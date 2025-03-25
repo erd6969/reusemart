@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\pembayaran;
+use App\Models\komisi;
 use Illuminate\Http\Request;
 
-class PembayaranController
+class KomisiController
 {
     /**
      * Display a listing of the resource.
@@ -26,7 +26,7 @@ class PembayaranController
     /**
      * Display the specified resource.
      */
-    public function show(pembayaran $pembayaran)
+    public function show(komisi $detail_transaksi_pembelian)
     {
         //
     }
@@ -34,7 +34,7 @@ class PembayaranController
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, pembayaran $pembayaran)
+    public function update(Request $request, komisi $komisi)
     {
         //
     }
@@ -42,7 +42,7 @@ class PembayaranController
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(pembayaran $pembayaran)
+    public function destroy(komisi $komisi)
     {
         //
     }

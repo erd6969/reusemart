@@ -16,10 +16,6 @@ const router = createBrowserRouter([
         element: <HomePage />,
     },
     {
-        path: "/login",
-        element: <LoginPage />,
-    },
-    {
         path: "/admin",
         element: <AdminPage />,
         children: [
@@ -32,6 +28,12 @@ const router = createBrowserRouter([
     {
         path: "/customerservice",
         element: <CSPage />,
+        children: [
+            {
+                path: "payment",
+                element: <div>Payment Management</div>,
+            },
+        ],
     },
     {
         path: "/auth",

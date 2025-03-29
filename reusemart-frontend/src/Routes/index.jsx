@@ -7,8 +7,14 @@ import LoginPage from "../Pages/LoginRegister/LoginPage";
 import DaftarDonasiPage from "../Pages/Organisasi/DaftarDonasi";
 import OwnerPage from "../Pages/Owner/OwnerPage";
 import PegawaiGudangPage from "../Pages/PegawaiGudang/PegawaiGudangPage";
-import ProfilePembeliPage from "../Pages/Pembeli/ProfilePembeliPage";
+
 import ProfilePenitipPage from "../Pages/Penitip/ProfilePenitipPage";
+
+import PembeliLayout from "../Layouts/PembeliLayouts";
+import ProfilePembeliPage from "../Pages/Pembeli/ProfilePembeliPage";
+import AlamatPembeliPage from "../Pages/Pembeli/AlamatPembeliProfilePage";
+import PurchasePembeliPage from "../Pages/Pembeli/PurchasePembeliPage";
+import ShopPembeliPage from "../Pages/Pembeli/shopPembeliPage";
 
 const router = createBrowserRouter([
     {
@@ -65,12 +71,24 @@ const router = createBrowserRouter([
     },
     {
         path: "/pembeli",
-        element: <div>Pembeli Page</div>,
+        element: <PembeliLayout />,
         children: [
             {
                 path: "profile",
                 element: <ProfilePembeliPage />,
             },
+            {
+                path: "alamat",
+                element: <AlamatPembeliPage />,
+            },
+            {
+                path: "purchase",
+                element: <PurchasePembeliPage />,
+            },
+            {
+                path: "shop",
+                element: <ShopPembeliPage />,
+            }
         ],
     },
     {

@@ -1,0 +1,17 @@
+import { Card } from 'react-bootstrap';
+import { useNavigate } from 'react-router-dom';
+import TopsNavbar from "../../Components/NavbarOwner.jsx";
+
+function Laporan() {
+    const navigate = useNavigate();
+    return (
+        <Card style={{marginRight:'10vw'}}>
+            <Card.Header as="h5">babi</Card.Header>
+            <Card.Body>
+                namaku babi suka babi
+            </Card.Body>
+        </Card>
+    );
+}
+
+export default Laporan;

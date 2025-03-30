@@ -6,6 +6,9 @@ import CSPage from "../Pages/CustomerService/CSPage";
 import LoginPage from "../Pages/LoginRegister/LoginPage";
 import DaftarDonasiPage from "../Pages/Organisasi/DaftarDonasi";
 import OwnerPage from "../Pages/Owner/OwnerPage";
+import ReqDonasi from "../Pages/Owner/ReqDonasi"; 
+import HistoryDonasiPage from "../Pages/Owner/HistoryDonasi"; 
+import LaporanPage from "../Pages/Owner/Laporan"; 
 import PegawaiGudangPage from "../Pages/PegawaiGudang/PegawaiGudangPage";
 
 import ProfilePenitipPage from "../Pages/Penitip/ProfilePenitipPage";
@@ -64,6 +67,21 @@ const router = createBrowserRouter([
     {
         path: "/owner",
         element: <OwnerPage />,
+        children: [
+            {
+                path: "req-donasi", 
+                element: <ReqDonasi/>,
+            },
+            {
+                path: "history-donasi", 
+                element: <HistoryDonasiPage/>,
+            },
+            {
+                path: "laporan", 
+                element: <LaporanPage/>,
+            },
+
+        ],
     },
     {
         path: "/pegawai-gudang",

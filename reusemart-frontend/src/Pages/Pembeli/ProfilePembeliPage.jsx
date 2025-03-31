@@ -31,7 +31,7 @@ const InputDataPembeli = () => {
 const ProfilePembeli = () => {
   return (
     <Container className="pembeli-container">
-      <ProfileNavigation Profile={{ fontWeight: "600", textDecoration: "underline" }} Alamat={{ fontWeight: "50"}} />
+      <ProfileNavigation Profile={{ fontWeight: "600", textDecoration: "underline", fontSize: "40px", color: "black" }} Alamat={{ fontWeight: "50", fontSize: "35px", color: "#AFAEAE" }} />
       <div className="profile-content">
         <div className="profile-left">
           <FotoPembeli 

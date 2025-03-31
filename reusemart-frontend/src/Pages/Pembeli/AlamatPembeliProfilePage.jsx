@@ -33,7 +33,7 @@ const InputDataPembeli = () => {
 const AlamatPembeliPage = () => {
   return (
     <Container className="pembeli-container">
-      <ProfileNavigation Profile={{ fontWeight: "50" }} Alamat={{ fontWeight: "600", textDecoration: "underline"}}/>
+      <ProfileNavigation Profile={{ fontWeight: "50", fontSize: "35px", color: "#AFAEAE" }} Alamat={{ fontWeight: "600", textDecoration: "underline", fontSize: "40px", color: "black" }}/>
       <div className="profile-content">
         <div className="profile-left">
           <FotoPembeli Foto={profileImage} SubProp={<p className="nama-pembeli">Yuki Suou</p>} />

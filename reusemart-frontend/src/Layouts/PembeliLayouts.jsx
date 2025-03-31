@@ -1,6 +1,6 @@
 import { Outlet } from "react-router-dom";
 
-import TopNavbar from "../Components/NavbarPembeli.jsx";
+import TopNavbar from "../Components/Pembeli/NavbarPembeli.jsx";
 
 const routes = [
     {

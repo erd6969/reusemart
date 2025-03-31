@@ -2,14 +2,13 @@ import { useNavigate } from "react-router-dom";
 import React, { useState, useRef, useEffect } from "react";
 import { Navbar, Container, Nav } from "react-bootstrap";
 import "./NavbarPembeli.css";
-import profileImage from "../assets/images/Pembeli/Yuki.jpeg";
-import logoReuseMart from "../assets/images/logo-reusemart.png";
-import coin from "../assets/images/coin-icon.png";
+import profileImage from "../../assets/images/Pembeli/Yuki.jpeg";
+import logoReuseMart from "../../assets/images/logo-reusemart.png";
+import coin from "../../assets/images/coin-icon.png";
 import { FaShoppingCart, FaChevronDown, FaBars, FaTimes } from "react-icons/fa";
 
 const TopNavbar = () => {
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-    const [isMenuOpen, setIsMenuOpen] = useState(false);
     const navigate = useNavigate();
     const dropdownRef = useRef(null);
 
@@ -21,11 +20,7 @@ const TopNavbar = () => {
                     <Navbar.Brand className="navTitle">ReuseMart</Navbar.Brand>
                 </div>
 
-                <div className="hamburger" onClick={() => setIsMenuOpen(!isMenuOpen)}>
-                    {isMenuOpen ? <FaTimes /> : <FaBars />}
-                </div>
-
-                <Nav className={`navContent ${isMenuOpen ? "open" : ""}`}>
+                <Nav className="navContent">
                     <Nav.Link onClick={() => navigate("/")}>Home</Nav.Link>
                     <Nav.Link onClick={() => navigate("/shop")}>Shop</Nav.Link>
                     <Nav.Link onClick={() => navigate("/help")}>Help</Nav.Link>

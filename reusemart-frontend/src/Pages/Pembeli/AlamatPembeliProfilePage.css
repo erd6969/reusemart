@@ -1,0 +1,17 @@
+.nama-pembeli{
+    font-size: 25px;
+    text-align: center;
+    margin-top: 5px;
+}
+
+@media (max-width: 768px) {
+    .poin-container{
+        text-align: center;
+    }
+}
+
+@media (max-width: 480px) {
+    .poin-container{
+        text-align: center;
+    }
+}

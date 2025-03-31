@@ -31,7 +31,6 @@
     cursor: pointer;
 }
 
-
 /* Navigation Links */
 .navContent {
     display: flex;
@@ -45,19 +44,7 @@
 }
 
 /* =========================== */
-/* HAMBURGER MENU (Mobile) */
-
-.hamburger {
-    display: none;
-    font-size: 28px;
-    cursor: pointer;
-}
-
-/* Mobile Nav */
-.navContent {
-    display: flex;
-    gap: 20px;
-}
+/* MOBILE */
 
 /* Profile & Cart Mobile */
 .profileContainer {
@@ -115,91 +102,15 @@
     z-index: 1000;
 }
 
-/* Show Dropdown */
 .dropdownMenu.show {
     opacity: 1;
     visibility: visible;
     transform: translateY(0) scale(1);
 }
 
-.dropdownContent {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: space-between;
-    gap: 10px;
-}
-
-/* Points Section */
-.pointsSection {
-    flex: 2;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    font-size: 16px;
-    font-weight: bold;
-    border-right: 1px solid #ddd;
-    padding-right: 20px;
-}
-
-.pointsSection img {
-    width: 70px;
-    height: 70px;
-}
-
-.pointsText {
-    display: flex;
-    flex-direction: column;
-    text-align: left;
-}
-
-/* Menu Section */
-.menuSection {
-    flex: 1.5;
-    padding-left: 15px;
-}
-
-.menuSection ul {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-}
-
-.menuSection ul li {
-    padding: 8px 0;
-    cursor: pointer;
-    transition: color 0.2s;
-    text-align: left;
-}
-
-.menuSection ul li:hover {
-    color: #007bff;
-}
-
-.dropdownMenu hr {
-    border: none;
-    border-top: 1px solid #ddd;
-    margin: 10px 0;
-}
-
-.logout {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    font-size: 16px;
-    color: red;
-    cursor: pointer;
-}
-
-.logout:hover {
-    color: darkred;
-}
-
-
 /* =========================== */
 /* RESPONSIVE */
 
-/* Responsive Layar HP */
 @media (max-width: 768px) {
     .navBar {
         flex-direction: column;
@@ -208,56 +119,28 @@
         text-align: center;
     }
 
+    .cartIcon {
+        font-size: 24px;
+        color: black;
+        margin-right: 20px;
+        margin-left: auto!important;
+    }
+
     .navContent {
         flex-direction: column;
         align-items: center;
         display: none;
-    }
-
-    .navContent.open {
-        display: flex;
-    }
-
-    .navContent .nav-link {
-        font-size: 18px;
-        margin: 5px 0;
-    }
-
-    .hamburger {
-        display: block;
-    }
-
-    .profileContainer {
-        flex-direction: column;
-        align-items: center;
-    }
-
-    .profileSection {
-        flex-direction: column;
-        gap: 5px;
-        text-align: center;
-    }
-
-    .dropdownMenu {
+        width: 100%;
+        background-color: white;
         position: absolute;
-        top: 100px;
-        right: 0;
-        background: white;
-        border-radius: 8px;
-        box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
-        width: 380px;
-        padding: 15px;
-        opacity: 0;
-        visibility: hidden;
-        transform: translateY(10px) scale(0.95);
-        transition: opacity 0.3s ease-in-out, transform 0.3s ease-in-out, visibility 0.3s;
-        z-index: 1000;
+        top: 55px;
+        left: 0;
+        padding: 10px;
+        box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+        z-index: 999;
     }
-
-
 }
 
-/* Responsive Buat Screen Kecil */
 @media (max-width: 480px) {
     .navTitle {
         font-size: 24px;
@@ -273,7 +156,9 @@
     }
 
     .cartIcon {
-        font-size: 20px;
-        margin-right: 10px;
+        font-size: 24px;
+        color: black;
+        margin-right: 20px;
+        margin-left: auto!important;
     }
 }

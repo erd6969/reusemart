@@ -1,17 +1,280 @@
-.nama-pembeli{
+.nama-pembeli {
     font-size: 25px;
     text-align: center;
     margin-top: 5px;
 }
 
+.alamat-container {
+    flex: 1;
+    max-width: 930px;
+    border: 1px solid #B7B7B7;
+    border-radius: 5px;
+    padding: 20px;
+    margin-top: 25px;
+    margin-bottom: 50px;
+}
+
+.alamat-list-container {
+    flex: 1;
+    max-width: 930px;
+    border: 1px solid #B7B7B7;
+    border-radius: 5px;
+    padding: 10px;
+    margin-top: 25px;
+    margin-bottom: 20px;
+}
+
+.alamat-list-container b {
+    font-size: 28px;
+}
+
+.alamat-list-container p {
+    font-size: 16px;
+    max-width: 700px;
+}
+
+.nama-alamat-container {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.nama-alamat {
+    font-size: 18px;
+    line-height: 1;
+}
+
+.main-address {
+    background-color: #347928;
+    color: white;
+    font-weight: bold;
+    padding: 4px 10px;
+    font-size: 14px;
+    border-radius: 10px;
+    border: black 1px solid;
+    display: flex;
+    align-items: center;
+    height: fit-content;
+    line-height: 1;
+}
+
+.alamat-button-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.left-button button {
+    margin-right: 10px;
+    background-color: #347928;
+    border-radius: 10px;
+    padding: 3px 10px;
+}
+
+.set-as-main-button-inactive {
+    background-color: #347928;
+    border-radius: 10px;
+    padding: 3px 10px;
+    font-weight: bold;
+    color: white;
+}
+
+.set-as-main-button-active {
+    background-color: white;
+    color: #A6A6A6;
+    border: 1px solid #A6A6A6;
+    border-radius: 10px;
+    padding: 3px 10px;
+    font-weight: bold;
+}
+
+.left-button b {
+    font-size: 16px!important;
+    color: white;
+}
+
+.left-button {
+    display: flex;
+}
+
+.right-button {
+    display: flex;
+    justify-content: flex-end;
+}
+
+.alamat-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+}
+
+.add-button {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 20px;
+    margin-bottom: 20px;
+    border-radius: 5px;
+    border: none;
+    background-color: #347928;
+    color: white;
+    height: 35px;
+    width: 200px;
+    font-size: 18px;
+}
+
+.search-container {
+    display: flex;
+    align-items: center;
+}
+
+.search-bar {
+    display: flex;
+    align-items: center;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    padding: 5px 10px;
+    background-color: #fff;
+}
+
+.search-icon-inside {
+    width: 20px;
+    height: 20px;
+    margin-right: 10px;
+}
+
+.search-input {
+    border: none;
+    outline: none;
+    flex: 1;
+    font-size: 16px;
+    background: transparent;
+    width: 600px;
+}
+
+@media (max-width: 1396px) {
+    .search-input {
+        width: 400px;
+    }
+}
+
+@media (max-width: 1199px) {
+    .search-input {
+        width: 250px;
+    }
+}
+
+@media (max-width: 1024px) {
+    .profile-content {
+        flex-direction: column;
+        align-items: center;
+    }
+    
+    .profile-left {
+        margin-bottom: 20px;
+        width: 100%;
+        max-width: 300px;
+    }
+    
+    .alamat-container {
+        width: 100%;
+        max-width: 100%;
+        margin-left: 0;
+        margin-right: 0;
+    }
+    
+    .add-button {
+        width: 150px;
+    }
+
+    .search-input{
+        width: 500px;
+    }
+}
+
+@media (max-width: 992px) {
+    .search-input{
+        width: 425px;
+    }
+}
+
 @media (max-width: 768px) {
-    .poin-container{
-        text-align: center;
+    .alamat-button-container {
+        flex-direction: column;
+        gap: 10px;
+    }
+    
+    .left-button {
+        display: flex;
+        justify-content: center;
+        width: 100%;
+        gap: 10px;
+    }
+    
+    .left-button button {
+        width: 250px;
+        margin-right: 0;
+        margin-bottom: 10px;
+        padding: 8px 10px;
+    }
+    
+    .right-button {
+        width: 100%;
+    }
+    
+    .right-button button {
+        width: 100%;
+    }
+    
+    .alamat-content {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    
+    .add-button {
+        width: 100%;
+        margin-top: 10px;
+    }
+
+
+}
+
+@media (max-width: 550px){
+    .search-input{
+        width: 370px;
     }
 }
 
 @media (max-width: 480px) {
-    .poin-container{
-        text-align: center;
+    .alamat-list-container p {
+        font-size: 14px;
+    }
+    
+    .nama-alamat {
+        font-size: 16px;
+    }
+    
+    .main-address {
+        font-size: 12px;
+        padding: 2px 8px;
+    }
+    
+    .left-button button b,
+    .right-button button {
+        font-size: 14px !important;
+    }
+    
+    .add-button {
+        height: 40px;
+        font-size: 16px;
+    }
+    
+    .pembeli-container {
+        padding: 15px;
+    }
+    
+    .alamat-container {
+        padding: 15px;
     }
 }

@@ -4,26 +4,86 @@ import FotoPembeli from "../../Components/Pembeli/FotoPembeli";
 import ProfileNavigation from "../../Components/Pembeli/ProfileHeader";
 import InputColumn from "../../Components/InputColumn";
 import profileImage from "../../assets/images/Pembeli/Yuki.jpeg";
-
+import { useState } from "react";
 
 const Poin = () => {
-  return(
+  return (
     <Container className="poin-container">
       <b>Poin Loyalitas</b>
-      <p>119 Point</p>
+      <p>119 Poin</p>
     </Container>
   );
 };
 
 const InputDataPembeli = () => {
-  return(
+  const [formData, setFormData] = useState({
+    fullName: '',
+    email: '',
+    phone: '',
+    dateBirth: '',
+    address: ''
+  });
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData({ ...formData, [name]: value });
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    console.log(formData);
+  };
+
+  return (
     <Container className="input-container">
-          <InputColumn nameLabel="FullName" contentLabel="Full Name" typeInput="text" idInput="name" placeholderInput="Yuki Suou" />
-          <InputColumn nameLabel="Email" contentLabel="Email" typeInput="email" idInput="email" placeholderInput="yukisuou@gmail.com" />
-          <InputColumn nameLabel="TelephoneNumber" contentLabel="Telephone Number" typeInput="number" idInput="phone" placeholderInput="1234567890" />
-          <InputColumn nameLabel="DateBirth" contentLabel="Date of Birth" typeInput="date" idInput="dateBirth" placeholderInput="" />
-          <InputColumn nameLabel="Address" contentLabel="Address" typeInput="text" idInput="address" placeholderInput="Jl. Putangina No. 69" />
-        <button className="input-button"><b>Save Change</b></button>
+      <form onSubmit={handleSubmit}>
+        <InputColumn
+          nameLabel="fullName"
+          contentLabel="Nama Lengkap"
+          typeInput="text"
+          idInput="name"
+          placeholderInput="Yuki Suou"
+          value={formData.fullName}
+          onChange={handleChange}
+        />
+        <InputColumn
+          nameLabel="email"
+          contentLabel="Email"
+          typeInput="email"
+          idInput="email"
+          placeholderInput="yukisuou@gmail.com"
+          value={formData.email}
+          onChange={handleChange}
+        />
+        <InputColumn
+          nameLabel="phone"
+          contentLabel="Nomor Telepon"
+          typeInput="number"
+          idInput="phone"
+          placeholderInput="1234567890"
+          value={formData.phone}
+          onChange={handleChange}
+        />
+        <InputColumn
+          nameLabel="dateBirth"
+          contentLabel="Tanggal Lahir"
+          typeInput="date"
+          idInput="dateBirth"
+          placeholderInput=""
+          value={formData.dateBirth}
+          onChange={handleChange}
+        />
+        <InputColumn
+          nameLabel="address"
+          contentLabel="Alamat"
+          typeInput="text"
+          idInput="address"
+          placeholderInput="Jl. Putangina No. 69"
+          value={formData.address}
+          onChange={handleChange}
+        />
+        <button type="submit" className="input-button"><b>Simpan</b></button>
+      </form>
     </Container>
   );
 };
@@ -38,8 +98,7 @@ const ProfilePembeli = () => {
             Foto={profileImage} 
             SubProp={
               <>
-                <input type="file" id="upload" className="input-file" accept="image/*" />
-                <label htmlFor="upload" className="button-profile">Choose Image</label>
+                <label htmlFor="upload" className="button-profile">Pilih Gambar</label>
               </>
             } 
           />
@@ -50,7 +109,5 @@ const ProfilePembeli = () => {
     </Container>
   );
 };
-
-
 
 export default ProfilePembeli;

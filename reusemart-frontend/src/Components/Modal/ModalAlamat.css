@@ -1,0 +1,21 @@
+.custom-modal-width .modal-dialog {
+    max-width: 600px;
+    width: 100%;
+  }
+  
+.modal-body {
+    padding: 20px;
+}
+
+.modal-footer {
+    display: flex;
+    justify-content: flex-end;
+}
+  
+.modal-footer .btn-submit {
+    background-color: #347928!important;
+    color: white;
+    border: 1px solid black;
+    padding: 5px 15px;
+    font-weight: bold;
+}

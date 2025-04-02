@@ -22,7 +22,7 @@ const TopNavbar = () => {
 
                 <Nav className="navContent">
                     <Nav.Link onClick={() => navigate("/")}>Home</Nav.Link>
-                    <Nav.Link onClick={() => navigate("/shop")}>Shop</Nav.Link>
+                    <Nav.Link onClick={() => navigate("/pembeli/shop")}>Shop</Nav.Link>
                     <Nav.Link onClick={() => navigate("/help")}>Help</Nav.Link>
                 </Nav>
 

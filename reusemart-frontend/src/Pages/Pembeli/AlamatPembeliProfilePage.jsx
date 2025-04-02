@@ -30,9 +30,9 @@ const AlamatDetail = ({namaAlamat, alamat, keterangan, kecamatan, kabupaten, kel
         <div className="left-button">
           <button className="edit-button"
             onClick={() => setShowModal(true)}>
-              <b>Ubah Address</b>
+              <b>Ubah Alamat</b>
           </button>
-          <button className="delete-button"><b>Hapus Address</b></button>
+          <button className="delete-button"><b>Hapus Alamat</b></button>
         </div>
         <div className="right-button">
           <button

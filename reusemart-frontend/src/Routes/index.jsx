@@ -17,7 +17,8 @@ import PembeliLayout from "../Layouts/PembeliLayouts";
 import ProfilePembeliPage from "../Pages/Pembeli/ProfilePembeliPage";
 import AlamatPembeliPage from "../Pages/Pembeli/AlamatPembeliProfilePage";
 import PurchasePembeliPage from "../Pages/Pembeli/PurchasePembeliPage";
-import ShopPembeliPage from "../Pages/Pembeli/shopPembeliPage";
+import ShopPage from "../Homepage/ShopPage";
+import DetailBarangPage from "../Pages/Pembeli/DetailBarangPage";
 
 const router = createBrowserRouter([
     {
@@ -105,7 +106,11 @@ const router = createBrowserRouter([
             },
             {
                 path: "shop",
-                element: <ShopPembeliPage />,
+                element: <ShopPage />,
+            },
+            {
+                path: "detailBarang",
+                element: <DetailBarangPage />,
             }
         ],
     },

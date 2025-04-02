@@ -1,0 +1,27 @@
+.main-container {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    height: 100vh;
+    overflow: hidden;
+}
+
+.main-container > div:first-child {
+    flex: 0 0 30%;
+    max-width: 30%;
+    height: 100%;
+    overflow-y: auto;
+    background-color: #D8C4B6;
+    color: #3E5879;
+    box-sizing: border-box;
+    padding: 16px;
+}
+
+.main-container > div:last-child {
+    flex: 0 0 70%;
+    max-width: 70%;
+    height: 100%;
+    overflow-y: auto;
+    box-sizing: border-box;
+    padding: 16px;
+}

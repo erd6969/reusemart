@@ -1,0 +1,108 @@
+.detail-barang-page-container{
+    background-color: white;
+    border-radius: 5px;
+    margin: 50px;
+}
+
+.detail-barang-container{
+    display: flex;
+    flex-direction: row;
+    padding: 25px;
+}
+
+.gambar-barang{
+    width: 350px;
+    height: 450px;
+}
+
+.isi-detail-barang-container{
+    display: flex;
+    flex-direction: column;
+    margin-left: 50px;
+}
+
+.harga-barang{
+    margin-top: 20px;
+    margin-bottom: 5px;
+}
+
+.harga-barang h1{
+    color: #347928;
+}
+
+.deskripsi-wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.label-colon-align {
+    display: grid;
+    grid-template-columns: 100px 10px auto;
+    gap: 5px;
+    align-items: start;
+}
+
+.label {
+    text-align: left;
+    font-weight: bold;
+}
+
+.colon {
+    text-align: left;
+}
+
+.isi-deskripsi p, 
+.isi-kondisi p {
+    margin: 0;
+    text-align: left;
+}
+
+.button-barang-container {
+    display: flex;
+    gap: 10px;
+    position: absolute;
+    bottom: 60px;
+    right: 20px;
+}
+
+.cart-button{
+    background-color: #347928;
+    border-radius: 5px;
+    height: 35px;
+    border: none;
+}
+
+.cart-button b{
+    color: white;
+}
+
+.buy-button{
+    background-color: #FCCD2A;
+    border-radius: 5px;
+    height: 35px;
+    width: 120px;
+    border: none;
+}
+
+.buy-button b{
+    color: #347928;
+}
+
+.detail-barang-container {
+    position: relative;
+    padding-bottom: 60px;
+}
+
+.toko-container{
+    display: flex;
+    flex-direction: row;
+    margin-top: 20px;
+    gap: 10px;
+}
+
+.toko-image-container img{
+    width: 100px;
+    height: 100px;
+    border-radius: 500px;
+}

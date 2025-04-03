@@ -1,3 +1,142 @@
-.pembeli-container{
+.pembeli-container {
     background-color: white;
+    border-radius: 5px;
+    margin: 50px;
+}
+
+.profile-content {
+    display: flex;
+    gap: 30px;
+    align-items: start;
+}
+
+.input-file {
+    display: none;
+}
+
+.button-profile {
+    background-color: #ffffff;
+    border: 1px solid #B7B7B7;
+    border-radius: 5px;
+    width: 200px;
+    height: 35px;
+    margin-top: 10px !important;
+    font-size: 18px;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    text-align: center;
+    line-height: 35px;
+    cursor: pointer;
+}
+
+
+.profile-left {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.input-container {
+    flex: 1;
+    max-width: 400px;
+    border: 1px solid #B7B7B7;
+    border-radius: 5px;
+    padding: 20px;
+    margin-top:25px;
+    margin-bottom: 50px;
+}
+
+.input-button{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 20px;
+    border-radius: 5px;
+    background-color: #347928;
+    color: white;
+    height: 35px;
+    width: 150px;
+    font-size: 18px;
+}
+
+@media (max-width: 768px) {
+    .pembeli-container {
+        background-color: white;
+        border-radius: 5px;
+        margin: 100px;
+    }
+
+    .profile-content {
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .profile-left {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        width: 100%;
+        margin-bottom: 20px;
+    }
+
+    .input-container {
+        width: 100%;
+        max-width: 100%;
+        margin-top: 20px;
+    }
+
+    .input-button {
+        width: 100%;
+        max-width: 300px;
+        margin: 0 auto;
+    }
+
+    .poin-container{
+        text-align: center;
+    }
+}
+
+
+@media (max-width: 480px) {
+    .pembeli-container {
+        background-color: white;
+        border-radius: 5px;
+        margin: 20px;
+        padding: 15px;
+    }
+
+    .profile-content {
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+    }
+
+    .profile-left {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        width: 100%;
+        margin-bottom: 15px;
+    }
+
+    .input-container {
+        width: 100%;
+        max-width: 100%;
+        margin-top: 20px;
+    }
+
+    .input-button {
+        width: 100%;
+        max-width: 250px;
+        margin: 0 auto;
+    }
+
+    .poin-container {
+        text-align: center;
+    }
 }

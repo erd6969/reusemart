@@ -1,0 +1,164 @@
+.navBar {
+    background-color: white;
+    color: black;
+    height: 55px;
+    font-weight: bold;
+    border-bottom: 2px solid black;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 20px;
+    flex-wrap: wrap;
+    position: relative;
+}
+
+/* Logo & Title */
+.logoReuseMart {
+    width: 50px;
+    height: 40px;
+    cursor: pointer;
+}
+
+.navTitle {
+    font-size: 30px;
+    cursor: pointer;
+}
+
+.navLeft {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    cursor: pointer;
+}
+
+/* Navigation Links */
+.navContent {
+    display: flex;
+    justify-content: center;
+    flex-grow: 1;
+}
+
+.navContent .nav-link {
+    font-size: 20px;
+    margin-left: 20px;
+}
+
+/* =========================== */
+/* MOBILE */
+
+/* Profile & Cart Mobile */
+.profileContainer {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    position: relative;
+    cursor: pointer;
+}
+
+.profileSection {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.profileSection img {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+}
+
+.profileName {
+    font-size: 18px;
+    font-weight: bold;
+}
+
+.chevronIcon {
+    font-size: 16px;
+    color: black;
+}
+
+.cartIcon {
+    font-size: 24px;
+    color: black;
+    margin-right: 20px;
+}
+
+/* =========================== */
+/* DROPDOWN */
+
+.dropdownMenu {
+    position: absolute;
+    top: 45px;
+    right: 0;
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+    width: 400px;
+    padding: 15px;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(10px) scale(0.95);
+    transition: opacity 0.3s ease-in-out, transform 0.3s ease-in-out, visibility 0.3s;
+    z-index: 1000;
+}
+
+.dropdownMenu.show {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0) scale(1);
+}
+
+/* =========================== */
+/* RESPONSIVE */
+
+@media (max-width: 768px) {
+    .navBar {
+        flex-direction: column;
+        height: auto;
+        padding: 10px;
+        text-align: center;
+    }
+
+    .cartIcon {
+        font-size: 24px;
+        color: black;
+        margin-right: 20px;
+        margin-left: auto!important;
+    }
+
+    .navContent {
+        flex-direction: column;
+        align-items: center;
+        display: none;
+        width: 100%;
+        background-color: white;
+        position: absolute;
+        top: 55px;
+        left: 0;
+        padding: 10px;
+        box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+        z-index: 999;
+    }
+}
+
+@media (max-width: 480px) {
+    .navTitle {
+        font-size: 24px;
+    }
+
+    .profileSection img {
+        width: 35px;
+        height: 35px;
+    }
+
+    .profileName {
+        font-size: 16px;
+    }
+
+    .cartIcon {
+        font-size: 24px;
+        color: black;
+        margin-right: 20px;
+        margin-left: auto!important;
+    }
+}

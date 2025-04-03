@@ -1,0 +1,30 @@
+.input-data {
+    margin-bottom: 15px;
+}
+
+.input-data label {
+    display: block;
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+.input-data input {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #B7B7B7;
+    border-radius: 5px;
+}
+
+@media (max-width: 768px) {
+    .input-data {
+        margin-bottom: 15px;
+        width: 100%;
+    }
+}
+
+@media (max-width: 480px) {
+    .input-data {
+        margin-bottom: 15px;
+        width: 100%;
+    }
+}

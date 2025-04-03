@@ -1,0 +1,23 @@
+.profile-header a {
+    text-decoration: none;
+    margin-right: 50px;
+}
+
+.profile-header hr {
+    width: 100%;
+    margin-top: -5px;
+}
+
+@media (max-width: 768px) {
+    .profile-header a {
+        font-size: 30px;
+        margin-right: 20px;
+    }
+}
+
+@media (max-width: 480px) {
+    .profile-header a {
+        font-size: 25px;
+        margin-right: 10px;
+    }
+}

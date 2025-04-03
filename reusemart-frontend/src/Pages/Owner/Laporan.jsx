@@ -9,6 +9,7 @@ function Laporan() {
             <Card.Header as="h5">babi</Card.Header>
             <Card.Body>
                 namaku babi suka babi
+                <inputCol/>
             </Card.Body>
         </Card>
     );

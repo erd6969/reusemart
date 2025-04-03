@@ -1,30 +1,145 @@
-// Ini Sementara Aja (Copas Dari Atma Library)
 
+import { Nav, Card, Badge } from 'react-bootstrap';
+import { useState } from 'react';
+import { 
+    FaMobile, FaTshirt, FaChair, FaBook, FaGamepad, 
+    FaBaby, FaCar, FaTree, FaBriefcase, FaSmile,
+    FaChevronDown, FaChevronRight
+} from 'react-icons/fa';
 import { useNavigate } from "react-router-dom";
 import image1 from "../assets/images/Pembeli/Yuki.jpeg";
+import image2 from "../assets/images/Orang Palu.png";
 import "../Homepage/ShopPage.css";
 
-function BookSection() {
-    return (
-        <div className="book-container">
-            <SearchBook />
-            <BookList />
-        </div>
-    );
-}
+const kategori = [
+    {
+        icon: FaMobile,
+        name: "Elektronik & Gadget",
+        subcategories: [
+            "Smartphone & Tablet",
+            "Laptop & Komputer",
+            "Kamera & Aksesori",
+            "Peralatan Audio/Video",
+            "Konsol Game & Aksesorinya",
+            "Printer & Scanner",
+            "Peralatan Dapur Elektronik"
+        ]
+    },
+    {
+        icon: FaTshirt,
+        name: "Pakaian & Aksesori",
+        subcategories: [
+            "Pakaian Pria, Wanita, dan Anak",
+            "Jaket, Sweater, dan Outerwear",
+            "Sepatu, Sandal, dan Boots",
+            "Tas, Dompet, dan Ransel",
+            "Perhiasan & Aksesori",
+            "Topi, Syal, dan Aksesori lainnya"
+        ]
+    },
+    {
+        icon: FaChair,
+        name: "Perabotan Rumah Tangga",
+        subcategories: [
+            "Sofa, Meja, Kursi",
+            "Lemari, Rak Buku, dan Meja TV",
+            "Tempat Tidur & Kasur",
+            "Peralatan Masak",
+            "Dekorasi Rumah",
+            "Alat Kebersihan"
+        ]
+    },
+    {
+        icon: FaBook,
+        name: "Buku, Alat Tulis, & Peralatan Sekolah",
+        subcategories: [
+            "Buku Pelajaran & Buku Bacaan",
+            "Buku Koleksi",
+            "Alat Tulis",
+            "Tas Sekolah & Peralatan Laboratorium",
+            "Kalkulator & Alat Ukur"
+        ]
+    },
+    {
+        icon: FaGamepad,
+        name: "Hobi, Mainan, & Koleksi",
+        subcategories: [
+            "Mainan Anak",
+            "Alat Musik",
+            "Perlengkapan Olahraga",
+            "Barang Koleksi",
+            "Buku Komik, CD Musik, DVD Film",
+            "Peralatan Memancing atau Camping"
+        ]
+    },
+    {
+        icon: FaBaby,
+        name: "Perlengkapan Bayi & Anak",
+        subcategories: [
+            "Pakaian Bayi & Anak",
+            "Perlengkapan Makan Bayi",
+            "Mainan Edukasi",
+            "Stroller, Car Seat, & Baby Carrier",
+            "Tempat Tidur & Perlengkapan Bayi"
+        ]
+    },
+    {
+        icon: FaCar,
+        name: "Otomotif & Aksesori",
+        subcategories: [
+            "Sepeda Motor & Sepeda Bekas",
+            "Suku Cadang & Aksesori Mobil/Motor",
+            "Helm, Jaket Riding, dan Sarung Tangan",
+            "Ban, Velg, dan Aksesori Kendaraan",
+            "Peralatan Perawatan Kendaraan"
+        ]
+    },
+    {
+        icon: FaTree,
+        name: "Perlengkapan Taman & Outdoor",
+        subcategories: [
+            "Peralatan Berkebun",
+            "Meja & Kursi Taman",
+            "Alat BBQ & Outdoor Cooking",
+            "Tenda, Sleeping Bag, & Peralatan Camping"
+        ]
+    },
+    {
+        icon: FaBriefcase,
+        name: "Peralatan Kantor & Industri",
+        subcategories: [
+            "Meja & Kursi Kantor",
+            "Lemari Arsip",
+            "Mesin Fotokopi, Printer, dan Scanner",
+            "Alat-alat Teknik & Perkakas",
+            "Rak Gudang & Peralatan Penyimpanan"
+        ]
+    },
+    {
+        icon: FaSmile,
+        name: "Kosmetik & Perawatan Diri",
+        subcategories: [
+            "Alat Kecantikan",
+            "Parfum & Produk Perawatan",
+            "Aksesori Kecantikan"
+        ]
+    }
+];
 
-function SearchBook(){
+function SearchBook() {
     const navigate = useNavigate();
-    
-    return(
-        <div className="search-container" style={{marginBottom:"20px"}}>
-            <input 
-                type="text" 
+
+    return (
+        <div className="search-container"
+            style={{ marginTop: "20px", marginBottom: "20px", display: "flex", justifyContent: "center" }}
+        >
+            <input
+                type="text"
                 placeholder="Search Book"
-                style={{width:"900px", height:"40px", marginRight:"20px", borderRadius:"5px"}}
+                style={{ width: "900px", height: "40px", marginRight: "20px", borderRadius: "5px" }}
             />
-            <button 
-                style={{width:"90px", height:"40px", borderRadius:"5px", backgroundColor:"#3E5879", color:"white", fontWeight:"bold"}}
+            <button
+                style={{ width: "90px", height: "40px", borderRadius: "5px", backgroundColor: "#3E5879", color: "white", fontWeight: "bold" }}
                 onClick={() => navigate("/search")}
             >
                 Search
@@ -44,38 +159,90 @@ function BookList() {
                 gridTemplateColumns: "repeat(4, 1fr)",
                 gap: "20px",
                 justifyContent: "center",
+                marginTop: "20px",
+                paddingLeft: "20px",
+                marginBottom: "20px",
+                height: "100%",
+                width: "100%",
             }}
         >
-            {Array.from({ length: 50 }).map((_, index) => (
+            {Array.from({ length: 30 }).map((_, index) => (
                 <div
                     key={index}
                     className="book-container"
                     style={{
-                        backgroundColor: "#D9D9D9",
+                        backgroundColor: "#FFFFFF",
                         borderRadius: "10px",
-                        width: "200px",
-                        height: "280px",
+                        width: "280px",
+                        height: "360px",
+                        boxShadow: "0px 2px 5px 5px rgb(16, 78, 13)",
                     }}
                     onClick={() => navigate(`/pembeli/detailBarang`)}
                 >
-                    <img
-                        src={image1}
-                        alt="book"
+                    <div
+                        className="book-image-container"
+                        style={{ display: "flex", justifyContent: "center" }}
+                    >
+
+                        <div
+                            className="inside-book-container"
+                            style={{
+                                backgroundColor: "#FFFFFF",
+                                borderRadius: "10px",
+                                marginTop: "10px",
+                                boxShadow: "2px 2px 2px 2px rgba(22, 40, 21, 0.33)",
+                                width: "260px",
+                                height: "250px",
+                                display: "flex",
+                                alignItems: "center",
+                                justifyContent: "center",
+                            }}
+                        >
+
+                            <img
+                                src={image2}
+                                alt="book"
+                                style={{
+                                    width: "180px",
+                                    height: "190px",
+                                    borderRadius: "10px",
+                                }}
+                            />
+                        </div>
+                    </div>
+                    <div
+                        className="item-description"
                         style={{
-                            width: "200px",
-                            height: "210px",
-                            borderRadius: "10px",
-                        }}
-                    />
-                    <p
-                        style={{
-                            textAlign: "center",
-                            paddingTop: "5px",
-                            fontWeight: "bold",
+                            display: "flex",
+                            paddingLeft: "20px",
+                            flexDirection: "column",
+                            alignItems: "flex-start",
                         }}
                     >
-                        Kisah Cinta Nigga Dari Jambi
-                    </p>
+                        <p
+                            style={{
+                                textAlign: "center",
+                                paddingTop: "20px",
+                                fontWeight: "lighter",
+                                fontSize: "18px",
+                                fontFamily: "monospace",
+                                marginBottom: "0px",
+                            }}
+                        >
+                            Orang Palu Musuh Jawa
+                        </p>
+                        <p
+                            style={{
+                                fontWeight: "bolder",
+                                fontSize: "26px",
+                                fontFamily: "monospace",
+                                marginBottom: "0px",
+                            }}
+                        >
+                            Rp. 90.000
+
+                        </p>
+                    </div>
                 </div>
             ))}
         </div>
@@ -84,18 +251,92 @@ function BookList() {
 
 function CategorySection() {
     const navigate = useNavigate();
+    const [activeCategory, setActiveCategory] = useState(null);
+
+    const toggleCategory = (index) => {
+        setActiveCategory(activeCategory === index ? null : index);
+    }
 
     return (
-        <div className="category-container">
-            <h1>Category</h1>
-            {Array.from({ length: 50 }).map((_, index) => (
-                <p 
-                    key={index}
-                    onClick={() => navigate(`/category/${index + 1}`)}
-                >
-                    Bokep {index + 1}
-                </p>
-            ))}
+        <div
+            className="category-container"
+            style={{
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+                marginTop: "20px",
+                marginLeft: "20px",
+                boxShadow: "0px 0px 5px 6px rgba(12, 77, 17, 0.99)",
+                backgroundColor: "#FFFFFF",
+                borderRadius: "10px",
+                overflowY: "auto",
+                height: "100vh",
+                width: "300px",
+                overflowX: "hidden",
+            }}
+        >
+
+            <Badge style={{ marginBottom: "20px", width: "300px"}} bg="success">
+                <h2>Categories</h2>
+            </Badge>
+            <div
+                className="category-list"
+                style={{
+                    display: "flex",
+                    flexDirection: "column",
+                    alignItems: "start",
+                    paddingLeft: "20px",
+                    paddingRight: "20px",
+                    width: "100%",
+                }}
+            >
+                {kategori.map((kat, index) => (
+                    <div key={index} style={{marginBottom: "20px"}}>
+                        <div
+                            onClick={() => toggleCategory(index)}
+                            style={{
+                                display: "flex",
+                                alignItems: "center",
+                                padding: "10px",
+                                cursor: "pointer",
+                                backgroundColor: activeCategory === index ? "#3E5879" : "#FFFFFF",
+                                color: activeCategory === index ? "#FFFFFF" : "#000000",
+                                borderRadius: "5px",
+                                transition: "background-color 0.3s",
+                            }}
+                        >
+                            <kat.icon style={{ fontSize:"25px", marginRight: "20px"}}/>
+                            <span style={{ flex:1, fontWeight: "bold"}}> {kat.name} </span>
+                            {activeCategory === index ? <FaChevronDown size={14} /> : <FaChevronRight size={14} />}
+                        </div>
+
+
+                        {activeCategory === index && (
+                            <div
+                                style={{paddingLeft: "20px", marginTop: "5px"}}
+                            >
+                                {kat.subcategories.map((subkategori, subIndex) => (
+                                    <div
+                                        key={subIndex}
+                                        onClick={() => navigate('/pembeli/profile')}
+                                        style={{
+                                            padding: "8px 10px",
+                                            cursor: "pointer",
+                                            borderRadius: "5px",
+                                            ':hover': { backgroundColor: "#f5f5f5" }
+                                        }}
+                                    >
+                                        {subkategori}
+
+                                    </div>    
+                                ))}
+
+                            </div>    
+                        )}
+                    </div>
+                        
+                ))}
+            </div>
         </div>
     );
 }
@@ -104,10 +345,20 @@ const ShopPage = () => {
     return (
         <div className="main-container">
             <div>
-                <CategorySection />
+                <SearchBook />
             </div>
             <div>
-                <BookSection />
+                <div className="book-section"
+                    style={{ 
+                        display: "flex", 
+                        justifyContent: "space-between", 
+                        overflowY: "auto", 
+                        height: "89vh",
+                    }}
+                >
+                    <CategorySection />
+                    <BookList />
+                </div>
             </div>
         </div>
     );

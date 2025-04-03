@@ -1,6 +1,6 @@
 import { Card } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
-import TopsNavbar from "../../Components/NavbarOwner.jsx";
+import inputCol from "../../Components/InputColumn.jsx";
 
 function Laporan() {
     const navigate = useNavigate();

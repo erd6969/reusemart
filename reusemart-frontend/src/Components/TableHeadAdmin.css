@@ -1,0 +1,11 @@
+.headerStyle {
+    border-color: white;
+    font-weight: bold;
+    display: inline-block;
+    width: 18%;
+    text-align: center;
+};
+
+.rowStyle {
+    padding: 10% 16%;
+};

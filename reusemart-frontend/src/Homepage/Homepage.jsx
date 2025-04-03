@@ -28,7 +28,7 @@ const Homepage = () => {
                 <button onClick={() => navigate("/penitip/profile")}>Penitip</button>
                 <p>langsung profil bang</p>
 
-                <button onClick={() => navigate("/owner")}>Owner</button>
+                <button onClick={() => navigate("/owner/req-donasi")}>Owner</button>
                 <p>owner itam</p>
 
                 <button onClick={() => navigate("/admin")}>Admin</button>

@@ -1,6 +1,6 @@
 import { Card } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
-import TopsNavbar from "../../Components/NavbarOwner.jsx";
+import inputCol from "../../Components/InputColumn.jsx";
 
 function Laporan() {
     const navigate = useNavigate();
@@ -9,6 +9,7 @@ function Laporan() {
             <Card.Header as="h5">babi</Card.Header>
             <Card.Body>
                 namaku babi suka babi
+                <inputCol/>
             </Card.Body>
         </Card>
     );

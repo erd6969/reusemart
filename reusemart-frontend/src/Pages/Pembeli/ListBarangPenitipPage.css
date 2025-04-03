@@ -1,0 +1,15 @@
+.list-barang-penitip-container{
+    background-color: white;
+    border-radius: 5px;
+    margin: 50px;
+    padding: 5px;
+}
+
+.toko-container{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-radius: 10px;
+    border: 1px solid #ddd;
+    margin-top: 10px;
+}

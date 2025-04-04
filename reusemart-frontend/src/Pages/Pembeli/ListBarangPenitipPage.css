@@ -1,15 +1,256 @@
-.list-barang-penitip-container{
+.list-barang-penitip-container {
     background-color: white;
     border-radius: 5px;
     margin: 50px;
-    padding: 5px;
+    padding: 10px;
 }
 
-.toko-container{
+.toko-container {
     display: flex;
     align-items: center;
     justify-content: space-between;
     border-radius: 10px;
     border: 1px solid #ddd;
-    margin-top: 10px;
+    padding: 15px;
+}
+
+.toko-image-detail {
+    width: 150px;
+    height: 150px;
+    border-radius: 18px;
+    border: 1px solid black;
+    box-shadow: 0px 2px 8px rgba(0, 0, 0, 0.1);
+    object-fit: cover;
+}
+
+.toko-detail {
+    flex-grow: 1;
+    margin-left: 15px;
+}
+
+.toko-nama {
+    margin: 0;
+}
+
+.total-produk-button {
+    width: 160px;
+    height: 36px;
+    background-color: #347928;
+    border-radius: 7px;
+    border: none;
+}
+
+.total-produk-button b {
+    font-size: 16px;
+    color: #FCCD2A;
+}
+
+.rating-toko-container {
+    text-align: right;
+}
+
+.rating-title {
+    margin-bottom: -10px;
+}
+
+.rating-title b {
+    margin: 0;
+    font-size: 26px;
+}
+
+.rating-stars {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 4px;
+}
+
+.rating-score {
+    font-size: 22px;
+    font-weight: bold;
+    margin: 0;
+}
+
+.list-barang-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+}
+
+.list-barang-title {
+    align-self: flex-start;
+    margin-left: 40px;
+    margin-bottom: 20px;
+}
+
+.search-bar-container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    margin-bottom: 20px;
+}
+
+.barang-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 10px;
+    width: 100%;
+    justify-items: center;
+}
+
+.barang-card {
+    width: 250px;
+    height: 330px;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    padding: 10px;
+    text-align: center;
+    box-shadow: 0px 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.barang-card-image {
+    width: 210px;
+    height: 200px;
+    object-fit: cover;
+    border-radius: 5px;
+    margin: 5px;
+}
+
+.barang-card-nama {
+    font-size: 18px;
+    margin-top: 5px;
+    text-align: left;
+    margin-left: 10px;
+}
+
+.barang-card-harga {
+    font-size: 24px;
+    font-weight: bold;
+    text-align: left;
+    margin-left: 10px;
+}
+
+.search-container {
+    display: flex;
+    align-items: center;
+}
+
+.search-bar {
+    display: flex;
+    align-items: center;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    padding: 5px 10px;
+    background-color: #fff;
+}
+
+.search-icon-inside {
+    width: 20px;
+    height: 20px;
+    margin-right: 10px;
+}
+
+.search-input-barang {
+    border: none;
+    outline: none;
+    flex: 1;
+    font-size: 16px;
+    background: transparent;
+    height: 40px;
+    width: 1150px;
+}
+
+@media (max-width: 1400px) {
+    .search-input-barang {
+        width: 1000px;
+    }
+}
+
+@media (max-width: 1200px) {
+    .search-input-barang {
+        width: 800px;
+    }
+
+    .barang-grid {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
+
+
+@media (max-width: 1024px) {
+    .toko-container {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+    }
+
+    .toko-image-detail{
+        width: 250px;
+        height: 250px;
+    }
+
+    .toko-detail{
+        margin-top: 10px;
+    }
+
+    .toko-nama{
+        font-size: 36px;
+    }
+
+    .total-produk-button{
+        width: 200px;
+        height: 40px;
+        margin: 0 auto;
+    }
+
+    .total-produk-button b{
+        font-size: 18px;
+    }
+
+    .rating-toko-container{
+        margin-top: 20px;
+    }
+}
+
+@media (max-width: 992px) {
+    .search-input-barang {
+        width: 600px;
+    }
+
+    .barang-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 768px) {
+    .barang-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .search-input-barang {
+        width: 400px;
+    }
+}
+
+@media (max-width: 540px) {
+    .barang-card {
+        width: 200px;
+        height: 280px;
+        border: 1px solid #ddd;
+        border-radius: 10px;
+        padding: 10px;
+        text-align: center;
+        box-shadow: 0px 2px 8px rgba(0, 0, 0, 0.1);
+    }
+    
+    .barang-card-image {
+        width: 160px;
+        height: 150px;
+        object-fit: cover;
+        border-radius: 5px;
+        margin: 5px;
+    }
 }

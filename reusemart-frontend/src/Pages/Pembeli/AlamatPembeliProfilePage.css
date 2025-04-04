@@ -119,7 +119,7 @@
     border: none;
     background-color: #347928;
     color: white;
-    height: 35px;
+    height: 40px;
     width: 200px;
     font-size: 18px;
 }
@@ -151,6 +151,7 @@
     font-size: 16px;
     background: transparent;
     width: 600px;
+    height: 40px;
 }
 
 @media (max-width: 1396px) {

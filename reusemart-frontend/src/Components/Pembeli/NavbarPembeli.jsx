@@ -26,8 +26,11 @@ const TopNavbar = () => {
                     <Nav.Link onClick={() => navigate("/help")}>Help</Nav.Link>
                 </Nav>
 
-                <FaShoppingCart className="cartIcon" />
-
+                <FaShoppingCart
+                    className="cartIcon"
+                    onClick={() => navigate("/pembeli/cart")}
+                    style={{ cursor: "pointer" }}
+                />
                 <div
                     className="profileContainer"
                     ref={dropdownRef}

@@ -20,6 +20,7 @@ import PurchasePembeliPage from "../Pages/Pembeli/PurchasePembeliPage";
 import ShopPage from "../Homepage/ShopPage";
 import DetailBarangPage from "../Pages/Pembeli/DetailBarangPage";
 import ListBarangPenitipPage from "../Pages/Pembeli/ListBarangPenitipPage"
+import CartPage from "../Pages/Pembeli/CartPage";
 
 const router = createBrowserRouter([
     {
@@ -116,6 +117,10 @@ const router = createBrowserRouter([
             {
                 path: "list-barang-penitip",
                 element: <ListBarangPenitipPage />,
+            },
+            {
+                path: "cart",
+                element: <CartPage />,
             }
         ],
     },

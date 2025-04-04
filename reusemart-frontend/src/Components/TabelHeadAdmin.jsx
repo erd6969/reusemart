@@ -1,4 +1,4 @@
-import './TableHeadAdmin.css';
+import './TabelHeadAdmin.css';
 import { useNavigate } from 'react-router-dom';
 import { Card, ListGroup, Button } from 'react-bootstrap';
 

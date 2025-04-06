@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { Container, Row, Col, Button } from "react-bootstrap";
 import { FaTrash } from "react-icons/fa";
 import gambarBarang from "../../assets/images/CinaBekas2.jpg";
@@ -6,6 +7,8 @@ import gambarToko from "../../assets/images/BurniceKicil.jpg";
 import "./CartPage.css";
 
 const CartPage = () => {
+    const navigate = useNavigate();
+
     const [cartItems, setCartItems] = useState([{
         toko: "Cahaya Design",
         items: [
@@ -103,7 +106,7 @@ const CartPage = () => {
                     <Row className="cart-actions">
                         <Col xs={12} className="cart-buttons">
                             <Button className="delete-cart me-2 mb-2 mb-md-0"><b>Delete Cart</b></Button>
-                            <Button className="checkout"><b>Checkout</b></Button>
+                            <Button className="checkout" onClick={() => navigate("/pembeli/checkout")}><b>Checkout</b></Button>
                         </Col>
                     </Row>
                 </div>

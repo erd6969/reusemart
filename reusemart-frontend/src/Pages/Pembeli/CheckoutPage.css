@@ -1,0 +1,281 @@
+.checkout-title {
+    color: white;
+    margin: 30px 0 20px 110px;
+    font-size: 32px;
+    font-weight: bold;
+}
+
+.checkout-content {
+    display: flex;
+    justify-content: space-between;
+    gap: 20px;
+    padding: 0 110px;
+    flex-wrap: wrap;
+}
+
+.left-section {
+    flex: 1 1 60%;
+}
+
+.right-section {
+    flex: 1 1 30%;
+    border-radius: 10px;
+    color: white;
+}
+
+/* Bagian Pengiriman */
+
+.bagian-pengiriman-container {
+    background-color: white;
+    border-radius: 10px;
+    padding: 20px 30px;
+    width: 100%;
+    max-width: 800px;
+    margin-left: 110px;
+}
+
+.pengiriman-title-section h3 {
+    color: #9B9999;
+    margin-bottom: 10px;
+}
+
+.opsi-pengiriman-section {
+    margin-bottom: 15px;
+}
+
+.shipping-button {
+    border-radius: 5px;
+    padding: 10px 20px;
+    margin-right: 10px;
+    font-weight: bold;
+    cursor: pointer;
+    border: none;
+    opacity: 0.8;
+    transition: all 0.2s ease-in-out;
+    color: white;
+}
+
+.active-courier,
+.active-pickup {
+    background-color: #347928;
+    opacity: 1;
+    box-shadow: 0 0 0 2px #2b5e22;
+}
+
+.inactive {
+    background-color: #898E88;
+}
+
+.alamat-title-container {
+    margin-top: 12px;
+}
+
+.alamat-title-container h4 {
+    display: flex;
+    align-items: center;
+    color: #333;
+}
+
+.alamat-detail-container {
+    margin-left: 30px;
+    color: #555;
+    max-width: 80%;
+}
+
+.pickup-warning {
+    color: red;
+    font-size: 12px;
+    margin-top: 5px;
+}
+
+.change-button {
+    background: #FCCD2A;
+    color: #333;
+    border: none;
+    border-radius: 8px;
+    padding: 6px 12px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: 0.3s ease;
+    width: 80px;
+}
+
+/* Bagian Pesanan */
+.order-container {
+    background-color: white;
+    border-radius: 10px;
+    padding: 30px;
+    margin: 20px 0;
+}
+  
+.order-box {
+    margin-bottom: 30px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid #ccc;
+}
+  
+.order-box:last-child {
+    border-bottom: none;
+    padding-bottom: 0;
+    margin-bottom: 0;
+}
+  
+.order-box h4 {
+    margin-bottom: 15px;
+    font-size: 18px;
+    color: #333;
+    font-weight: bold;
+}
+  
+.seller-name {
+    display: flex;
+    align-items: center;
+    font-weight: bold;
+    margin-bottom: 15px;
+}
+  
+.seller-name img {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-right: 10px;
+}
+  
+.order-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 0;
+    margin-left: 10px;
+}
+  
+.order-item-info {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+  
+.order-item img {
+    width: 50px;
+    height: 50px;
+    border-radius: 8px;
+    object-fit: cover;
+}
+  
+.order-item-name {
+    font-weight: 500;
+    color: #333;
+}
+  
+.order-item-price {
+    white-space: nowrap;
+    font-weight: bold;
+}
+  
+/* Bagian Payment */
+.payment-box {
+    background-color: white;
+    border-radius: 10px 10px 0 0;
+    color: black;
+    padding: 20px;
+}
+  
+.payment-box h4 {
+    margin-bottom: 15px;
+    color: #333;
+    font-weight: bold;
+    font-size: 18px;
+}
+  
+.payment-box p {
+    display: flex;
+    justify-content: space-between;
+    margin: 8px 0;
+    font-size: 15px;
+}
+  
+.payment-box small {
+    font-size: 11px;
+    color: #888;
+}
+  
+.discount {
+    color: red;
+    font-weight: bold;
+}
+  
+.loyalty-button {
+    width: 100%;
+    margin: 15px 0;
+    padding: 10px;
+    border-radius: 25px;
+    background-color: white;
+    border: 1px solid #aaa;
+    font-weight: bold;
+    cursor: pointer;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    transition: background-color 0.3s ease;
+}
+  
+.loyalty-button:hover {
+    background-color: #f0f0f0;
+}
+  
+.total-bill-section {
+    background-color: #153f16;
+    border-radius: 0 0 10px 10px;
+    padding: 15px 20px;
+    color: white;
+}
+  
+.total-bill-section .point-earned {
+    color: #66ff66;
+    font-size: 13px;
+    font-weight: bold;
+}
+  
+.total-bill-section .total-bill-amount {
+    font-size: 18px;
+    font-weight: bold;
+}
+  
+.pay-button {
+    background-color: #f6c700;
+    width: 100%;
+    padding: 12px;
+    margin-top: 15px;
+    font-weight: bold;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+  
+.pay-button:hover {
+    background-color: #e0b800;
+}
+  
+@media (max-width: 992px) {
+    .checkout-content {
+        flex-direction: column;
+        padding: 0 20px;
+    }
+
+    .bagian-pengiriman-container {
+        margin-left: 0;
+    }
+
+    .left-section,
+    .right-section {
+        width: 100%;
+    }
+}
+
+@media (max-width: 768px) {
+    .checkout-title {
+        margin-top: 100px;
+        text-align: center;
+        margin-left: 0;
+    }
+}

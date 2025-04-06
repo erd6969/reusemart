@@ -129,7 +129,7 @@ const router = createBrowserRouter([
                 element: <CheckoutPage />,
             },
             {
-                path: "payment",
+                path: "pembayaran",
                 element: <PaymentPage />,
             }
         ],

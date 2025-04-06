@@ -1,14 +1,15 @@
 
 import { Nav, Card, Badge } from 'react-bootstrap';
 import { useState } from 'react';
-import { 
-    FaMobile, FaTshirt, FaChair, FaBook, FaGamepad, 
+import {
+    FaMobile, FaTshirt, FaChair, FaBook, FaGamepad,
     FaBaby, FaCar, FaTree, FaBriefcase, FaSmile,
-    FaChevronDown, FaChevronRight
+    FaChevronDown, FaChevronRight, FaSearch
 } from 'react-icons/fa';
 import { useNavigate } from "react-router-dom";
 import image1 from "../assets/images/Pembeli/Yuki.jpeg";
 import image2 from "../assets/images/Orang Palu.png";
+import image3 from "../assets/images/Search.png";
 import "../Homepage/ShopPage.css";
 
 const kategori = [
@@ -126,34 +127,111 @@ const kategori = [
     }
 ];
 
-function SearchBook() {
-    const navigate = useNavigate();
-
-    return (
-        <div className="search-container"
-            style={{ marginTop: "20px", marginBottom: "20px", display: "flex", justifyContent: "center" }}
-        >
-            <input
-                type="text"
-                placeholder="Search Book"
-                style={{ width: "900px", height: "40px", marginRight: "20px", borderRadius: "5px" }}
-            />
-            <button
-                style={{ width: "90px", height: "40px", borderRadius: "5px", backgroundColor: "#3E5879", color: "white", fontWeight: "bold" }}
-                onClick={() => navigate("/search")}
-            >
-                Search
-            </button>
-        </div>
-    )
-}
-
-function BookList() {
+function SearchItem() {
     const navigate = useNavigate();
 
     return (
         <div
-            className="book-list"
+            className="search-container"
+            style={{
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+                marginTop: "20px",
+                marginBottom: "20px",
+            }}
+        >
+            <Card className="bg-dark text-white" >
+                <Card.Img src={image3} alt="Card image" style={{ 
+                    height: "250px",  
+                    width: "100%",    
+                    objectFit: "cover" 
+                }}/>
+                <Card.ImgOverlay
+                    style={{
+                        display: "flex",
+                        flexDirection: "column",
+                        justifyContent: "flex-end", 
+                        alignItems: "start",       
+                        paddingBottom: "10px",
+                        paddingLeft: "30px",
+                    }}
+                >
+                    <Card.Title></Card.Title>
+                    <Card.Text>
+                        
+                    </Card.Text>
+                    <Card.Text>
+                        <div className="search-container"
+                            style={{
+                                marginTop: "20px",
+                                marginBottom: "20px",
+                                display: "flex",
+                                justifyContent: "center",
+                                alignItems: "center",
+                                backgroundColor: "white",
+                                padding: "5px 15px",
+                                borderRadius: "30px",
+                                width: "300px",
+                                boxShadow: "0 4px 6px rgba(0,0,0,0.1)",
+                            }}
+                        >
+                            <FaSearch style={{ color: "#777", marginRight: "10px" }} />
+                            <input
+                                type="text"
+                                placeholder="Search for an item"
+                                style={{
+                                    width: "100%",
+                                    height: "20px",
+                                    border: "none",
+                                    outline: "none",
+                                    fontSize: "16px",
+                                    backgroundColor: "transparent",
+                                }}
+                            />
+                        </div>
+                    </Card.Text>
+                </Card.ImgOverlay>
+                
+            </Card>
+        </div>
+        // <div className="search-container"
+        //     style={{
+        //         marginTop: "20px",
+        //         marginBottom: "20px",
+        //         display: "flex",
+        //         justifyContent: "center",
+        //         alignItems: "center",
+        //         backgroundColor: "white",
+        //         padding: "5px 15px",
+        //         borderRadius: "30px",
+        //         width: "500px",
+        //         boxShadow: "0 4px 6px rgba(0,0,0,0.1)",
+        //     }}
+        // >
+        //     <FaSearch style={{ color: "#777", marginRight: "10px" }} />
+        //     <input
+        //         type="text"
+        //         placeholder="Search for an item"
+        //         style={{
+        //             width: "100%",
+        //             height: "40px",
+        //             border: "none",
+        //             outline: "none",
+        //             fontSize: "16px",
+        //             backgroundColor: "transparent",
+        //         }}
+        //     />
+        // </div>
+    );
+}
+
+function ItemList() {
+    const navigate = useNavigate();
+
+    return (
+        <div
+            className="item-list"
             style={{
                 display: "grid",
                 gridTemplateColumns: "repeat(4, 1fr)",
@@ -161,7 +239,7 @@ function BookList() {
                 justifyContent: "center",
                 marginTop: "20px",
                 paddingLeft: "20px",
-                marginBottom: "20px",
+                marginBottom: "0px",
                 height: "100%",
                 width: "100%",
             }}
@@ -169,7 +247,7 @@ function BookList() {
             {Array.from({ length: 30 }).map((_, index) => (
                 <div
                     key={index}
-                    className="book-container"
+                    className="item-container"
                     style={{
                         backgroundColor: "#FFFFFF",
                         borderRadius: "10px",
@@ -180,12 +258,12 @@ function BookList() {
                     onClick={() => navigate(`/pembeli/detailBarang`)}
                 >
                     <div
-                        className="book-image-container"
+                        className="item-image-container"
                         style={{ display: "flex", justifyContent: "center" }}
                     >
 
                         <div
-                            className="inside-book-container"
+                            className="inside-item-container"
                             style={{
                                 backgroundColor: "#FFFFFF",
                                 borderRadius: "10px",
@@ -201,7 +279,7 @@ function BookList() {
 
                             <img
                                 src={image2}
-                                alt="book"
+                                alt="item"
                                 style={{
                                     width: "180px",
                                     height: "190px",
@@ -276,7 +354,7 @@ function CategorySection() {
             }}
         >
 
-            <Badge style={{ marginBottom: "20px", width: "300px"}} bg="success">
+            <Badge style={{ marginBottom: "20px", width: "300px" }} bg="success">
                 <h2>Categories</h2>
             </Badge>
             <div
@@ -291,7 +369,7 @@ function CategorySection() {
                 }}
             >
                 {kategori.map((kat, index) => (
-                    <div key={index} style={{marginBottom: "20px"}}>
+                    <div key={index} style={{ marginBottom: "20px" }}>
                         <div
                             onClick={() => toggleCategory(index)}
                             style={{
@@ -299,21 +377,21 @@ function CategorySection() {
                                 alignItems: "center",
                                 padding: "10px",
                                 cursor: "pointer",
-                                backgroundColor: activeCategory === index ? "#3E5879" : "#FFFFFF",
+                                backgroundColor: activeCategory === index ? "#316910" : "#FFFFFF",
                                 color: activeCategory === index ? "#FFFFFF" : "#000000",
                                 borderRadius: "5px",
                                 transition: "background-color 0.3s",
                             }}
                         >
-                            <kat.icon style={{ fontSize:"25px", marginRight: "20px"}}/>
-                            <span style={{ flex:1, fontWeight: "bold"}}> {kat.name} </span>
+                            <kat.icon style={{ fontSize: "25px", marginRight: "20px" }} />
+                            <span style={{ flex: 1, fontWeight: "bold" }}> {kat.name} </span>
                             {activeCategory === index ? <FaChevronDown size={14} /> : <FaChevronRight size={14} />}
                         </div>
 
 
                         {activeCategory === index && (
                             <div
-                                style={{paddingLeft: "20px", marginTop: "5px"}}
+                                style={{ paddingLeft: "20px", marginTop: "5px" }}
                             >
                                 {kat.subcategories.map((subkategori, subIndex) => (
                                     <div
@@ -328,13 +406,13 @@ function CategorySection() {
                                     >
                                         {subkategori}
 
-                                    </div>    
+                                    </div>
                                 ))}
 
-                            </div>    
+                            </div>
                         )}
                     </div>
-                        
+
                 ))}
             </div>
         </div>
@@ -344,22 +422,24 @@ function CategorySection() {
 const ShopPage = () => {
     return (
         <div className="main-container">
-            <div>
-                <SearchBook />
-            </div>
-            <div>
-                <div className="book-section"
-                    style={{ 
-                        display: "flex", 
-                        justifyContent: "space-between", 
-                        overflowY: "auto", 
-                        height: "89vh",
-                    }}
-                >
-                    <CategorySection />
-                    <BookList />
+            
+            
+            <div className="item-section"
+                style={{
+                    display: "flex",
+                    overflowY: "auto",
+                    height: "100vh",
+                }}
+            >
+                <div style={{display: "flex", flexDirection: "column", overflowX: "hidden"}}>
+                    <SearchItem />
+                    <div style={{display: "flex", flexDirection: "row"}}>
+                        <CategorySection />
+                        <ItemList />
+                    </div>
                 </div>
             </div>
+            
         </div>
     );
 };

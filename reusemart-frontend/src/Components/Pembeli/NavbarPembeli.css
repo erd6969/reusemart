@@ -1,7 +1,11 @@
 .navBar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 55px;
     background-color: white;
     color: black;
-    height: 55px;
     font-weight: bold;
     border-bottom: 2px solid black;
     display: flex;
@@ -9,7 +13,7 @@
     justify-content: space-between;
     padding: 0 20px;
     flex-wrap: wrap;
-    position: sticky;
+    z-index: 1000;
 }
 
 /* Logo & Title */
@@ -36,6 +40,7 @@
     display: flex;
     justify-content: center;
     flex-grow: 1;
+    top: 55px;
 }
 
 .navContent .nav-link {
@@ -161,4 +166,10 @@
         margin-right: 20px;
         margin-left: auto!important;
     }
+}
+
+body{
+    margin: 0;
+    height: 100vh;
+    overflow: hidden;
 }

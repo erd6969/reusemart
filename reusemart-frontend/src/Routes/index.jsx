@@ -21,6 +21,8 @@ import ShopPage from "../Homepage/ShopPage";
 import DetailBarangPage from "../Pages/Pembeli/DetailBarangPage";
 import ListBarangPenitipPage from "../Pages/Pembeli/ListBarangPenitipPage"
 import CartPage from "../Pages/Pembeli/CartPage";
+import CheckoutPage from "../Pages/Pembeli/CheckoutPage";
+import PaymentPage from "../Pages/Pembeli/PaymentPage";
 
 const router = createBrowserRouter([
     {
@@ -121,6 +123,14 @@ const router = createBrowserRouter([
             {
                 path: "cart",
                 element: <CartPage />,
+            },
+            {
+                path: "checkout",
+                element: <CheckoutPage />,
+            },
+            {
+                path: "payment",
+                element: <PaymentPage />,
             }
         ],
     },

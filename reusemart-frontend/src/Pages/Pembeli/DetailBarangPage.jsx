@@ -8,6 +8,8 @@ import { FaStar } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 
 const DetailBarang = () => {
+    const navigate = useNavigate();
+
     return(
         <Container className="detail-barang-container">
             <div className="item-image-container">
@@ -47,7 +49,7 @@ const DetailBarang = () => {
 
                     <div className="button-barang-container">
                         <button className="cart-button"><b>Tambah ke Keranjang</b></button>
-                        <button className="buy-button"><b>Beli Langsung</b></button>
+                        <button className="buy-button" onClick={() => navigate("/pembeli/checkout")}><b>Beli Langsung</b></button>
                     </div>
                 </div>
             </div>

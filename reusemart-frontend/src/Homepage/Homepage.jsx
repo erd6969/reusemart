@@ -13,7 +13,7 @@ const Homepage = () => {
                 <button onClick={() => navigate("/")}>Umum Web</button>
                 <p>Sumpah ini isi nya umum Homepage cok</p>
 
-                <button onClick={() => navigate("/pembeli/profile")}>Pembeli</button>
+                <button onClick={() => navigate("/pembeli/shop")}>Pembeli</button>
                 <p>Pembeli ni langsung masuk ke profil</p>
 
                 <button onClick={() => navigate("/organisasi/daftar-donasi")}>Organisasi</button>

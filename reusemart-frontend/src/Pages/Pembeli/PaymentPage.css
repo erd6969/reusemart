@@ -1,0 +1,322 @@
+.container-payment {
+    background-color: white;
+    border-radius: 5px;
+    margin: 50px;
+}
+
+.header-payment {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: white;
+}
+
+.header-left-payment {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+.clock-icon {
+    width: 70px;
+    height: 70px;
+}
+
+.header-text {
+    display: flex;
+    flex-direction: column;
+}
+
+.pay-title {
+    font-weight: bold;
+    font-size: 18px;
+}
+
+.pay-date {
+    color: gray;
+    font-size: 14px;
+}
+
+.timer-box {
+    background-color: red;
+    color: white;
+    font-weight: bold;
+    font-size: 14px;
+    padding: 6px 16px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.content-payment {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    gap: 40px;
+}
+
+.bank-info-wrapper {
+    display: flex;
+    align-items: flex-start;
+    gap: 20px;
+}
+
+.bank-logo {
+    width: 300px;
+    height: 200px;
+    object-fit: contain;
+}
+
+.bank-info-text {
+    display: flex;
+    flex-direction: column;
+}
+
+.title-payment {
+    font-size: 28px;
+    font-weight: bold;
+}
+
+.bank-name {
+    font-size: 28px;
+    font-weight: bold;
+    margin-top: 10px;
+}
+
+.label-receiver {
+    font-size: 14px;
+    margin-top: 10px;
+    color: gray;
+}
+
+.receiver-name {
+    font-size: 28px;
+    font-weight: bold;
+}
+
+.label-payment {
+    font-size: 14px;
+    margin-top: 10px;
+    color: gray;
+}
+
+.account-box {
+    display: flex;
+    align-items: center;
+    margin-top: 5px;
+}
+
+.account-number {
+    font-size: 28px;
+    font-weight: bold;
+}
+
+.copy-icon {
+    margin-left: 10px;
+    font-size: 20px;
+    cursor: pointer;
+}
+
+.right {
+    margin-right: 50px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.proof-box {
+    background-color: rgb(133, 130, 130);
+    width: 130px;
+    height: 150px;
+}
+
+.proof-box img {
+    width: 130px;
+    height: 150px;
+    object-fit: cover;
+}
+
+.upload-btn {
+    background-color: #347928;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    width: 100px;
+    height: 35px;
+    margin-top: 10px !important;
+    font-size: 18px;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    text-align: center;
+    line-height: 35px;
+    cursor: pointer;
+}
+
+.footer-transaction-number {
+    margin-bottom: 10px;
+}
+
+.label-transaction-number {
+    color: gray;
+}
+
+.transaction-number-payment {
+    font-weight: bold;
+    font-size: 18px;
+    margin-top: 5px;
+}
+
+.label-total-bill {
+    color: gray;
+}
+
+.total-bill-payment {
+    font-weight: bold;
+    font-size: 18px;
+    margin-top: 5px;
+}
+
+.footer-payment {
+    background-color: #203C0E;
+    padding: 20px;
+    border-radius: 0 0 5px 5px;
+    display: flex;
+    justify-content: flex-end;
+    width: 1320px;
+    margin-left: -12px;
+}
+
+.confirm-btn {
+    background-color: #FDC93A;
+    color: #203C0E;
+    border: none;
+    padding: 10px 24px;
+    border-radius: 8px;
+    font-weight: bold;
+    font-size: 14px;
+    cursor: pointer;
+}
+
+@media (max-width: 1400px){
+    .footer-payment {
+        width: 1140px;
+    }
+}
+
+@media (max-width: 1200px){
+    .footer-payment {
+        width: 960px;
+    }
+}
+
+@media (max-width: 993px){
+    .footer-payment {
+        width: 720px;
+    }
+
+    .bank-logo {
+        width: 250px;
+        height: 150px;
+        object-fit: contain;
+    }
+}
+
+
+@media (max-width: 768px) {
+    .container-payment {
+        margin: 20px;
+        margin-top: 100px;
+    }
+
+    .header-payment {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+    }
+
+    .clock-icon {
+        width: 50px;
+        height: 50px;
+    }
+
+    .bank-logo {
+        width: 100%;
+        height: auto;
+    }
+
+    .account-number {
+        font-size: 18px;
+    }
+
+    .receiver-name, .bank-name {
+        font-size: 20px;
+    }
+
+    .footer-payment {
+        width: 540px;
+    }
+
+    .right {
+        margin: 0;
+    }
+
+    .proof-box {
+        width: 100px;
+        height: 120px;
+    }
+
+    .proof-box img {
+        width: 100px;
+        height: 120px;
+    }
+
+    .upload-btn {
+        width: 100px;
+        height: 35px;
+    }
+
+    .confirm-btn {
+        font-size: 12px;
+        padding: 8px 16px;
+    }
+
+    .timer-box {
+        font-size: 12px;
+        padding: 4px 10px;
+    }
+
+    .pay-title, .pay-date, .title-payment {
+        font-size: 16px;
+    }
+
+    .pay-date {
+        font-size: 12px;
+    }
+
+    .bank-info-wrapper {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+    }
+
+    .bank-logo {
+        width: 150px;
+        height: 100px;
+    }
+
+    .bank-info-text {
+        gap: 8px;
+    }
+}
+
+@media (max-width: 576px){
+    .footer-payment {
+        width: 100%;
+        margin-left: 0px;
+    }
+}

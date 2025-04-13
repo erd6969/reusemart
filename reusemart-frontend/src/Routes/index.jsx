@@ -23,6 +23,7 @@ import ListBarangPenitipPage from "../Pages/Pembeli/ListBarangPenitipPage"
 import CartPage from "../Pages/Pembeli/CartPage";
 import CheckoutPage from "../Pages/Pembeli/CheckoutPage";
 import PaymentPage from "../Pages/Pembeli/PaymentPage";
+import ListTransaksi from "../Pages/Pembeli/PurchasePembeliPage";
 
 const router = createBrowserRouter([
     {
@@ -131,6 +132,10 @@ const router = createBrowserRouter([
             {
                 path: "pembayaran",
                 element: <PaymentPage />,
+            },
+            {
+                path: "list-transaksi",
+                element: <ListTransaksi />,
             }
         ],
     },

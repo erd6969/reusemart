@@ -25,9 +25,9 @@ const ModalPoint = ({ show, handleClose, availablePoints = 1000, onConfirm }) =>
               onChange={(e) => setPoints(e.target.value)}
             />
           </div>
-          <Button className="loyalty-confirm-button" onClick={handleConfirm}>
+          <button className="loyalty-confirm-button" onClick={handleConfirm}>
             Konfirmasi
-          </Button>
+          </button>
         </Modal.Body>
       </Modal>
     );

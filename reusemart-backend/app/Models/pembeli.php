@@ -28,6 +28,6 @@ class Pembeli extends Model
 
     public function alamat()
     {
-        return $this->hasMany(alamat::class, 'id_pembeli');
+        return $this->hasMany(Alamat::class, 'id_pembeli');
     }
 }

@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\hunter;
+use App\Models\Hunter;
 use Illuminate\Http\Request;
 
 class HunterController

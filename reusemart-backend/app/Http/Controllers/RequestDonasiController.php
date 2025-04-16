@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\request_donasi;
+use App\Models\RequestDonasi;
 use Illuminate\Http\Request;
 
 class RequestDonasiController

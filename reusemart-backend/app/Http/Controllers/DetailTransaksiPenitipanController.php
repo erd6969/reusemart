@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Keranjang;
+use App\Models\DetailTransaksiPenitipan;
 use Illuminate\Http\Request;
 
-class KeranjangController
+class DetailTransaksiPenitipanController
 {
     /**
      * Display a listing of the resource.
@@ -26,7 +26,7 @@ class KeranjangController
     /**
      * Display the specified resource.
      */
-    public function show(keranjang $keranjang)
+    public function show(DetailTransaksiPenitipan $detailTransaksiPenitipan)
     {
         //
     }
@@ -34,7 +34,7 @@ class KeranjangController
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, keranjang $keranjang)
+    public function update(Request $request, DetailTransaksiPenitipan $detailTransaksiPenitipan)
     {
         //
     }
@@ -42,7 +42,7 @@ class KeranjangController
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(keranjang $keranjang)
+    public function destroy(DetailTransaksiPenitipan $detailTransaksiPenitipan)
     {
         //
     }

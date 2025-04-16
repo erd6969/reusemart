@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\penitip;
+use App\Models\Penitip;
 use Illuminate\Http\Request;
 
 class PenitipController

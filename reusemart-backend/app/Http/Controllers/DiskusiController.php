@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\diskusi;
+use App\Models\Diskusi;
 use Illuminate\Http\Request;
 
 class DiskusiController

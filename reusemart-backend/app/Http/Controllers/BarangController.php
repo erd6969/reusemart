@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\barang;
+use App\Models\Barang;
 use Illuminate\Http\Request;
 
 class BarangController

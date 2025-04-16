@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\merchandise;
+use App\Models\Merchandise;
 use Illuminate\Http\Request;
 
 class MerchandiseController

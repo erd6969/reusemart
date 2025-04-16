@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\transaksi_penitipan;
+use App\Models\TransaksiPenitipan;
 use Illuminate\Http\Request;
 
 class TransaksiPenitipanController

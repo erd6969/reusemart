@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\transaksi_pembelian;
+use App\Models\TransaksiPembelian;
 use Illuminate\Http\Request;
 
 class TransaksiPembelianController

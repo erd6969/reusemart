@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\komisi;
+use App\Models\Komisi;
 use Illuminate\Http\Request;
 
 class KomisiController

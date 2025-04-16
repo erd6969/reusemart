@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\transaksi_merchandise;
+use App\Models\TransaksiMerchandise;
 use Illuminate\Http\Request;
 
 class TransaksiMerchandiseController

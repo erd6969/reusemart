@@ -85,7 +85,7 @@ return [
             'driver' => 'eloquent',
             'model' => App\Models\Penitip::class,
         ],
-        'penitip' => [
+        'hunter' => [
             'driver' => 'eloquent',
             'model' => App\Models\Hunter::class,
         ],

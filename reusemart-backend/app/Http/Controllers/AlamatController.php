@@ -69,7 +69,8 @@ class AlamatController
      */
     public function show()
     {
-        try{
+        try {
+            \Log::info("Fetching address for user", ['user' => Auth::user()]);
             $user = Auth::user();
             if (!$user) {
                 return response()->json([
@@ -85,14 +86,15 @@ class AlamatController
             }
 
             return response()->json($alamat, 200);
-
-        }catch(\Exception $e){
+        } catch (\Exception $e) {
+            \Log::error("Failed to retrieve address", ['error' => $e->getMessage()]);
             return response()->json([
                 'message' => 'Failed to retrieve address',
                 'error' => $e->getMessage(),
             ], 500);
         }
     }
+
 
     /**
      * Update the specified resource in storage.
@@ -217,6 +219,37 @@ class AlamatController
         } catch (\Exception $e) {
             return response()->json([
                 'message' => 'Failed to retrieve address',
+                'error' => $e->getMessage(),
+            ], 500);
+        }
+    }
+
+    public function updateAlamatUtama(Request $request, $id_alamat)
+    {
+        try {
+            $user = Auth::user();
+            if (!$user) {
+                return response()->json([
+                    'message' => 'User not authenticated or invalid token',
+                ], 401);
+            }
+
+            $alamat_utama_before = Alamat::where('id_pembeli', $user->id_pembeli)->where('alamat_utama', 1)->first();
+            $alamat_utama_before->update(['alamat_utama' => 0]);
+
+            $alamat = Alamat::find($id_alamat);
+            if (!$alamat) {
+                return response()->json([
+                    'message' => 'Address not found',
+                ], 404);
+            }
+
+            $alamat->update(['alamat_utama' => 1]);
+            return response()->json($alamat, 200);
+
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'Failed to update address',
                 'error' => $e->getMessage(),
             ], 500);
         }

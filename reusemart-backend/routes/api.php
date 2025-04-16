@@ -16,4 +16,5 @@ Route::middleware('auth:pembeli')->group(function () {
     Route::put('/pembeli/update-alamat/{id}', [AlamatController::class, 'update']);
     Route::delete('/pembeli/delete-alamat/{id}', [AlamatController::class, 'destroy']);
     Route::get('/pembeli/search-alamat/{id}', [AlamatController::class, 'search']);
+    Route::put('/pembeli/change-alamat-utama/{id}', [AlamatController::class, 'updateAlamatUtama']);
 });

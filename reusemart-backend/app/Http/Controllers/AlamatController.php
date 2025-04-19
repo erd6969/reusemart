@@ -210,8 +210,8 @@ class AlamatController
      * Display the specified resource.
      */
 
-    public function search($id_alamat){
-        try{
+     public function search($search_alamat){
+        try {
             $user = Auth::user();
             if (!$user) {
                 return response()->json([
@@ -219,15 +219,26 @@ class AlamatController
                 ], 401);
             }
 
-            $alamat = Alamat::where('id_alamat', $id_alamat)->where('id_pembeli', $user->id_pembeli)->first();
+            $alamat = Alamat::where('id_pembeli', $user->id_pembeli)
+                            ->where(function($query) use ($search_alamat) {
+                                $query->where('nama_alamat', 'LIKE', '%' . $search_alamat . '%')
+                                        ->orWhere('alamat', 'LIKE', '%' . $search_alamat . '%')
+                                        ->orWhere('kecamatan', 'LIKE', '%' . $search_alamat . '%')
+                                        ->orWhere('kabupaten', 'LIKE', '%' . $search_alamat . '%')
+                                        ->orWhere('kelurahan', 'LIKE', '%' . $search_alamat . '%')
+                                        ->orWhere('kode_pos', 'LIKE', '%' . $search_alamat . '%');
+
+                            })
+                            ->get();
+    
             if (!$alamat) {
                 return response()->json([
                     'message' => 'Address not found',
                 ], 404);
             }
-
+    
             return response()->json($alamat, 200);
-
+    
         } catch (\Exception $e) {
             return response()->json([
                 'message' => 'Failed to retrieve address',
@@ -235,6 +246,7 @@ class AlamatController
             ], 500);
         }
     }
+    
 
     public function updateAlamatUtama(Request $request, $id_alamat)
     {

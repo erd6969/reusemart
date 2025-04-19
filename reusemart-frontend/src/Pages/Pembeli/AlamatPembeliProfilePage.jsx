@@ -6,18 +6,16 @@ import ProfileNavigation from "../../Components/Pembeli/ProfileHeader";
 import profileImage from "../../assets/images/Pembeli/Yuki.jpeg";
 import SearchIcon from "../../assets/images/search-icon.png";
 import ModalTambahAlamat from "../../Components/Modal/ModalTambahAlamat";
-import ModalEditAlamat from "../../Components/Modal/ModalEditAlamat"; 
+import ModalEditAlamat from "../../Components/Modal/ModalEditAlamat";
 
-import { GetAllAlamat, ChangeMainAlamat } from "../../api/apiAlamat";
+import { GetAllAlamat, ChangeMainAlamat, SearchAlamat } from "../../api/apiAlamat";
 
-const Poin = () => {
-  return (
-    <Container className="poin-container">
-      <b>Poin Loyalitas</b>
-      <p>119 Point</p>
-    </Container>
-  );
-};
+const Poin = () => (
+  <Container className="poin-container">
+    <b>Poin Loyalitas</b>
+    <p>119 Point</p>
+  </Container>
+);
 
 const AlamatDetail = ({ data, onEdit, toggleMain }) => {
   const {
@@ -64,16 +62,19 @@ const AlamatPembeliPage = () => {
   const [address, setAddress] = useState([]);
   const [modalTitle, setModalTitle] = useState("Tambah Alamat");
   const [selectedAlamat, setSelectedAlamat] = useState(null);
+  const [searchQuery, setSearchQuery] = useState("");
 
   const fetchAlamat = () => {
     setIsLoading(true);
-    GetAllAlamat().then((data) => {
-      setAddress(data);
-      setIsLoading(false);
-    }).catch((error) => {
-      console.error("Error fetching address:", error);
-      setIsLoading(false);
-    });
+    GetAllAlamat()
+      .then((data) => {
+        setAddress(data);
+        setIsLoading(false);
+      })
+      .catch((error) => {
+        console.error("Error fetching address:", error);
+        setIsLoading(false);
+      });
   };
 
   const toggleMain = async (id) => {
@@ -88,6 +89,29 @@ const AlamatPembeliPage = () => {
   useEffect(() => {
     fetchAlamat();
   }, []);
+
+  useEffect(() => {
+    const delayDebounce = setTimeout(() => {
+      if (searchQuery.length >= 3) {
+        setIsLoading(true);
+        SearchAlamat(searchQuery)
+          .then((data) => {
+            const hasil = Array.isArray(data) ? data : [data];
+            setAddress(hasil);
+            setIsLoading(false);
+          })
+          .catch((error) => {
+            console.error("Error searching address:", error);
+            setAddress([]);
+            setIsLoading(false);
+          });
+      } else {
+        fetchAlamat();
+      }
+    }, 500);
+
+    return () => clearTimeout(delayDebounce);
+  }, [searchQuery]);
 
   return (
     <>
@@ -106,7 +130,13 @@ const AlamatPembeliPage = () => {
               <div className="search-container">
                 <div className="search-bar">
                   <img src={SearchIcon} alt="Search Icon" className="search-icon-inside" />
-                  <input type="text" placeholder="Masukkan Alamat" className="search-input" />
+                  <input
+                    type="text"
+                    placeholder="Masukkan Alamat"
+                    className="search-input"
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                  />
                 </div>
               </div>
               <button

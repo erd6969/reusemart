@@ -63,3 +63,20 @@ export const EditAlamat = async (id, data) => {
         throw error?.response?.data || error;
     }
 }
+
+export const SearchAlamat = async (search_alamat) => {
+    try {
+        const response = await useAxios.get(`/pembeli/search-alamat/${search_alamat}`, {
+            headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer 6|BNr8C7LePAA4aPzDEyc15MPFcuSBNMicT3k8JWHra16c5ea6`
+            },
+        });
+        console.log("Search address response:", response);
+        return response.data;
+    } catch (error) {
+        console.error("Error searching address:", error);
+        throw error?.response?.data || error;
+    }
+};
+

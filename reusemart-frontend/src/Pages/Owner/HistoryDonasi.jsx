@@ -8,7 +8,6 @@ function HistoryDonasi() {
 
     return (
         <div>
-
             <Card style={{ marginTop: '5vh', marginRight: '7vw' }}>
                 <Card.Body>
                     <SearchBook />

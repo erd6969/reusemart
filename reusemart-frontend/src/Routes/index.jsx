@@ -4,6 +4,7 @@ import HomePage from "../Homepage/Homepage";
 import AdminPage from "../Pages/Admin/AdminPage";
 import CSPage from "../Pages/CustomerService/CSPage";
 import LoginPage from "../Pages/LoginRegister/LoginPage";
+import RegisterPage from "../Pages/LoginRegister/RegisterPage";
 import DaftarDonasiPage from "../Pages/Organisasi/DaftarDonasi";
 import OwnerPage from "../Pages/Owner/OwnerPage";
 import ReqDonasi from "../Pages/Owner/ReqDonasi"; 
@@ -30,6 +31,11 @@ const router = createBrowserRouter([
         path: "/",
         element: <HomePage />,
     },
+
+    {
+        path: "/HomePage",
+        element: <HomePage />,
+    },
     {
         path: "/admin",
         element: <AdminPage />,
@@ -52,11 +58,15 @@ const router = createBrowserRouter([
     },
     {
         path: "/auth",
-        element: <div>Auth Page</div>,
         children: [
             {
                 path: "login",
                 element: <LoginPage />,
+            },
+
+            {
+                path: "register",
+                element: <RegisterPage />,
             },
         ],
     },

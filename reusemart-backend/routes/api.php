@@ -4,10 +4,13 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\PembeliController;
 use App\Http\Controllers\AlamatController;
+use App\Http\Controllers\BarangController;
 
 Route::post ('/pembeli/register', [PembeliController::class, 'register']);
 Route::post ('/pembeli/login', [PembeliController::class, 'login']);
 Route::post ('/pembeli/logout', [PembeliController::class, 'logout'])->middleware('auth:pembeli');
+Route::get('/shop-page', [BarangController::class, 'showAll']);
+Route::get('/shop-page/{category}', [BarangController::class, 'showByCategory']);
 
 Route::middleware('auth:pembeli')->group(function () {
     Route::post('/pembeli/create-alamat', [AlamatController::class, 'store']);

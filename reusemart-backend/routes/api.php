@@ -5,8 +5,9 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\PembeliController;
 use App\Http\Controllers\AlamatController;
 
-Route::post ('/pembeli/register', [PembeliController::class, 'register']);
-Route::post ('/pembeli/login', [PembeliController::class, 'login']);
+
+Route::post ('/pembeli/register', [PembeliController::class, 'register'])->name('pembeli.register');
+Route::post ('/pembeli/login', [PembeliController::class, 'login'])->name('pembeli.login');
 Route::post ('/pembeli/logout', [PembeliController::class, 'logout'])->middleware('auth:pembeli');
 
 Route::middleware('auth:pembeli')->group(function () {

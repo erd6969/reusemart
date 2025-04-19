@@ -1,12 +1,12 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Card, Form, Button } from 'react-bootstrap';
-import './LoginPage.css';
+import './RegisterPage.css';
 import axios from 'axios';
 import TopsNavbar from "./NavbarLogin.jsx";
 import { ShoppingCart } from 'lucide-react';
 
-function LoginPage() {
+function RegisterPage() {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const navigate = useNavigate();
@@ -30,15 +30,15 @@ function LoginPage() {
     return (
         <div>
             <TopsNavbar />
-            <div className="loginCard">
-                <Card className="p-3 reuseTitle" style={{ backgroundColor: '#347928', border: 'none' }}>
-                    <p className='wel'>Welcome To</p>
-                    <p className='cam'>ReuseMart<ShoppingCart size={60}/></p>
+            <div className="loginCards">
+                <Card className="p-3 reuseTitles" style={{ backgroundColor: '#347928', border: 'none' }}>
+                    <p className='wels'>Welcome To</p>
+                    <p className='cams'>ReuseMart<ShoppingCart size={60}/></p>
                 </Card>
 
-                <Card className="p-4 reuseForm" >
-                    <h2 className='loginTitle'>Login</h2>
-                    <p className='loginText'>Welcome Back</p>
+                <Card className="p-4 reuseForms" >
+                    <h2 className='loginTitles'>Register</h2>
+                    <p className='loginTexts'>Welcome Back</p>
                     <Form onSubmit={handleLogin}>
                         <Form.Group className="mb-3">
                             <Form.Label>Email</Form.Label>
@@ -60,11 +60,11 @@ function LoginPage() {
                                 required
                             />
                         </Form.Group>
-                        <p className='forpas'>Forgot Password</p>
-                        <div className='buttonGroup'>
-                            <Button className="tombol" type="submit" variant="warning"><p >Login</p></Button>
+                        <p className='forpass'>Forgot Password</p>
+                        <div className='buttonGroups'>
+                            <Button className="tombols" type="submit" variant="warning"><p >Login</p></Button>
                             <p>Don't have a account? Register here!</p>
-                            <Button className="tombol" type="regis" variant="warning"><p>Register</p></Button>
+                            <Button className="tombols" type="regis" variant="warning"><p>Register</p></Button>
                         </div>
                     </Form>
                 </Card>
@@ -73,4 +73,4 @@ function LoginPage() {
     );
 }
 
-export default LoginPage;
+export default RegisterPage;

@@ -38,8 +38,20 @@ class AlamatController
                 'kabupaten' => 'required|string|max:255',
                 'kelurahan' => 'required|string|max:255',
                 'kode_pos' => 'required|integer',
-                'alamat_utama' => 'boolean',
             ]);
+
+            // Check if the user already has an address marked as utama
+            $existingUtama = Alamat::where('id_pembeli', $user->id_pembeli)
+                ->where('alamat_utama', 1)
+                ->first();
+            if ($existingUtama) {
+                // If the user already has an address marked as utama, set it to 0
+                $alamat_utama = 0;
+            }else{
+                // If the user does not have an address marked as utama, set the new address to 1
+                $alamat_utama = 1;
+            }
+            // Create a new address
 
             $alamat = Alamat::create([
                 'id_pembeli' => $user->id_pembeli,
@@ -50,7 +62,7 @@ class AlamatController
                 'kabupaten' => $request->kabupaten,
                 'kelurahan' => $request->kelurahan,
                 'kode_pos' => $request->kode_pos,
-                'alamat_utama' => $request->alamat_utama,
+                'alamat_utama' => $alamat_utama,
             ]);
 
             return response()->json($alamat, 201);

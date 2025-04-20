@@ -8,7 +8,7 @@ import SearchIcon from "../../assets/images/search-icon.png";
 import ModalTambahAlamat from "../../Components/Modal/ModalTambahAlamat";
 import ModalEditAlamat from "../../Components/Modal/ModalEditAlamat";
 
-import { GetAllAlamat, ChangeMainAlamat, SearchAlamat } from "../../api/apiAlamat";
+import { GetAllAlamat, ChangeMainAlamat, SearchAlamat, DeleteAlamat } from "../../api/apiAlamat";
 
 const Poin = () => (
   <Container className="poin-container">
@@ -17,7 +17,7 @@ const Poin = () => (
   </Container>
 );
 
-const AlamatDetail = ({ data, onEdit, toggleMain }) => {
+const AlamatDetail = ({ data, onEdit, toggleMain, onDelete }) => {
   const {
     nama_alamat,
     alamat,
@@ -41,7 +41,7 @@ const AlamatDetail = ({ data, onEdit, toggleMain }) => {
           <button className="edit-button" onClick={onEdit}>
             <b>Ubah Alamat</b>
           </button>
-          <button className="delete-button"><b>Hapus Alamat</b></button>
+          <button className="delete-button" onClick={onDelete}><b>Hapus Alamat</b></button>
         </div>
         <div className="right-button">
           <button
@@ -113,6 +113,17 @@ const AlamatPembeliPage = () => {
     return () => clearTimeout(delayDebounce);
   }, [searchQuery]);
 
+  const handleDelete = async (id) => {
+    if (window.confirm("Apakah Anda yakin ingin menghapus alamat ini?")) {
+      try {
+        await DeleteAlamat(id);
+        fetchAlamat();
+      } catch (error) {
+        console.error("Gagal menghapus alamat:", error);
+      }
+    }
+  }
+
   return (
     <>
       <Container className="pembeli-container">
@@ -175,6 +186,7 @@ const AlamatPembeliPage = () => {
                         setSelectedAlamat(addr);
                         setShowModal(true);
                       }}
+                      onDelete={() => handleDelete(addr.id_alamat)}
                     />
                   ))
                 ) : (

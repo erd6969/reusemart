@@ -1,0 +1,46 @@
+import { useNavigate } from 'react-router-dom';
+import { Card } from 'react-bootstrap';
+import './RegisterOption.css';
+import TopsNavbar from "./NavbarLogin.jsx";
+import { ShoppingCart, Users, User } from 'lucide-react';
+
+const Option = () => {
+    const navigate = useNavigate();
+
+    return (
+        <div className="register-option-container">
+            <div className="register-option-box" onClick={() => navigate('/auth/register-organization')}>
+                <Users size={70} color="white" />
+                <p className="register-option-text"><b>Organization</b></p>
+            </div>
+            <div className="register-option-box" onClick={() => navigate('/auth/register-buyer')}>
+                <User size={70} color="white" />
+                <p className="register-option-text"><b>Buyer</b></p>
+            </div>
+        </div>
+    );
+};
+
+function RegisterOptionPage() {
+    return (
+        <div>
+            <TopsNavbar />
+                <div className="register-wrapper">
+                    <Card className="p-3 register-welcome" style={{ backgroundColor: '#347928', border: 'none' }}>
+                        <p className='register-welcome-text'>Welcome To</p>
+                        <p className='register-logo'>ReuseMart<ShoppingCart size={60}/></p>
+                    </Card>
+
+                    <Card className="p-4 register-form-option">
+                        <h2 className='register-title'>REGISTER AS</h2>
+                        <Option />
+                        <p className="register-info">
+                            Mau menjadi penjual? <a href="#">Klik disini</a> untuk info lebih lengkap.
+                        </p>
+                    </Card>
+                </div>
+        </div>
+    );
+}
+
+export default RegisterOptionPage;

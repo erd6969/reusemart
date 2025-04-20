@@ -80,3 +80,19 @@ export const SearchAlamat = async (search_alamat) => {
     }
 };
 
+export const DeleteAlamat = async (id) => {
+    try {
+        const response = await useAxios.delete(`/pembeli/delete-alamat/${id}`, {
+            headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer 6|BNr8C7LePAA4aPzDEyc15MPFcuSBNMicT3k8JWHra16c5ea6`
+            },
+        });
+        console.log("Delete address response:", response);
+        return response.data;
+    } catch (error) {
+        console.error("Error deleting address:", error);
+        throw error?.response?.data || error;
+    }
+}
+

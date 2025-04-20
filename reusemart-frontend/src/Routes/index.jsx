@@ -3,8 +3,11 @@ import { ToastContainer } from "react-toastify";
 import HomePage from "../Homepage/Homepage";
 import AdminPage from "../Pages/Admin/AdminPage";
 import CSPage from "../Pages/CustomerService/CSPage";
+
 import LoginPage from "../Pages/LoginRegister/LoginPage";
-import RegisterPage from "../Pages/LoginRegister/RegisterPage";
+import RegisterBuyerPage from "../Pages/LoginRegister/RegisterBuyerPage";
+import RegisterOption from "../Pages/LoginRegister/RegisterOption";
+
 import DaftarDonasiPage from "../Pages/Organisasi/DaftarDonasi";
 import OwnerPage from "../Pages/Owner/OwnerPage";
 import ReqDonasi from "../Pages/Owner/ReqDonasi"; 
@@ -65,9 +68,13 @@ const router = createBrowserRouter([
             },
 
             {
-                path: "register",
-                element: <RegisterPage />,
+                path: "register-buyer",
+                element: <RegisterBuyerPage />,
             },
+            {
+                path: "register-option",
+                element: <RegisterOption />,
+            }
         ],
     },
     {

@@ -4,9 +4,102 @@ namespace App\Http\Controllers;
 
 use App\Models\Penitip;
 use Illuminate\Http\Request;
-
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Validation\ValidationException;
 class PenitipController
 {
+
+    public function register(Request $request)
+    {
+        try {
+            $request->validate([
+                'email_penitip' => 'required|email|unique:penitip,email_penitip',
+                'password_penitip' => 'required|min:8',
+                'nama_penitip' => 'required|string|max:255',
+                'nomor_telepon_penitip' => 'required|string|max:15',
+                'tanggal_lahir' => 'required|date',
+                'NIK' => 'required|string|max:16|unique:penitip,NIK',
+                'foto_ktp' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
+                'foto_penitip' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048'
+            ]);
+
+
+            $foto_penitip_path = 'blank-profile-picture.jpg';
+            $fotoKTPPath = $request->file('foto_ktp')->store('ktp', 'public');
+
+            $penitip = penitip::create([
+                'email_penitip' => $request->email_penitip,
+                'password_penitip' => Hash::make($request->password_penitip),
+                'nama_penitip' => $request->nama_penitip,
+                'nomor_telepon_penitip' => $request->nomor_telepon_penitip,
+                'tanggal_lahir' => $request->tanggal_lahir,
+                'NIK' => $request->NIK,
+                'foto_ktp' => $fotoKTPPath,
+                'saldo' => 0,
+                'poin_loyalitas' => 0,
+                'badge' => 0,
+                'komisi_penitip' => 0,
+                'rerata_rating' => 0,
+                'foto_penitip' => $foto_penitip_path,
+            ]);
+
+            return response()->json([
+                'message' => 'Registration successful',
+                'penitip' => $penitip,
+            ], 201);
+
+        } catch (ValidationException $e) {
+            return response()->json([
+                'message' => 'Validasi gagal',
+                'errors' => $e->errors()
+            ], 422);
+
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'Registration failed',
+                'error' => $e->getMessage(),
+            ], 500);
+        }
+    }
+
+    public function login(Request $request)
+    {
+        $request->validate([
+            'email_penitip' => 'required|email',
+            'password_penitip' => 'required',
+        ]);
+
+        $penitip = penitip::where('email_penitip', $request->email_penitip)->first();
+
+        if (!$penitip || !Hash::check($request->password_penitip, $penitip->password_penitip)) {
+            return response()->json([
+                'message' => 'Invalid credentials',
+            ], 401);
+        }
+
+        $token = $penitip->createToken('Personal Access Token')->plainTextToken;
+
+        return response()->json([
+            'message' => 'Login successful',
+            'penitip' => $penitip,
+            'token' => $token,
+        ]);
+    }
+
+    public function logout(Request $request)
+    {
+        if (Auth::check()) {
+            $request->user()->currentAccessToken()->delete();
+            return response()->json([
+                'message' => 'Logout successful',
+            ]);
+        }
+
+        return response()->json([
+            'message' => 'No user is logged in',
+        ], 401);
+    }
     /**
      * Display a listing of the resource.
      */

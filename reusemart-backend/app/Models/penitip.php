@@ -20,6 +20,7 @@ class Penitip extends Model
         'poin_loyalitas',
         'badge',
         'foto_penitip',
+        'foto_ktp',
         'komisi_penitip',
         'rerata_rating'
     ];

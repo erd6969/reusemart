@@ -4,6 +4,7 @@ import { Card, Form, Button } from 'react-bootstrap';
 import './LoginPage.css';
 import TopsNavbar from "./NavbarLogin.jsx";
 import { ShoppingCart } from 'lucide-react';
+import axios from 'axios';
 
 function LoginPage() {
     const [email, setEmail] = useState('');
@@ -12,17 +13,31 @@ function LoginPage() {
 
     const handleLogin = async (e) => {
         e.preventDefault();
-
+    
         try {
-            const response = await axios.post('http://localhost:8000/api/pembeli/login', {
-                email_pembeli: email,
-                password_pembeli: password
+            const response = await axios.post('http://localhost:8000/api/login', {
+                email,
+                password
             });
-
-            console.log('Login berhasil:', response.data);
-            navigate('/HomePage');
+    
+            const data = response.data;
+    
+            if (data.penitip) {
+                console.log("Login sebagai PENITIP:", data.penitip);
+                localStorage.setItem("role", "penitip");
+                localStorage.setItem("user", JSON.stringify(data.penitip));
+                navigate("/owner"); //ini cuman tes aja
+            } else if (data.pembeli) {
+                console.log("Login sebagai PEMBELI:", data.pembeli);
+                localStorage.setItem("role", "pembeli");
+                localStorage.setItem("user", JSON.stringify(data.pembeli));
+                navigate("/owner2"); // ini juga
+            }
+            
+    
         } catch (error) {
             console.error('Login gagal:', error.response?.data || error.message);
+            alert("Email atau password salah!");
         }
     };
 
@@ -33,9 +48,10 @@ function LoginPage() {
                 <Card className="p-3 login-welcome" style={{ backgroundColor: '#347928', border: 'none' }}>
                     <p className='login-welcome-text'>Welcome To</p>
                     <p className='login-logo'>ReuseMart<ShoppingCart size={60} /></p>
+                    <p className='login-logo2'>Hemat Cerdas, Pilih ReuseMart.</p>
                 </Card>
 
-                <Card className="p-4 login-form-option">
+                <Card className="p-4.5 login-form-option">
                     <h2 className='login-title'>LOGIN</h2>
                     <p className='loginText'>Welcome Back</p>
                     <Form onSubmit={handleLogin} style={{ width: '100%' }}>
@@ -43,7 +59,6 @@ function LoginPage() {
                             <Form.Label>Email</Form.Label>
                             <Form.Control
                                 type="email"
-                                placeholder="name@example.com"
                                 value={email}
                                 onChange={(e) => setEmail(e.target.value)}
                                 required

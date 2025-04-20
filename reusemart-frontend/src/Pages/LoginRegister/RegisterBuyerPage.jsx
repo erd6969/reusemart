@@ -78,10 +78,11 @@ function RegisterPage() {
                 <Card className="p-3 register-welcome" style={{ backgroundColor: '#347928', border: 'none' }}>
                     <p className='register-welcome-text'>Welcome To</p>
                     <p className='register-logo'>ReuseMart<ShoppingCart size={60}/></p>
+                    <p className='register-logo2'>Hemat Cerdas, Pilih ReuseMart.</p>
                 </Card>
 
                 <Card className="p-4 register-form-pembeli">
-                    <h2 className='register-title' style={{marginTop:"30px"}}>PENDAFTARAN</h2>
+                    <p className='register-titles' >PENDAFTARAN</p>
                     <h4 className='sub-register-title'>Sebagai Pembeli</h4>
                     <div className='input-register-pembeli-container'>
                         <form className='input-register-pembeli' onSubmit={handleSubmit}>

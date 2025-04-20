@@ -4,6 +4,7 @@ import { Card, Form, Button } from 'react-bootstrap';
 import './LoginPage.css';
 import TopsNavbar from "./NavbarLogin.jsx";
 import { ShoppingCart } from 'lucide-react';
+import axios from 'axios';
 
 function LoginPage() {
     const [email, setEmail] = useState('');
@@ -12,17 +13,31 @@ function LoginPage() {
 
     const handleLogin = async (e) => {
         e.preventDefault();
-
+    
         try {
-            const response = await axios.post('http://localhost:8000/api/pembeli/login', {
-                email_pembeli: email,
-                password_pembeli: password
+            const response = await axios.post('http://localhost:8000/api/login', {
+                email,
+                password
             });
-
-            console.log('Login berhasil:', response.data);
-            navigate('/HomePage');
+    
+            const data = response.data;
+    
+            if (data.penitip) {
+                console.log("Login sebagai PENITIP:", data.penitip);
+                localStorage.setItem("role", "penitip");
+                localStorage.setItem("user", JSON.stringify(data.penitip));
+                navigate("/owner"); //ini cuman tes aja
+            } else if (data.pembeli) {
+                console.log("Login sebagai PEMBELI:", data.pembeli);
+                localStorage.setItem("role", "pembeli");
+                localStorage.setItem("user", JSON.stringify(data.pembeli));
+                navigate("/owner2"); // ini juga
+            }
+            
+    
         } catch (error) {
             console.error('Login gagal:', error.response?.data || error.message);
+            alert("Email atau password salah!");
         }
     };
 

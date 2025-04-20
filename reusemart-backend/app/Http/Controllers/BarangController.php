@@ -8,6 +8,8 @@ use Exception;
 use Illuminate\Support\Facades\File;
 use Illuminate\Http\UploadedFile;
 use App\Models\Kategori;
+use App\Models\Penitip;
+use App\Models\TransaksiPenitipan;
 
 class BarangController
 {
@@ -60,6 +62,32 @@ class BarangController
         } catch (Exception $e) {
             dd($e);
             return response()->json(['message' => 'Data Barangasdasd tidak ditemukan.'], 404);
+        }
+    }
+
+    public function showDetailBarang($id_barang) // ini untuk detail barang page, jadi ada data penitip juga
+    {
+        try {
+            // dd($id_barang);
+            $Barang = Barang::where('id_barang', $id_barang)->firstOrFail();
+            if (!$Barang) {
+                return response()->json(['message' => 'Data Barang tidak ditemukan.'], 404);
+            }
+            $transaksi_penitipan = TransaksiPenitipan::where('id_transaksi_penitipan', $Barang->id_transaksi_penitipan)->first();
+            // dd($Barang);
+            $penitip = Penitip::where('id_penitip', $transaksi_penitipan->id_penitip)->first();
+            if (!$penitip) {
+                return response()->json(['message' => 'Data Penitip tidak ditemukan'], 404);
+            }
+
+            $detailBarangPage = [
+                'barang' => $Barang,
+                'penitip' => $penitip,
+            ];
+
+            return response()->json($detailBarangPage, 200);
+        } catch (Exception $e) {
+            return response()->json(['message' => 'ERRROR'], 404);
         }
     }
 

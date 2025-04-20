@@ -12,7 +12,7 @@ import image2 from "../assets/images/Orang Palu.png";
 import image3 from "../assets/images/Search.png";
 import "../Homepage/ShopPage.css";
 
-import { GetAllBarang } from "../api/apiBarang";
+import { GetAllBarang, GetAllBarangByCategory } from "../api/apiBarang";
 import { useEffect } from 'react';
 
 const kategori = [
@@ -23,7 +23,7 @@ const kategori = [
             "Smartphone & Tablet",
             "Laptop & Komputer",
             "Kamera & Aksesori",
-            "Peralatan Audio/Video",
+            "Peralatan Audio atau Video",
             "Konsol Game & Aksesorinya",
             "Printer & Scanner",
             "Peralatan Dapur Elektronik"
@@ -213,7 +213,7 @@ const ItemList = ({ barang }) => {
                 height: "360px",
                 boxShadow: "0px 2px 5px 5px rgb(16, 78, 13)",
             }}
-            onClick={() => navigate(`/pembeli/detailBarang`)}
+            onClick={() => navigate(`/pembeli/detailBarang/${barang.id_barang}`)}
         >
             <div
                 className="item-image-container"
@@ -257,12 +257,16 @@ const ItemList = ({ barang }) => {
             >
                 <div
                     style={{
-                        textAlign: "center",
+                        textAlign: "start",
                         paddingTop: "20px",
                         fontWeight: "lighter",
                         fontSize: "18px",
                         fontFamily: "monospace",
                         marginBottom: "0px",
+                        whiteSpace: "nowrap",
+                        overflow: "hidden",
+                        width: "200px",
+                        textOverflow: "ellipsis",
                     }}
                 >
                     {nama_barang}
@@ -288,13 +292,21 @@ function CategorySection({ categoryNameSelect }) {
     const [activeSubcategory, setActiveSubcategory] = useState(null);
 
     const handleCategorySelect = (category, subIndex) => {
-        categoryNameSelect(category);
-        setActiveSubcategory(activeSubcategory === subIndex ? null : subIndex);
+        if (activeSubcategory === subIndex) {
+            setActiveSubcategory(null);
+            categoryNameSelect(null);
+        } else {
+            categoryNameSelect(category);
+            setActiveSubcategory(subIndex);
+        }
     };
 
     const toggleCategory = (index) => {
-        if(activeCategory !== index){
+        if (activeCategory !== index) {
             setActiveSubcategory(null);
+        }else{
+            setActiveSubcategory(null);
+            categoryNameSelect(null);
         }
         setActiveCategory(activeCategory === index ? null : index);
     }
@@ -390,7 +402,7 @@ const ShopPage = () => {
     const [isLoading, setIsLoading] = useState(true);
     const fetchBarang = async () => {
         try {
-            setIsLoading(true);
+            // setIsLoading(true);
             const data = await GetAllBarang();
             setBarang(data);
         } catch (error) {
@@ -400,19 +412,23 @@ const ShopPage = () => {
         }
     };
 
-    
+
     const fetchBarangByCategory = async (kategori) => {
-        try{
-            setIsLoading(true);
+        if (!kategori) {
+            fetchBarang();
+            return;
+        }
+
+        try {
             const data = await GetAllBarangByCategory(kategori);
             setBarang(data);
-        }catch (error) {
+        } catch (error) {
             console.error("Error fetching barang by category:", error);
-        }finally {
+        } finally {
             setIsLoading(false);
         }
     }
-    
+
     useEffect(() => {
         fetchBarang();
     }, []);
@@ -425,17 +441,23 @@ const ShopPage = () => {
                     display: "flex",
                     overflowY: "auto",
                     height: "100vh",
+                    justifyContent: isLoading ? "center" : "flex-start",
                 }}
             >
-                <div style={{ display: "flex", flexDirection: "column", overflowX: "hidden"}}>
+                <div style={{ display: "flex", flexDirection: "column", overflowX: "hidden" }}>
                     <SearchItem />
-                    <div style={{ display: "flex", flexDirection: "row" }}>
-
-                        <CategorySection categoryNameSelect={fetchBarangByCategory} /> 
-                        
-                        {/* tampilan barang  */}
-                        {isLoading ? (
-                            <div className="text-center">
+                    {isLoading ? (
+                        <div
+                            style={{
+                                flex: 1,
+                                display: "flex",
+                                justifyContent: "center",
+                                alignItems: "center",
+                                height: "100%",
+                                padding: "20px",
+                            }}
+                        >
+                            <div style={{ textAlign: "center" }}>
                                 <Spinner
                                     as="span"
                                     animation="border"
@@ -446,8 +468,15 @@ const ShopPage = () => {
                                 />
                                 <h6 className="mt-2 mb-0">Loading...</h6>
                             </div>
-                        ) : (
-                            barang.length > 0 ? (
+                        </div>
+                    ) : (
+                        <div style={{ display: "flex", flexDirection: "row", width: "100%" }}>
+
+                            <CategorySection categoryNameSelect={fetchBarangByCategory} />
+
+                            {/* tampilan barang  */}
+
+                            {barang.length > 0 ? (
                                 <div
                                     className="item-list"
                                     style={{
@@ -472,10 +501,10 @@ const ShopPage = () => {
                                     <h6 className="mt-2 mb-0">Tidak ada barang</h6>
                                 </div>
                             )
-                        )}
+                            }
 
-                        
-                    </div>
+                        </div>
+                    )}
                 </div>
             </div>
 

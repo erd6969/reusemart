@@ -31,3 +31,19 @@ export const GetAllBarangByCategory = async (kategori) => {
     }
 }
 
+export const GetDetailBarang = async (id_barang) => {
+    try {
+        const response = await useAxios.get(`/detail-barang/${id_barang}`, {
+            headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer 6|BNr8C7LePAA4aPzDEyc15MPFcuSBNMicT3k8JWHra16c5ea6`
+            },
+        });
+        console.log("Detail Barang response:", response);
+        return response.data;
+    } catch (error) {
+        console.error("Error fetching Detail Barang:", error);
+        throw error?.response?.data || error;
+    }
+}
+

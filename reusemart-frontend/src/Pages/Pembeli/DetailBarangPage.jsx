@@ -1,40 +1,40 @@
-import { Container, Row, Col, Form, Button, FloatingLabel } from "react-bootstrap";
+import { Container, Row, Col, Form, Button, FloatingLabel, Spinner } from "react-bootstrap";
 import gambarBarang from "../../assets/images/CinaBekas2.jpg";
 import gambarToko from "../../assets/images/BurniceKicil.jpg";
 import profileImage from "../../assets/images/Pembeli/Yuki.jpeg";
 import csProfileImage from "../../assets/images/blank-profile-picture.jpg";
 import './DetailBarangPage.css';
 import { FaStar } from "react-icons/fa";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { GetDetailBarang } from "../../api/apiBarang";
 
-const DetailBarang = () => {
+const DetailBarang = ({ detailBarang }) => {
     const navigate = useNavigate();
 
-    return(
+    return (
         <Container className="detail-barang-container">
             <div className="item-image-container">
                 <img src={gambarBarang} alt="barang" className="gambar-barang" />
+                {/* <img src={detailBarang.gambar_barang} alt="barang" className="gambar-barang" /> */}
             </div>
-            
+
             <div className="isi-detail-barang-container">
                 <div className="nama-barang">
-                    <h1><b>CINA BEKAS 2</b></h1>
+                    <h1><b>{detailBarang.nama_barang}</b></h1>
                 </div>
-                
+
                 <div className="harga-barang">
-                    <h1><b>Rp1.200.000</b></h1>
+                    <h1><b>Rp {Number(detailBarang.harga_barang).toLocaleString("id-ID")}</b></h1>
                 </div>
-                
+
                 <div className="deskripsi-wrapper">
                     <div className="label-colon-align">
                         <div className="label">Deskripsi</div>
                         <div className="colon">:</div>
                         <div className="isi-deskripsi">
                             <p>
-                                Barang berupa Cina bekas yang berkualitas tinggi. 
-                                Namun, kekurangannya karena dagunya panjang sehingga dijual.
-                                Tapi overall bagus dan recomended meski ini barang bekas. 
-                                Senyumnya yang haha hihi akan membuat harimu indah.
+                                {detailBarang.deskripsi_barang}
                             </p>
                         </div>
                     </div>
@@ -43,7 +43,7 @@ const DetailBarang = () => {
                         <div className="label">Kondisi</div>
                         <div className="colon">:</div>
                         <div className="isi-kondisi">
-                            <p>Stress dikit karena P3L dan Kecewa dengan KKN</p>
+                            <p>{detailBarang.kondisi_barang}</p>
                         </div>
                     </div>
 
@@ -57,8 +57,8 @@ const DetailBarang = () => {
     )
 }
 
-const Rating = ({jumlahBintang}) => {
-    return(
+const Rating = ({ jumlahBintang }) => {
+    return (
         <Container className="rating-container">
             {[...Array(5)].map((_, index) => (
                 <FaStar
@@ -71,7 +71,7 @@ const Rating = ({jumlahBintang}) => {
     )
 }
 
-const Toko = () => {
+const Toko = ({ penitip }) => {
     const navigate = useNavigate();
 
     return (
@@ -79,11 +79,12 @@ const Toko = () => {
             <div className="toko-info">
                 <div className="toko-image-container">
                     <img src={gambarToko} alt="Toko" />
+                    {/* <img src={penitip.foto_penitip} alt="Toko" /> */}
                 </div>
                 <div className="toko-detail">
-                    <h3><b>Cahaya Design</b></h3>
-                    <button 
-                        className="buy-button" 
+                    <h3><b>{penitip.nama_penitip}</b></h3>
+                    <button
+                        className="buy-button"
                         onClick={() => navigate("/pembeli/list-barang-penitip")}
                     >
                         <b>See Store</b>
@@ -92,10 +93,10 @@ const Toko = () => {
             </div>
             <div className="rating-toko-container">
                 <div className="rating-text">
-                    <h5><b>5</b> <span>from 5</span></h5>
+                    <h5><b>{penitip.rerata_rating}</b> <span>from 5</span></h5>
                 </div>
                 <div className="rating-stars">
-                    <Rating jumlahBintang={5} />
+                    <Rating jumlahBintang={penitip.rerata_rating} />
                 </div>
             </div>
         </div>
@@ -129,72 +130,125 @@ const Diskusi = () => {
             tanggal: "Selasa, 10 September 2023",
         }]
 
-    return(
+    return (
         <>
             <Container className="diskusi-container">
-            <Form>
-                <div className="d-flex align-items-center">
-                    <img 
-                        src={profileImage}
-                        alt="User Avatar" 
-                        className="rounded-circle me-2"
-                        style={{ width: 40, height: 40 }}
-                    />
-
-                    <div className="flex-grow-1">
-                        <Form.Control
-                            type="text"
-                            className="input-diskusi"
-                            placeholder="Tambah Diskusi..."
+                <Form>
+                    <div className="d-flex align-items-center">
+                        <img
+                            src={profileImage}
+                            alt="User Avatar"
+                            className="rounded-circle me-2"
+                            style={{ width: 40, height: 40 }}
                         />
-                    </div>
-                </div>
 
-                <div className="diskusi-buttons">
-                    <button className="cancel-btn">Batal</button>
-                    <button className="discuss-btn"><b>Tambah</b></button>
-                </div>
-            </Form>
-            <br />
-            <Row>
-                {komen.map((item, index) => (
-                    <Col md={12} className="mb-3" key={index}>
-                        <div className="d-flex flex-row justify-content-between align-items-start p-3" 
-                            style={{ borderRadius: "10px", border: "1px solid #ccc" }}>
-                            <div className="d-flex align-items-start w-100">
-                                <img
-                                    src={item.profil}
-                                    alt="User"
-                                    className="rounded-circle"
-                                    style={{ width: "50px", height: "50px", objectFit: "cover", marginRight: "15px" }}
-                                />
-                                <div className="w-100">
-                                    <div className="d-flex justify-content-between align-items-center">
-                                        <h5 className="mb-0"><b>{item.nama}</b></h5>
-                                        <span className="text-muted" style={{ fontSize: "14px", whiteSpace: "nowrap" }}>
-                                            {item.tanggal}
-                                        </span>
+                        <div className="flex-grow-1">
+                            <Form.Control
+                                type="text"
+                                className="input-diskusi"
+                                placeholder="Tambah Diskusi..."
+                            />
+                        </div>
+                    </div>
+
+                    <div className="diskusi-buttons">
+                        <button className="cancel-btn">Batal</button>
+                        <button className="discuss-btn"><b>Tambah</b></button>
+                    </div>
+                </Form>
+                <br />
+                <Row>
+                    {komen.map((item, index) => (
+                        <Col md={12} className="mb-3" key={index}>
+                            <div className="d-flex flex-row justify-content-between align-items-start p-3"
+                                style={{ borderRadius: "10px", border: "1px solid #ccc" }}>
+                                <div className="d-flex align-items-start w-100">
+                                    <img
+                                        src={item.profil}
+                                        alt="User"
+                                        className="rounded-circle"
+                                        style={{ width: "50px", height: "50px", objectFit: "cover", marginRight: "15px" }}
+                                    />
+                                    <div className="w-100">
+                                        <div className="d-flex justify-content-between align-items-center">
+                                            <h5 className="mb-0"><b>{item.nama}</b></h5>
+                                            <span className="text-muted" style={{ fontSize: "14px", whiteSpace: "nowrap" }}>
+                                                {item.tanggal}
+                                            </span>
+                                        </div>
+                                        <p className="mb-0 mt-1">{item.comment}</p>
                                     </div>
-                                    <p className="mb-0 mt-1">{item.comment}</p>
                                 </div>
                             </div>
-                        </div>
-                    </Col>
-                ))}
-            </Row>
+                        </Col>
+                    ))}
+                </Row>
             </Container>
         </>
     );
 }
 
 const DetailBarangPage = () => {
+
+    const [detailBarang, setDetailBarang] = useState([]);
+    const id = useParams().id_barang;
+    console.log(id);
+    const [penitip, setPenitip] = useState([]);
+
+    const [isLoading, setIsLoading] = useState(true);
+
+    const fetchBarangAndPenitip = async () => {
+        try {
+            const detailBarang = await GetDetailBarang(id);
+            setDetailBarang(detailBarang.barang);
+            setPenitip(detailBarang.penitip);
+            console.log("Detail Barang:", detailBarang.barang);
+            console.log("Penitip:", penitip);
+            setIsLoading(false);
+        } catch (error) {
+            console.error("Error fetching Detail Barang:", error);
+        }
+    }
+
+    useEffect(() => {
+        fetchBarangAndPenitip();
+    }, []);
+
     return (
+
         <Container className="detail-barang-page-container">
-            <DetailBarang />
-            <hr />
-            <Toko />
-            <hr />
-            <Diskusi />
+            {isLoading ? (
+                <div
+                    style={{
+                        flex: 1,
+                        display: "flex",
+                        justifyContent: "center",
+                        alignItems: "center",
+                        height: "100%",
+                        padding: "20px",
+                    }}
+                >
+                    <div style={{ textAlign: "center" }}>
+                        <Spinner
+                            as="span"
+                            animation="border"
+                            variant="primary"
+                            size="lg"
+                            role="status"
+                            aria-hidden="true"
+                        />
+                        <h6 className="mt-2 mb-0">Loading...</h6>
+                    </div>
+                </div>
+            ) : (
+                <div>
+                    <DetailBarang detailBarang={detailBarang} />
+                    <hr />
+                    <Toko penitip={penitip} />
+                    <hr />
+                    <Diskusi />
+                </div>
+            )}
         </Container>
     );
 }

@@ -3,9 +3,11 @@
     display: flex;
     background-color: #347928;
     padding: 2rem;
+    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
 }
 
 .register-welcome-text {
+    margin-bottom: 1px;
     color: white;
     font-weight: bold;
     font-size: 400%;
@@ -13,6 +15,7 @@
 }
 
 .register-logo {
+    margin-top: 1px;
     width: 80%;
     font-weight: bold;
     font-size: 850%;
@@ -21,30 +24,44 @@
     color: white;
 }
 
+.register-logo2 {
+    margin-top: 100px;
+    width: 80%;
+    font-weight: bold;
+    font-size: 320%;
+    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+    line-height: 80%;
+    color: white;
+}
+
 .register-welcome {
     width: 550px;
     margin: auto;
-    margin-top: 140px;
+    margin-top: 1px;
     margin-right: 1px;
-    margin-left: 100px;
+    margin-left: 170px;
+    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
 }
 
 .register-form-option {
-    border-radius: 30px;
+    border-radius:30px;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    width: 650px;
-    height: 630px!important;
-    margin-left: 150px;
+    width: 540px;
+    /* height: 00px !important; */
+    margin-left: 120px;
+    padding: 2rem;
+    background-color: white;
 }
 
 .register-title {
     font-weight: 700;
     font-size: 4rem;
-    margin-bottom: 2rem;
+    margin-bottom: 1.5rem;
     text-align: center;
+    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
 }
 
 .register-option-container {
@@ -154,6 +171,10 @@
         width: 100%;
         font-size: 500%;
     }
+    .register-logo2 {
+        width: 100%;
+        font-size: 500%;
+    }
 
     .register-form-option {
         margin-left: 0;
@@ -176,6 +197,9 @@
     }
 
     .register-logo {
+        font-size: 400%;
+    }
+    .register-logo2 {
         font-size: 400%;
     }
 

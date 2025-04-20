@@ -33,9 +33,10 @@ function LoginPage() {
                 <Card className="p-3 login-welcome" style={{ backgroundColor: '#347928', border: 'none' }}>
                     <p className='login-welcome-text'>Welcome To</p>
                     <p className='login-logo'>ReuseMart<ShoppingCart size={60} /></p>
+                    <p className='login-logo2'>Hemat Cerdas, Pilih ReuseMart.</p>
                 </Card>
 
-                <Card className="p-4 login-form-option">
+                <Card className="p-4.5 login-form-option">
                     <h2 className='login-title'>LOGIN</h2>
                     <p className='loginText'>Welcome Back</p>
                     <Form onSubmit={handleLogin} style={{ width: '100%' }}>
@@ -43,7 +44,6 @@ function LoginPage() {
                             <Form.Label>Email</Form.Label>
                             <Form.Control
                                 type="email"
-                                placeholder="name@example.com"
                                 value={email}
                                 onChange={(e) => setEmail(e.target.value)}
                                 required

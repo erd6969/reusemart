@@ -3,6 +3,7 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\PembeliController;
+use App\Http\Controllers\PenitipController;
 use App\Http\Controllers\AlamatController;
 use App\Http\Controllers\BarangController;
 use App\Http\Controllers\TransaksiPenitipanController;
@@ -11,6 +12,9 @@ use App\Http\Controllers\TransaksiPenitipanController;
 Route::post ('/pembeli/register', [PembeliController::class, 'register'])->name('pembeli.register');
 Route::post ('/pembeli/login', [PembeliController::class, 'login'])->name('pembeli.login');
 Route::post ('/pembeli/logout', [PembeliController::class, 'logout'])->middleware('auth:pembeli');
+Route::post ('/penitip/register', [PenitipController::class, 'register'])->name('penitip.register');
+Route::post ('/penitip/login', [PenitipController::class, 'login'])->name('penitip.login');
+Route::post ('/penitip/logout', [PenitipController::class, 'logout'])->middleware('auth:penitip');
 Route::get('/shop-page', [BarangController::class, 'showAll']);
 Route::get('/shop-page/{category}', [BarangController::class, 'showByCategory']);
 

@@ -29,7 +29,8 @@ function RegisterOptionPage() {
                     <Card className="p-3 register-welcome" style={{ backgroundColor: '#347928', border: 'none' }}>
                         <p className='register-welcome-text'>Welcome To</p>
                         <p className='register-logo'>ReuseMart<ShoppingCart size={60}/></p>
-                    </Card>
+                        <p className='register-logo2'>Hemat Cerdas, Pilih ReuseMart.</p>
+                   </Card>
 
                     <Card className="p-4 register-form-option">
                         <h2 className='register-title'>DAFTAR SEBAGAI</h2>

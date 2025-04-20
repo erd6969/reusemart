@@ -27,9 +27,9 @@ const TopNavbar = () => {
                     onClick={() => setIsOpen((prev) => !prev)} // Bisa juga dibuka dengan klik
                 >
                     <div className="profileSection">
-                        <Button className="butto" type="submit"  onClick={() => navigate("/auth/login")}variant="success"><p >Login</p></Button>
-                        <Button className="butto" type="button" onClick={() => navigate("/auth/register")} variant="warning">
-                            <p>Register</p>
+                        <Button className="butto" type="submit"  onClick={() => navigate("/auth/login")}variant="success"><p ><b>Login</b></p></Button>
+                        <Button className="butto" type="button" onClick={() => navigate("/auth/register-option")} variant="warning">
+                            <p><b>Register</b></p>
                         </Button>
                     </div>
                 </div>

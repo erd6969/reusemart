@@ -36,6 +36,9 @@ const Homepage = () => {
 
                 <button onClick={() => navigate("/pegawai-gudang")}>Pegawai Gudang</button>
                 <p>Halaman pegawai gudang</p>
+
+                <button onClick={() => navigate("/auth/login")}>Login Register</button>
+                <p>Auth</p>
             </div>
         </Container>
     );

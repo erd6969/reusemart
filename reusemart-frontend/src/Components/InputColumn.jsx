@@ -10,7 +10,6 @@ const InputColumn = ({
   onChange
 }) => {
   const handleChange = (e) => {
-    // Teruskan event lengkap ke parent component
     onChange(e); 
   };
 

@@ -11,11 +11,11 @@ const Option = () => {
         <div className="register-option-container">
             <div className="register-option-box" onClick={() => navigate('/auth/register-organization')}>
                 <Users size={70} color="white" />
-                <p className="register-option-text"><b>Organization</b></p>
+                <p className="register-option-text"><b>Organisasi</b></p>
             </div>
             <div className="register-option-box" onClick={() => navigate('/auth/register-buyer')}>
                 <User size={70} color="white" />
-                <p className="register-option-text"><b>Buyer</b></p>
+                <p className="register-option-text"><b>Pembeli</b></p>
             </div>
         </div>
     );
@@ -32,7 +32,7 @@ function RegisterOptionPage() {
                     </Card>
 
                     <Card className="p-4 register-form-option">
-                        <h2 className='register-title'>REGISTER AS</h2>
+                        <h2 className='register-title'>DAFTAR SEBAGAI</h2>
                         <Option />
                         <p className="register-info">
                             Mau menjadi penjual? <a href="#">Klik disini</a> untuk info lebih lengkap.

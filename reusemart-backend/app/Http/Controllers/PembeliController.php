@@ -6,20 +6,22 @@ use App\Models\Pembeli;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Validation\ValidationException;
 
 class PembeliController
 {
     public function register(Request $request){
-        try{
+        try {
             $request->validate([
                 'email_pembeli' => 'required|email|unique:pembeli,email_pembeli',
                 'password_pembeli' => 'required|min:8',
+                'konfirmasi_password_pembeli' => 'required|same:password_pembeli',
                 'nama_pembeli' => 'required|string|max:255',
                 'nomor_telepon_pembeli' => 'required|string|max:15',
                 'tanggal_lahir_pembeli' => 'required|date',
                 'foto_pembeli' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
             ]);
-
+    
             $pembeli = Pembeli::create([
                 'email_pembeli' => $request->email_pembeli,
                 'password_pembeli' => Hash::make($request->password_pembeli),
@@ -29,20 +31,26 @@ class PembeliController
                 'poin_loyalitas' => 0,
                 'foto_pembeli' => $request->foto_pembeli ?? null,
             ]);
-
+    
             return response()->json([
                 'message' => 'Registration successful',
                 'pembeli' => $pembeli,
             ], 201);
-            
-        }catch(\Exception $e){
+    
+        } catch (ValidationException $e) {
+            return response()->json([
+                'message' => 'Validasi gagal',
+                'errors' => $e->errors()
+            ], 422);
+    
+        } catch (\Exception $e) {
             return response()->json([
                 'message' => 'Registration failed',
                 'error' => $e->getMessage(),
             ], 500);
         }
-        
     }
+    
 
     public function login(Request $request){
         $request->validate([

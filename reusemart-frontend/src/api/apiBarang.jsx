@@ -1,4 +1,5 @@
 import useAxios from ".";
+
 export const GetAllBarang = async () => {
     try {
         const response = await useAxios.get("/shop-page", {

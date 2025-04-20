@@ -4,6 +4,10 @@ namespace App\Http\Controllers;
 
 use App\Models\TransaksiPenitipan;
 use Illuminate\Http\Request;
+use App\Models\transaksi_penitipan;
+use App\Models\DetailTransaksiPenitipan;
+use App\Models\Barang;
+use App\Models\Penitip;
 
 class TransaksiPenitipanController
 {
@@ -28,8 +32,10 @@ class TransaksiPenitipanController
      */
     public function show(transaksi_penitipan $transaksi_penitipan)
     {
-        //
+        
     }
+
+    
 
     /**
      * Update the specified resource in storage.

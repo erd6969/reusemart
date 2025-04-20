@@ -124,7 +124,7 @@ const router = createBrowserRouter([
                 element: <ShopPage />,
             },
             {
-                path: "detailBarang",
+                path: "detailBarang/:id_barang",
                 element: <DetailBarangPage />,
             },
             {

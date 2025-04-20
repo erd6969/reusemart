@@ -1,16 +1,19 @@
 
-import { Nav, Card, Badge } from 'react-bootstrap';
+import { Nav, Card, Badge, Spinner } from 'react-bootstrap';
 import { useState } from 'react';
 import {
     FaMobile, FaTshirt, FaChair, FaBook, FaGamepad,
     FaBaby, FaCar, FaTree, FaBriefcase, FaSmile,
     FaChevronDown, FaChevronRight, FaSearch
 } from 'react-icons/fa';
-import { useNavigate } from "react-router-dom";
+import { data, useNavigate } from "react-router-dom";
 import image1 from "../assets/images/Pembeli/Yuki.jpeg";
 import image2 from "../assets/images/Orang Palu.png";
 import image3 from "../assets/images/Search.png";
 import "../Homepage/ShopPage.css";
+
+import { GetAllBarang, GetAllBarangByCategory } from "../api/apiBarang";
+import { useEffect } from 'react';
 
 const kategori = [
     {
@@ -20,7 +23,7 @@ const kategori = [
             "Smartphone & Tablet",
             "Laptop & Komputer",
             "Kamera & Aksesori",
-            "Peralatan Audio/Video",
+            "Peralatan Audio atau Video",
             "Konsol Game & Aksesorinya",
             "Printer & Scanner",
             "Peralatan Dapur Elektronik"
@@ -142,196 +145,169 @@ function SearchItem() {
             }}
         >
             <Card className="bg-dark text-white" >
-                <Card.Img src={image3} alt="Card image" style={{ 
-                    height: "250px",  
-                    width: "100%",    
-                    objectFit: "cover" 
-                }}/>
+                <Card.Img src={image3} alt="Card image" style={{
+                    height: "250px",
+                    width: "100%",
+                    objectFit: "cover"
+                }} />
                 <Card.ImgOverlay
                     style={{
                         display: "flex",
                         flexDirection: "column",
-                        justifyContent: "flex-end", 
-                        alignItems: "start",       
+                        justifyContent: "flex-end",
+                        alignItems: "start",
                         paddingBottom: "10px",
                         paddingLeft: "30px",
                     }}
                 >
                     <Card.Title></Card.Title>
                     <Card.Text>
-                        
+
                     </Card.Text>
-                    <Card.Text>
-                        <div className="search-container"
+                    <div className="search-container"
+                        style={{
+                            marginTop: "20px",
+                            marginBottom: "20px",
+                            display: "flex",
+                            justifyContent: "center",
+                            alignItems: "center",
+                            backgroundColor: "white",
+                            padding: "5px 15px",
+                            borderRadius: "30px",
+                            width: "300px",
+                            boxShadow: "0 4px 6px rgba(0,0,0,0.1)"
+                        }}>
+                        <FaSearch style={{ color: "#777", marginRight: "10px" }} />
+                        <input
+                            type="text"
+                            placeholder="Search for an item"
                             style={{
-                                marginTop: "20px",
-                                marginBottom: "20px",
-                                display: "flex",
-                                justifyContent: "center",
-                                alignItems: "center",
-                                backgroundColor: "white",
-                                padding: "5px 15px",
-                                borderRadius: "30px",
-                                width: "300px",
-                                boxShadow: "0 4px 6px rgba(0,0,0,0.1)",
+                                width: "100%",
+                                height: "20px",
+                                border: "none",
+                                outline: "none",
+                                fontSize: "16px",
+                                backgroundColor: "transparent",
                             }}
-                        >
-                            <FaSearch style={{ color: "#777", marginRight: "10px" }} />
-                            <input
-                                type="text"
-                                placeholder="Search for an item"
-                                style={{
-                                    width: "100%",
-                                    height: "20px",
-                                    border: "none",
-                                    outline: "none",
-                                    fontSize: "16px",
-                                    backgroundColor: "transparent",
-                                }}
-                            />
-                        </div>
-                    </Card.Text>
+                        />
+                    </div>
                 </Card.ImgOverlay>
-                
+
             </Card>
         </div>
-        // <div className="search-container"
-        //     style={{
-        //         marginTop: "20px",
-        //         marginBottom: "20px",
-        //         display: "flex",
-        //         justifyContent: "center",
-        //         alignItems: "center",
-        //         backgroundColor: "white",
-        //         padding: "5px 15px",
-        //         borderRadius: "30px",
-        //         width: "500px",
-        //         boxShadow: "0 4px 6px rgba(0,0,0,0.1)",
-        //     }}
-        // >
-        //     <FaSearch style={{ color: "#777", marginRight: "10px" }} />
-        //     <input
-        //         type="text"
-        //         placeholder="Search for an item"
-        //         style={{
-        //             width: "100%",
-        //             height: "40px",
-        //             border: "none",
-        //             outline: "none",
-        //             fontSize: "16px",
-        //             backgroundColor: "transparent",
-        //         }}
-        //     />
-        // </div>
+
     );
 }
 
-function ItemList() {
+const ItemList = ({ barang }) => {
     const navigate = useNavigate();
+    const { nama_barang, harga_barang, foto_barang } = barang;
 
     return (
         <div
-            className="item-list"
+            className="item-container"
             style={{
-                display: "grid",
-                gridTemplateColumns: "repeat(4, 1fr)",
-                gap: "20px",
-                justifyContent: "center",
-                marginTop: "20px",
-                paddingLeft: "20px",
-                marginBottom: "0px",
-                height: "100%",
-                width: "100%",
+                backgroundColor: "#FFFFFF",
+                borderRadius: "10px",
+                width: "280px",
+                height: "360px",
+                boxShadow: "0px 2px 5px 5px rgb(16, 78, 13)",
             }}
+            onClick={() => navigate(`/pembeli/detailBarang/${barang.id_barang}`)}
         >
-            {Array.from({ length: 30 }).map((_, index) => (
+            <div
+                className="item-image-container"
+                style={{ display: "flex", justifyContent: "center" }}
+            >
+
                 <div
-                    key={index}
-                    className="item-container"
+                    className="inside-item-container"
                     style={{
                         backgroundColor: "#FFFFFF",
                         borderRadius: "10px",
-                        width: "280px",
-                        height: "360px",
-                        boxShadow: "0px 2px 5px 5px rgb(16, 78, 13)",
+                        marginTop: "10px",
+                        boxShadow: "2px 2px 2px 2px rgba(22, 40, 21, 0.33)",
+                        width: "260px",
+                        height: "250px",
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
                     }}
-                    onClick={() => navigate(`/pembeli/detailBarang`)}
                 >
-                    <div
-                        className="item-image-container"
-                        style={{ display: "flex", justifyContent: "center" }}
-                    >
 
-                        <div
-                            className="inside-item-container"
-                            style={{
-                                backgroundColor: "#FFFFFF",
-                                borderRadius: "10px",
-                                marginTop: "10px",
-                                boxShadow: "2px 2px 2px 2px rgba(22, 40, 21, 0.33)",
-                                width: "260px",
-                                height: "250px",
-                                display: "flex",
-                                alignItems: "center",
-                                justifyContent: "center",
-                            }}
-                        >
-
-                            <img
-                                src={image2}
-                                alt="item"
-                                style={{
-                                    width: "180px",
-                                    height: "190px",
-                                    borderRadius: "10px",
-                                }}
-                            />
-                        </div>
-                    </div>
-                    <div
-                        className="item-description"
+                    <img
+                        src={foto_barang}
+                        alt="item"
                         style={{
-                            display: "flex",
-                            paddingLeft: "20px",
-                            flexDirection: "column",
-                            alignItems: "flex-start",
+                            width: "180px",
+                            height: "190px",
+                            borderRadius: "10px",
                         }}
-                    >
-                        <p
-                            style={{
-                                textAlign: "center",
-                                paddingTop: "20px",
-                                fontWeight: "lighter",
-                                fontSize: "18px",
-                                fontFamily: "monospace",
-                                marginBottom: "0px",
-                            }}
-                        >
-                            Orang Palu Musuh Jawa
-                        </p>
-                        <p
-                            style={{
-                                fontWeight: "bolder",
-                                fontSize: "26px",
-                                fontFamily: "monospace",
-                                marginBottom: "0px",
-                            }}
-                        >
-                            Rp. 90.000
-
-                        </p>
-                    </div>
+                    />
                 </div>
-            ))}
+            </div>
+            <div
+                className="item-description"
+                style={{
+                    display: "flex",
+                    paddingLeft: "20px",
+                    flexDirection: "column",
+                    alignItems: "flex-start",
+                }}
+            >
+                <div
+                    style={{
+                        textAlign: "start",
+                        paddingTop: "20px",
+                        fontWeight: "lighter",
+                        fontSize: "18px",
+                        fontFamily: "monospace",
+                        marginBottom: "0px",
+                        whiteSpace: "nowrap",
+                        overflow: "hidden",
+                        width: "200px",
+                        textOverflow: "ellipsis",
+                    }}
+                >
+                    {nama_barang}
+                </div>
+                <div
+                    style={{
+                        fontWeight: "bolder",
+                        fontSize: "26px",
+                        fontFamily: "monospace",
+                        marginBottom: "0px",
+                    }}
+                >
+                    Rp {Number(harga_barang).toLocaleString("id-ID")}
+
+                </div>
+            </div>
         </div>
     );
 }
 
-function CategorySection() {
-    const navigate = useNavigate();
+function CategorySection({ categoryNameSelect }) {
     const [activeCategory, setActiveCategory] = useState(null);
+    const [activeSubcategory, setActiveSubcategory] = useState(null);
+
+    const handleCategorySelect = (category, subIndex) => {
+        if (activeSubcategory === subIndex) {
+            setActiveSubcategory(null);
+            categoryNameSelect(null);
+        } else {
+            categoryNameSelect(category);
+            setActiveSubcategory(subIndex);
+        }
+    };
 
     const toggleCategory = (index) => {
+        if (activeCategory !== index) {
+            setActiveSubcategory(null);
+        }else{
+            setActiveSubcategory(null);
+            categoryNameSelect(null);
+        }
         setActiveCategory(activeCategory === index ? null : index);
     }
 
@@ -396,12 +372,13 @@ function CategorySection() {
                                 {kat.subcategories.map((subkategori, subIndex) => (
                                     <div
                                         key={subIndex}
-                                        onClick={() => navigate('/pembeli/profile')}
+                                        onClick={() => handleCategorySelect(subkategori, subIndex)}
                                         style={{
                                             padding: "8px 10px",
                                             cursor: "pointer",
                                             borderRadius: "5px",
-                                            ':hover': { backgroundColor: "#f5f5f5" }
+                                            backgroundColor: activeSubcategory === subIndex ? "#316910" : "#FFFFFF",
+                                            color: activeSubcategory === subIndex ? "#FFFFFF" : "#000000",
                                         }}
                                     >
                                         {subkategori}
@@ -420,26 +397,117 @@ function CategorySection() {
 }
 
 const ShopPage = () => {
+
+    const [barang, setBarang] = useState([]);
+    const [isLoading, setIsLoading] = useState(true);
+    const fetchBarang = async () => {
+        try {
+            // setIsLoading(true);
+            const data = await GetAllBarang();
+            setBarang(data);
+        } catch (error) {
+            console.error("Error fetching barang:", error);
+        } finally {
+            setIsLoading(false);
+        }
+    };
+
+
+    const fetchBarangByCategory = async (kategori) => {
+        if (!kategori) {
+            fetchBarang();
+            return;
+        }
+
+        try {
+            const data = await GetAllBarangByCategory(kategori);
+            setBarang(data);
+        } catch (error) {
+            console.error("Error fetching barang by category:", error);
+        } finally {
+            setIsLoading(false);
+        }
+    }
+
+    useEffect(() => {
+        fetchBarang();
+    }, []);
+
     return (
         <div className="main-container">
-            
-            
+
             <div className="item-section"
                 style={{
                     display: "flex",
                     overflowY: "auto",
                     height: "100vh",
+                    justifyContent: isLoading ? "center" : "flex-start",
                 }}
             >
-                <div style={{display: "flex", flexDirection: "column", overflowX: "hidden"}}>
+                <div style={{ display: "flex", flexDirection: "column", overflowX: "hidden" }}>
                     <SearchItem />
-                    <div style={{display: "flex", flexDirection: "row"}}>
-                        <CategorySection />
-                        <ItemList />
-                    </div>
+                    {isLoading ? (
+                        <div
+                            style={{
+                                flex: 1,
+                                display: "flex",
+                                justifyContent: "center",
+                                alignItems: "center",
+                                height: "100%",
+                                padding: "20px",
+                            }}
+                        >
+                            <div style={{ textAlign: "center" }}>
+                                <Spinner
+                                    as="span"
+                                    animation="border"
+                                    variant="primary"
+                                    size="lg"
+                                    role="status"
+                                    aria-hidden="true"
+                                />
+                                <h6 className="mt-2 mb-0">Loading...</h6>
+                            </div>
+                        </div>
+                    ) : (
+                        <div style={{ display: "flex", flexDirection: "row", width: "100%" }}>
+
+                            <CategorySection categoryNameSelect={fetchBarangByCategory} />
+
+                            {/* tampilan barang  */}
+
+                            {barang.length > 0 ? (
+                                <div
+                                    className="item-list"
+                                    style={{
+                                        display: "grid",
+                                        gridTemplateColumns: "repeat(4, 1fr)",
+                                        gap: "20px",
+                                        justifyContent: "center",
+                                        marginTop: "20px",
+                                        paddingLeft: "20px",
+                                        marginBottom: "0px",
+                                        height: "100%",
+                                        width: "100%",
+                                    }}
+                                >
+                                    {barang.map((brg, index) => (
+                                        <ItemList key={index} barang={brg} />
+                                    ))}
+                                    <div></div>
+                                </div>
+                            ) : (
+                                <div className="text-center">
+                                    <h6 className="mt-2 mb-0">Tidak ada barang</h6>
+                                </div>
+                            )
+                            }
+
+                        </div>
+                    )}
                 </div>
             </div>
-            
+
         </div>
     );
 };

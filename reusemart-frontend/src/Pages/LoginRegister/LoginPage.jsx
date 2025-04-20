@@ -29,14 +29,14 @@ function LoginPage() {
     return (
         <div>
             <TopsNavbar />
-            <div className="register-wrapper">
-                <Card className="p-3 register-welcome" style={{ backgroundColor: '#347928', border: 'none' }}>
-                    <p className='register-welcome-text'>Welcome To</p>
-                    <p className='register-logo'>ReuseMart<ShoppingCart size={60}/></p>
+            <div className="login-wrapper">
+                <Card className="p-3 login-welcome" style={{ backgroundColor: '#347928', border: 'none' }}>
+                    <p className='login-welcome-text'>Welcome To</p>
+                    <p className='login-logo'>ReuseMart<ShoppingCart size={60} /></p>
                 </Card>
 
-                <Card className="p-4 register-form-option">
-                    <h2 className='register-title'>LOGIN</h2>
+                <Card className="p-4 login-form-option">
+                    <h2 className='login-title'>LOGIN</h2>
                     <p className='loginText'>Welcome Back</p>
                     <Form onSubmit={handleLogin} style={{ width: '100%' }}>
                         <Form.Group className="mb-3" style={{ width: '100%' }}>
@@ -64,10 +64,10 @@ function LoginPage() {
 
                         <div className='buttonGroup'>
                             <Button className="tombol" type="submit" variant="warning"><p>Login</p></Button>
-                            <p>Don't have an account?</p>
-                           
                         </div>
                     </Form>
+                    <br />
+                    <p>Don't have an account?</p>
                     <Button className="tombol" variant="warning" onClick={() => navigate("/auth/register-option")}><p>Register</p></Button>
                 </Card>
             </div>

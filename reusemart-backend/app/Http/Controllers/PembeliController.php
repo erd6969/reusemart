@@ -19,8 +19,10 @@ class PembeliController
                 'nama_pembeli' => 'required|string|max:255',
                 'nomor_telepon_pembeli' => 'required|string|max:15',
                 'tanggal_lahir_pembeli' => 'required|date',
-                'foto_pembeli' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+                'foto_pembeli' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048'
             ]);
+
+            $foto_pembeli_path = 'blank-profile-picture.jpg';
     
             $pembeli = Pembeli::create([
                 'email_pembeli' => $request->email_pembeli,
@@ -29,7 +31,7 @@ class PembeliController
                 'nomor_telepon_pembeli' => $request->nomor_telepon_pembeli,
                 'tanggal_lahir_pembeli' => $request->tanggal_lahir_pembeli,
                 'poin_loyalitas' => 0,
-                'foto_pembeli' => $request->foto_pembeli ?? null,
+                'foto_pembeli' => $foto_pembeli_path,
             ]);
     
             return response()->json([

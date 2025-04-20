@@ -26,4 +26,3 @@ export const RegisterPembeli = async (data) => {
         };
     }
 };
-

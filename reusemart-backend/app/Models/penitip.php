@@ -3,9 +3,13 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Laravel\Sanctum\HasApiTokens;
 
 class Penitip extends Model
 {
+    use HasFactory, HasApiTokens;
+
     protected $table = 'penitip';
     protected $primaryKey = 'id_penitip';
     protected $fillable = [

@@ -20,7 +20,8 @@ class LoginController
             $token = $pembeli->createToken('auth_token', ["pembeli"])->plainTextToken;
             return response()->json([
                 'message' => 'Login successful',
-                'token' => $token
+                'token' => $token,
+                'role' => 'pembeli'
             ]);
         }
 
@@ -29,12 +30,23 @@ class LoginController
             $token = $penitip->createToken('auth_token', ["penitip"])->plainTextToken;
             return response()->json([
                 'message' => 'Login successful',
-                'token' => $token
+                'token' => $token,
+                'role' => 'penitip'
             ]);
         }
 
         return response()->json([
             'message' => 'Email atau password salah.'
         ], 401);
+    }
+
+    public function logout(Request $request)
+    {
+        $user = $request->user();
+        $user->currentAccessToken()->delete();
+
+        return response()->json([
+            'message' => 'Logout successful'
+        ]);
     }
 }

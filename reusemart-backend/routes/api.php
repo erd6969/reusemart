@@ -11,11 +11,8 @@ use App\Http\Controllers\LoginController;
 
 Route::post('/login', [LoginController::class, 'login']);
 Route::post ('/pembeli/register', [PembeliController::class, 'register'])->name('pembeli.register');
-// Route::post ('/pembeli/login', [PembeliController::class, 'login'])->name('pembeli.login');
-Route::post ('/pembeli/logout', [PembeliController::class, 'logout'])->middleware('auth:pembeli');
-Route::post ('/penitip/register', [PenitipController::class, 'register'])->name('penitip.register');
-// Route::post ('/penitip/login', [PenitipController::class, 'login'])->name('penitip.login');
-Route::post ('/penitip/logout', [PenitipController::class, 'logout'])->middleware('auth:penitip');
+
+
 Route::get('/shop-page', [BarangController::class, 'showAll']);
 Route::get('/shop-page/{category}', [BarangController::class, 'showByCategory']);
 
@@ -23,7 +20,15 @@ Route::get('/shop-page/{category}', [BarangController::class, 'showByCategory'])
 Route::get('/detail-barang/{id_barang}', [BarangController::class, 'showDetailBarang']);
 Route::get('/penitipByIdTransaksiPenitipan/{idTransaksiPenitipan}', [TransaksiPenitipanController::class, 'getPenitipById']);
 
+#region Penitip
+Route::middleware('auth:penitip')->group(function () {
+    Route::post ('/penitip/logout', [PenitipController::class, 'logout']);
+});
+ #endregion
+
+#region Pembeli
 Route::middleware('auth:pembeli')->group(function () {
+    Route::post ('/pembeli/logout', [PembeliController::class, 'logout']);
     Route::post('/pembeli/create-alamat', [AlamatController::class, 'store']);
     Route::get('/pembeli/alamat', [AlamatController::class, 'index']);
     Route::get('/pembeli/show-alamat', [AlamatController::class, 'show']);
@@ -32,3 +37,4 @@ Route::middleware('auth:pembeli')->group(function () {
     Route::get('/pembeli/search-alamat/{search_alamat}', [AlamatController::class, 'search']);
     Route::put('/pembeli/change-alamat-utama/{id}', [AlamatController::class, 'updateAlamatUtama']);
 });
+ #endregion

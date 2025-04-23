@@ -1,20 +1,21 @@
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
+import ProtectedRoutes from "../Routes/ProtectedRoutes";
+import GuestOnlyRoute  from "../Routes/GuestOnlyRoutes";
+
+// Pages & Layouts
 import HomePage from "../Homepage/Homepage";
 import AdminPage from "../Pages/Admin/AdminPage";
 import CSPage from "../Pages/CustomerService/CSPage";
-
 import LoginPage from "../Pages/LoginRegister/LoginPage";
 import RegisterBuyerPage from "../Pages/LoginRegister/RegisterBuyerPage";
 import RegisterOption from "../Pages/LoginRegister/RegisterOption";
-
 import DaftarDonasiPage from "../Pages/Organisasi/DaftarDonasi";
 import OwnerPage from "../Pages/Owner/OwnerPage";
 import ReqDonasi from "../Pages/Owner/ReqDonasi"; 
 import HistoryDonasiPage from "../Pages/Owner/HistoryDonasi"; 
 import LaporanPage from "../Pages/Owner/Laporan"; 
 import PegawaiGudangPage from "../Pages/PegawaiGudang/PegawaiGudangPage";
-
 import ProfilePenitipPage from "../Pages/Penitip/ProfilePenitipPage";
 
 import PembeliLayout from "../Layouts/PembeliLayouts";
@@ -23,7 +24,7 @@ import AlamatPembeliPage from "../Pages/Pembeli/AlamatPembeliProfilePage";
 import PurchasePembeliPage from "../Pages/Pembeli/PurchasePembeliPage";
 import ShopPage from "../Homepage/ShopPage";
 import DetailBarangPage from "../Pages/Pembeli/DetailBarangPage";
-import ListBarangPenitipPage from "../Pages/Pembeli/ListBarangPenitipPage"
+import ListBarangPenitipPage from "../Pages/Pembeli/ListBarangPenitipPage";
 import CartPage from "../Pages/Pembeli/CartPage";
 import CheckoutPage from "../Pages/Pembeli/CheckoutPage";
 import PaymentPage from "../Pages/Pembeli/PaymentPage";
@@ -34,14 +35,17 @@ const router = createBrowserRouter([
         path: "/",
         element: <HomePage />,
     },
-
     {
         path: "/HomePage",
         element: <HomePage />,
     },
     {
         path: "/admin",
-        element: <AdminPage />,
+        element: (
+            <ProtectedRoutes allowedRoles={["admin"]}>
+                <AdminPage />
+            </ProtectedRoutes>
+        ),
         children: [
             {
                 path: "dashboard",
@@ -51,7 +55,11 @@ const router = createBrowserRouter([
     },
     {
         path: "/customerservice",
-        element: <CSPage />,
+        element: (
+            <ProtectedRoutes allowedRoles={["customerservice"]}>
+                <CSPage />
+            </ProtectedRoutes>
+        ),
         children: [
             {
                 path: "payment",
@@ -64,17 +72,28 @@ const router = createBrowserRouter([
         children: [
             {
                 path: "login",
-                element: <LoginPage />,
+                element: (
+                    <GuestOnlyRoute>
+                        <LoginPage />
+                    </GuestOnlyRoute>
+                ),
             },
-
             {
                 path: "register-buyer",
-                element: <RegisterBuyerPage />,
+                element:(
+                    <GuestOnlyRoute>
+                        <RegisterBuyerPage />
+                    </GuestOnlyRoute>
+                ),
             },
             {
                 path: "register-option",
-                element: <RegisterOption />,
-            }
+                element: (
+                    <GuestOnlyRoute>
+                        <RegisterOption />
+                    </GuestOnlyRoute>
+                ),
+            },
         ],
     },
     {
@@ -89,30 +108,41 @@ const router = createBrowserRouter([
     },
     {
         path: "/owner",
-        element: <OwnerPage />,
+        element: (
+            <ProtectedRoutes allowedRoles={["owner"]}>
+                <OwnerPage />
+            </ProtectedRoutes>
+        ),
         children: [
             {
-                path: "req-donasi", 
-                element: <ReqDonasi/>,
+                path: "req-donasi",
+                element: <ReqDonasi />,
             },
             {
-                path: "history-donasi", 
-                element: <HistoryDonasiPage/>,
+                path: "history-donasi",
+                element: <HistoryDonasiPage />,
             },
             {
-                path: "laporan", 
-                element: <LaporanPage/>,
+                path: "laporan",
+                element: <LaporanPage />,
             },
-
         ],
     },
     {
         path: "/pegawai-gudang",
-        element: <PegawaiGudangPage />,
+        element: (
+            <ProtectedRoutes allowedRoles={["pegawai"]}>
+                <PegawaiGudangPage />
+            </ProtectedRoutes>
+        ),
     },
     {
         path: "/pembeli",
-        element: <PembeliLayout />,
+        element: (
+            <ProtectedRoutes allowedRoles={["pembeli"]}>
+                <PembeliLayout />
+            </ProtectedRoutes>
+        ),
         children: [
             {
                 path: "profile",
@@ -153,12 +183,16 @@ const router = createBrowserRouter([
             {
                 path: "list-transaksi",
                 element: <ListTransaksi />,
-            }
+            },
         ],
     },
     {
         path: "/penitip",
-        element: <div>Penitip Page</div>,
+        element: (
+            <ProtectedRoutes allowedRoles={["penitip"]}>
+                <div>Penitip Page</div>
+            </ProtectedRoutes>
+        ),
         children: [
             {
                 path: "profile",

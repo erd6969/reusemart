@@ -1,43 +1,43 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Card, Form, Button } from 'react-bootstrap';
+import { Card, Form, Button, Spinner } from 'react-bootstrap';
 import './LoginPage.css';
 import TopsNavbar from "./NavbarLogin.jsx";
 import { ShoppingCart } from 'lucide-react';
-import axios from 'axios';
+import { Login } from '../../api/apiAuth';
 
 function LoginPage() {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const [loading, setLoading] = useState(false);
+    const [error, setError] = useState('');
     const navigate = useNavigate();
 
     const handleLogin = async (e) => {
         e.preventDefault();
-    
+        setLoading(true);
+        setError('');
+
         try {
-            const response = await axios.post('http://localhost:8000/api/login', {
-                email,
-                password
-            });
-    
-            const data = response.data;
-    
-            if (data.penitip) {
-                console.log("Login sebagai PENITIP:", data.penitip);
-                localStorage.setItem("role", "penitip");
-                localStorage.setItem("user", JSON.stringify(data.penitip));
-                navigate("/owner"); //ini cuman tes aja
-            } else if (data.pembeli) {
-                console.log("Login sebagai PEMBELI:", data.pembeli);
-                localStorage.setItem("role", "pembeli");
-                localStorage.setItem("user", JSON.stringify(data.pembeli));
-                navigate("/owner2"); // ini juga
-            }
+            const data = await Login({ email, password });
             
-    
+            const { role } = data;
+
+            if (role === "penitip") {
+                navigate("/penitip");
+            } else if (role === "pembeli") {
+                navigate("/pembeli/shop");
+            } else {
+                alert("Role tidak dikenali.");
+            }
         } catch (error) {
-            console.error('Login gagal:', error.response?.data || error.message);
-            alert("Email atau password salah!");
+            if (error.type === "validation") {
+                setError("Periksa input Anda.");
+            } else {
+                setError(error.message || "Login gagal.");
+            }
+        } finally {
+            setLoading(false);
         }
     };
 
@@ -54,6 +54,9 @@ function LoginPage() {
                 <Card className="p-4.5 login-form-option">
                     <h2 className='login-title'>LOGIN</h2>
                     <p className='loginText'>Welcome Back</p>
+
+                    {error && <p className="text-danger">{error}</p>}
+
                     <Form onSubmit={handleLogin} style={{ width: '100%' }}>
                         <Form.Group className="mb-3" style={{ width: '100%' }}>
                             <Form.Label>Email</Form.Label>
@@ -78,12 +81,20 @@ function LoginPage() {
                         <p className='forpas'>Forgot Password?</p>
 
                         <div className='buttonGroup'>
-                            <Button className="tombol" type="submit" variant="warning"><p>Login</p></Button>
+                            <Button className="tombol" type="submit" variant="warning" disabled={loading}>
+                                {loading ? (
+                                    <Spinner animation="border" size="sm" />
+                                ) : (
+                                    <p>Login</p>
+                                )}
+                            </Button>
                         </div>
                     </Form>
                     <br />
                     <p>Don't have an account?</p>
-                    <Button className="tombol" variant="warning" onClick={() => navigate("/auth/register-option")}><p>Register</p></Button>
+                    <Button className="tombol" variant="warning" onClick={() => navigate("/auth/register-option")}>
+                        <p>Register</p>
+                    </Button>
                 </Card>
             </div>
         </div>

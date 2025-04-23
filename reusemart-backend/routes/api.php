@@ -10,6 +10,7 @@ use App\Http\Controllers\TransaksiPenitipanController;
 use App\Http\Controllers\LoginController;
 
 Route::post('/login', [LoginController::class, 'login']);
+Route::middleware('auth:sanctum')->post('/logout', [LoginController::class, 'logout']);
 Route::post ('/pembeli/register', [PembeliController::class, 'register'])->name('pembeli.register');
 
 
@@ -28,7 +29,6 @@ Route::middleware('auth:penitip')->group(function () {
 
 #region Pembeli
 Route::middleware('auth:pembeli')->group(function () {
-    Route::post ('/pembeli/logout', [PembeliController::class, 'logout']);
     Route::post('/pembeli/create-alamat', [AlamatController::class, 'store']);
     Route::get('/pembeli/alamat', [AlamatController::class, 'index']);
     Route::get('/pembeli/show-alamat', [AlamatController::class, 'show']);

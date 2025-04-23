@@ -1,21 +1,26 @@
 import { useNavigate, Outlet } from "react-router-dom";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 
-/* eslint-disable react/prop-types */
-const ProtectedRoutes = ({ children }) => {
-    const navigate = useNavigate();
-    const [token, setToken] = useState("");
+const ProtectedRoutes = ({ children, allowedRoles }) => {
+  const navigate = useNavigate();
+  const [isAllowed, setIsAllowed] = useState(false);
 
-    useEffect(() => {
-        const tokenDariSS = sessionStorage.getItem("token");
-        setToken(tokenDariSS);
+  useEffect(() => {
+    const token = sessionStorage.getItem("token");
+    const role = sessionStorage.getItem("role");
 
-        if (!tokenDariSS) {
-            navigate("/");
-        }
-    }, [navigate]);
+    if (!token) {
+        navigate("/auth/login");
+    } else if (!allowedRoles.includes(role)) {
+      setIsAllowed(false);
+      // Balik ke halaman sebelumnya
+      navigate(-1);
+    } else {
+      setIsAllowed(true);
+    }
+  }, [navigate, allowedRoles]);
 
-    return token && (children ? children : <Outlet />);
+  return isAllowed ? (children ? children : <Outlet />) : null;
 };
 
 export default ProtectedRoutes;

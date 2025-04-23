@@ -6,11 +6,22 @@ import profileImage from "../../assets/images/Pembeli/Yuki.jpeg";
 import logoReuseMart from "../../assets/images/logo-reusemart.png";
 import coin from "../../assets/images/coin-icon.png";
 import { FaShoppingCart, FaChevronDown, FaBars, FaTimes } from "react-icons/fa";
+import { Logout } from "../../api/apiAuth";
 
 const TopNavbar = () => {
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
     const navigate = useNavigate();
     const dropdownRef = useRef(null);
+    
+    const handleLogout = async () => {
+        try {
+            await Logout();
+        } catch (err) {
+            console.error("Logout error:", err);
+        } finally {
+            navigate("/auth/login");
+        }
+    };
 
     return (
         <Navbar className="navBar">
@@ -72,7 +83,9 @@ const TopNavbar = () => {
                                     </li>
                                 </ul>
                                 <hr />
-                                <div className="logout">Log Out ➡</div>
+                                <div className="logout" onClick={handleLogout} style={{ cursor: "pointer" }}>
+                                    Log Out ➡
+                                </div>
                             </div>
                         </div>
                     </div>

@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
+
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use App\Models\Pembeli;
@@ -48,5 +49,45 @@ class LoginController
         return response()->json([
             'message' => 'Logout successful'
         ]);
+    }
+
+    // Fungsi untuk reset password
+    public function resetPassword(Request $request)
+    {
+        // Validasi input
+        $validated = $request->validate([
+            'email' => 'required|email',
+            'password' => 'required|min:8|confirmed',
+        ]);
+
+        // Cari Pembeli berdasarkan email
+        $pembeli = Pembeli::where('email_pembeli', $validated['email'])->first();
+
+        if ($pembeli) {
+            // Update password Pembeli
+            $pembeli->password_pembeli = Hash::make($validated['password']);
+            $pembeli->save();
+
+            return response()->json([
+                'message' => 'Password berhasil diperbarui.'
+            ]);
+        }
+
+        // Cari Penitip berdasarkan email
+        $penitip = Penitip::where('email_penitip', $validated['email'])->first();
+
+        if ($penitip) {
+            // Update password Penitip
+            $penitip->password_penitip = Hash::make($validated['password']);
+            $penitip->save();
+
+            return response()->json([
+                'message' => 'Password berhasil diperbarui.'
+            ]);
+        }
+
+        return response()->json([
+            'message' => 'Email tidak ditemukan.'
+        ], 404);
     }
 }

@@ -1,7 +1,9 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\EmailController;
 
-Route::get('/', function () {
-    return view('welcome');
-});
+Route::get('/email/verify', [EmailController::class, 'verifyEmail'])->name('verification.link');
+
+
+

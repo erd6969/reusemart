@@ -40,6 +40,18 @@ return [
             'driver' => 'sanctum',
             'provider' => 'pegawai',
         ],
+        'cs' => [
+            'driver' => 'sanctum',
+            'provider' => 'pegawai',
+        ],
+        'admin' => [
+            'driver' => 'sanctum',
+            'provider' => 'pegawai',
+        ],
+        'gudang' => [
+            'driver' => 'sanctum',
+            'provider' => 'pegawai',
+        ],
         'pembeli' => [
             'driver' => 'sanctum',
             'provider' => 'pembeli',

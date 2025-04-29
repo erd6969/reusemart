@@ -63,30 +63,6 @@ class PenitipController
         }
     }
 
-    public function login(Request $request)
-    {
-        $request->validate([
-            'email_penitip' => 'required|email',
-            'password_penitip' => 'required',
-        ]);
-
-        $penitip = penitip::where('email_penitip', $request->email_penitip)->first();
-
-        if (!$penitip || !Hash::check($request->password_penitip, $penitip->password_penitip)) {
-            return response()->json([
-                'message' => 'Invalid credentials',
-            ], 401);
-        }
-
-        $token = $penitip->createToken('Personal Access Token')->plainTextToken;
-
-        return response()->json([
-            'message' => 'Login successful',
-            'penitip' => $penitip,
-            'token' => $token,
-        ]);
-    }
-
     public function logout(Request $request)
     {
         if (Auth::check()) {

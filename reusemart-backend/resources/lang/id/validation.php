@@ -10,6 +10,8 @@ return [
     'same' => 'Konfirmasi password tidak sesuai dengan password.',
     'date' => 'Harus berupa tanggal yang valid.',
     'max' => [
-        'string' => 'Maksimal :max karakter.',
+        'string' => 'Maksimal :max karakter.',  
     ],
+    
+    
 ];

@@ -30,6 +30,9 @@ import CheckoutPage from "../Pages/Pembeli/CheckoutPage";
 import PaymentPage from "../Pages/Pembeli/PaymentPage";
 import ListTransaksi from "../Pages/Pembeli/PurchasePembeliPage";
 
+import ForgotPassword from "../Pages/LoginRegister/VerifyEmailPage";
+import ResetPassword from "../Pages/LoginRegister/ResetPasswordPage";
+
 const router = createBrowserRouter([
     {
         path: "/",
@@ -91,6 +94,22 @@ const router = createBrowserRouter([
                 element: (
                     <GuestOnlyRoute>
                         <RegisterOption />
+                    </GuestOnlyRoute>
+                ),
+            },
+            {
+                path: "forgot-password",
+                element: (
+                    <GuestOnlyRoute>
+                        <ForgotPassword />
+                    </GuestOnlyRoute>
+                ),
+            },
+            {
+                path: "reset-password",
+                element: (
+                    <GuestOnlyRoute>
+                        <ResetPassword />
                     </GuestOnlyRoute>
                 ),
             },

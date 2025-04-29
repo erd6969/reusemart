@@ -78,7 +78,7 @@ function LoginPage() {
                             />
                         </Form.Group>
 
-                        <p className='forpas'>Forgot Password?</p>
+                        <p className='forpas' onClick={() => navigate("/auth/forgot-password")}>Forgot Password?</p>
 
                         <div className='buttonGroup'>
                             <Button className="tombol" type="submit" variant="warning" disabled={loading}>

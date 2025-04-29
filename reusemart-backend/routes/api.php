@@ -22,6 +22,7 @@ Route::post ('/pegawai/register', [PegawaiController::class, 'register'])->name(
 
 Route::get('/shop-page', [BarangController::class, 'showAll']);
 Route::get('/shop-page/{category}', [BarangController::class, 'showByCategory']);
+Route::get('/shop-page/search-barang/{search_barang}', [BarangController::class, 'search']);
 
 
 Route::get('/detail-barang/{id_barang}', [BarangController::class, 'showDetailBarang']);

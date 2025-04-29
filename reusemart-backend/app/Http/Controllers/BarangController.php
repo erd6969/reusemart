@@ -106,4 +106,29 @@ class BarangController
     {
         //
     }
+
+    public function search($search_barang){
+        try {
+            
+
+            $barang = Barang::where(function($query) use ($search_barang) {
+                                $query->where('nama_barang', 'LIKE', '%' . $search_barang . '%');
+                            })
+                            ->get();
+    
+            if (!$barang) {
+                return response()->json([
+                    'message' => 'Barang not found',
+                ], 404);
+            }
+    
+            return response()->json($barang, 200);
+    
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'Failed to retrieve address',
+                'error' => $e->getMessage(),
+            ], 500);
+        }
+    }
 }

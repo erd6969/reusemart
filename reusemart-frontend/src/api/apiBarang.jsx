@@ -48,3 +48,19 @@ export const GetDetailBarang = async (id_barang) => {
     }
 }
 
+// Cari barang
+export const SearchBarang = async (search_barang) => {
+    try {
+      const response = await useAxios.get(`/shop-page/search-barang/${search_barang}`, {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer 6|BNr8C7LePAA4aPzDEyc15MPFcuSBNMicT3k8JWHra16c5ea6`
+        },
+      });
+      return response.data;
+    } catch (error) {
+      console.error("Error searching Barang:", error);
+      throw error?.response?.data || error;
+    }
+  };
+

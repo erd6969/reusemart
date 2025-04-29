@@ -20,13 +20,21 @@ function LoginPage() {
 
         try {
             const data = await Login({ email, password });
-            
+
             const { role } = data;
 
             if (role === "penitip") {
                 navigate("/penitip");
             } else if (role === "pembeli") {
                 navigate("/pembeli/shop");
+            } else if (role === "owner") {
+                navigate("/owner/req-donasi");
+            } else if (role === "gudang") {
+                navigate("/pegawai-gudang");
+            } else if (role === "admin") {
+                navigate("/admin");
+            } else if (role === "cs") {
+                navigate("/customerservice");
             } else {
                 alert("Role tidak dikenali.");
             }

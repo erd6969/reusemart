@@ -13,7 +13,6 @@ const ProtectedRoutes = ({ children, allowedRoles }) => {
         navigate("/auth/login");
     } else if (!allowedRoles.includes(role)) {
       setIsAllowed(false);
-      // Balik ke halaman sebelumnya
       navigate(-1);
     } else {
       setIsAllowed(true);

@@ -42,34 +42,8 @@ const router = createBrowserRouter([
         path: "/HomePage",
         element: <HomePage />,
     },
-    {
-        path: "/admin",
-        element: (
-            <ProtectedRoutes allowedRoles={["admin"]}>
-                <AdminPage />
-            </ProtectedRoutes>
-        ),
-        children: [
-            {
-                path: "dashboard",
-                element: <div>Admin Dashboard</div>,
-            },
-        ],
-    },
-    {
-        path: "/customerservice",
-        element: (
-            <ProtectedRoutes allowedRoles={["customerservice"]}>
-                <CSPage />
-            </ProtectedRoutes>
-        ),
-        children: [
-            {
-                path: "payment",
-                element: <div>Payment Management</div>,
-            },
-        ],
-    },
+    
+    
     {
         path: "/auth",
         children: [
@@ -150,11 +124,43 @@ const router = createBrowserRouter([
     {
         path: "/pegawai-gudang",
         element: (
-            <ProtectedRoutes allowedRoles={["pegawai"]}>
+            <ProtectedRoutes allowedRoles={["gudang"]}>
                 <PegawaiGudangPage />
             </ProtectedRoutes>
         ),
     },
+
+    {
+        path: "/admin",
+        element: (
+            <ProtectedRoutes allowedRoles={["admin"]}>
+                <AdminPage />
+            </ProtectedRoutes>
+        ),
+        children: [
+            {
+                path: "dashboard",
+                element: <div>Admin Dashboard</div>,
+            },
+        ],
+    },
+
+    {
+        path: "/customerservice",
+        element: (
+            <ProtectedRoutes allowedRoles={["cs"]}>
+                <CSPage />
+            </ProtectedRoutes>
+        ),
+        children: [
+            {
+                path: "payment",
+                element: <div>Payment Management</div>,
+            },
+        ],
+    },
+
+
     {
         path: "/pembeli",
         element: (

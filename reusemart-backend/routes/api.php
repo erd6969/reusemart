@@ -9,6 +9,7 @@ use App\Http\Controllers\BarangController;
 use App\Http\Controllers\TransaksiPenitipanController;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\EmailController;
+use App\Http\Controllers\PegawaiController;
 
 Route::post('/send-konfirmasi-email', [EmailController::class, 'sendKonfirmasiEmail']);
 Route::post('/reset-password', [LoginController::class, 'resetPassword']);
@@ -16,6 +17,7 @@ Route::post('/reset-password', [LoginController::class, 'resetPassword']);
 Route::post('/login', [LoginController::class, 'login']);
 Route::middleware('auth:sanctum')->post('/logout', [LoginController::class, 'logout']);
 Route::post ('/pembeli/register', [PembeliController::class, 'register'])->name('pembeli.register');
+Route::post ('/pegawai/register', [PegawaiController::class, 'register'])->name('pegawai.register');
 
 
 Route::get('/shop-page', [BarangController::class, 'showAll']);
@@ -40,5 +42,24 @@ Route::middleware('auth:pembeli')->group(function () {
     Route::delete('/pembeli/delete-alamat/{id}', [AlamatController::class, 'destroy']);
     Route::get('/pembeli/search-alamat/{search_alamat}', [AlamatController::class, 'search']);
     Route::put('/pembeli/change-alamat-utama/{id}', [AlamatController::class, 'updateAlamatUtama']);
+});
+ #endregion
+
+ #region Pegawai
+Route::middleware('auth:pegawai')->group(function () {
+    Route::middleware('auth:owner')->group(function () {
+    
+    });
+    Route::middleware('auth:gudang')->group(function () {
+    
+    });
+
+    Route::middleware('auth:cs')->group(function () {
+        Route::post ('/penitip/register', [PenitipController::class, 'register'])->name('penitip.register');
+    });
+
+    Route::middleware('auth:admin')->group(function () {
+        
+    });
 });
  #endregion

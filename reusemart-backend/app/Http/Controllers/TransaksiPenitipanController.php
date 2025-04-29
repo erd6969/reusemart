@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Models\TransaksiPenitipan;
 use Illuminate\Http\Request;
-use App\Models\transaksi_penitipan;
 use App\Models\DetailTransaksiPenitipan;
 use App\Models\Barang;
 use App\Models\Penitip;
@@ -30,7 +29,7 @@ class TransaksiPenitipanController
     /**
      * Display the specified resource.
      */
-    public function show(transaksi_penitipan $transaksi_penitipan)
+    public function show(TransaksiPenitipan $TransaksiPenitipan)
     {
         
     }
@@ -40,7 +39,7 @@ class TransaksiPenitipanController
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, transaksi_penitipan $transaksi_penitipan)
+    public function update(Request $request, TransaksiPenitipan $TransaksiPenitipan)
     {
         //
     }
@@ -48,7 +47,7 @@ class TransaksiPenitipanController
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(transaksi_penitipan $transaksi_penitipan)
+    public function destroy(TransaksiPenitipan $TransaksiPenitipan)
     {
         //
     }

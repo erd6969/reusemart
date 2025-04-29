@@ -9,6 +9,7 @@ use App\Http\Controllers\BarangController;
 use App\Http\Controllers\TransaksiPenitipanController;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\EmailController;
+use App\Http\Controllers\PegawaiController;
 
 Route::post('/send-konfirmasi-email', [EmailController::class, 'sendKonfirmasiEmail']);
 Route::post('/reset-password', [LoginController::class, 'resetPassword']);

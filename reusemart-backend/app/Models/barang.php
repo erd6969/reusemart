@@ -8,7 +8,6 @@ class Barang extends Model
 {
     protected $table = 'barang';
     protected $fillable = [
-        'id_transaksi_penitipan',
         'id_pegawai',
         'id_kategori',
         'id_hunter',
@@ -21,10 +20,6 @@ class Barang extends Model
         
     ];
 
-    public function transaksi_penitipan()
-    {
-        return $this->belongsTo(TransaksiPenitipan::class, 'id_transaksi_penitipan');
-    }
     public function pegawai()
     {
         return $this->belongsTo(Pegawai::class, 'id_pegawai');
@@ -38,5 +33,9 @@ class Barang extends Model
         return $this->belongsTo(Hunter::class, 'id_hunter');
     }
 
+    public function detailtransaksipenitipan()
+    {
+        return $this->hasMany(DetailTransaksiPenitipan::class, 'id_barang', 'id_barang');
+    }
     
 }

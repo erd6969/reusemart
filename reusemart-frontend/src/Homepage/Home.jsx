@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Container } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 
-const Homepage = () => {
+const Home = () => {
     const [count, setCount] = useState(0);
 
     const navigate = useNavigate();
@@ -10,7 +10,7 @@ const Homepage = () => {
         <Container className="mt-5">
             <p>Count: {count}</p>
             <div className="text-center mb-3">
-                <button onClick={() => navigate("/home")}>Umum Web</button>
+                <button onClick={() => navigate("/")}>ASDLASFJKASF</button>
                 <p>Sumpah ini isi nya umum Homepage cok</p>
 
                 <button onClick={() => navigate("/pembeli/shop")}>Pembeli</button>
@@ -42,6 +42,6 @@ const Homepage = () => {
             </div>
         </Container>
     );
-};
+}
 
-export default Homepage;
+export default Home;

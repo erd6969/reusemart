@@ -10,6 +10,7 @@ use Illuminate\Http\UploadedFile;
 use App\Models\Kategori;
 use App\Models\Penitip;
 use App\Models\TransaksiPenitipan;
+use App\Models\DetailTransaksiPenitipan;
 
 class BarangController
 {
@@ -73,7 +74,13 @@ class BarangController
             if (!$Barang) {
                 return response()->json(['message' => 'Data Barang tidak ditemukan.'], 404);
             }
-            $transaksi_penitipan = TransaksiPenitipan::where('id_transaksi_penitipan', $Barang->id_transaksi_penitipan)->first();
+
+            $detailpenitipan = DetailTransaksiPenitipan::where('id_barang', $Barang->id_barang)->first();
+            if (!$detailpenitipan) {
+                return response()->json(['message' => 'Data Detail Transaksi Penitipan tidak ditemukan'], 404);
+            }
+
+            $transaksi_penitipan = TransaksiPenitipan::where('id_transaksi_penitipan', $detailpenitipan->id_transaksi_penitipan)->first();
             // dd($Barang);
             $penitip = Penitip::where('id_penitip', $transaksi_penitipan->id_penitip)->first();
             if (!$penitip) {

@@ -6,5 +6,23 @@ use Illuminate\Database\Eloquent\Model;
 
 class DetailTransaksiPenitipan extends Model
 {
-    //
+    protected $table = 'detail_transaksi_penitipan';
+    protected $primaryKey = 'id_detail_transaksi_penitipan';
+    protected $fillable = [
+        'id_detail_transaksi_penitipan',
+        'id_transaksi_penitipan',
+        'id_barang',
+        'harga_barang'
+    ];
+    
+    public function transaksiPenitipan()
+    {
+        return $this->belongsTo(TransaksiPenitipan::class, 'id_transaksi_penitipan', 'id_transaksi_penitipan');
+    }
+    public function barang()
+    {
+        return $this->belongsTo(Barang::class, 'id_barang', 'id_barang');
+    }
+
+    
 }

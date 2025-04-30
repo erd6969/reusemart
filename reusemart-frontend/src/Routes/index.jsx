@@ -5,6 +5,7 @@ import GuestOnlyRoute  from "../Routes/GuestOnlyRoutes";
 
 // Pages & Layouts
 import HomePage from "../Homepage/Homepage";
+import Home from "../Homepage/Home";
 import AdminPage from "../Pages/Admin/AdminPage";
 import CSPage from "../Pages/CustomerService/CSPage";
 import LoginPage from "../Pages/LoginRegister/LoginPage";
@@ -39,8 +40,8 @@ const router = createBrowserRouter([
         element: <HomePage />,
     },
     {
-        path: "/HomePage",
-        element: <HomePage />,
+        path: "/Home",
+        element: <Home />,
     },
     
     

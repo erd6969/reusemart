@@ -7,7 +7,7 @@ const GuestOnlyRoute = ({ children }) => {
 
     useEffect(() => {
         if (token !== null) {
-            navigate(1);
+            navigate(-1);
         }
     }, [token, navigate]);
 

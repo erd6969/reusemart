@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Hash;
 use App\Models\Pembeli;
 use App\Models\Penitip;
 use App\Models\Pegawai;
+use App\Models\Organisasi;
 use Illuminate\Support\Facades\DB;
 
 class LoginController
@@ -83,6 +84,16 @@ class LoginController
                     'message' => 'Jabatan tidak ditemukan'
                 ], 404);
             }
+        }
+
+        $organisasi = Organisasi::where('email_organisasi', $credentials['email'])->first();
+        if ($organisasi && Hash::check($credentials['password'], $organisasi->password_organisasi)) {
+            $token = $organisasi->createToken('auth_token', ["organisasi"])->plainTextToken;
+            return response()->json([
+                'message' => 'Login successful',
+                'token' => $token,
+                'role' => 'organisasi'
+            ]);
         }
 
         return response()->json([

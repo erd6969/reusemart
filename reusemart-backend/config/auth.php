@@ -63,6 +63,10 @@ return [
         'hunter' => [
             'driver' => 'sanctum',
             'provider' => 'hunter',
+        ],
+        'organisasi' => [
+            'driver' => 'sanctum',
+            'provider' => 'organisasi',
         ]
     ],
 
@@ -100,6 +104,10 @@ return [
         'hunter' => [
             'driver' => 'eloquent',
             'model' => App\Models\Hunter::class,
+        ],
+        'organisasi' => [
+            'driver' => 'eloquent',
+            'model' => App\Models\Organisasi::class,
         ],
     ],
 

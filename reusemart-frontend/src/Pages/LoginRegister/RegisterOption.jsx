@@ -9,7 +9,7 @@ const Option = () => {
 
     return (
         <div className="register-option-container">
-            <div className="register-option-box" onClick={() => navigate('/auth/register-organization')}>
+            <div className="register-option-box" onClick={() => navigate('/auth/register-organisasi')}>
                 <Users size={70} color="white" />
                 <p className="register-option-text"><b>Organisasi</b></p>
             </div>

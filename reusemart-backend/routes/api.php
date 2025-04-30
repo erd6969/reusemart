@@ -10,6 +10,8 @@ use App\Http\Controllers\TransaksiPenitipanController;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\EmailController;
 use App\Http\Controllers\PegawaiController;
+use App\Http\Controllers\DiskusiController;
+use App\Http\Controllers\OrganisasiController;
 
 Route::post('/send-konfirmasi-email', [EmailController::class, 'sendKonfirmasiEmail']);
 Route::post('/reset-password', [LoginController::class, 'resetPassword']);
@@ -18,6 +20,9 @@ Route::post('/login', [LoginController::class, 'login']);
 Route::middleware('auth:sanctum')->post('/logout', [LoginController::class, 'logout']);
 Route::post ('/pembeli/register', [PembeliController::class, 'register'])->name('pembeli.register');
 Route::post ('/pegawai/register', [PegawaiController::class, 'register'])->name('pegawai.register');
+Route::post ('/organisasi/register', [OrganisasiController::class, 'register'])->name('organisasi.register');
+
+Route::post('/pegawai/reguister', [PegawaiController::class, 'register'])->name('pegawai.register');
 
 
 Route::get('/shop-page', [BarangController::class, 'showAll']);
@@ -27,6 +32,9 @@ Route::get('/shop-page/search-barang/{search_barang}', [BarangController::class,
 
 Route::get('/detail-barang/{id_barang}', [BarangController::class, 'showDetailBarang']);
 Route::get('/penitipByIdTransaksiPenitipan/{idTransaksiPenitipan}', [TransaksiPenitipanController::class, 'getPenitipById']);
+
+Route::get('/diskusi/{id_barang}', [DiskusiController::class, 'show']);
+Route::middleware('auth:sanctum')->post('/create-diskusi', [DiskusiController::class, 'store']);
 
 #region Penitip
 Route::middleware('auth:penitip')->group(function () {
@@ -44,23 +52,28 @@ Route::middleware('auth:pembeli')->group(function () {
     Route::get('/pembeli/search-alamat/{search_alamat}', [AlamatController::class, 'search']);
     Route::put('/pembeli/change-alamat-utama/{id}', [AlamatController::class, 'updateAlamatUtama']);
 });
- #endregion
+#endregion
 
- #region Pegawai
-Route::middleware('auth:pegawai')->group(function () {
-    Route::middleware('auth:owner')->group(function () {
-    
-    });
-    Route::middleware('auth:gudang')->group(function () {
-    
-    });
 
-    Route::middleware('auth:cs')->group(function () {
-        Route::post ('/penitip/register', [PenitipController::class, 'register'])->name('penitip.register');
-    });
+//Pegawai aku hapus middlewarenya, keknya gak perlu. Login cuma kasih rolenya di token. Kalau nested
+//middleware pegawai nanti unauthenticated karena tokennya bukan pegawai. Udah cek tembak url juga aman kalau gak bungkus 
+//middleware pegawai.
 
-    Route::middleware('auth:admin')->group(function () {
-        
-    });
+#region Pegawai
+Route::middleware('auth:owner')->group(function () {
+
 });
- #endregion
+Route::middleware('auth:gudang')->group(function () {
+
+});
+
+Route::middleware('auth:cs')->group(function () {
+    Route::post ('/penitip/register', [PenitipController::class, 'register'])->name('penitip.register');
+});
+
+Route::middleware('auth:admin')->group(function () {
+    Route::get('/organisasi/show-all', [OrganisasiController::class, 'show']);
+    Route::get('/organisasi/search/{search_organisasi}', [OrganisasiController::class, 'search']);
+});
+#endregion
+

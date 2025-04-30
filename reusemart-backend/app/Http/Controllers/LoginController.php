@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\Hash;
 use App\Models\Pembeli;
 use App\Models\Penitip;
 use App\Models\Pegawai;
-
+use Illuminate\Support\Facades\DB;
 
 class LoginController
 {
@@ -103,40 +103,37 @@ class LoginController
     // Fungsi untuk reset password
     public function resetPassword(Request $request)
     {
-        // Validasi input
-        $validated = $request->validate([
-            'email' => 'required|email',
+        $request->validate([
+            'token' => 'required',
             'password' => 'required|min:8|confirmed',
         ]);
 
-        // Cari Pembeli berdasarkan email
-        $pembeli = Pembeli::where('email_pembeli', $validated['email'])->first();
+        $resetRecord = DB::table('password_resets')->where('token', $request->token)->first();
 
+        if (!$resetRecord) {
+            return response()->json(['message' => 'Token tidak valid atau sudah kadaluarsa.'], 400);
+        }
+
+        // Coba cari pembeli dulu
+        $pembeli = Pembeli::where('email_pembeli', $resetRecord->email)->first();
         if ($pembeli) {
-            // Update password Pembeli
-            $pembeli->password_pembeli = Hash::make($validated['password']);
+            $pembeli->password_pembeli = Hash::make($request->password);
             $pembeli->save();
-
-            return response()->json([
-                'message' => 'Password berhasil diperbarui.'
-            ]);
+        } else {
+            // Coba cari penitip
+            $penitip = Penitip::where('email_penitip', $resetRecord->email)->first();
+            if ($penitip) {
+                $penitip->password_penitip = Hash::make($request->password);
+                $penitip->save();
+            } else {
+                return response()->json(['message' => 'User tidak ditemukan.'], 404);
+            }
         }
 
-        // Cari Penitip berdasarkan email
-        $penitip = Penitip::where('email_penitip', $validated['email'])->first();
+        // Hapus token setelah digunakan
+        DB::table('password_resets')->where('email', $resetRecord->email)->delete();
 
-        if ($penitip) {
-            // Update password Penitip
-            $penitip->password_penitip = Hash::make($validated['password']);
-            $penitip->save();
-
-            return response()->json([
-                'message' => 'Password berhasil diperbarui.'
-            ]);
-        }
-
-        return response()->json([
-            'message' => 'Email tidak ditemukan.'
-        ], 404);
+        return response()->json(['message' => 'Password berhasil diperbarui.']);
     }
+
 }

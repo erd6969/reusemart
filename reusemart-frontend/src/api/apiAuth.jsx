@@ -79,9 +79,13 @@ export const sendKonfirmasiEmail = async (email, isPenitip = false) => {
     }
 };
 
-export const ResetPassword = async (data) => {
+export const ResetPassword = async ({ token, password, password_confirmation }) => {
     try {
-        const response = await useAxios.post("/reset-password", data, {
+        const response = await useAxios.post("/reset-password", {
+            token,
+            password,
+            password_confirmation,
+        }, {
             headers: {
                 "Content-Type": "application/json",
                 "Accept": "application/json",
@@ -92,5 +96,4 @@ export const ResetPassword = async (data) => {
     } catch (error) {
         throw error?.response?.data || error;
     }
-}
-
+};

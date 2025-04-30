@@ -21,7 +21,7 @@ class KonfirmasiEmail extends Mailable
 
     public function build()
     {
-        return $this->view('emails.konfirmasi')  // Pastikan nama view yang benar
+        return $this->view('emails.konfirmasi')
                     ->subject('Konfirmasi Email untuk Reset Password')
                     ->with([
                         'nama' => $this->nama,

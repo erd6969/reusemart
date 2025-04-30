@@ -12,7 +12,7 @@ import image2 from "../assets/images/Orang Palu.png";
 import image3 from "../assets/images/Search.png";
 import "../Homepage/ShopPage.css";
 
-import { GetAllBarang, GetAllBarangByCategory } from "../api/apiBarang";
+import { GetAllBarang, GetAllBarangByCategory, SearchBarang } from "../api/apiBarang";
 import { useEffect } from 'react';
 
 const kategori = [
@@ -130,75 +130,6 @@ const kategori = [
     }
 ];
 
-function SearchItem() {
-    const navigate = useNavigate();
-
-    return (
-        <div
-            className="search-container"
-            style={{
-                display: "flex",
-                justifyContent: "center",
-                alignItems: "center",
-                marginTop: "20px",
-                marginBottom: "20px",
-            }}
-        >
-            <Card className="bg-dark text-white" >
-                <Card.Img src={image3} alt="Card image" style={{
-                    height: "250px",
-                    width: "100%",
-                    objectFit: "cover"
-                }} />
-                <Card.ImgOverlay
-                    style={{
-                        display: "flex",
-                        flexDirection: "column",
-                        justifyContent: "flex-end",
-                        alignItems: "start",
-                        paddingBottom: "10px",
-                        paddingLeft: "30px",
-                    }}
-                >
-                    <Card.Title></Card.Title>
-                    <Card.Text>
-
-                    </Card.Text>
-                    <div className="search-container"
-                        style={{
-                            marginTop: "20px",
-                            marginBottom: "20px",
-                            display: "flex",
-                            justifyContent: "center",
-                            alignItems: "center",
-                            backgroundColor: "white",
-                            padding: "5px 15px",
-                            borderRadius: "30px",
-                            width: "300px",
-                            boxShadow: "0 4px 6px rgba(0,0,0,0.1)"
-                        }}>
-                        <FaSearch style={{ color: "#777", marginRight: "10px" }} />
-                        <input
-                            type="text"
-                            placeholder="Search for an item"
-                            style={{
-                                width: "100%",
-                                height: "20px",
-                                border: "none",
-                                outline: "none",
-                                fontSize: "16px",
-                                backgroundColor: "transparent",
-                            }}
-                        />
-                    </div>
-                </Card.ImgOverlay>
-
-            </Card>
-        </div>
-
-    );
-}
-
 const ItemList = ({ barang }) => {
     const navigate = useNavigate();
     const { nama_barang, harga_barang, foto_barang } = barang;
@@ -304,7 +235,7 @@ function CategorySection({ categoryNameSelect }) {
     const toggleCategory = (index) => {
         if (activeCategory !== index) {
             setActiveSubcategory(null);
-        }else{
+        } else {
             setActiveSubcategory(null);
             categoryNameSelect(null);
         }
@@ -400,6 +331,7 @@ const ShopPage = () => {
 
     const [barang, setBarang] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
+    const [searchQuery, setSearchQuery] = useState("");
     const fetchBarang = async () => {
         try {
             // setIsLoading(true);
@@ -433,6 +365,29 @@ const ShopPage = () => {
         fetchBarang();
     }, []);
 
+    useEffect(() => {
+        const delayDebounce = setTimeout(() => {
+            if (searchQuery.length >= 3) {
+                setIsLoading(true);
+                SearchBarang(searchQuery)
+                    .then((data) => {
+                        const hasil = Array.isArray(data) ? data : [data];
+                        setBarang(hasil);
+                        setIsLoading(false);
+                    })
+                    .catch((error) => {
+                        console.error("Error searching address:", error);
+                        setBarang([]);
+                        setIsLoading(false);
+                    });
+            } else {
+                fetchBarang();
+            }
+        }, 500);
+
+        return () => clearTimeout(delayDebounce);
+    }, [searchQuery]);
+
     return (
         <div className="main-container">
 
@@ -441,11 +396,73 @@ const ShopPage = () => {
                     display: "flex",
                     overflowY: "auto",
                     height: "100vh",
-                    justifyContent: isLoading ? "center" : "flex-start",
+                    justifyContent: "center"
                 }}
             >
                 <div style={{ display: "flex", flexDirection: "column", overflowX: "hidden" }}>
-                    <SearchItem />
+                    <div
+                        className="search-container"
+                        style={{
+                            display: "flex",
+                            justifyContent: "center",
+                            alignItems: "center",
+                            marginTop: "20px",
+                            marginBottom: "20px",
+                        }}
+                    >
+                        <Card className="bg-dark text-white" >
+                            <Card.Img src={image3} alt="Card image" style={{
+                                height: "250px",
+                                width: "100%",
+                                objectFit: "cover"
+                            }} />
+                            <Card.ImgOverlay
+                                style={{
+                                    display: "flex",
+                                    flexDirection: "column",
+                                    justifyContent: "flex-end",
+                                    alignItems: "start",
+                                    paddingBottom: "10px",
+                                    paddingLeft: "30px",
+                                }}
+                            >
+                                <Card.Title></Card.Title>
+                                <Card.Text>
+
+                                </Card.Text>
+                                <div className="search-container"
+                                    style={{
+                                        marginTop: "20px",
+                                        marginBottom: "20px",
+                                        display: "flex",
+                                        justifyContent: "center",
+                                        alignItems: "center",
+                                        backgroundColor: "white",
+                                        padding: "5px 15px",
+                                        borderRadius: "30px",
+                                        width: "300px",
+                                        boxShadow: "0 4px 6px rgba(0,0,0,0.1)"
+                                    }}>
+                                    <FaSearch style={{ color: "#777", marginRight: "10px" }} />
+                                    <input
+                                        type="text"
+                                        placeholder="Search for an item"
+                                        style={{
+                                            width: "100%",
+                                            height: "20px",
+                                            border: "none",
+                                            outline: "none",
+                                            fontSize: "16px",
+                                            backgroundColor: "transparent",
+                                        }}
+                                        value={searchQuery}
+                                        onChange={(e) => setSearchQuery(e.target.value)}
+                                    />
+                                </div>
+                            </Card.ImgOverlay>
+
+                        </Card>
+                    </div>
                     {isLoading ? (
                         <div
                             style={{
@@ -470,34 +487,35 @@ const ShopPage = () => {
                             </div>
                         </div>
                     ) : (
-                        <div style={{ display: "flex", flexDirection: "row", width: "100%" }}>
+                        <div style={{ display: "flex", flexDirection: "row", width: "100%"}}>
 
-                            <CategorySection categoryNameSelect={fetchBarangByCategory} />
 
                             {/* tampilan barang  */}
 
                             {barang.length > 0 ? (
-                                <div
-                                    className="item-list"
-                                    style={{
-                                        display: "grid",
-                                        gridTemplateColumns: "repeat(4, 1fr)",
-                                        gap: "20px",
-                                        justifyContent: "center",
-                                        marginTop: "20px",
-                                        paddingLeft: "20px",
-                                        marginBottom: "0px",
-                                        height: "100%",
-                                        width: "100%",
-                                    }}
-                                >
-                                    {barang.map((brg, index) => (
-                                        <ItemList key={index} barang={brg} />
-                                    ))}
-                                    <div></div>
-                                </div>
+                                <><CategorySection categoryNameSelect={fetchBarangByCategory} />
+                                    <div
+                                        className="item-list"
+                                        style={{
+                                            display: "grid",
+                                            gridTemplateColumns: "repeat(4, 1fr)",
+                                            gap: "20px",
+                                            justifyContent: "center",
+                                            marginTop: "20px",
+                                            paddingLeft: "20px",
+                                            marginBottom: "0px",
+                                            height: "100%",
+                                            width: "100%",
+                                        }}
+                                    >
+                                        {barang.map((brg, index) => (
+                                            <ItemList key={index} barang={brg} />
+                                        ))}
+                                        {/* pemberi jarak dibawah */}
+                                        <div></div>
+                                    </div></>
                             ) : (
-                                <div className="text-center">
+                                <div style={{ textAlign: "center", marginTop: "20px", justifyContent: "center" }}>
                                     <h6 className="mt-2 mb-0">Tidak ada barang</h6>
                                 </div>
                             )

@@ -4,12 +4,12 @@ import { Card, Form, Button, Spinner } from 'react-bootstrap';
 import TopsNavbar from './NavbarLogin';
 import { ShoppingCart } from 'lucide-react';
 import './VerifyEmailPage.css';
-import { ResetPassword } from '../../api/apiAuth'; // 🔁 Ubah path jika file di folder lain
+import { ResetPassword } from '../../api/apiAuth';
 
 function ResetPasswordPage() {
     const navigate = useNavigate();
     const location = useLocation();
-    const [email, setEmail] = useState('');
+    const [token, setToken] = useState('');
     const [password, setPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
     const [loading, setLoading] = useState(false);
@@ -18,8 +18,8 @@ function ResetPasswordPage() {
 
     useEffect(() => {
         const queryParams = new URLSearchParams(location.search);
-        const emailFromUrl = queryParams.get('email');
-        if (emailFromUrl) setEmail(emailFromUrl);
+        const tokenFromUrl = queryParams.get('token');
+        if (tokenFromUrl) setToken(tokenFromUrl);
     }, [location.search]);
 
     const handleSubmit = async (e) => {
@@ -36,7 +36,7 @@ function ResetPasswordPage() {
 
         try {
             await ResetPassword({
-                email,
+                token,
                 password,
                 password_confirmation: confirmPassword,
             });
@@ -70,16 +70,6 @@ function ResetPasswordPage() {
                     <h2 className='login-title'>RESET PASSWORD</h2>
 
                     <Form onSubmit={handleSubmit} style={{ width: '100%' }}>
-                        <Form.Group className="mb-3">
-                            <Form.Label>Email</Form.Label>
-                            <Form.Control
-                                type="email"
-                                value={email}
-                                readOnly
-                                className="form-input"
-                            />
-                        </Form.Group>
-
                         <Form.Group className="mb-3">
                             <Form.Label>Password Baru</Form.Label>
                             <Form.Control

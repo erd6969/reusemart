@@ -32,9 +32,11 @@ function LoginPage() {
             } else if (role === "gudang") {
                 navigate("/pegawai-gudang");
             } else if (role === "admin") {
-                navigate("/admin");
+                navigate("/admin/admin-organisasi-master");
             } else if (role === "cs") {
                 navigate("/customerservice");
+            } else if(role === "organisasi"){
+                navigate("/organisasi/daftar-donasi")
             } else {
                 alert("Role tidak dikenali.");
             }

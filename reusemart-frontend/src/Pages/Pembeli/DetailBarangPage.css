@@ -210,3 +210,12 @@
 .input-diskusi:focus-visible {
     outline: none;
 }
+
+.diskusi-buttons .discuss-btn {
+    transition: all 0.3s ease;
+}
+
+.diskusi-buttons .discuss-btn[disabled] {
+    opacity: 0.5;
+}
+

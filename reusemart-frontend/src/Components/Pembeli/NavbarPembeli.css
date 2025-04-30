@@ -1,5 +1,5 @@
 .navBar {
-    position: fixed;
+    position: sticky!important;
     top: 0;
     left: 0;
     right: 0;
@@ -24,7 +24,7 @@
 }
 
 .navTitle {
-    font-size: 30px;
+    font-size: 30px!important;
     cursor: pointer;
 }
 

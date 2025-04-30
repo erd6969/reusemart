@@ -9,6 +9,8 @@ import { useNavigate, useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { GetDetailBarang } from "../../api/apiBarang";
 
+import { ShowDiskusi, CreateDiskusi } from "../../api/apiDiskusi";
+
 const DetailBarang = ({ detailBarang }) => {
     const navigate = useNavigate();
 
@@ -104,89 +106,146 @@ const Toko = ({ penitip }) => {
 }
 
 const Diskusi = () => {
-    const komen = [
-        {
-            profil: profileImage,
-            nama: "Yuki Suou",
-            comment: "Panjang Dagunya Berapa Emang ?",
-            tanggal: "Selasa, 12 September 2023",
-        },
-        {
-            profil: csProfileImage,
-            nama: "CS Agus",
-            comment: "Lupa. Kek e 12 CM terakhir itung",
-            tanggal: "Selasa, 12 September 2023",
-        },
-        {
-            profil: profileImage,
-            nama: "Yuki Suou",
-            comment: "Apakah produk ini bisa membantu saya dalam banyak hal seperti menyelesaikan 100 soal permasalahan Informasi dan Struktur Data dalam bahasa Cina Kuno yang terdiri dari banyak sekali Hanzi ?",
-            tanggal: "Selasa, 10 September 2023",
-        },
-        {
-            profil: csProfileImage,
-            nama: "CS Agus",
-            comment: "Y.",
-            tanggal: "Selasa, 10 September 2023",
-        }]
+    const [diskusi, setDiskusi] = useState([]);
+    const [newComment, setNewComment] = useState("");
+    const [loading, setLoading] = useState(false);
+    const [error, setError] = useState(null);
+    const [isCommenting, setIsCommenting] = useState(false);
+    const id = useParams().id_barang;
+
+    // Ambil data diskusi
+    const fetchDiskusi = async () => {
+        setLoading(true);
+        try {
+            const response = await ShowDiskusi(id);
+            if (response.status === 'success' && Array.isArray(response.data)) {
+                setDiskusi(response.data);
+            }
+            setLoading(false);
+        } catch (error) {
+            console.error("Error fetching diskusi:", error);
+            setError("Failed to load diskusi.");
+            setLoading(false);
+        }
+    };
+
+    // Submit komentar
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        if (!newComment.trim()) return;
+        try {
+            setIsCommenting(true);
+            await CreateDiskusi({
+                id_barang: id,
+                diskusi: newComment,
+            });
+            setNewComment("");
+            fetchDiskusi();
+        } catch (error) {
+            console.error("Error adding diskusi:", error);
+            setError("Failed to add comment.");
+        } finally {
+            setIsCommenting(false);
+        }
+    };
+
+    useEffect(() => {
+        fetchDiskusi();
+    }, [id]);
 
     return (
-        <>
-            <Container className="diskusi-container">
-                <Form>
-                    <div className="d-flex align-items-center">
-                        <img
-                            src={profileImage}
-                            alt="User Avatar"
-                            className="rounded-circle me-2"
-                            style={{ width: 40, height: 40 }}
+        <Container className="diskusi-container">
+            <Form onSubmit={handleSubmit}>
+                <div className="d-flex align-items-center">
+                    <img
+                        src={profileImage}
+                        alt="User Avatar"
+                        className="rounded-circle me-2"
+                        style={{ width: 40, height: 40 }}
+                    />
+                    <div className="flex-grow-1">
+                        <Form.Control
+                            type="text"
+                            className="input-diskusi"
+                            placeholder="Tambah Diskusi..."
+                            value={newComment}
+                            onChange={(e) => setNewComment(e.target.value)}
                         />
-
-                        <div className="flex-grow-1">
-                            <Form.Control
-                                type="text"
-                                className="input-diskusi"
-                                placeholder="Tambah Diskusi..."
-                            />
-                        </div>
                     </div>
+                </div>
 
-                    <div className="diskusi-buttons">
-                        <button className="cancel-btn">Batal</button>
-                        <button className="discuss-btn"><b>Tambah</b></button>
-                    </div>
-                </Form>
+                <div className="diskusi-buttons">
+                    <button type="button" className="cancel-btn" onClick={() => setNewComment("")}>Batal</button>
+                    <button type="submit" className="discuss-btn" disabled={isCommenting}>
+                        <b>{isCommenting ? "Memproses..." : "Tambah"}</b>
+                    </button>
+                </div>
                 <br />
-                <Row>
-                    {komen.map((item, index) => (
+            </Form>
+
+            {loading && <p>Loading...</p>}
+            {error && <p>{error}</p>}
+
+            <Row>
+                {diskusi.length > 0 ? (
+                    diskusi.map((disc, index) => (
                         <Col md={12} className="mb-3" key={index}>
-                            <div className="d-flex flex-row justify-content-between align-items-start p-3"
-                                style={{ borderRadius: "10px", border: "1px solid #ccc" }}>
+                            <div
+                                className="d-flex flex-row justify-content-between align-items-start p-3 diskusi-item"
+                                style={{ borderRadius: "10px", border: "1px solid #ccc" }}
+                            >
                                 <div className="d-flex align-items-start w-100">
                                     <img
-                                        src={item.profil}
+                                        src={disc.id_pembeli ? disc.pembeli?.profil_pembeli : disc.pegawai?.profil_pegawai || csProfileImage}
                                         alt="User"
                                         className="rounded-circle"
-                                        style={{ width: "50px", height: "50px", objectFit: "cover", marginRight: "15px" }}
+                                        style={{
+                                            width: "50px",
+                                            height: "50px",
+                                            objectFit: "cover",
+                                            marginRight: "15px",
+                                        }}
                                     />
                                     <div className="w-100">
                                         <div className="d-flex justify-content-between align-items-center">
-                                            <h5 className="mb-0"><b>{item.nama}</b></h5>
+                                            <h5 className="mb-0" style={{ display: "flex", alignItems: "center" }}>
+                                                <b>{disc.id_pembeli ? disc.pembeli?.nama_pembeli : disc.pegawai?.nama_pegawai}</b>
+                                                {disc.id_pegawai && (
+                                                    <span 
+                                                        className="badge ms-2" 
+                                                        style={{
+                                                            backgroundColor: '#b6f7c1',
+                                                            color: '#155724',
+                                                            fontSize: '12px',
+                                                            padding: '5px 8px'
+                                                        }}
+                                                    >
+                                                        Customer Service
+                                                    </span>
+                                                )}
+                                            </h5>
                                             <span className="text-muted" style={{ fontSize: "14px", whiteSpace: "nowrap" }}>
-                                                {item.tanggal}
+                                                {disc.waktu_diskusi}
                                             </span>
                                         </div>
-                                        <p className="mb-0 mt-1">{item.comment}</p>
+                                        <p className="mb-0 mt-1">{disc.diskusi}</p>
                                     </div>
                                 </div>
                             </div>
                         </Col>
-                    ))}
-                </Row>
-            </Container>
-        </>
+                    ))
+                ) : (
+                    <>
+                        <Col md={12} className="mb-3 d-flex justify-content-center align-items-center">
+                            <p>Tidak Ada Diskusi Untuk Produk Ini</p>
+                        </Col>
+                    </>
+                )}
+            </Row>
+        </Container>
     );
-}
+};
+
 
 const DetailBarangPage = () => {
 

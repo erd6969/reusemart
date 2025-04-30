@@ -6,7 +6,6 @@ import GuestOnlyRoute  from "../Routes/GuestOnlyRoutes";
 // Pages & Layouts
 import HomePage from "../Homepage/Homepage";
 import Home from "../Homepage/Home";
-import AdminPage from "../Pages/Admin/AdminPage";
 import CSPage from "../Pages/CustomerService/CSPage";
 import LoginPage from "../Pages/LoginRegister/LoginPage";
 import RegisterBuyerPage from "../Pages/LoginRegister/RegisterBuyerPage";
@@ -33,6 +32,11 @@ import ListTransaksi from "../Pages/Pembeli/PurchasePembeliPage";
 
 import ForgotPassword from "../Pages/LoginRegister/VerifyEmailPage";
 import ResetPassword from "../Pages/LoginRegister/ResetPasswordPage";
+
+import RegisterOrganisasi from "../Pages/LoginRegister/RegisterOrganisasiPage";
+
+import AdminLayout from "../Layouts/AdminLayouts";
+import AdminMasterOrganisasiPage from "../Pages/Admin/AdminMasterOrganisasiPage";
 
 const router = createBrowserRouter([
     {
@@ -73,6 +77,14 @@ const router = createBrowserRouter([
                 ),
             },
             {
+                path: "register-organisasi",
+                element: (
+                    <GuestOnlyRoute>
+                        <RegisterOrganisasi />
+                    </GuestOnlyRoute>
+                ),
+            },
+            {
                 path: "forgot-password",
                 element: (
                     <GuestOnlyRoute>
@@ -96,7 +108,11 @@ const router = createBrowserRouter([
         children: [
             {
                 path: "daftar-donasi",
-                element: <DaftarDonasiPage />,
+                element: (
+                    <ProtectedRoutes allowedRoles={["organisasi"]}>
+                        <DaftarDonasiPage />
+                    </ProtectedRoutes>
+                )
             },
         ],
     },
@@ -135,13 +151,13 @@ const router = createBrowserRouter([
         path: "/admin",
         element: (
             <ProtectedRoutes allowedRoles={["admin"]}>
-                <AdminPage />
+                <AdminLayout />
             </ProtectedRoutes>
         ),
         children: [
             {
-                path: "dashboard",
-                element: <div>Admin Dashboard</div>,
+                path: "admin-organisasi-master",
+                element: <AdminMasterOrganisasiPage />,
             },
         ],
     },

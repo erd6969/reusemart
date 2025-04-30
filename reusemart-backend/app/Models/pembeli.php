@@ -30,4 +30,9 @@ class Pembeli extends Model
     {
         return $this->hasMany(Alamat::class, 'id_pembeli');
     }
+
+    public function diskusi()
+    {
+        return $this->hasMany(Diskusi::class, 'id_pembeli', 'id_pembeli');
+    }
 }

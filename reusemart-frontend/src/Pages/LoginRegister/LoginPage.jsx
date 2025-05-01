@@ -24,7 +24,7 @@ function LoginPage() {
             const { role } = data;
 
             if (role === "penitip") {
-                navigate("/penitip");
+                navigate("/penitip/profile");
             } else if (role === "pembeli") {
                 navigate("/pembeli/shop");
             } else if (role === "owner") {

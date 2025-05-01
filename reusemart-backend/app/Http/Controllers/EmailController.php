@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Mail\KonfirmasiEmail;
 use App\Models\Pembeli;
 use App\Models\Penitip;
+use App\Models\Organisasi;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;
@@ -17,8 +18,10 @@ class EmailController
         $email = $request->email;
         $pembeli = Pembeli::where('email_pembeli', $email)->first();
         $penitip = Penitip::where('email_penitip', $email)->first();
+        $organisasi = Organisasi::where('email_organisasi', $email)->first();
 
-        if (!$pembeli && !$penitip) {
+
+        if (!$pembeli && !$penitip && !$organisasi) {
             return response()->json(['error' => 'Email tidak ditemukan'], 404);
         }
 
@@ -32,9 +35,9 @@ class EmailController
         $resetPasswordUrl = env('FRONTEND_URL') . '/auth/reset-password?token=' . $token;
 
         // Kirim Email
-        $receiver = $pembeli ?? $penitip;
+        $receiver = $pembeli ?? $penitip ?? $organisasi;
         Mail::to($email)->send(new KonfirmasiEmail([
-            'name' => $receiver->nama_pembeli ?? $receiver->nama_penitip,
+            'name' => $receiver->nama_pembeli ?? $receiver->nama_penitip ?? $receiver->nama_organisasi,
             'reset_password_url' => $resetPasswordUrl
         ]));
 

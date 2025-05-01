@@ -74,6 +74,8 @@ Route::middleware('auth:cs')->group(function () {
 Route::middleware('auth:admin')->group(function () {
     Route::get('/organisasi/show-all', [OrganisasiController::class, 'show']);
     Route::get('/organisasi/search/{search_organisasi}', [OrganisasiController::class, 'search']);
+    Route::delete('/organisasi/delete/{id_organisasi}', [OrganisasiController::class, 'destroy']);
+    Route::post('/organisasi/update/{id_organisasi}', [OrganisasiController::class, 'update']);
 });
 #endregion
 

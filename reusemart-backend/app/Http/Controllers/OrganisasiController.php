@@ -7,6 +7,9 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\ValidationException;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Log;
+
 
 class OrganisasiController
 {
@@ -76,11 +79,7 @@ class OrganisasiController
     public function show()
     {
         try {
-            $organisasi = Organisasi::all(); // Ambil semua organisasi
-            return response()->json([
-                'message' => 'Organisasi found',
-                'data' => $organisasi
-            ], 200);
+            return response()->json(Organisasi::paginate(10), 200);
         } catch (\Exception $e) {
             return response()->json([
                 'message' => 'Organisasi not found',
@@ -88,22 +87,94 @@ class OrganisasiController
             ], 404);
         }
     }
+
     
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, organisasi $organisasi)
+
+    public function update(Request $request, $id_organisasi)
     {
-        //
+        try {
+            $organisasi = Organisasi::find($id_organisasi);
+            if (!$organisasi) {
+                return response()->json(['message' => 'Organisasi not found'], 404);
+            }
+    
+            $validatedData = $request->validate([
+                'email_organisasi' => 'required|email|unique:organisasi,email_organisasi,' . $id_organisasi . ',id_organisasi',
+                'nama_organisasi' => 'required|string|max:255',
+                'nomor_telepon_organisasi' => 'required|string|max:15',
+                'alamat_organisasi' => 'required|string|max:255',
+                'foto_organisasi' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048'
+            ]);
+    
+            $updateData = [
+                'email_organisasi' => $validatedData['email_organisasi'],
+                'nama_organisasi' => $validatedData['nama_organisasi'],
+                'nomor_telepon_organisasi' => $validatedData['nomor_telepon_organisasi'],
+                'alamat_organisasi' => $validatedData['alamat_organisasi'],
+            ];
+    
+            if ($request->hasFile('foto_organisasi')) {
+                $image = $request->file('foto_organisasi');
+                $uploadFolder = 'img';
+                $image_uploaded_path = $image->store($uploadFolder, 'public');
+                $uploadedImageResponse = basename($image_uploaded_path);
+    
+                // Menghapus foto lama jika ada
+                if ($organisasi->foto_organisasi && Storage::disk('public')->exists($uploadFolder . '/' . $organisasi->foto_organisasi)) {
+                    Storage::disk('public')->delete($uploadFolder . '/' . $organisasi->foto_organisasi);
+                }
+    
+                // Update foto organisasi
+                $updateData['foto_organisasi'] = $uploadedImageResponse;
+            }
+    
+            $organisasi->update($updateData);
+    
+            return response()->json([
+                'message' => 'Organisasi updated successfully',
+                'data' => $organisasi
+            ]);
+    
+        } catch (ValidationException $e) {
+            return response()->json([
+                'message' => 'Validasi gagal',
+                'errors' => $e->errors()
+            ], 422);
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'Failed to update organisasi',
+                'error' => $e->getMessage(),
+            ], 500);
+        }
     }
+    
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(organisasi $organisasi)
+    public function destroy($id_organisasi)
     {
-        //
+        try {
+            $organisasi = Organisasi::find($id_organisasi);
+            if (!$organisasi) {
+                return response()->json([
+                    'message' => 'Organisasi not found',
+                ], 404);
+            }
+            $organisasi->delete();
+            return response()->json([
+                'message' => 'Organisasi deleted successfully',
+            ], 200);
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'Organisasi not found',
+                'error' => $e->getMessage(),
+            ], 404);
+        }
     }
 
     public function search($search_)

@@ -1,6 +1,6 @@
 import { Outlet } from "react-router-dom";
 
-import TopNavbar from "../Components/Pembeli/NavbarPembeli.jsx";
+import TopNavbar from "../Components/Penitip/NavbarPenitip.jsx";
 
 const MainLayout = () => {
     return (

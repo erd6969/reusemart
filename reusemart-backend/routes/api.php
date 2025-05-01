@@ -38,7 +38,7 @@ Route::middleware('auth:sanctum')->post('/create-diskusi', [DiskusiController::c
 
 #region Penitip
 Route::middleware('auth:penitip')->group(function () {
-    Route::post ('/penitip/logout', [PenitipController::class, 'logout']);
+    Route::get('/penitip/profile', [PenitipController::class, 'showProfile']);
 });
  #endregion
 

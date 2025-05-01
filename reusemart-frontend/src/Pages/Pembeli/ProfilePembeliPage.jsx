@@ -40,7 +40,6 @@ const InputDataPembeli = () => {
     try {
       const data = await GetProfile();
       setProfile(data);
-      console.log("Profile data:", data);
     } catch (error) {
       console.error("Error fetching profile", error);
     }

@@ -1,18 +1,34 @@
 import { useNavigate } from "react-router-dom";
 import React, { useState, useRef, useEffect } from "react";
-import { Navbar, Container, Nav } from "react-bootstrap";
+import { Navbar, Container, Nav, Spinner } from "react-bootstrap";
 import "../pembeli/NavbarPembeli.css";
 import profileImage from "../../assets/images/Pembeli/Yuki.jpeg";
 import logoReuseMart from "../../assets/images/logo-reusemart.png";
 import coin from "../../assets/images/coin-icon.png";
-import { FaShoppingCart, FaChevronDown, FaBars, FaTimes } from "react-icons/fa";
+import { FaChevronDown } from "react-icons/fa";
 import { Logout } from "../../api/apiAuth";
+import { ShowProfilePenitip } from "../../api/apiPenitip";
+import { getThumbnail } from "../../api/index";
 
 const TopNavbar = () => {
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
     const navigate = useNavigate();
     const dropdownRef = useRef(null);
-    
+    const [penitip, setPenitip] = useState(null);
+
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                const data = await ShowProfilePenitip();
+                setPenitip(data);
+            } catch (error) {
+                console.error("Gagal mengambil data penitip:", error);
+            }
+        };
+
+        fetchData();
+    }, []);
+
     const handleLogout = async () => {
         try {
             await Logout();
@@ -39,41 +55,58 @@ const TopNavbar = () => {
                     onClick={() => setIsDropdownOpen((prev) => !prev)}
                 >
                     <div className="profileSection">
-                        <img src={profileImage} alt="profile" />
-                        <div className="profileName">Yuki Suou</div>
+                        {penitip ? (
+                            <img
+                                src={getThumbnail(penitip.foto_penitip)}
+                                alt="profile"
+                            />
+                        ) : (
+                            <div style={{ width: 40, height: 40, display: "flex", alignItems: "center", justifyContent: "center" }}>
+                                <Spinner animation="border" size="sm" />
+                            </div>
+                        )}
+                        <div className="profileName">
+                            {penitip?.nama_penitip || "Loading..."}
+                        </div>
                         <FaChevronDown className="chevronIcon" />
                     </div>
 
-                    <div className={`dropdownMenu ${isDropdownOpen ? "show" : ""}`}>
-                        <div className="dropdownContent">
-                            <div className="pointsSection">
-                                <img src={coin} alt="coin icon" />
-                                <div className="pointsText">
-                                    <span>Poin Loyalitas</span>
-                                    <strong>1000 Poin</strong>
+                    {penitip && (
+                        <div className={`dropdownMenu ${isDropdownOpen ? "show" : ""}`}>
+                            <div className="dropdownContent">
+                                <div className="pointsSection">
+                                    <img src={coin} alt="coin icon" />
+                                    <div className="pointsText">
+                                        <span>Poin Loyalitas</span>
+                                        <strong>{penitip.poin_loyalitas}</strong>
+                                    </div>
                                 </div>
-                            </div>
-                            <div className="menuSection">
-                                <ul>
-                                    <br />
-                                    <li>
-                                        <Nav.Link onClick={() => navigate("/pembeli/profile")}>
-                                            Profil
-                                        </Nav.Link>
-                                    </li>
-                                    <li>
-                                        <Nav.Link onClick={() => navigate("/pembeli/alamat")}>
-                                            Daftar Penitipan
-                                        </Nav.Link>
-                                    </li>
-                                </ul>
-                                <hr />
-                                <div className="logout" onClick={handleLogout} style={{ cursor: "pointer" }}>
-                                    Log Out ➡
+                                <div className="menuSection">
+                                    <ul>
+                                        <br />
+                                        <li>
+                                            <Nav.Link onClick={() => navigate("/penitip/profile")}>
+                                                Profil
+                                            </Nav.Link>
+                                        </li>
+                                        <li>
+                                            <Nav.Link onClick={() => navigate("/penitip/history")}>
+                                                Daftar Penitipan
+                                            </Nav.Link>
+                                        </li>
+                                    </ul>
+                                    <hr />
+                                    <div
+                                        className="logout"
+                                        onClick={handleLogout}
+                                        style={{ cursor: "pointer" }}
+                                    >
+                                        Log Out ➡
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
+                    )}
                 </div>
             </Container>
         </Navbar>

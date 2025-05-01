@@ -1,9 +1,11 @@
 import { useEffect, useState } from "react";
 import { Container } from "react-bootstrap";
-import "./ProfilePenitip.css";
+import "./ProfilePenitipPage.css";
 import FotoPenitip from "../../Components/Penitip/FotoPenitip";
 import InputColumn from "../../Components/InputColumn";
 import { ShowProfilePenitip } from "../../api/apiPenitip";
+
+import { getThumbnail } from "../../api/index";
 
 const ProfilePenitip = () => {
   const [penitip, setPenitip] = useState(null);
@@ -21,7 +23,7 @@ const ProfilePenitip = () => {
     fetchData();
   }, []);
 
-  if (!penitip) return <p>Loading...</p>;
+  if (!penitip) return <p></p>;
 
   return (
     <>
@@ -32,7 +34,7 @@ const ProfilePenitip = () => {
       </div>
       <div className="profile-content">
         <div className="profile-left">
-          <FotoPenitip Foto={penitip.foto_penitip} />
+          <FotoPenitip Foto={getThumbnail(penitip.foto_penitip)} />
           <div className="profile-details-container">
             <div className="left-details">
               <div className="detail-item">
@@ -45,7 +47,7 @@ const ProfilePenitip = () => {
               </div>
               <div className="detail-item">
                 <b>Badge</b>
-                <div className="badge-placeholder">{penitip.badge || "-"}</div>
+                <div className="badge-placeholder">{penitip.badge || "None"}</div>
               </div>
             </div>
             <div className="right-detail">

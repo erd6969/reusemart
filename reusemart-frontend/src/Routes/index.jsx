@@ -44,6 +44,7 @@ import AdminMasterOrganisasiPage from "../Pages/Admin/AdminMasterOrganisasiPage"
 //Penitip
 import PenitipLayout from "../Layouts/PenitipLayouts";
 import ProfilPenitip from "../Pages/Penitip/ProfilePenitipPage";
+import HistoryPenitip from "../Pages/Penitip/HistoriPenitipanPage";
 
 const router = createBrowserRouter([
     {
@@ -247,6 +248,10 @@ const router = createBrowserRouter([
                 path: "profile",
                 element: <ProfilPenitip />,
             },
+            {
+                path: "history",
+                element: <HistoryPenitip />,
+            }
         ],
     },
     {

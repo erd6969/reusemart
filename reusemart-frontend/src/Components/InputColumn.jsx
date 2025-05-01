@@ -7,6 +7,7 @@ const InputColumn = ({
   idInput,
   placeholderInput,
   value,
+  disabled = false,
   onChange
 }) => {
   const handleChange = (e) => {
@@ -22,6 +23,7 @@ const InputColumn = ({
         name={nameLabel}
         placeholder={placeholderInput}
         value={value}
+        disabled={disabled}
         onChange={handleChange}
       />
     </div>

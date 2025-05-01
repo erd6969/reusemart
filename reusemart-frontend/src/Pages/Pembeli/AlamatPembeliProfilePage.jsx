@@ -63,6 +63,7 @@ const AlamatPembeliPage = () => {
   const [modalTitle, setModalTitle] = useState("Tambah Alamat");
   const [selectedAlamat, setSelectedAlamat] = useState(null);
   const [searchQuery, setSearchQuery] = useState("");
+  const [isFirstLoad, setIsFirstLoad] = useState(true);
 
   const fetchAlamat = () => {
     setIsLoading(true);
@@ -70,10 +71,12 @@ const AlamatPembeliPage = () => {
       .then((data) => {
         setAddress(data);
         setIsLoading(false);
+        setIsFirstLoad(false);
       })
       .catch((error) => {
         console.error("Error fetching address:", error);
         setIsLoading(false);
+        setIsFirstLoad(false);
       });
   };
 
@@ -87,24 +90,19 @@ const AlamatPembeliPage = () => {
   };
 
   useEffect(() => {
-    fetchAlamat();
-  }, []);
-
-  useEffect(() => {
     const delayDebounce = setTimeout(() => {
-      if (searchQuery.length >= 3) {
+      if (searchQuery.trim().length >= 3) {
         setIsLoading(true);
-        SearchAlamat(searchQuery)
+        SearchAlamat(searchQuery.trim())
           .then((data) => {
             const hasil = Array.isArray(data) ? data : [data];
             setAddress(hasil);
-            setIsLoading(false);
           })
           .catch((error) => {
             console.error("Error searching address:", error);
             setAddress([]);
-            setIsLoading(false);
-          });
+          })
+          .finally(() => setIsLoading(false));
       } else {
         fetchAlamat();
       }
@@ -122,7 +120,7 @@ const AlamatPembeliPage = () => {
         console.error("Gagal menghapus alamat:", error);
       }
     }
-  }
+  };
 
   return (
     <>
@@ -162,7 +160,7 @@ const AlamatPembeliPage = () => {
               </button>
             </div>
             <div className="alamat-list">
-              {isLoading ? (
+              {isLoading || isFirstLoad ? (
                 <div className="text-center">
                   <Spinner
                     as="span"

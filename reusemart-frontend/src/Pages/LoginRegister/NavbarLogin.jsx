@@ -5,9 +5,6 @@ import { Navbar, Container, Nav, Button } from 'react-bootstrap';
 import logoReuseMart from '../../assets/images/logo-reusemart.png';
 import { FaChevronDown } from "react-icons/fa";
 
-
-
-
 const TopNavbar = () => {
     const [isOpen, setIsOpen] = useState(false);
     const navigate = useNavigate();
@@ -17,8 +14,11 @@ const TopNavbar = () => {
     return (
         <Navbar className="navBar">
             <Container fluid>
-                <img src={logoReuseMart} alt="logo" className="logoReuseMart" onClick={() => navigate('/')} />
-                <Navbar.Brand className="navTitles" onClick={() => navigate('/')}>ReuseMart</Navbar.Brand>
+                <div className='navbar-left'>
+                    <img src={logoReuseMart} alt="logo" className="logoReuseMart" onClick={() => navigate('/')} />
+                    <Navbar.Brand className="navTitles" onClick={() => navigate('/')}>ReuseMart</Navbar.Brand>
+                </div>
+                
                 <div
                     className="profileContainer"
                     ref={dropdownRef}

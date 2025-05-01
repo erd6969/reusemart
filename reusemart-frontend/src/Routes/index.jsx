@@ -16,8 +16,8 @@ import ReqDonasi from "../Pages/Owner/ReqDonasi";
 import HistoryDonasiPage from "../Pages/Owner/HistoryDonasi"; 
 import LaporanPage from "../Pages/Owner/Laporan"; 
 import PegawaiGudangPage from "../Pages/PegawaiGudang/PegawaiGudangPage";
-import ProfilePenitipPage from "../Pages/Penitip/ProfilePenitipPage";
 
+//Pembeli
 import PembeliLayout from "../Layouts/PembeliLayouts";
 import ProfilePembeliPage from "../Pages/Pembeli/ProfilePembeliPage";
 import AlamatPembeliPage from "../Pages/Pembeli/AlamatPembeliProfilePage";
@@ -30,13 +30,20 @@ import CheckoutPage from "../Pages/Pembeli/CheckoutPage";
 import PaymentPage from "../Pages/Pembeli/PaymentPage";
 import ListTransaksi from "../Pages/Pembeli/PurchasePembeliPage";
 
+//Forgot Password
 import ForgotPassword from "../Pages/LoginRegister/VerifyEmailPage";
 import ResetPassword from "../Pages/LoginRegister/ResetPasswordPage";
 
+//Organisasi
 import RegisterOrganisasi from "../Pages/LoginRegister/RegisterOrganisasiPage";
 
+//Admin
 import AdminLayout from "../Layouts/AdminLayouts";
 import AdminMasterOrganisasiPage from "../Pages/Admin/AdminMasterOrganisasiPage";
+
+//Penitip
+import PenitipLayout from "../Layouts/PenitipLayouts";
+import ProfilPenitip from "../Pages/Penitip/ProfilePenitipPage";
 
 const router = createBrowserRouter([
     {
@@ -232,13 +239,13 @@ const router = createBrowserRouter([
         path: "/penitip",
         element: (
             <ProtectedRoutes allowedRoles={["penitip"]}>
-                <div>Penitip Page</div>
+                <PenitipLayout />
             </ProtectedRoutes>
         ),
         children: [
             {
                 path: "profile",
-                element: <ProfilePenitipPage />,
+                element: <ProfilPenitip />,
             },
         ],
     },

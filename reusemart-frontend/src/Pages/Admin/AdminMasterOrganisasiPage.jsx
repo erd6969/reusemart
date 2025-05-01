@@ -2,7 +2,10 @@ import './AdminMasterOrganisasiPage.css';
 import InputColumn from '../../Components/InputColumn';
 import { Container, Button, Spinner } from 'react-bootstrap';
 import { useEffect, useState } from 'react';
-import { ShowAllOrganisasi, SearchOrganisasi } from '../../api/apiOrganisasi';
+import { ShowAllOrganisasi, DeleteOrganisasi } from '../../api/apiOrganisasi';
+import ModalEditOrganisasi from '../../Components/Modal/ModalAdmin/ModalEditOrganisasi';
+import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
+import { toast } from 'react-toastify';
 
 const SearchComponent = ({ onSearch }) => {
     return (
@@ -23,47 +26,61 @@ const AdminMasterOrganisasiPage = () => {
     const [organisasiList, setOrganisasiList] = useState([]);
     const [isLoading, setIsLoading] = useState(false);
     const [searchQuery, setSearchQuery] = useState("");
+    const [isFirstLoad, setIsFirstLoad] = useState(true);
+    const [showModal, setShowModal] = useState(false);
+    const [selectedOrganisasi, setSelectedOrganisasi] = useState(null);
 
-    const fetchOrganisasiData = async () => {
+    // Pagination states
+    const [currentPage, setCurrentPage] = useState(1);
+    const [totalPages, setTotalPages] = useState(1);
+
+    const fetchOrganisasiData = async (page = 1) => {
         setIsLoading(true);
         try {
-            const response = await ShowAllOrganisasi();
+            const response = await ShowAllOrganisasi(page);
+
             setOrganisasiList(response.data);
+            setTotalPages(response.last_page);
+            setCurrentPage(response.current_page);
         } catch (error) {
             console.error("Error fetching organisasi data:", error);
             setOrganisasiList([]);
         } finally {
             setIsLoading(false);
+            setIsFirstLoad(false);
+        }
+    };
+    
+
+    useEffect(() => {
+        fetchOrganisasiData(currentPage);
+    }, [currentPage]);
+
+    const handleDelete = async (id) => {
+        if (window.confirm("Apakah Anda yakin ingin menghapus organisasi ini?")) {
+            try {
+                await DeleteOrganisasi(id);
+                fetchOrganisasiData(currentPage);
+            } catch (error) {
+                console.error("Gagal menghapus organisasi:", error);
+            }
         }
     };
 
-    useEffect(() => {
-        const delayDebounce = setTimeout(() => {
-            if (searchQuery.trim().length >= 3) {
-                setIsLoading(true);
-                SearchOrganisasi(searchQuery.trim())
-                    .then((response) => {
-                        const hasil = Array.isArray(response.data) ? response.data : [response.data];
-                        setOrganisasiList(hasil);
-                    })
-                    .catch((error) => {
-                        console.error("Error searching organisasi:", error);
-                        setOrganisasiList([]);
-                    })
-                    .finally(() => {
-                        setIsLoading(false);
-                    });
-            } else {
-                fetchOrganisasiData();
-            }
-        }, 500);
+    const handleEdit = (org) => {
+        setSelectedOrganisasi(org);
+        setShowModal(true);
+    };
 
-        return () => clearTimeout(delayDebounce);
-    }, [searchQuery]);
+    const handleModalClose = () => {
+        setShowModal(false);
+        setSelectedOrganisasi(null);
+    };
 
-    useEffect(() => {
-        fetchOrganisasiData();
-    }, []);
+    const handleUpdateSuccess = () => {
+        fetchOrganisasiData(currentPage);
+        toast.success("Data Organisasi Berhasil Diperbarui.");
+    };
 
     return (
         <Container>
@@ -83,30 +100,24 @@ const AdminMasterOrganisasiPage = () => {
                             </tr>
                         </thead>
                         <tbody>
-                            {isLoading ? (
+                            {isLoading || isFirstLoad ? (
                                 <tr>
                                     <td colSpan="6" className="text-center">
-                                        <Spinner
-                                            as="span"
-                                            animation="border"
-                                            variant="primary"
-                                            role="status"
-                                            aria-hidden="true"
-                                        />
+                                        <Spinner animation="border" variant="primary" />
                                         <div>Loading...</div>
                                     </td>
                                 </tr>
                             ) : organisasiList.length > 0 ? (
-                                organisasiList.map((org, index) => (
-                                    <tr key={index}>
+                                organisasiList.map((org) => (
+                                    <tr key={org.id_organisasi}>
                                         <td>ORG.{org.id_organisasi}</td>
                                         <td>{org.nama_organisasi}</td>
                                         <td>{org.alamat_organisasi}</td>
                                         <td>{org.nomor_telepon_organisasi}</td>
                                         <td>{org.email_organisasi}</td>
-                                        <td>
-                                            <Button variant="warning" className="me-2">Edit</Button>
-                                            <Button variant="danger">Delete</Button>
+                                        <td className="actionButtons">
+                                            <Button variant="warning" onClick={() => handleEdit(org)}>Edit</Button>
+                                            <Button variant="danger" onClick={() => handleDelete(org.id_organisasi)}>Delete</Button>
                                         </td>
                                     </tr>
                                 ))
@@ -120,7 +131,39 @@ const AdminMasterOrganisasiPage = () => {
                         </tbody>
                     </table>
                 </div>
+
+                {/* Pagination */}
+                <div className="pagination d-flex justify-content-center align-items-center mt-4">
+                    <Button 
+                        variant="secondary" 
+                        disabled={currentPage === 1} 
+                        onClick={() => setCurrentPage(prev => prev - 1)}
+                        className="me-2 d-flex align-items-center justify-content-center"
+                    >
+                        <FaChevronLeft />
+                    </Button>
+
+                    <span>Halaman {currentPage} dari {totalPages}</span>
+
+                    <Button 
+                        variant="secondary" 
+                        disabled={currentPage === totalPages} 
+                        onClick={() => setCurrentPage(prev => prev + 1)}
+                        className="ms-2 d-flex align-items-center justify-content-center"
+                    >
+                        <FaChevronRight />
+                    </Button>
+                </div>
             </div>
+
+            {selectedOrganisasi && (
+                <ModalEditOrganisasi
+                    show={showModal}
+                    handleClose={handleModalClose}
+                    dataEdit={selectedOrganisasi}
+                    onSuccess={handleUpdateSuccess}
+                />
+            )}
         </Container>
     );
 };

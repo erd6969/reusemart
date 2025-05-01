@@ -137,7 +137,13 @@ class LoginController
                 $penitip->password_penitip = Hash::make($request->password);
                 $penitip->save();
             } else {
-                return response()->json(['message' => 'User tidak ditemukan.'], 404);
+                $organisasi = Organisasi::where('email_organisasi', $resetRecord->email)->first();
+                if($organisasi) {
+                    $organisasi->password_organisasi = Hash::make($request->password);
+                    $organisasi->save();
+                } else {
+                    return response()->json(['message' => 'Email tidak ditemukan.'], 404);
+                }
             }
         }
 

@@ -55,11 +55,12 @@ export const Logout = async () => {
 };
 
 // Fungsi untuk mengirimkan email konfirmasi
-export const sendKonfirmasiEmail = async (email, isPenitip = false) => {
+export const sendKonfirmasiEmail = async (email, isPenitip = false, isOrganisasi = false) => {
     try {
         const response = await useAxios.post("/send-konfirmasi-email", {
             email: email,  // Kirimkan email
-            isPenitip: isPenitip  // Penentuan apakah penitip atau pembeli
+            isPenitip: isPenitip,  // Penentuan apakah penitip atau pembeli
+            isOrganisasi: isOrganisasi  // Penentuan apakah organisasi atau bukan
         }, {
             headers: {
                 "Content-Type": "application/json",

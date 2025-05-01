@@ -7,12 +7,26 @@ import logoReuseMart from "../../assets/images/logo-reusemart.png";
 import coin from "../../assets/images/coin-icon.png";
 import { FaShoppingCart, FaChevronDown, FaBars, FaTimes } from "react-icons/fa";
 import { Logout } from "../../api/apiAuth";
+import { GetProfile } from "../../api/apiPembeli";
 
 const TopNavbar = () => {
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
     const navigate = useNavigate();
     const dropdownRef = useRef(null);
+    const [profile, setProfile] = useState([]);
     
+     const showProfile = async () => {
+        try {
+          const data = await GetProfile();
+          setProfile(data);
+        } catch (error) {
+          console.error("Error fetching profile", error);
+        }
+      }
+    
+      useEffect(() => {
+        showProfile();
+      }, []);
     const handleLogout = async () => {
         try {
             await Logout();
@@ -50,8 +64,8 @@ const TopNavbar = () => {
                     onClick={() => setIsDropdownOpen((prev) => !prev)}
                 >
                     <div className="profileSection">
-                        <img src={profileImage} alt="profile" />
-                        <div className="profileName">Yuki Suou</div>
+                        <img src={profile.foto_pembeli} alt="profile" />
+                        <div className="profileName">{profile.nama_pembeli}</div>
                         <FaChevronDown className="chevronIcon" />
                     </div>
 
@@ -61,7 +75,7 @@ const TopNavbar = () => {
                                 <img src={coin} alt="coin icon" />
                                 <div className="pointsText">
                                     <span>Loyalty Points</span>
-                                    <strong>1000 Points</strong>
+                                    <strong>{profile.poin_loyalitas}</strong>
                                 </div>
                             </div>
                             <div className="menuSection">

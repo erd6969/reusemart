@@ -115,4 +115,18 @@ class PenitipController
     {
         //
     }
+
+    public function showProfile()
+    {
+        try {
+            $penitip = auth('penitip')->user();
+            return response()->json($penitip, 200);
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'Penitip not found',
+                'error' => $e->getMessage(),
+            ], 404);
+        }
+    }
+    
 }

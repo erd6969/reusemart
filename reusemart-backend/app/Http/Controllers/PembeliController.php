@@ -14,29 +14,30 @@ class PembeliController
     {
         try {
             $request->validate([
-                'email_organisasi' => 'required|email|unique:organisasi,email_organisasi',
-                'password_organisasi' => 'required|min:8',
-                'konfirmasi_password_organisasi' => 'required|same:password_organisasi',
-                'nama_organisasi' => 'required|string|max:255',
-                'nomor_telepon_organisasi' => 'required|string|max:15',
-                'alamat_organisasi' => 'required|string|max:255',
-                'foto_organisasi' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048'
+                'email_pembeli' => 'required|email|unique:pembeli,email_pembeli',
+                 'password_pembeli' => 'required|min:8',
+                 'konfirmasi_password_pembeli' => 'required|same:password_pembeli',
+                 'nama_pembeli' => 'required|string|max:255',
+                 'nomor_telepon_pembeli' => 'required|string|max:15',
+                 'tanggal_lahir_pembeli' => 'required|date',
+                 'foto_pembeli' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048'
             ]);
 
-            $foto_organisasi_path = 'blank-profile-picture.jpg';
-
-            $organisasi = Organisasi::create([
-                'email_organisasi' => $request->email_organisasi,
-                'password_organisasi' => Hash::make($request->password_organisasi),
-                'nama_organisasi' => $request->nama_organisasi,
-                'nomor_telepon_organisasi' => $request->nomor_telepon_organisasi,
-                'alamat_organisasi' => $request->alamat_organisasi,
-                'foto_organisasi' => $foto_organisasi_path,
+            $foto_pembeli_path = 'blank-profile-picture.jpg';
+     
+             $pembeli = Pembeli::create([
+                 'email_pembeli' => $request->email_pembeli,
+                 'password_pembeli' => Hash::make($request->password_pembeli),
+                 'nama_pembeli' => $request->nama_pembeli,
+                 'nomor_telepon_pembeli' => $request->nomor_telepon_pembeli,
+                 'tanggal_lahir_pembeli' => $request->tanggal_lahir_pembeli,
+                 'poin_loyalitas' => 0,
+                 'foto_pembeli' => $foto_pembeli_path,
             ]);
 
             return response()->json([
                 'message' => 'Registration successful',
-                'organisasi' => $organisasi,
+                'pembeli' => $pembeli,
             ], 201);
 
         } catch (ValidationException $e) {

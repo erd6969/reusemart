@@ -73,9 +73,12 @@ class PembeliController
     /**
      * Display the specified resource.
      */
-    public function show(pembeli $pembeli)
+    public function show()
     {
-        //
+        $userProf = Auth()->user();
+        return response()->json(
+            $userProf
+        , 200);
     }
 
     /**

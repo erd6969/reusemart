@@ -4,7 +4,8 @@ import FotoPembeli from "../../Components/Pembeli/FotoPembeli";
 import ProfileNavigation from "../../Components/Pembeli/ProfileHeader";
 import InputColumn from "../../Components/InputColumn";
 import profileImage from "../../assets/images/Pembeli/Yuki.jpeg";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { GetProfile } from "../../api/apiPembeli";
 
 const Poin = () => {
   return (
@@ -16,6 +17,7 @@ const Poin = () => {
 };
 
 const InputDataPembeli = () => {
+  const [profile, setProfile] = useState([]);
   const [formData, setFormData] = useState({
     fullName: '',
     email: '',
@@ -34,6 +36,21 @@ const InputDataPembeli = () => {
     console.log(formData);
   };
 
+  const showProfile = async () => {
+    try {
+      const data = await GetProfile();
+      setProfile(data);
+      console.log("Profile data:", data);
+    } catch (error) {
+      console.error("Error fetching profile", error);
+    }
+  }
+
+  useEffect(() => {
+    showProfile();
+  }, []);
+
+
   return (
     <Container className="input-container">
       <form onSubmit={handleSubmit}>
@@ -42,7 +59,7 @@ const InputDataPembeli = () => {
           contentLabel="Nama Lengkap"
           typeInput="text"
           idInput="name"
-          placeholderInput="Yuki Suou"
+          placeholderInput={profile.nama_pembeli}
           value={formData.fullName}
           onChange={handleChange}
         />
@@ -51,7 +68,7 @@ const InputDataPembeli = () => {
           contentLabel="Email"
           typeInput="email"
           idInput="email"
-          placeholderInput="yukisuou@gmail.com"
+          placeholderInput={profile.email_pembeli}
           value={formData.email}
           onChange={handleChange}
         />
@@ -60,7 +77,7 @@ const InputDataPembeli = () => {
           contentLabel="Nomor Telepon"
           typeInput="number"
           idInput="phone"
-          placeholderInput="1234567890"
+          placeholderInput={profile.nomor_telepon_pembeli}
           value={formData.phone}
           onChange={handleChange}
         />
@@ -94,13 +111,13 @@ const ProfilePembeli = () => {
       <ProfileNavigation Profile={{ fontWeight: "600", textDecoration: "underline", fontSize: "40px", color: "black" }} Alamat={{ fontWeight: "50", fontSize: "35px", color: "#AFAEAE" }} />
       <div className="profile-content">
         <div className="profile-left">
-          <FotoPembeli 
-            Foto={profileImage} 
+          <FotoPembeli
+            Foto={profileImage}
             SubProp={
               <>
                 <label htmlFor="upload" className="button-profile">Pilih Gambar</label>
               </>
-            } 
+            }
           />
           <Poin />
         </div>

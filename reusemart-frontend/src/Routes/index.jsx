@@ -51,8 +51,14 @@ const router = createBrowserRouter([
         element: <HomePage />,
     },
     {
-        path: "/Home",
-        element: <Home />,
+        path: "/home",
+        element: <PembeliLayout />,
+        children: [
+            {
+                path: "/home",
+                element: <Home />,
+            },
+        ],
     },
     
     

@@ -1,6 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import React, { useState, useRef, useEffect } from "react";
-import { Navbar, Container, Nav } from "react-bootstrap";
+import { Navbar, Container, Nav, Spinner } from "react-bootstrap";
 import "./NavbarPembeli.css";
 import profileImage from "../../assets/images/Pembeli/Yuki.jpeg";
 import logoReuseMart from "../../assets/images/logo-reusemart.png";
@@ -14,19 +14,23 @@ const TopNavbar = () => {
     const navigate = useNavigate();
     const dropdownRef = useRef(null);
     const [profile, setProfile] = useState([]);
-    
-     const showProfile = async () => {
+    const [isLoading, setIsLoading] = useState(true);
+
+    const showProfile = async () => {
         try {
-          const data = await GetProfile();
-          setProfile(data);
+            setIsLoading(true);
+            const data = await GetProfile();
+            setProfile(data);
         } catch (error) {
-          console.error("Error fetching profile", error);
+            console.error("Error fetching profile", error);
+        } finally {
+            setIsLoading(false);
         }
-      }
-    
-      useEffect(() => {
+    }
+
+    useEffect(() => {
         showProfile();
-      }, []);
+    }, []);
     const handleLogout = async () => {
         try {
             await Logout();
@@ -46,7 +50,7 @@ const TopNavbar = () => {
                 </div>
 
                 <Nav className="navContent">
-                    <Nav.Link onClick={() => navigate("/")}>Home</Nav.Link>
+                    <Nav.Link onClick={() => navigate("/home")}>Home</Nav.Link>
                     <Nav.Link onClick={() => navigate("/pembeli/shop")}>Shop</Nav.Link>
                     <Nav.Link onClick={() => navigate("/help")}>Help</Nav.Link>
                 </Nav>
@@ -56,54 +60,68 @@ const TopNavbar = () => {
                     onClick={() => navigate("/pembeli/cart")}
                     style={{ cursor: "pointer" }}
                 />
-                <div
-                    className="profileContainer"
-                    ref={dropdownRef}
-                    onMouseEnter={() => setIsDropdownOpen(true)}
-                    onMouseLeave={() => setIsDropdownOpen(false)}
-                    onClick={() => setIsDropdownOpen((prev) => !prev)}
-                >
-                    <div className="profileSection">
-                        <img src={profile.foto_pembeli} alt="profile" />
-                        <div className="profileName">{profile.nama_pembeli}</div>
-                        <FaChevronDown className="chevronIcon" />
+                {isLoading ? (
+                    <div style={{ textAlign: "center" }}>
+                        <Spinner
+                            as="span"
+                            animation="border"
+                            variant="primary"
+                            size="lg"
+                            role="status"
+                            aria-hidden="true"
+                        />
                     </div>
+                ) : (
 
-                    <div className={`dropdownMenu ${isDropdownOpen ? "show" : ""}`}>
-                        <div className="dropdownContent">
-                            <div className="pointsSection">
-                                <img src={coin} alt="coin icon" />
-                                <div className="pointsText">
-                                    <span>Loyalty Points</span>
-                                    <strong>{profile.poin_loyalitas}</strong>
+                    <div
+                        className="profileContainer"
+                        ref={dropdownRef}
+                        onMouseEnter={() => setIsDropdownOpen(true)}
+                        onMouseLeave={() => setIsDropdownOpen(false)}
+                        onClick={() => setIsDropdownOpen((prev) => !prev)}
+                    >
+                        <div className="profileSection">
+                            <img src={profile.foto_pembeli} alt="profile" />
+                            <div className="profileName">{profile.nama_pembeli}</div>
+                            <FaChevronDown className="chevronIcon" />
+                        </div>
+
+                        <div className={`dropdownMenu ${isDropdownOpen ? "show" : ""}`}>
+                            <div className="dropdownContent">
+                                <div className="pointsSection">
+                                    <img src={coin} alt="coin icon" />
+                                    <div className="pointsText">
+                                        <span>Loyalty Points</span>
+                                        <strong>{profile.poin_loyalitas}</strong>
+                                    </div>
                                 </div>
-                            </div>
-                            <div className="menuSection">
-                                <ul>
-                                    <li>
-                                        <Nav.Link onClick={() => navigate("/pembeli/profile")}>
-                                            My Profile
-                                        </Nav.Link>
-                                    </li>
-                                    <li>
-                                        <Nav.Link onClick={() => navigate("/pembeli/alamat")}>
-                                            My Address
-                                        </Nav.Link>
-                                    </li>
-                                    <li>
-                                        <Nav.Link onClick={() => navigate("/pembeli/purchase")}>
-                                            Purchase
-                                        </Nav.Link>
-                                    </li>
-                                </ul>
-                                <hr />
-                                <div className="logout" onClick={handleLogout} style={{ cursor: "pointer" }}>
-                                    Log Out ➡
+                                <div className="menuSection">
+                                    <ul>
+                                        <li>
+                                            <Nav.Link onClick={() => navigate("/pembeli/profile")}>
+                                                My Profile
+                                            </Nav.Link>
+                                        </li>
+                                        <li>
+                                            <Nav.Link onClick={() => navigate("/pembeli/alamat")}>
+                                                My Address
+                                            </Nav.Link>
+                                        </li>
+                                        <li>
+                                            <Nav.Link onClick={() => navigate("/pembeli/purchase")}>
+                                                Purchase
+                                            </Nav.Link>
+                                        </li>
+                                    </ul>
+                                    <hr />
+                                    <div className="logout" onClick={handleLogout} style={{ cursor: "pointer" }}>
+                                        Log Out ➡
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                </div>
+                )}
             </Container>
         </Navbar>
     );

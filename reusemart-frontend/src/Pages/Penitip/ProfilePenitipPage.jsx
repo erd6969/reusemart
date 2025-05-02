@@ -39,7 +39,7 @@ const ProfilePenitip = () => {
             <div className="left-details">
               <div className="detail-item">
                 <b>Saldo</b>
-                <p>Rp {penitip.saldo?.toLocaleString('id-ID')},00</p>
+                <p>Rp{penitip.saldo?.toLocaleString('id-ID')},00</p>
               </div>
               <div className="detail-item">
                 <b>Poin Loyalitas</b>

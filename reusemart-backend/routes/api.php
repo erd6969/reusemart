@@ -39,6 +39,7 @@ Route::middleware('auth:sanctum')->post('/create-diskusi', [DiskusiController::c
 #region Penitip
 Route::middleware('auth:penitip')->group(function () {
     Route::get('/penitip/profile', [PenitipController::class, 'showProfile']);
+    Route::get('/penitip/show-sold-product', [PenitipController::class, 'showSoldProducts']);
 });
  #endregion
 

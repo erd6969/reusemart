@@ -7,6 +7,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\ValidationException;
+use Illuminate\Support\Facades\DB;
+
 class PenitipController
 {
 
@@ -128,5 +130,37 @@ class PenitipController
             ], 404);
         }
     }
+
+    public function showSoldProducts()
+    {
+        try {
+            $penitip = auth('penitip')->user();
+
+            $products = DB::table('transaksi_penitipan')
+            ->join('detail_transaksi_penitipan', 'transaksi_penitipan.id_transaksi_penitipan', '=', 'detail_transaksi_penitipan.id_transaksi_penitipan')
+            ->join('barang', 'detail_transaksi_penitipan.id_barang', '=', 'barang.id_barang')
+            ->join('komisi', 'komisi.id_barang', '=', 'barang.id_barang')
+            ->join('transaksi_pembelian', 'transaksi_pembelian.id_transaksi_pembelian', '=', 'komisi.id_transaksi_pembelian')
+            ->where('transaksi_penitipan.id_penitip', $penitip->id_penitip)
+            ->where('detail_transaksi_penitipan.status_penitipan', 'terjual')
+            ->select(
+                'barang.*',
+                'transaksi_pembelian.tanggal_pembelian'
+            )
+            ->get();
+
+            return response()->json([
+                'message' => 'Success',
+                'data' => $products
+            ], 200);
+
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'Penitip not found',
+                'error' => $e->getMessage(),
+            ], 404);
+        }
+    }
+
     
 }

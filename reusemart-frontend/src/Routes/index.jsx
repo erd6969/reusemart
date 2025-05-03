@@ -6,7 +6,6 @@ import GuestOnlyRoute  from "../Routes/GuestOnlyRoutes";
 // Pages & Layouts
 import HomePage from "../Homepage/Homepage";
 import Home from "../Homepage/Home";
-import CSPage from "../Pages/CustomerService/CSPage";
 import LoginPage from "../Pages/LoginRegister/LoginPage";
 import RegisterBuyerPage from "../Pages/LoginRegister/RegisterBuyerPage";
 import RegisterOption from "../Pages/LoginRegister/RegisterOption";
@@ -44,6 +43,11 @@ import AdminMasterOrganisasiPage from "../Pages/Admin/AdminMasterOrganisasiPage"
 //Penitip
 import PenitipLayout from "../Layouts/PenitipLayouts";
 import ProfilPenitip from "../Pages/Penitip/ProfilePenitipPage";
+
+//CS
+import CSLayout from "../Layouts/CSLayouts";
+import CSDiscussionPage from "../Pages/CustomerService/CSDiscussionPage";
+import CSPenitipManagementPage from "../Pages/CustomerService/CSPenitipManagementPage";
 
 const router = createBrowserRouter([
     {
@@ -173,13 +177,17 @@ const router = createBrowserRouter([
         path: "/customerservice",
         element: (
             <ProtectedRoutes allowedRoles={["cs"]}>
-                <CSPage />
+                <CSLayout />
             </ProtectedRoutes>
         ),
         children: [
             {
-                path: "payment",
-                element: <div>Payment Management</div>,
+                path: "penitip-management",
+                element: <CSPenitipManagementPage />,
+            },
+            {
+                path: "discussion",
+                element: <CSDiscussionPage />,
             },
         ],
     },

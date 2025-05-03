@@ -94,12 +94,40 @@ class PenitipController
         //
     }
 
+    public function search(Request $search_)
+    {
+        try{
+            $penitip = Penitip::where('nama_penitip', 'like', '%' . $search_ . '%')->get();
+            if ($penitip->isEmpty()) {
+                return response()->json([
+                    'message' => 'Penitip not found',
+                ], 404);
+            }
+            return response()->json([
+                'message' => 'Penitip found',
+                'data' => $penitip
+            ], 200);
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'Penitip not found',
+                'error' => $e->getMessage(),
+            ], 404);
+        }
+    }
+
     /**
      * Display the specified resource.
      */
     public function show(penitip $penitip)
     {
-        //
+        try {
+            return response()->json(Penitip::paginate(10), 200);
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'penitip not found',
+                'error' => $e->getMessage(),
+            ], 404);
+        }
     }
 
     /**
@@ -115,7 +143,7 @@ class PenitipController
      */
     public function destroy(penitip $penitip)
     {
-        //
+        
     }
 
     public function showProfile()

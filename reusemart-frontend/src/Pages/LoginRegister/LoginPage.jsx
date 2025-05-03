@@ -34,7 +34,7 @@ function LoginPage() {
             } else if (role === "admin") {
                 navigate("/admin/admin-organisasi-master");
             } else if (role === "cs") {
-                navigate("/customerservice");
+                navigate("/customerservice/penitip-management");
             } else if(role === "organisasi"){
                 navigate("/organisasi/daftar-donasi")
             } else {

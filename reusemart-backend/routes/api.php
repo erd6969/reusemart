@@ -71,6 +71,10 @@ Route::middleware('auth:gudang')->group(function () {
 
 Route::middleware('auth:cs')->group(function () {
     Route::post ('/penitip/register', [PenitipController::class, 'register'])->name('penitip.register');
+    Route::get('/penitip/show-all', [PenitipController::class, 'show']);
+    Route::get('/penitip/search/{search_penitip}', [PenitipController::class, 'search']);
+    Route::delete('/penitip/delete/{id_penitip}', [PenitipController::class, 'destroy']);
+    Route::post('/penitip/update/{id_penitip}', [PenitipController::class, 'update']);
 });
 
 Route::middleware('auth:admin')->group(function () {

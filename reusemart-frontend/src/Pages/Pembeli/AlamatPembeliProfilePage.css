@@ -138,6 +138,10 @@
     background-color: #fff;
 }
 
+.search-bar:focus-within {
+    border: 1px solid black;
+}
+
 .search-icon-inside {
     width: 20px;
     height: 20px;

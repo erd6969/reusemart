@@ -42,7 +42,12 @@ import AdminMasterOrganisasiPage from "../Pages/Admin/AdminMasterOrganisasiPage"
 
 //Penitip
 import PenitipLayout from "../Layouts/PenitipLayouts";
+import PenitipProductLayout from "../Layouts/PenitipContentLayouts";
 import ProfilPenitip from "../Pages/Penitip/ProfilePenitipPage";
+import SoldProductPage from "../Pages/Penitip/SoldProductPage";
+import OnSaleProductPage from "../Pages/Penitip/OnSaleProductPage";
+import ExpiredProductPage from "../Pages/Penitip/ExpiredProductPage";
+import DonatedProductPage from "../Pages/Penitip/DonatedProductPage";
 
 //CS
 import CSLayout from "../Layouts/CSLayouts";
@@ -252,17 +257,27 @@ const router = createBrowserRouter([
     {
         path: "/penitip",
         element: (
-            <ProtectedRoutes allowedRoles={["penitip"]}>
-                <PenitipLayout />
-            </ProtectedRoutes>
+          <ProtectedRoutes allowedRoles={["penitip"]}>
+            <PenitipLayout />
+          </ProtectedRoutes>
         ),
         children: [
-            {
-                path: "profile",
-                element: <ProfilPenitip />,
-            },
+          {
+            path: "profile",
+            element: <ProfilPenitip />,
+          },
+          {
+            path: "",
+            element: <PenitipProductLayout />,
+            children: [
+              { path: "history", element: <SoldProductPage /> },
+              { path: "on-sale", element: <OnSaleProductPage /> },
+              { path: "expired", element: <ExpiredProductPage /> },
+              { path: "donated", element: <DonatedProductPage /> },
+            ],
+          },
         ],
-    },
+      },      
     {
         path: "*",
         element: <div>Routes Not Found!</div>,

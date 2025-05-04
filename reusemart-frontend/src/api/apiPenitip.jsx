@@ -1,5 +1,10 @@
 import useAxios from ".";
 
+const getToken = () => {
+    return sessionStorage.getItem("token");
+};
+
+
 export const ShowProfilePenitip = async () => {
     try {
         const token = sessionStorage.getItem("token");
@@ -38,7 +43,7 @@ export const ShowAllPenitip = async (page = 1) => {
             headers: {
                 "Content-Type": "application/json",
                 "Accept": "application/json",
-                "Authorization": `Bearer ${token}`,
+                "Authorization": `Bearer ${getToken()}`,
             },
         });
         
@@ -69,6 +74,7 @@ export const SearchPenitip = async (search_penitip) => {
         throw error;
     }
 };
+
 
 export const DeletePenitip = async (id) => {
     try {

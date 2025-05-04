@@ -33,7 +33,7 @@ export const SearchPegawai = async (search_pegawai = "") => {
         console.error("Error searching pegawai:", error);
         throw error?.response?.data || error;
     }
-}
+};
 
 export const ShowAllPegawai = async (page) => {
     try {
@@ -48,7 +48,7 @@ export const ShowAllPegawai = async (page) => {
         console.error("Error fetching pegawai data:", error);
         throw error?.response?.data || error;
     }
-}
+};
 
 export const deletePegawai = async (id) => {
     try {
@@ -63,4 +63,4 @@ export const deletePegawai = async (id) => {
         console.error("Error deleting pegawai:", error);
         throw error?.response?.data || error;
     }
-}
+};

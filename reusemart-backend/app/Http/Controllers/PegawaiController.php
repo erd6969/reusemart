@@ -104,7 +104,6 @@ class PegawaiController
         }
     }
 
-
     public function show(){
         try {
             return response()->json(Pegawai::paginate(10), 200);

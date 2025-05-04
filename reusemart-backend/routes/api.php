@@ -88,6 +88,10 @@ Route::middleware('auth:admin')->group(function () {
 
     Route::post('/pegawai/reset-password/{id}', [PegawaiController::class, 'resetPassword']);
     Route::get('/pegawai/search/{search_pegawai}', [PegawaiController::class, 'search']);
+
+    Route::get('/pegawai/show-all', [PegawaiController::class, 'show']);
+    Route::delete('/pegawai/delete/{id_pegawai}', [PegawaiController::class, 'delete']);
+
 });
 #endregion
 

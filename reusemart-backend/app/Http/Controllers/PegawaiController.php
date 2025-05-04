@@ -103,5 +103,32 @@ class PegawaiController
             ], 500);
         }
     }
-    
+
+
+    public function show(){
+        try {
+            return response()->json(Pegawai::paginate(10), 200);
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'Gagal mengambil data pegawai',
+                'error' => $e->getMessage(),
+            ], 500);
+        }
+    }
+
+    public function delete($id){
+        try {
+            $pegawai = Pegawai::findOrFail($id);
+            $pegawai->delete();
+
+            return response()->json([
+                'message' => 'Pegawai berhasil dihapus',
+            ], 200);
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'Gagal menghapus pegawai',
+                'error' => $e->getMessage(),
+            ], 500);
+        }
+    }
 }

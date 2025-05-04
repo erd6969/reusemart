@@ -12,7 +12,7 @@ const SideBarAdmin = () => {
                     <li className="sidebarItemAdmin" onClick={() => navigate("/admin/admin-organisasi-master")}>
                         <FaUsersCog className="sidebarIcon" /> Master Organisasi
                     </li>
-                    <li className="sidebarItemAdmin" onClick={() => navigate("/admin/products")}>
+                    <li className="sidebarItemAdmin" onClick={() => navigate("/admin/admin-pegawai-master")}>
                         <FaUserCog className="sidebarIcon" /> Master Pegawai
                     </li>
                     <li className="sidebarItemAdmin" onClick={() => navigate("/admin/orders")}>

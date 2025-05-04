@@ -35,3 +35,32 @@ export const SearchPegawai = async (search_pegawai = "") => {
     }
 }
 
+export const ShowAllPegawai = async (page) => {
+    try {
+        const response = await useAxios.get(`/pegawai/show-all`, {
+            headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${sessionStorage.getItem("token")}`,
+            },
+        });
+        return response.data;
+    } catch (error) {
+        console.error("Error fetching pegawai data:", error);
+        throw error?.response?.data || error;
+    }
+}
+
+export const deletePegawai = async (id) => {
+    try {
+        const response = await useAxios.delete(`/pegawai/delete/${id}`, {
+            headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${getToken()}`,
+            },
+        });
+        return response.data;
+    } catch (error) {
+        console.error("Error deleting pegawai:", error);
+        throw error?.response?.data || error;
+    }
+}

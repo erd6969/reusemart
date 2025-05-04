@@ -1,36 +1,19 @@
 import './CSPenitipManagementPage.css';
-import InputColumn from '../../Components/InputColumn';
-import { Container, Button, Spinner } from 'react-bootstrap';
+import { Container, Button, Spinner, InputGroup, Form } from 'react-bootstrap';
 import { useEffect, useState } from 'react';
 import { ShowAllPenitip, SearchPenitip, DeletePenitip } from '../../api/apiPenitip';
-// import ModalEditPenitip from '../../Components/Modal/ModalAdmin/ModalEditPenitip';
-import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
+import { FaChevronLeft, FaChevronRight, FaSearch } from "react-icons/fa";
 import { toast } from 'react-toastify';
-
-const SearchComponent = ({ onSearch }) => {
-    return (
-        <div className="searchComponent">
-            <div className="searchContainer">
-                <InputColumn 
-                    typeInput="text"
-                    idInput="nama_penitip"
-                    placeholderInput="Masukkan Nama Penitip..."
-                    onChange={(e) => onSearch(e.target.value)}
-                />
-            </div>
-        </div>
-    );
-};
+// import ModalEditPenitip from '../../Components/Modal/ModalAdmin/ModalEditPenitip';
 
 const CSPenitipManagementPage = () => {
     const [penitipList, setPenitipList] = useState([]);
     const [isLoading, setIsLoading] = useState(false);
-    const [searchQuery, setSearchQuery] = useState("");
+    const [searchQuery, setSearchQuery] = useState(""); // digunakan untuk request ke backend
+    const [searchValue, setSearchValue] = useState(""); // digunakan untuk input field
     const [isFirstLoad, setIsFirstLoad] = useState(true);
     const [showModal, setShowModal] = useState(false);
     const [selectedPenitip, setSelectedPenitip] = useState(null);
-
-    
     const [currentPage, setCurrentPage] = useState(1);
     const [totalPages, setTotalPages] = useState(1);
 
@@ -38,7 +21,6 @@ const CSPenitipManagementPage = () => {
         setIsLoading(true);
         try {
             const response = await ShowAllPenitip(page);
-
             setPenitipList(response.data);
             setTotalPages(response.last_page);
             setCurrentPage(response.current_page);
@@ -51,9 +33,32 @@ const CSPenitipManagementPage = () => {
         }
     };
 
+    const fetchSearchData = async () => {
+        if (searchQuery.trim() === "") {
+            fetchPenitipData(1);
+        } else {
+            setIsLoading(true);
+            try {
+                const response = await SearchPenitip(searchQuery);
+                setPenitipList(response.data);
+                setCurrentPage(1);
+            } catch (error) {
+                console.error("Error searching penitip:", error);
+                setPenitipList([]);
+            } finally {
+                setIsLoading(false);
+                setIsFirstLoad(false);
+            }
+        }
+    };
+
     useEffect(() => {
-        fetchPenitipData(currentPage);
-    }, [currentPage]);
+        fetchSearchData();
+    }, [searchQuery]);
+
+    const handleSearch = () => {
+        setSearchQuery(searchValue); 
+    };
 
     const handleDelete = async (id) => {
         if (window.confirm("Apakah Anda yakin ingin menghapus penitip ini?")) {
@@ -85,7 +90,26 @@ const CSPenitipManagementPage = () => {
         <Container>
             <div className="CSPage">
                 <h1 className="pageTitle1">Master Penitip</h1>
-                <SearchComponent onSearch={setSearchQuery} />
+
+                {/* Search Input */}
+                <div className="searchComponent1">
+                    <div className="searchContainer1">
+                        <InputGroup className="mb-3">
+                            <Form.Control
+                                type="text"
+                                placeholder="Masukkan Nama Penitip..."
+                                className="searchInput"
+                                value={searchValue}
+                                onChange={(e) => setSearchValue(e.target.value)}
+                            />
+                            <Button variant="secondary" onClick={handleSearch}>
+                                <FaSearch />
+                            </Button>
+                        </InputGroup>
+                    </div>
+                </div>
+
+                {/* Table */}
                 <div className="tableContainer1">
                     <table className="dataTable1">
                         <thead>
@@ -131,22 +155,20 @@ const CSPenitipManagementPage = () => {
 
                 {/* Pagination */}
                 <div className="pagination d-flex justify-content-center align-items-center mt-4">
-                    <Button 
-                        variant="secondary" 
-                        disabled={currentPage === 1} 
+                    <Button
+                        variant="secondary"
+                        disabled={currentPage === 1}
                         onClick={() => setCurrentPage(prev => prev - 1)}
-                        className="me-2 d-flex align-items-center justify-content-center"
+                        className="me-2"
                     >
                         <FaChevronLeft />
                     </Button>
-
                     <span>Halaman {currentPage} dari {totalPages}</span>
-
-                    <Button 
-                        variant="secondary" 
-                        disabled={currentPage === totalPages} 
+                    <Button
+                        variant="secondary"
+                        disabled={currentPage === totalPages}
                         onClick={() => setCurrentPage(prev => prev + 1)}
-                        className="ms-2 d-flex align-items-center justify-content-center"
+                        className="ms-2"
                     >
                         <FaChevronRight />
                     </Button>

@@ -94,26 +94,30 @@ class PenitipController
         //
     }
 
-    public function search(Request $search_)
+    public function search($search_)
     {
-        try{
-            $penitip = Penitip::where('nama_penitip', 'like', '%' . $search_ . '%')->get();
+        try {
+            $penitip = Penitip::where('nama_penitip', 'LIKE', '%' . $search_ . '%')->get();
+    
             if ($penitip->isEmpty()) {
                 return response()->json([
                     'message' => 'Penitip not found',
                 ], 404);
             }
+    
             return response()->json([
                 'message' => 'Penitip found',
                 'data' => $penitip
             ], 200);
         } catch (\Exception $e) {
             return response()->json([
-                'message' => 'Penitip not found',
+                'message' => 'Error occurred',
                 'error' => $e->getMessage(),
-            ], 404);
+            ], 500);
         }
     }
+    
+
 
     /**
      * Display the specified resource.

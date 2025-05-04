@@ -86,7 +86,7 @@ Route::middleware('auth:admin')->group(function () {
     Route::delete('/organisasi/delete/{id_organisasi}', [OrganisasiController::class, 'destroy']);
     Route::post('/organisasi/update/{id_organisasi}', [OrganisasiController::class, 'update']);
 
-    Route::put('/pegawai/reset-password/{id}', [PegawaiController::class, 'resetPassword']);
+    Route::post('/pegawai/reset-password/{id}', [PegawaiController::class, 'resetPassword']);
     Route::get('/pegawai/search/{search_pegawai}', [PegawaiController::class, 'search']);
 });
 #endregion

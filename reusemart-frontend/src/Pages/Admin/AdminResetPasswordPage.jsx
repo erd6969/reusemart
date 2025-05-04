@@ -2,7 +2,8 @@ import './AdminMasterOrganisasiPage.css';
 import InputColumn from '../../Components/InputColumn';
 import { Container, Button, Spinner } from 'react-bootstrap';
 import { useEffect, useState } from 'react';
-import { SearchPegawai } from '../../api/apiPegawai';
+import { SearchPegawai, ResetPassword } from '../../api/apiPegawai';
+import { toast } from 'react-toastify';
 
 const SearchComponent = ({ onSearch }) => {
     return (
@@ -51,13 +52,12 @@ const AdminMasterResetPage = () => {
                     })
                     .finally(() => setIsLoading(false));
             } else {
-                fetchPegawaiData(); // Use the original data fetch if the query is short
+                fetchPegawaiData();
             }
         }, 500);
-    
+
         return () => clearTimeout(delayDebounce);
     }, [searchQuery]);
-    
 
     return (
         <Container>
@@ -86,22 +86,40 @@ const AdminMasterResetPage = () => {
                             ) : pegawaiList.length > 0 ? (
                                 pegawaiList.map((pgw) => (
                                     <tr key={pgw.id_pegawai}>
-                                        <td>{pgw.id_pegawai}</td>
+                                        <td>
+                                            <span>
+                                                {(() => {
+                                                    switch (pgw.nama_jabatan) {
+                                                        case "Owner":
+                                                            return `OWNR.${pgw.id_pegawai}`;
+                                                        case "Admin":
+                                                            return `ADM.${pgw.id_pegawai}`;
+                                                        case "Pegawai Gudang":
+                                                            return `PG.${pgw.id_pegawai}`;
+                                                        case "Kurir":
+                                                            return `KR.${pgw.id_pegawai}`;
+                                                        default:
+                                                            return `CS.${pgw.id_pegawai}`;
+                                                    }
+                                                })()}
+                                            </span>
+                                        </td>
                                         <td>{pgw.nama_pegawai}</td>
                                         <td>{pgw.nama_jabatan}</td>
                                         <td>{pgw.email_pegawai}</td>
                                         <td className="actionButtons">
                                             <Button
-                                                variant="primary"
+                                                variant="danger"
                                                 onClick={async () => {
                                                     try {
                                                         await ResetPassword(pgw.id_pegawai);
-                                                        alert("Password berhasil direset!");
+                                                        toast.success(`Password berhasil direset ke tanggal lahir dengan format YYYY-MM-DD`);
                                                     } catch (error) {
                                                         console.error("Error resetting password:", error);
-                                                        alert("Gagal mereset password.");
+                                                        toast.error("Gagal mereset password.");
                                                     }
                                                 }}
+                                                style={{ width: "70%", margin: "0 auto" }}
                                             >
                                                 Reset Password
                                             </Button>

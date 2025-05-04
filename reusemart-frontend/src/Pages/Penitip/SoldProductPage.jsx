@@ -8,7 +8,7 @@ import defaultImage from "../../assets/images/Pembeli/Yuki.jpeg";
 import { ShowSoldProducts } from "../../api/apiPenitip";
 import { getThumbnail } from "../../api/index";
 
-import ModalDetailPenjualan from "../../Components/Modal/ModalPenitip/ModalDetailPenjualan"; // pastikan path ini sesuai
+import ModalDetailPenjualan from "../../Components/Modal/ModalPenitip/ModalDetailPenjualan";
 
 const SoldProductPage = () => {
     const [soldProducts, setSoldProducts] = useState([]);

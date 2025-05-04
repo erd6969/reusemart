@@ -24,7 +24,7 @@ const SearchComponent = ({ onSearch }) => {
 
 const AdminMasterOrganisasiPage = () => {
     const [organisasiList, setOrganisasiList] = useState([]);
-    const [isLoading, setIsLoading] = useState(true); // Set to true initially
+    const [isLoading, setIsLoading] = useState(true);
     const [searchQuery, setSearchQuery] = useState("");
     const [isFirstLoad, setIsFirstLoad] = useState(true);
     const [showModal, setShowModal] = useState(false);
@@ -50,11 +50,6 @@ const AdminMasterOrganisasiPage = () => {
                 setIsFirstLoad(false);
             });
     };
-    
-
-    useEffect(() => {
-        fetchOrganisasiData(currentPage);
-    }, [currentPage]);
 
     const handleDelete = async (id) => {
         if (window.confirm("Apakah Anda yakin ingin menghapus organisasi ini?")) {
@@ -90,23 +85,22 @@ const AdminMasterOrganisasiPage = () => {
                     .then((response) => {
                         const hasil = Array.isArray(response.data) ? response.data : [response.data];
                         setOrganisasiList(hasil);
-                        setTotalPages(Math.ceil(hasil.length / 10));
-                        setCurrentPage(1);  // Reset to first page after search
+                        setTotalPages(1); // Karena hasil pencarian tidak paginasi
+                        setCurrentPage(1);
                     })
                     .catch((error) => {
                         console.error("Error searching organisasi:", error);
                         setOrganisasiList([]);
                     })
-                    .finally(() => {
-                        setIsLoading(false);
-                    });
+                    .finally(() => setIsLoading(false));
             } else {
-                fetchOrganisasiData(1);  // Back to page 1 if search is empty
+                fetchOrganisasiData(currentPage); // Aktifkan pagination saat tidak mencari
             }
-        }, 500);
-
+        }, 50);
+    
         return () => clearTimeout(delayDebounce);
-    }, [searchQuery]);
+    }, [searchQuery, currentPage]); // Tambahkan currentPage ke dependency
+    
 
     return (
         <Container>

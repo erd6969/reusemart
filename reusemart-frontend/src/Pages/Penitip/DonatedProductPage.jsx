@@ -1,12 +1,6 @@
 import './SoldProductPage.css';
-import { FaStar } from 'react-icons/fa';
 import { useState, useEffect } from 'react';
-import PenitipSide from './PenitipSide';
-import { Container } from 'react-bootstrap';
 import SearchIcon from "../../assets/images/search-icon.png";
-
-import rajangImage from "../../assets/images/Pembeli/Yuki.jpeg";
-import kucingImage from "../../assets/images/BurniceKicil.jpg";
 
 import { ShowDonatedProduct } from "../../api/apiPenitip";
 import { getThumbnail } from "../../api/index";

@@ -122,4 +122,17 @@ class DiskusiController
     {
         //
     }
+
+    public function showDiskusiByDate(){
+        $diskusi = Diskusi::with(['barang', 'pembeli', 'pegawai'])
+            ->whereDate('waktu_diskusi', now())
+            ->whereNotNull('id_pembeli')
+            ->orderBy('waktu_diskusi', 'desc')
+            ->get();
+    
+        return response()->json([
+            'status' => 'success',
+            'data' => $diskusi,
+        ], 200);
+    } 
 }

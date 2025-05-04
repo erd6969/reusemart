@@ -5,8 +5,8 @@ import FotoPembeli from "../../Components/Pembeli/FotoPembeli";
 import ProfileNavigation from "../../Components/Pembeli/ProfileHeader";
 import profileImage from "../../assets/images/Pembeli/Yuki.jpeg";
 import SearchIcon from "../../assets/images/search-icon.png";
-import ModalTambahAlamat from "../../Components/Modal/ModalTambahAlamat";
-import ModalEditAlamat from "../../Components/Modal/ModalEditAlamat";
+import ModalTambahAlamat from "../../Components/Modal/ModalAlamat/ModalTambahAlamat";
+import ModalEditAlamat from "../../Components/Modal/ModalAlamat/ModalEditAlamat";
 
 import { GetAllAlamat, ChangeMainAlamat, SearchAlamat, DeleteAlamat } from "../../api/apiAlamat";
 

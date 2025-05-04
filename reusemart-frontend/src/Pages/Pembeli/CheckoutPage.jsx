@@ -5,7 +5,7 @@ import { FaMapMarkerAlt } from 'react-icons/fa';
 import { useNavigate } from "react-router-dom";
 import gambarBarang from '../../assets/images/CinaBekas2.jpg';
 import gambarToko from '../../assets/images/BurniceKicil.jpg';
-import ModalListAlamat from '../../Components/Modal/ModalListAlamat';
+import ModalListAlamat from '../../Components/Modal/ModalAlamat/ModalListAlamat';
 import ModalPoint from '../../Components/Modal/ModalPoint';
 
 const AlamatSection = () => {

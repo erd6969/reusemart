@@ -44,3 +44,25 @@ export const CreateDiskusi = async (data) => {
     }
 }
 
+export const ShowDiskusiByDate = async () => {
+    try{
+        const token = sessionStorage.getItem("token");
+        if (!token) {
+            throw new Error("Authorization token is missing.");
+        }
+
+        const response = await useAxios.get("/penitip/show-diskusi-by-date", {
+            headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${token}`,
+            },
+        });
+
+        return response.data;
+    } catch (error) {
+        console.error("Error fetching diskusi by date:", error);
+
+        throw error?.response?.data || { message: "An error occurred while fetching the diskusi by date." };
+    }
+};
+

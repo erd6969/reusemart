@@ -78,6 +78,8 @@ Route::middleware('auth:cs')->group(function () {
     Route::get('/penitip/search/{search_penitip}', [PenitipController::class, 'search']);
     Route::delete('/penitip/delete/{id_penitip}', [PenitipController::class, 'destroy']);
     Route::post('/penitip/update/{id_penitip}', [PenitipController::class, 'update']);
+
+    Route::get('/penitip/show-diskusi-by-date', [DiskusiController::class, 'showDiskusiByDate']);
 });
 
 Route::middleware('auth:admin')->group(function () {

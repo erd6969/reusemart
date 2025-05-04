@@ -1,11 +1,10 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Modal, Button } from 'react-bootstrap';
-import InputColumn from "../InputColumn";
-import { AddAlamat } from '../../api/apiAlamat';
-import { toast } from 'react-toastify';
+import InputColumn from "../../InputColumn";
+import { EditAlamat } from '../../../api/apiAlamat';
 import "./ModalAlamat.css";
 
-const ModalTambahAlamat = ({ show, handleClose, onSuccess }) => {
+const ModalEditAlamat = ({ show, handleClose, dataEdit, onSuccess }) => {
   const [formData, setFormData] = useState({
     nama_alamat: '',
     alamat: '',
@@ -13,15 +12,26 @@ const ModalTambahAlamat = ({ show, handleClose, onSuccess }) => {
     kecamatan: '',
     kabupaten: '',
     kelurahan: '',
-    kode_pos: ''
+    kode_pos: '',
   });
 
-  const [isSubmitting, setIsSubmitting] = useState(false);
+  useEffect(() => {
+    if (dataEdit) {
+      setFormData({
+        nama_alamat: dataEdit.nama_alamat || '',
+        alamat: dataEdit.alamat || '',
+        keterangan: dataEdit.keterangan || '',
+        kecamatan: dataEdit.kecamatan || '',
+        kabupaten: dataEdit.kabupaten || '',
+        kelurahan: dataEdit.kelurahan || '',
+        kode_pos: dataEdit.kode_pos || '',
+        alamat_utama: dataEdit.alamat_utama || false,
+      });
+    }
+  }, [dataEdit]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    console.log(`Field ${name} diubah menjadi:`, value);
-    
     setFormData(prev => ({
       ...prev,
       [name]: value
@@ -30,43 +40,24 @@ const ModalTambahAlamat = ({ show, handleClose, onSuccess }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
-    console.log('Data yang akan dikirim:', formData);
 
     try {
-      setIsSubmitting(true);
-      const response = await AddAlamat(formData);
-      console.log('Response:', response);
-      
-      toast.success("Alamat berhasil ditambahkan");
-      onSuccess?.();
-      handleClose();
-      
-      // Reset form
-      setFormData({
-        nama_alamat: '',
-        alamat: '',
-        keterangan: '',
-        kecamatan: '',
-        kabupaten: '',
-        kelurahan: '',
-        kode_pos: ''
-      });
+      if (dataEdit && dataEdit.id_alamat) {
+        await EditAlamat(dataEdit.id_alamat, formData);
+        onSuccess?.();
+        handleClose();
+      } else {
+        console.log("Data edit tidak ditemukan.");
+      }
     } catch (error) {
-      console.error('Error:', {
-        message: error.message,
-        response: error.response?.data
-      });
-      toast.error(error.response?.data?.message || "Gagal menambahkan alamat");
-    } finally {
-      setIsSubmitting(false);
+      console.error("Gagal menyimpan alamat:", error.response?.data || error);
     }
   };
 
   return (
     <Modal show={show} onHide={handleClose} className="custom-modal-width">
       <Modal.Header closeButton>
-        <Modal.Title><b>Tambah Alamat</b></Modal.Title>
+        <Modal.Title><b>Edit Alamat</b></Modal.Title>
       </Modal.Header>
 
       <form onSubmit={handleSubmit}>
@@ -143,8 +134,8 @@ const ModalTambahAlamat = ({ show, handleClose, onSuccess }) => {
         </Modal.Body>
 
         <Modal.Footer className="modal-footer">
-          <Button className="btn-submit" type="submit" disabled={isSubmitting}>
-            {isSubmitting ? 'Menyimpan...' : <b>Tambah Alamat</b>}
+          <Button className="btn-submit" type="submit">
+            <b>Edit Alamat</b>
           </Button>
         </Modal.Footer>
       </form>
@@ -152,4 +143,4 @@ const ModalTambahAlamat = ({ show, handleClose, onSuccess }) => {
   );
 };
 
-export default ModalTambahAlamat;
+export default ModalEditAlamat;

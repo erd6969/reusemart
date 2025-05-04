@@ -1,7 +1,7 @@
 import './ModalListAlamat.css';
 import { Modal, Container } from "react-bootstrap";
 import { useState } from 'react';
-import SearchIcon from "../../assets/images/search-icon.png";
+import SearchIcon from "../../../assets/images/search-icon.png";
 
 const AlamatDetail = ({
   namaAlamat,

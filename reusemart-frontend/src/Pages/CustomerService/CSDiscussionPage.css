@@ -1,0 +1,97 @@
+.cs-diskusi-header-container {
+    background-color: white;
+    margin-top: 40px;
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0 12px 28px rgba(0, 0, 0, 0.2), 
+                0 6px 14px rgba(0, 0, 0, 0.1);
+    border: 1px solid #e0e0e0;
+    transition: box-shadow 0.3s ease;
+}
+
+.cs-diskusi-container:hover {
+    background-color: #f9f9f9;
+}
+
+.cs-diskusi-header-container h2{
+    font-weight: 600;
+    margin: auto;
+}
+
+.cs-diskusi-container {
+    width: 100%;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    padding: 12px;
+    font-family: sans-serif;
+    margin-bottom: 20px;
+}
+
+.cs-diskusi-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+}
+
+.cs-diskusi-user {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+}
+
+.cs-diskusi-avatar {
+    width: 70px;
+    height: 70px;
+    border-radius: 50%;
+}
+
+.cs-diskusi-user-info {
+    line-height: 1.2;
+}
+
+.cs-diskusi-nama {
+    font-weight: bold;
+    font-size: 20px;
+    margin-bottom: 10px;
+}
+
+.cs-diskusi-produk {
+    font-size: 16px;
+    font-weight: 500;
+    color: #555;
+    margin-bottom: 0;
+}
+
+.cs-diskusi-produk-nama {
+    font-weight: bold;
+}
+
+.cs-diskusi-tanggal {
+    font-size: 12px;
+    color: gray;
+}
+
+.cs-diskusi-isi {
+    margin-top: 0px;
+    margin-left: 80px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    background-color: #f3f3f3;
+    padding: 8px;
+    font-size: 14px;
+}
+
+
+.cs-diskusi-content-container{
+    background-color: white;
+    margin-top: 40px;
+    padding: 20px;
+    border-radius: 12px;
+}
+
+.cs-diskusi-box{
+    padding: 20px;
+    border-radius: 12px;
+    border : 1px solid black;
+}
+

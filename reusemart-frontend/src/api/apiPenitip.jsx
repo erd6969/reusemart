@@ -136,3 +136,61 @@ export const ShowSoldProducts = async () => {
         };
     }
 }
+
+export const ShowDonatedProduct = async () => {
+    try {
+        const token = sessionStorage.getItem("token");
+        
+        const response = await useAxios.get("/penitip/show-donated-product", {
+            headers: {
+                "Content-Type": "application/json",
+                "Accept": "application/json",
+                "Authorization": `Bearer ${token}`,
+            },
+        });
+        return response.data;
+    } catch (error) {
+        const status = error.response?.status;
+
+        if (status === 422 && error.response?.data?.errors) {
+            throw {
+                type: "validation",
+                errors: error.response.data.errors,
+            };
+        }
+
+        throw {
+            type: "general",
+            message: error.response?.data?.message || "Terjadi kesalahan saat mengambil data.",
+        };
+    }
+}
+
+export const ShowDetailPendapatan = async (id) => {
+    try {
+        const token = sessionStorage.getItem("token");
+        
+        const response = await useAxios.get(`/penitip/show-detail-pendapatan/${id}`, {
+            headers: {
+                "Content-Type": "application/json",
+                "Accept": "application/json",
+                "Authorization": `Bearer ${token}`,
+            },
+        });
+        return response.data;
+    } catch (error) {
+        const status = error.response?.status;
+
+        if (status === 422 && error.response?.data?.errors) {
+            throw {
+                type: "validation",
+                errors: error.response.data.errors,
+            };
+        }
+
+        throw {
+            type: "general",
+            message: error.response?.data?.message || "Terjadi kesalahan saat mengambil data.",
+        };
+    }
+}

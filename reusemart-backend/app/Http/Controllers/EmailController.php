@@ -32,7 +32,7 @@ class EmailController
             ['token' => $token, 'created_at' => now()]
         );
 
-        $resetPasswordUrl = env('FRONTEND_URL') . '/auth/reset-password?token=' . $token;
+        $resetPasswordUrl = 'http://localhost:5173/auth/reset-password?token=' . $token;
 
         // Kirim Email
         $receiver = $pembeli ?? $penitip ?? $organisasi;

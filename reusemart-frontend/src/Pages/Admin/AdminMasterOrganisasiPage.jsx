@@ -2,7 +2,7 @@ import './AdminMasterOrganisasiPage.css';
 import InputColumn from '../../Components/InputColumn';
 import { Container, Button, Spinner } from 'react-bootstrap';
 import { useEffect, useState } from 'react';
-import { ShowAllOrganisasi, DeleteOrganisasi } from '../../api/apiOrganisasi';
+import { ShowAllOrganisasi, DeleteOrganisasi, SearchOrganisasi } from '../../api/apiOrganisasi';
 import ModalEditOrganisasi from '../../Components/Modal/ModalAdmin/ModalEditOrganisasi';
 import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
 import { toast } from 'react-toastify';
@@ -24,7 +24,7 @@ const SearchComponent = ({ onSearch }) => {
 
 const AdminMasterOrganisasiPage = () => {
     const [organisasiList, setOrganisasiList] = useState([]);
-    const [isLoading, setIsLoading] = useState(false);
+    const [isLoading, setIsLoading] = useState(true); // Set to true initially
     const [searchQuery, setSearchQuery] = useState("");
     const [isFirstLoad, setIsFirstLoad] = useState(true);
     const [showModal, setShowModal] = useState(false);
@@ -36,19 +36,19 @@ const AdminMasterOrganisasiPage = () => {
 
     const fetchOrganisasiData = async (page = 1) => {
         setIsLoading(true);
-        try {
-            const response = await ShowAllOrganisasi(page);
-
-            setOrganisasiList(response.data);
-            setTotalPages(response.last_page);
-            setCurrentPage(response.current_page);
-        } catch (error) {
-            console.error("Error fetching organisasi data:", error);
-            setOrganisasiList([]);
-        } finally {
-            setIsLoading(false);
-            setIsFirstLoad(false);
-        }
+        ShowAllOrganisasi(page)
+            .then((data) => {
+                setOrganisasiList(data.data);
+                setTotalPages(data.last_page);
+                setCurrentPage(data.current_page);
+                setIsLoading(false);
+                setIsFirstLoad(false);
+            })
+            .catch((error) => {
+                console.error("Error fetching data:", error);
+                setIsLoading(false);
+                setIsFirstLoad(false);
+            });
     };
     
 
@@ -81,6 +81,32 @@ const AdminMasterOrganisasiPage = () => {
         fetchOrganisasiData(currentPage);
         toast.success("Data Organisasi Berhasil Diperbarui.");
     };
+
+    useEffect(() => {
+        const delayDebounce = setTimeout(() => {
+            if (searchQuery.trim().length >= 3) {
+                setIsLoading(true);
+                SearchOrganisasi(searchQuery.trim())
+                    .then((response) => {
+                        const hasil = Array.isArray(response.data) ? response.data : [response.data];
+                        setOrganisasiList(hasil);
+                        setTotalPages(Math.ceil(hasil.length / 10));
+                        setCurrentPage(1);  // Reset to first page after search
+                    })
+                    .catch((error) => {
+                        console.error("Error searching organisasi:", error);
+                        setOrganisasiList([]);
+                    })
+                    .finally(() => {
+                        setIsLoading(false);
+                    });
+            } else {
+                fetchOrganisasiData(1);  // Back to page 1 if search is empty
+            }
+        }, 500);
+
+        return () => clearTimeout(delayDebounce);
+    }, [searchQuery]);
 
     return (
         <Container>

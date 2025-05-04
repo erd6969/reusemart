@@ -1,5 +1,6 @@
 import './SoldProductPage.css';
 import { FaStar } from 'react-icons/fa';
+import { useState, useEffect } from 'react';
 import PenitipSide from './PenitipSide';
 import { Container } from 'react-bootstrap';
 import SearchIcon from "../../assets/images/search-icon.png";
@@ -7,7 +8,30 @@ import SearchIcon from "../../assets/images/search-icon.png";
 import rajangImage from "../../assets/images/Pembeli/Yuki.jpeg";
 import kucingImage from "../../assets/images/BurniceKicil.jpg";
 
+import { ShowDonatedProduct } from "../../api/apiPenitip";
+import { getThumbnail } from "../../api/index";
+
 const DonatedProductPage = () => {
+    const [donatedProduct, setDonatedProduct] = useState([]);
+    const [loading, setLoading] = useState(true);
+
+    useEffect(() => {
+        const fetchDonatedProduct = async () => {
+            try {
+                const response = await ShowDonatedProduct();
+                setDonatedProduct(response.data);
+                console.log("Fetched on sale products:", response.data);
+
+            } catch (error) {
+                console.error("Error fetching sold products:", error);
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        fetchDonatedProduct();
+    }, []);
+
     return (
         <div className="histori-penitipan-wrapper">
             <div className="sold-products-container">
@@ -22,83 +46,35 @@ const DonatedProductPage = () => {
                         />
                     </div>
 
-                    <table className="sold-products-table">
-                        <thead>
-                            <tr>
-                                <th>Info Product</th>
-                                <th>Price</th>
-                                <th>Sold Date</th>
-                                <th>Rating</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td className="product-info">
-                                    <img src={rajangImage} alt="Rajang Bekas" />
-                                    <b>Rajang Bekas</b>
-                                </td>
-                                <td>Rp100.000</td>
-                                <td>23/10/2025</td>
-                                <td>
-                                    {[1, 2, 3, 4, 5].map((i) => (
-                                        <FaStar key={i} color={i === 1 ? "#e5e7eb" : "#facc15"} />
-                                    ))}
-                                </td>
-                            </tr>
-                            <tr>
-                                <td className="product-info">
-                                    <img src={kucingImage} alt="Kucing Bekas" />
-                                    <b>Kucing Bekas</b>
-                                </td>
-                                <td>Rp12.000</td>
-                                <td>24/10/2025</td>
-                                <td>
-                                    {[1, 2, 3, 4, 5].map((i) => (
-                                        <FaStar key={i} color={i === 5 ? "#e5e7eb" : "#facc15"} />
-                                    ))}
-                                </td>
-                            </tr>
-                            <tr>
-                                <td className="product-info">
-                                    <img src={rajangImage} alt="Rajang Bekas" />
-                                    <b>Rajang Bekas</b>
-                                </td>
-                                <td>Rp100.000</td>
-                                <td>23/10/2025</td>
-                                <td>
-                                    {[1, 2, 3, 4, 5].map((i) => (
-                                        <FaStar key={i} color={i === 1 ? "#e5e7eb" : "#facc15"} />
-                                    ))}
-                                </td>
-                            </tr>
-                            <tr>
-                                <td className="product-info">
-                                    <img src={kucingImage} alt="Kucing Bekas" />
-                                    <b>Kucing Bekas</b>
-                                </td>
-                                <td>Rp12.000</td>
-                                <td>24/10/2025</td>
-                                <td>
-                                    {[1, 2, 3, 4, 5].map((i) => (
-                                        <FaStar key={i} color={i === 5 ? "#e5e7eb" : "#facc15"} />
-                                    ))}
-                                </td>
-                            </tr>
-                            <tr>
-                                <td className="product-info">
-                                    <img src={kucingImage} alt="Kucing Bekas" />
-                                    <b>Kucing Bekas</b>
-                                </td>
-                                <td>Rp12.000</td>
-                                <td>24/10/2025</td>
-                                <td>
-                                    {[1, 2, 3, 4, 5].map((i) => (
-                                        <FaStar key={i} color={i === 5 ? "#e5e7eb" : "#facc15"} />
-                                    ))}
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
+                    {loading ? (
+                        <p>Loading...</p>
+                    ) : donatedProduct.length === 0 ? (
+                        <p style={{textAlign:"center"}}>Tidak ada produk yang sedang didonasikan.</p>
+                    ) : (
+                        <table className="sold-products-table">
+                            <thead>
+                                <tr>
+                                    <th>Informasi Produk</th>
+                                    <th>Tanggal Donasi</th>
+                                    <th>Organisasi</th>
+                                    <th>Nama Penerima</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {donatedProduct.map((product, index) => (
+                                    <tr key={index}>
+                                        <td className="product-info">
+                                            <img src={getThumbnail(product.foto_barang) || defaultImage} alt={product.nama_barang} />
+                                            <b>{product.nama_barang}</b>
+                                        </td>
+                                        <td>{product.tanggal_donasi?.substring(0, 10)}</td>
+                                        <td>{product.nama_organisasi}</td>
+                                        <td>{product.nama_penerima}</td>
+                                    </tr>
+                                ))}
+                            </tbody>
+                        </table>
+                    )}
                 </div>
             </div>
         </div>

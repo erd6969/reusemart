@@ -119,7 +119,7 @@ const AdminMasterResetPage = () => {
                                                         toast.error("Gagal mereset password.");
                                                     }
                                                 }}
-                                                style={{ width: "70%", margin: "0 auto" }}
+                                                style={{ width: "100%", margin: "0 auto" }}
                                             >
                                                 Reset Password
                                             </Button>

@@ -18,7 +18,7 @@ const SideBarAdmin = () => {
                     <li className="sidebarItemAdmin" onClick={() => navigate("/admin/orders")}>
                         <FaBoxOpen className="sidebarIcon" /> Master Merchandise
                     </li>
-                    <li className="sidebarItemAdmin" onClick={() => navigate("/admin/users")}>
+                    <li className="sidebarItemAdmin" onClick={() => navigate("/admin/admin-reset-password")}>
                         <FaKey className="sidebarIcon" /> Reset Password
                     </li>
                 </ul>

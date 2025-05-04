@@ -12,7 +12,10 @@ class DetailTransaksiPenitipan extends Model
         'id_detail_transaksi_penitipan',
         'id_transaksi_penitipan',
         'id_barang',
-        'harga_barang'
+        'tanggal_berakhir',
+        'tanggal_batas_pengambilan',
+        'status_penitipan',
+        'status_perpanjangan',
     ];
     
     public function transaksiPenitipan()

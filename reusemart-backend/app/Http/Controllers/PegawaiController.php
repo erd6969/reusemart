@@ -50,4 +50,58 @@ class PegawaiController
             ], 500);
         }
     }
+
+    public function resetPassword($id){
+        try{
+            $pegawai = Pegawai::where('id_pegawai', $id)->first();
+            if (!$pegawai) {
+                return response()->json([
+                    'message' => 'Pegawai tidak ditemukan',
+                ], 404);
+            }
+    
+            $newPassword = $pegawai->tanggal_lahir;
+            $pegawai->password_pegawai = Hash::make($newPassword);
+            $pegawai->save();
+    
+            return response()->json([
+                'message' => 'Password berhasil direset',
+                'new_password' => $newPassword,
+            ], 200);
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'Gagal mereset password',
+                'error' => $e->getMessage(),
+            ], 500);
+        }
+    }
+
+    public function search($search_pegawai){
+        try {
+            if(empty($search_pegawai)) {
+                return response()->json([
+                    'message' => 'Search query is empty.',
+                ], 400); // Return a bad request if search query is empty
+            }
+    
+            $pegawai = Pegawai::where('nama_pegawai', 'like', '%' . $search_pegawai . '%')
+                ->join('jabatan', 'pegawai.id_jabatan', '=', 'jabatan.id_jabatan')
+                ->select('pegawai.*', 'jabatan.nama_jabatan')
+                ->get();
+    
+            if ($pegawai->isEmpty()) {
+                return response()->json([
+                    'message' => 'Pegawai tidak ditemukan.',
+                ], 404);
+            }
+    
+            return response()->json($pegawai, 200);
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'Gagal mencari pegawai',
+                'error' => $e->getMessage(),
+            ], 500);
+        }
+    }
+    
 }

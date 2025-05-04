@@ -40,6 +40,9 @@ Route::middleware('auth:sanctum')->post('/create-diskusi', [DiskusiController::c
 Route::middleware('auth:penitip')->group(function () {
     Route::get('/penitip/profile', [PenitipController::class, 'showProfile']);
     Route::get('/penitip/show-sold-product', [PenitipController::class, 'showSoldProducts']);
+    Route::get('/penitip/show-donated-product', [PenitipController::class, 'showDonatedProducts']);
+
+    Route::get('/penitip/show-detail-pendapatan/{id_barang}', [PenitipController::class, 'showDetailPendapatan']);
 });
  #endregion
 
@@ -82,6 +85,9 @@ Route::middleware('auth:admin')->group(function () {
     Route::get('/organisasi/search/{search_organisasi}', [OrganisasiController::class, 'search']);
     Route::delete('/organisasi/delete/{id_organisasi}', [OrganisasiController::class, 'destroy']);
     Route::post('/organisasi/update/{id_organisasi}', [OrganisasiController::class, 'update']);
+
+    Route::post('/pegawai/reset-password/{id}', [PegawaiController::class, 'resetPassword']);
+    Route::get('/pegawai/search/{search_pegawai}', [PegawaiController::class, 'search']);
 });
 #endregion
 

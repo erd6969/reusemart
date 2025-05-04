@@ -3,11 +3,16 @@
 namespace App\Http\Controllers;
 
 use App\Models\Penitip;
+use App\Models\Barang;
+use App\Models\DetailTransaksiPenitipan;
+use App\Models\TransaksiPenitipan;
+use App\Models\Komisi;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\ValidationException;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class PenitipController
 {
@@ -194,5 +199,61 @@ class PenitipController
         }
     }
 
-    
+    public function showDonatedProducts(){
+        try {
+            $penitip = auth('penitip')->user();
+
+            $products = DB::table('transaksi_penitipan')
+            ->join('detail_transaksi_penitipan', 'transaksi_penitipan.id_transaksi_penitipan', '=', 'detail_transaksi_penitipan.id_transaksi_penitipan')
+            ->join('barang', 'detail_transaksi_penitipan.id_barang', '=', 'barang.id_barang')
+            ->join('request_donasi', 'request_donasi.id_barang', '=', 'barang.id_barang')
+            ->join('transaksi_donasi', 'transaksi_donasi.id_request_donasi', '=', 'request_donasi.id_request_donasi')
+            ->join('organisasi', 'transaksi_donasi.id_organisasi', '=', 'organisasi.id_organisasi')
+            ->where('transaksi_penitipan.id_penitip', $penitip->id_penitip)
+            ->whereIn('detail_transaksi_penitipan.status_penitipan', ['sudah didonasikan'])
+            ->select(
+                'barang.*',
+                'transaksi_donasi.tanggal_donasi',
+                'transaksi_donasi.nama_penerima',
+                'organisasi.nama_organisasi'
+            )
+            ->get();
+
+            return response()->json([
+                'message' => 'Success',
+                'data' => $products
+            ], 200);
+
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'Penitip not found',
+                'error' => $e->getMessage(),
+            ], 404);
+        }
+    }
+
+    public function showDetailPendapatan($id_barang)
+    {
+        try {
+            $pendapatan = Komisi::where('id_barang', $id_barang)->first();
+            if (!$pendapatan) {
+                return response()->json([
+                    'message' => 'Pendapatan not found',
+                ], 404);
+            }
+            Log::info($pendapatan);
+            Log::info("ID Barang: " . $id_barang);
+
+            return response()->json([
+                'message' => 'Success',
+                'data' => $pendapatan
+            ], 200);
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'Komisi not found',
+                'error' => $e->getMessage(),
+            ], 404);
+        }
+    }
+
 }

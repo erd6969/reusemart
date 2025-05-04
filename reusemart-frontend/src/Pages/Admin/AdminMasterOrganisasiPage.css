@@ -53,11 +53,21 @@
 }
 
 .actionButtons {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    gap: 10px;
-    min-width: 120px;
+    width: 150px;
+    text-align: center;
+    white-space: nowrap;
+    position: relative;
+}
+
+.actionButtons .btn {
+    width: 47%;
+    display: inline-block;
+    padding: 2px 6px;
+    font-size: 0.8rem;
+}
+
+.actionButtons .btn:first-child {
+    margin-right: 6%;
 }
 
 .actionButtons Button {

@@ -99,7 +99,7 @@ const AdminMasterOrganisasiPage = () => {
         }, 50);
     
         return () => clearTimeout(delayDebounce);
-    }, [searchQuery, currentPage]); // Tambahkan currentPage ke dependency
+    }, [searchQuery, currentPage]);
     
 
     return (

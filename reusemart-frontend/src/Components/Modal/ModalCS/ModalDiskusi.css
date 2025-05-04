@@ -1,0 +1,133 @@
+.modal-diskusi-body {
+    background-color: white;
+}
+
+.modal-loading-container {
+    text-align: center;
+    padding: 30px 0;
+}
+
+.modal-detail-barang-content {
+    display: flex;
+    flex-direction: row;
+    gap: 30px;
+    margin-bottom: 20px;
+}
+
+.modal-gambar-barang {
+    width: 300px;
+    height: 400px;
+    object-fit: cover;
+    border-radius: 5px;
+}
+
+.modal-info-barang {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+}
+
+.modal-nama-barang {
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+.modal-harga-barang h1 {
+    color: #347928;
+    margin-bottom: 10px;
+}
+
+.modal-deskripsi-wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.label-colon-align {
+    display: grid;
+    grid-template-columns: 100px 10px auto;
+    gap: 5px;
+}
+
+.label {
+    font-weight: bold;
+    text-align: left;
+}
+
+.colon {
+    text-align: left;
+}
+
+.isi-deskripsi p,
+.isi-kondisi p {
+    margin: 0;
+    text-align: left;
+}
+
+.diskusi-container {
+    margin-top: 20px;
+    padding-top: 10px;
+}
+
+.diskusi-input-container {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 10px;
+}
+
+.input-diskusi {
+    flex: 1;
+    height: 50px;
+    border: none !important;
+    border-bottom: 1px solid #ccc !important;
+    background: transparent;
+    font-size: 16px;
+    padding: 0;
+}
+
+.input-diskusi::placeholder {
+    color: #ccc;
+}
+
+.diskusi-buttons {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.cancel-btn {
+    background: none;
+    border: none;
+    font-size: 16px;
+    color: #000;
+}
+
+.discuss-btn {
+    background-color: #198754;
+    color: white;
+    padding: 6px 12px;
+    border-radius: 5px;
+    border: none;
+    font-size: 16px;
+}
+
+.discuss-btn[disabled] {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.diskusi-avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.diskusi-box {
+    padding: 12px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    margin-bottom: 10px;
+}

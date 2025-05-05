@@ -10,11 +10,21 @@ import "./Home.css";
 import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
 
-import dhiaz from "../assets/images/logohomehd.png";
+import logo from "../assets/images/logohomehd.png";
 import burnice from "../assets/images/BurniceKicil.jpg";
 import benefit2 from "../assets/images/benefit2.png";
 import chen from "../assets/images/chen-quotes.jpeg";
 import benefit1 from "../assets/images/onkle.png";
+
+import yuki from "../assets/images/Pembeli/Yuki.jpeg";
+import test from "../assets/images/testcarousel.jpg";
+
+import dhiaz from "../assets/images/Orang Palu.png";
+const gambar = [
+    chen,
+    test,
+    yuki,
+]
 
 const Home = () => {
     const [count, setCount] = useState(0);
@@ -82,14 +92,14 @@ const Home = () => {
                 </Card>
             </div>
             {/* Carousel */}
-            <CarouselHome className="w-full" />
+            <CarouselHome className="w-full" gambar={gambar} />
 
 
 
             <div className="text-center mb-3" style={{ backgroundColor: "#347928", borderRadius: "50px", transform: "translateY(-6vh)", paddingTop: "20vh" }}>
 
                 <div className="kotak-kuning">
-                    <img src={dhiaz} alt="" style={{ width: "18%" }} />
+                    <img src={logo} alt="" style={{ width: "18%" }} />
 
 
                     <h1 style={{ fontSize: "3vw" }}>

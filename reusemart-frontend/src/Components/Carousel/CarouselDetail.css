@@ -1,0 +1,18 @@
+.carousel-detail {
+  width: 100%;
+  height: 100%;
+}
+
+.carousel-detail .carousel-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.carousel-detail .carousel,
+.carousel-detail .carousel-inner,
+.carousel-detail .carousel-item {
+  width: 100%;
+  height: 100%;
+}

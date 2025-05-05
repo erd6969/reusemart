@@ -1,7 +1,14 @@
-.carousel-image {
+.carousel-home .carousel-image {
   width: 100vw;
   height: 80vh;
   display: flex;
   justify-self: center;
   object-fit: fill;
+}
+
+.carousel-home .carousel,
+.carousel-home .carousel-inner,
+.carousel-home .carousel-item {
+  width: 100vw;
+  height: 80vh;
 }

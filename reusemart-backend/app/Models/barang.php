@@ -17,6 +17,8 @@ class Barang extends Model
         'kondisi_barang',
         'harga_barang',
         'foto_barang',
+        'foto_barang2',
+        'foto_barang3',
         
     ];
 

@@ -8,17 +8,30 @@ import { FaStar } from "react-icons/fa";
 import { useNavigate, useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { GetDetailBarang } from "../../api/apiBarang";
+import CarouselDetail from "../../Components/Carousel/CarouselDetail";
+
+import yuki from "../../assets/images/Pembeli/Yuki.jpeg";
+import test from "../../assets/images/testcarousel.jpg";
+
+import chen from "../../assets/images/chen-quotes.jpeg";
 
 import { ShowDiskusi, CreateDiskusi } from "../../api/apiDiskusi";
+const gambar = [
+    chen,
+    test,
+    yuki,
+]
 
 const DetailBarang = ({ detailBarang }) => {
     const navigate = useNavigate();
+    const [gambarBarang, setGambarBarang] = useState([detailBarang.foto_barang, detailBarang.foto_barang1, detailBarang.foto_barang2, detailBarang.foto_barang3]);
 
     return (
         <Container className="detail-barang-container">
-            <div className="item-image-container">
-                <img src={gambarBarang} alt="barang" className="gambar-barang" />
-                {/* <img src={detailBarang.gambar_barang} alt="barang" className="gambar-barang" /> */}
+            <div className="item-image-container-barang">
+                <CarouselDetail gambar={gambar} />
+                {/* <CarouselDetail gambar={gambarBarang} /> */}
+                {/* <img src={gambarBarang} alt="barang" className="gambar-barang" /> */}
             </div>
 
             <div className="isi-detail-barang-container">

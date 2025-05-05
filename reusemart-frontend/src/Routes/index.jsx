@@ -19,6 +19,7 @@ import PegawaiGudangPage from "../Pages/PegawaiGudang/PegawaiGudangPage";
 //Pembeli
 import PembeliLayout from "../Layouts/PembeliLayouts";
 import ProfilePembeliPage from "../Pages/Pembeli/ProfilePembeliPage";
+import PembeliProductLayout from "../Layouts/PembeliContentLayouts";
 import AlamatPembeliPage from "../Pages/Pembeli/AlamatPembeliProfilePage";
 import PurchasePembeliPage from "../Pages/Pembeli/PurchasePembeliPage";
 import ShopPage from "../Homepage/ShopPage";
@@ -230,10 +231,7 @@ const router = createBrowserRouter([
                 path: "alamat",
                 element: <AlamatPembeliPage />,
             },
-            {
-                path: "purchase",
-                element: <PurchasePembeliPage />,
-            },
+            
             {
                 path: "shop",
                 element: <ShopPage />,
@@ -262,6 +260,13 @@ const router = createBrowserRouter([
                 path: "list-transaksi",
                 element: <ListTransaksi />,
             },
+            {
+                path: "",
+                element: <PembeliProductLayout />,
+                children: [
+                  { path: "purchase", element: <PurchasePembeliPage />},    
+                ],
+              },
         ],
     },
     {

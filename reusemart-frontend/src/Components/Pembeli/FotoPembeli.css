@@ -2,7 +2,7 @@
     border: 1px solid #B7B7B7;
     border-radius: 5px;
     width: 300px;
-    height: 330px;
+    height: 45.5vh !important;
 }
 
 .foto-container img{

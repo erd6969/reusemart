@@ -3,9 +3,10 @@ import "./ProfilePembeliPage.css";
 import FotoPembeli from "../../Components/Pembeli/FotoPembeli";
 import ProfileNavigation from "../../Components/Pembeli/ProfileHeader";
 import InputColumn from "../../Components/InputColumn";
-import profileImage from "../../assets/images/Pembeli/Yuki.jpeg";
 import { useState, useEffect } from "react";
 import { GetProfile } from "../../api/apiPembeli";
+import { getThumbnail } from "../../api/index";
+
 
 const Poin = () => {
   return (
@@ -16,8 +17,8 @@ const Poin = () => {
   );
 };
 
-const InputDataPembeli = () => {
-  const [profile, setProfile] = useState([]);
+const InputDataPembeli = ({ profile }) => {
+
   const [formData, setFormData] = useState({
     fullName: '',
     email: '',
@@ -35,19 +36,6 @@ const InputDataPembeli = () => {
     e.preventDefault();
     console.log(formData);
   };
-
-  const showProfile = async () => {
-    try {
-      const data = await GetProfile();
-      setProfile(data);
-    } catch (error) {
-      console.error("Error fetching profile", error);
-    }
-  }
-
-  useEffect(() => {
-    showProfile();
-  }, []);
 
 
   return (
@@ -85,17 +73,8 @@ const InputDataPembeli = () => {
           contentLabel="Tanggal Lahir"
           typeInput="date"
           idInput="dateBirth"
-          placeholderInput=""
+          placeholderInput={profile.tanggal_lahir}
           value={formData.dateBirth}
-          onChange={handleChange}
-        />
-        <InputColumn
-          nameLabel="address"
-          contentLabel="Alamat"
-          typeInput="text"
-          idInput="address"
-          placeholderInput="Jl. Putangina No. 69"
-          value={formData.address}
           onChange={handleChange}
         />
         <button type="submit" className="input-button"><b>Simpan</b></button>
@@ -105,22 +84,41 @@ const InputDataPembeli = () => {
 };
 
 const ProfilePembeli = () => {
+  const [profile, setProfile] = useState({});
+
+  useEffect(() => {
+    const showProfile = async () => {
+      try {
+        const data = await GetProfile();
+        setProfile(data);
+      } catch (error) {
+        console.error("Error fetching profile", error);
+      }
+    }
+
+    showProfile();
+  }, []);
+
+
   return (
     <Container className="pembeli-container">
       <ProfileNavigation Profile={{ fontWeight: "600", textDecoration: "underline", fontSize: "40px", color: "black" }} Alamat={{ fontWeight: "50", fontSize: "35px", color: "#AFAEAE" }} />
       <div className="profile-content">
         <div className="profile-left">
-          <FotoPembeli
-            Foto={profileImage}
-            SubProp={
-              <>
-                <label htmlFor="upload" className="button-profile">Pilih Gambar</label>
-              </>
-            }
-          />
+          {profile.foto_pembeli && (
+            <FotoPembeli
+              Foto={getThumbnail(profile.foto_pembeli)}
+              SubProp={
+                <>
+                  <label htmlFor="upload" className="button-profile">Pilih Gambar</label>
+                </>
+              }
+            />
+          )}
+
           <Poin />
         </div>
-        <InputDataPembeli />
+        <InputDataPembeli profile={profile} />
       </div>
     </Container>
   );

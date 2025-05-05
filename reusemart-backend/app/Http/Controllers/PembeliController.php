@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\ValidationException;
+use Illuminate\Support\Facades\DB;
 
 class PembeliController
 {
@@ -95,5 +96,34 @@ class PembeliController
     public function destroy(pembeli $pembeli)
     {
         //
+    }
+
+    public function showHistoryPurchase(){
+        try {
+            $pembeli = auth('pembeli')->user();
+
+            $products = DB::table('transaksi_pembelian')
+            ->join('komisi', 'transaksi_pembelian.id_transaksi_pembelian', '=', 'komisi.id_transaksi_pembelian')
+            ->join('barang', 'komisi.id_barang', '=', 'barang.id_barang')
+            ->where('transaksi_pembelian.id_pembeli', $pembeli->id_pembeli)
+            ->where('transaksi_pembelian.status_pembayaran', '1')
+            ->select(
+                'barang.*',
+                'transaksi_pembelian.tanggal_pembelian',
+                'transaksi_pembelian.status_pengiriman',
+            )
+            ->get();
+
+            return response()->json([
+                'message' => 'Success',
+                'data' => $products
+            ], 200);
+
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'Pembeli not found',
+                'error' => $e->getMessage(),
+            ], 404);
+        }
     }
 }

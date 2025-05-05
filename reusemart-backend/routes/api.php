@@ -52,6 +52,7 @@ Route::middleware('auth:pembeli')->group(function () {
     Route::get('/pembeli/alamat', [AlamatController::class, 'index']);
     Route::get('/pembeli/show-alamat', [AlamatController::class, 'show']);
     Route::get('/pembeli/show-profile', [PembeliController::class, 'show']);
+    Route::get('/pembeli/show-history-purchase', [PembeliController::class, 'showHistoryPurchase']);
     Route::put('/pembeli/update-alamat/{id}', [AlamatController::class, 'update']);
     Route::delete('/pembeli/delete-alamat/{id}', [AlamatController::class, 'destroy']);
     Route::get('/pembeli/search-alamat/{search_alamat}', [AlamatController::class, 'search']);

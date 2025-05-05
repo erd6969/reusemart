@@ -143,6 +143,8 @@ class PegawaiController
                 'email_pegawai' => 'required|email|unique:pegawai,email_pegawai,' . $id_pegawai . ',id_pegawai',
                 'nama_pegawai' => 'required|string|max:255',
                 'tanggal_lahir' => 'required|string|max:15',
+                'id_jabatan' => 'required|integer|max:5',
+                'password_pegawai' => 'nullable|min:8',
                 'foto_pegawai' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048'
             ]);
     
@@ -150,6 +152,8 @@ class PegawaiController
                 'email_pegawai' => $validatedData['email_pegawai'],
                 'nama_pegawai' => $validatedData['nama_pegawai'],
                 'tanggal_lahir' => $validatedData['tanggal_lahir'],
+                'id_jabatan' => $validatedData['id_jabatan'],
+                'password_pegawai' => $validatedData['password_pegawai'] ? Hash::make($validatedData['password_pegawai']) : $pegawai->password_pegawai,
             ];
     
             if ($request->hasFile('foto_pegawai')) {

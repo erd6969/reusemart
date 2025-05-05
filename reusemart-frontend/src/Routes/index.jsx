@@ -40,6 +40,7 @@ import RegisterOrganisasi from "../Pages/LoginRegister/RegisterOrganisasiPage";
 import AdminLayout from "../Layouts/AdminLayouts";
 import AdminMasterOrganisasiPage from "../Pages/Admin/AdminMasterOrganisasiPage";
 import AdminResetPasswordPage from "../Pages/Admin/AdminResetPasswordPage";
+import AdminMasterPegawaiPage from "../Pages/Admin/AdminMasterPegawaiPage";
 
 //Penitip
 import PenitipLayout from "../Layouts/PenitipLayouts";
@@ -185,7 +186,11 @@ const router = createBrowserRouter([
             {
                 path: "admin-reset-password",
                 element: <AdminResetPasswordPage />,
-            }
+            },
+            {
+                path: "admin-pegawai-master",
+                element: <AdminMasterPegawaiPage />,
+            },
         ],
     },
 

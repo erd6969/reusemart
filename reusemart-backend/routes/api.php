@@ -12,6 +12,7 @@ use App\Http\Controllers\EmailController;
 use App\Http\Controllers\PegawaiController;
 use App\Http\Controllers\DiskusiController;
 use App\Http\Controllers\OrganisasiController;
+use App\Http\Controllers\JabatanController;
 
 Route::post('/send-konfirmasi-email', [EmailController::class, 'sendKonfirmasiEmail']);
 Route::post('/reset-password', [LoginController::class, 'resetPassword']);
@@ -19,10 +20,9 @@ Route::post('/reset-password', [LoginController::class, 'resetPassword']);
 Route::post('/login', [LoginController::class, 'login']);
 Route::middleware('auth:sanctum')->post('/logout', [LoginController::class, 'logout']);
 Route::post ('/pembeli/register', [PembeliController::class, 'register'])->name('pembeli.register');
-Route::post ('/pegawai/register', [PegawaiController::class, 'register'])->name('pegawai.register');
 Route::post ('/organisasi/register', [OrganisasiController::class, 'register'])->name('organisasi.register');
 
-Route::post('/pegawai/reguister', [PegawaiController::class, 'register'])->name('pegawai.register');
+Route::post('/pegawai/register', [PegawaiController::class, 'register'])->name('pegawai.register');
 
 
 Route::get('/shop-page', [BarangController::class, 'showAll']);
@@ -87,9 +87,16 @@ Route::middleware('auth:admin')->group(function () {
     Route::get('/organisasi/search/{search_organisasi}', [OrganisasiController::class, 'search']);
     Route::delete('/organisasi/delete/{id_organisasi}', [OrganisasiController::class, 'destroy']);
     Route::post('/organisasi/update/{id_organisasi}', [OrganisasiController::class, 'update']);
-
+    
     Route::post('/pegawai/reset-password/{id}', [PegawaiController::class, 'resetPassword']);
     Route::get('/pegawai/search/{search_pegawai}', [PegawaiController::class, 'search']);
+    
+    Route::post ('/pegawai/register', [PegawaiController::class, 'register'])->name('pegawai.register');
+    Route::get('/pegawai/show-all', [PegawaiController::class, 'show']);
+    Route::delete('/pegawai/delete/{id_pegawai}', [PegawaiController::class, 'delete']);
+    Route::post('/pegawai/update/{id_pegawai}', [PegawaiController::class, 'update']);
+    Route::get('/jabatan/show', [JabatanController::class, 'show']);
+
 });
 #endregion
 

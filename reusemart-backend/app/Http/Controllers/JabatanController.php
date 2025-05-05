@@ -28,7 +28,8 @@ class JabatanController
      */
     public function show(jabatan $jabatan)
     {
-        //
+        $jabatan = Jabatan::all();
+        return response()->json($jabatan, 200);
     }
 
     /**

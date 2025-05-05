@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Card } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import image3 from "../assets/images/Search.png";
-import CarouselHome from "../Components/CarouselHome.jsx";
+import CarouselHome from "../Components/Carousel/CarouselHome.jsx";
 import {
     FaSearch, FaEye, FaBullseye
 } from 'react-icons/fa';

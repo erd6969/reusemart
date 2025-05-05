@@ -1,7 +1,7 @@
 import Carousel from 'react-bootstrap/Carousel';
-import yuki from "../assets/images/Pembeli/Yuki.jpeg";
-import test from "../assets/images/testcarousel.jpg";
-import dhiaz from "../assets/images/Orang Palu.png";
+import yuki from "../../assets/images/Pembeli/Yuki.jpeg";
+import test from "../../assets/images/testcarousel.jpg";
+import dhiaz from "../../assets/images/Orang Palu.png";
 import "./CarouselHome.css";
 
 function CarouselHome() {

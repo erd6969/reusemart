@@ -1,28 +1,26 @@
 import { getThumbnail } from "../../../api/index";
 import { Modal, Container, Button } from "react-bootstrap";
 import { useState, useEffect } from 'react';
-import InputColumn from "../../../Components/InputColumn";
-import { EditOrganisasi } from '../../../api/apiOrganisasi';
+import InputColumn from "../../InputColumn";
+import { EditPegawai } from '../../../api/apiPegawai';
 import { toast } from 'react-toastify';
 
-const ModalEditOrganisasi = ({ show, handleClose, dataEdit, onSuccess }) => {
+const ModalEditPegawai = ({ show, handleClose, dataEdit, onSuccess }) => {
     const [formData, setFormData] = useState({
-        email_organisasi: '',
-        nama_organisasi: '',
-        alamat_organisasi: '',
-        nomor_telepon_organisasi: '',
-        foto_organisasi: ''
+        email_pegawai: '',
+        nama_pegawai: '',
+        tanggal_lahir: '',
+        foto_pegawai: ''
     });
     const [selectedImage, setSelectedImage] = useState(null);
 
     useEffect(() => {
         if (dataEdit) {
             setFormData({
-                email_organisasi: dataEdit.email_organisasi || '',
-                nama_organisasi: dataEdit.nama_organisasi || '',
-                alamat_organisasi: dataEdit.alamat_organisasi || '',
-                nomor_telepon_organisasi: dataEdit.nomor_telepon_organisasi || '',
-                foto_organisasi: dataEdit.foto_organisasi || ''
+                email_pegawai: dataEdit.email_pegawai || '',
+                nama_pegawai: dataEdit.nama_pegawai || '',
+                tanggal_lahir: dataEdit.tanggal_lahir || '',
+                foto_pegawai: dataEdit.foto_pegawai || ''
             });
         }
     }, [dataEdit]);
@@ -41,7 +39,7 @@ const ModalEditOrganisasi = ({ show, handleClose, dataEdit, onSuccess }) => {
             setSelectedImage(URL.createObjectURL(file)); // Preview image
             setFormData(prev => ({
                 ...prev,
-                foto_organisasi: file
+                foto_pegawai: file
             }));
         }
     };
@@ -49,18 +47,17 @@ const ModalEditOrganisasi = ({ show, handleClose, dataEdit, onSuccess }) => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            if (dataEdit && dataEdit.id_organisasi) {
+            if (dataEdit && dataEdit.id_pegawai) {
                 const formDataToSend = new FormData();
-                formDataToSend.append('email_organisasi', formData.email_organisasi);
-                formDataToSend.append('nama_organisasi', formData.nama_organisasi);
-                formDataToSend.append('alamat_organisasi', formData.alamat_organisasi);
-                formDataToSend.append('nomor_telepon_organisasi', formData.nomor_telepon_organisasi);
+                formDataToSend.append('email_pegawai', formData.email_pegawai);
+                formDataToSend.append('nama_pegawai', formData.nama_pegawai);
+                formDataToSend.append('tanggal_lahir', formData.tanggal_lahir);
     
-                if (formData.foto_organisasi instanceof File) {
-                    formDataToSend.append('foto_organisasi', formData.foto_organisasi);
+                if (formData.foto_pegawai instanceof File) {
+                    formDataToSend.append('foto_pegawai', formData.foto_pegawai);
                 }
     
-                await EditOrganisasi(dataEdit.id_organisasi, formDataToSend);
+                await EditPegawai(dataEdit.id_pegawai, formDataToSend);
                 onSuccess?.();
                 handleClose();
             }
@@ -71,7 +68,7 @@ const ModalEditOrganisasi = ({ show, handleClose, dataEdit, onSuccess }) => {
                     messages.forEach((msg) => toast.error(msg));
                 });
             } else {
-                toast.error(error.message || "Gagal melakukan update organisasi");
+                toast.error(error.message || "Gagal melakukan update pegawai");
             }
         }
     };
@@ -80,16 +77,16 @@ const ModalEditOrganisasi = ({ show, handleClose, dataEdit, onSuccess }) => {
     return (
         <Modal show={show} onHide={handleClose} className="custom-modal-width">
             <Modal.Header closeButton>
-                <Modal.Title><b>Edit Organisasi</b></Modal.Title>
+                <Modal.Title><b>Edit Pegawai</b></Modal.Title>
             </Modal.Header>
             <Container className="modal-body">
                 <form onSubmit={handleSubmit}>
                     <div className="image-container text-center">
-                        {formData.foto_organisasi && !selectedImage && (
+                        {formData.foto_pegawai && !selectedImage && (
                             <div className="existing-image">
                                 <img
-                                    src={getThumbnail(formData.foto_organisasi)}
-                                    alt="Existing Organisasi Foto"
+                                    src={getThumbnail(formData.foto_pegawai)}
+                                    alt="Existing Pegawai Foto"
                                     className="img-thumbnail"
                                 />
                             </div>
@@ -107,13 +104,13 @@ const ModalEditOrganisasi = ({ show, handleClose, dataEdit, onSuccess }) => {
                     </div>
 
                     <div className="form-group text-center mt-3">
-                        <label htmlFor="foto_organisasi" className="btn btn-secondary">
+                        <label htmlFor="foto_pegawai" className="btn btn-secondary">
                             Unggah Gambar
                         </label>
                         <input
                             type="file"
-                            id="foto_organisasi"
-                            name="foto_organisasi"
+                            id="foto_pegawai"
+                            name="foto_pegawai"
                             className="d-none"
                             accept="image/*"
                             onChange={handleImageChange}
@@ -121,39 +118,30 @@ const ModalEditOrganisasi = ({ show, handleClose, dataEdit, onSuccess }) => {
                     </div>
                     <br />
                     <InputColumn
-                        nameLabel="email_organisasi"
-                        contentLabel="Email Organisasi"
+                        nameLabel="email_pegawai"
+                        contentLabel="Email Pegawai"
                         typeInput="text"
-                        idInput="email_organisasi"
-                        placeholderInput="Masukkan Email Organisasi..."
-                        value={formData.email_organisasi}
+                        idInput="email_pegawai"
+                        placeholderInput="Masukkan Email Pegawai..."
+                        value={formData.email_pegawai}
                         onChange={handleChange}
                     />
                     <InputColumn
-                        nameLabel="nama_organisasi"
-                        contentLabel="Nama Organisasi"
+                        nameLabel="nama_pegawai"
+                        contentLabel="Nama Pegawai"
                         typeInput="text"
-                        idInput="nama_organisasi"
-                        placeholderInput="Masukkan Nama Organisasi..."
-                        value={formData.nama_organisasi}
+                        idInput="nama_pegawai"
+                        placeholderInput="Masukkan Nama Pegawai..."
+                        value={formData.nama_pegawai}
                         onChange={handleChange}
                     />
                     <InputColumn
-                        nameLabel="alamat_organisasi"
-                        contentLabel="Alamat Organisasi"
+                        nameLabel="tanggal_lahir"
+                        contentLabel="Tanggal Lahir"
                         typeInput="text"
-                        idInput="alamat_organisasi"
-                        placeholderInput="Masukkan Alamat Organisasi..."
-                        value={formData.alamat_organisasi}
-                        onChange={handleChange}
-                    />
-                    <InputColumn
-                        nameLabel="nomor_telepon_organisasi"
-                        contentLabel="Nomor Telepon"
-                        typeInput="text"
-                        idInput="nomor_telepon_organisasi"
-                        placeholderInput="Masukkan Nomor Telepon..."
-                        value={formData.nomor_telepon_organisasi}
+                        idInput="tanggal_lahir"
+                        placeholderInput="Masukkan Alamat Pegawai..."
+                        value={formData.tanggal_lahir}
                         onChange={handleChange}
                     />
                     <div className="d-flex justify-content-end">
@@ -171,4 +159,4 @@ const ModalEditOrganisasi = ({ show, handleClose, dataEdit, onSuccess }) => {
     );
 };
 
-export default ModalEditOrganisasi;
+export default ModalEditPegawai;

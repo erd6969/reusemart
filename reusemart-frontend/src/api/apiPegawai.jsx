@@ -35,9 +35,9 @@ export const SearchPegawai = async (search_pegawai = "") => {
     }
 };
 
-export const ShowAllPegawai = async (page) => {
+export const ShowAllPegawai = async (page=1) => {
     try {
-        const response = await useAxios.get(`/pegawai/show-all`, {
+        const response = await useAxios.get(`/pegawai/show-all?page=${page}`, {
             headers: {
                 "Content-Type": "application/json",
                 Authorization: `Bearer ${sessionStorage.getItem("token")}`,
@@ -50,7 +50,7 @@ export const ShowAllPegawai = async (page) => {
     }
 };
 
-export const deletePegawai = async (id) => {
+export const DeletePegawai = async (id) => {
     try {
         const response = await useAxios.delete(`/pegawai/delete/${id}`, {
             headers: {
@@ -64,3 +64,41 @@ export const deletePegawai = async (id) => {
         throw error?.response?.data || error;
     }
 };
+
+export const EditPegawai = async (id, data) => {
+    try {
+        const token = sessionStorage.getItem("token");
+
+        const response = await useAxios.post(`/pegawai/update/${id}`, data, {
+            headers: {
+                "Content-Type": "multipart/form-data",
+                "Accept": "application/json",
+                "Authorization": `Bearer ${token}`,
+            },
+        });
+        console.log("Edit Pegawai response:", response.data);
+        return response.data;
+    } catch (error) {
+        console.error("Error editing pegawai:", error);
+        throw error;
+    }
+};
+
+export const CreatePegawai = async (data) => {
+    try {
+        const token = sessionStorage.getItem("token");
+
+        const response = await useAxios.post("/pegawai/register", data, {
+            headers: {
+                "Content-Type": "multipart/form-data",
+                "Accept": "application/json",
+                "Authorization": `Bearer ${token}`,
+            },
+        });
+        console.log("Create Pegawai response:", response.data);
+        return response.data;
+    } catch (error) {
+        console.error("Error creating pegawai:", error);
+        throw error;
+    }
+}

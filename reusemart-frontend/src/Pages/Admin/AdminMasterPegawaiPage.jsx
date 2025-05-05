@@ -4,16 +4,17 @@ import { FaChevronLeft, FaChevronRight } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
 import './AdminMasterPegawaiPage.css';
 import InputColumn from '../../Components/InputColumn';
-import { ShowAllPegawai } from '../../api/apiPegawai';
-import { deletePegawai } from '../../api/apiPegawai';
+import { ShowAllPegawai, DeletePegawai, EditPegawai, SearchPegawai } from '../../api/apiPegawai';
 import ModalEditPegawai from '../../Components/Modal/ModalAdmin/ModalEditPegawai';
+import { toast } from 'react-toastify';
+import ModalCreatePegawai from '../../Components/Modal/ModalAdmin/ModalCreatePegawai';
 
 
 const SearchComponent = ({ onSearch }) => {
     return (
         <div className="searchComponent">
             <div className="searchContainer">
-                <InputColumn 
+                <InputColumn
                     typeInput="text"
                     idInput="nama_pegawai"
                     placeholderInput="Masukkan Nama Pegawai..."
@@ -32,6 +33,7 @@ const AdminMasterPegawaiPage = () => {
     const [searchQuery, setSearchQuery] = useState("");
     const [isFirstLoad, setIsFirstLoad] = useState(true);
     const [showModal, setShowModal] = useState(false);
+    const [showModalCreate, setShowModalCreate] = useState(false);
     const [selectedPegawai, setSelectedPegawai] = useState(null);
 
     // Pagination states
@@ -40,30 +42,53 @@ const AdminMasterPegawaiPage = () => {
 
     const fetchPegawaiData = async (page = 1) => {
         setIsLoading(true);
-        try {
-            const response = await ShowAllPegawai(page);
-            console.log("Pegawai Data:", response);
-            setPegawaiList(response.data);
-            setTotalPages(response.last_page);
-            setCurrentPage(response.current_page);
-        } catch (error) {
-            console.error("Error fetching pegawai data:", error);
-            setPegawaiList([]);
-        } finally {
+        
+        ShowAllPegawai(page).then((data) => {
+            console.log("Pegawai Data:", data);
+            setPegawaiList(data.data);
+            setTotalPages(data.last_page);
+            setCurrentPage(data.current_page);
             setIsLoading(false);
             setIsFirstLoad(false);
-        }
+        })
+        .catch((error) => {
+            console.error("Error fetching pegawai data:", error);
+            setIsLoading(false);
+            setIsFirstLoad(false);
+        });
     };
 
 
     useEffect(() => {
-        fetchPegawaiData(currentPage);
-    }, [currentPage]);
+        const delayDebounce = setTimeout(() => {
+            if (searchQuery.trim().length >= 3) {
+                setIsLoading(true);
+                SearchPegawai(searchQuery.trim())
+                    .then((response) => {
+                        const hasil = Array.isArray(response) ? response : [response];
+                        console.log("Hasil pencarian pegawai:", hasil);
+                        setPegawaiList(hasil);
+                        setTotalPages(1); // Karena hasil pencarian tidak paginasi
+                        setCurrentPage(1);
+                    })
+                    .catch((error) => {
+                        console.error("Error searching organisasi:", error);
+                        setPegawaiList([]);
+                    })
+                    .finally(() => setIsLoading(false));
+            } else {
+                fetchPegawaiData(currentPage); // Aktifkan pagination saat tidak mencari
+            }
+        }, 50);
+
+        return () => clearTimeout(delayDebounce);
+    }, [searchQuery, currentPage]);
 
     const handleDelete = async (id) => {
         if (window.confirm("Apakah Anda yakin ingin menghapus pegawai ini?")) {
             try {
-                await deletePegawai(id);
+                await DeletePegawai(id);
+                toast.success("Data Pegawai Berhasil Dihapus.");
                 fetchPegawaiData(currentPage);
             } catch (error) {
                 console.error("Gagal menghapus pegawai:", error);
@@ -74,6 +99,19 @@ const AdminMasterPegawaiPage = () => {
     const handleEdit = (pgw) => {
         setSelectedPegawai(pgw);
         setShowModal(true);
+    };
+    
+    const handleCreate = () => {
+        setShowModalCreate(true);
+    };
+
+    const handleModalCreateClose = () => {
+        setShowModalCreate(false);
+    };
+
+    const handleCreateSuccess = () => {
+        fetchPegawaiData(currentPage);
+        toast.success("Data Pegawai Berhasil Ditambahkan.");
     };
 
     const handleModalClose = () => {
@@ -91,6 +129,9 @@ const AdminMasterPegawaiPage = () => {
             <div className="adminMasterPegawaiPage">
                 <h1 className="pageTitle">Master Pegawai</h1>
                 <SearchComponent onSearch={setSearchQuery} />
+                <div style={{display: "flex", justifyContent: "end", paddingInlineEnd: "20px"}}>
+                    <Button variant="primary" onClick={() => handleCreate()}>Create New Pegawai</Button>
+                </div>
                 <div className="tableContainer">
                     <table className="dataTable">
                         <thead>
@@ -166,6 +207,14 @@ const AdminMasterPegawaiPage = () => {
                     handleClose={handleModalClose}
                     dataEdit={selectedPegawai}
                     onSuccess={handleUpdateSuccess}
+                />
+            )}
+
+            {showModalCreate && (
+                <ModalCreatePegawai
+                    show={showModalCreate}
+                    handleClose={handleModalCreateClose}
+                    onSuccess={handleCreateSuccess}
                 />
             )}
         </Container>

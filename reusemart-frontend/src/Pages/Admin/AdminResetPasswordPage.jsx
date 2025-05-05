@@ -3,6 +3,7 @@ import InputColumn from '../../Components/InputColumn';
 import { Container, Button, Spinner } from 'react-bootstrap';
 import { useEffect, useState } from 'react';
 import { SearchPegawai, ResetPassword } from '../../api/apiPegawai';
+import { SearchHunter, ResetPasswordHunter } from '../../api/apiHunter';
 import { toast } from 'react-toastify';
 
 const SearchComponent = ({ onSearch }) => {
@@ -22,16 +23,33 @@ const SearchComponent = ({ onSearch }) => {
 
 const AdminMasterResetPage = () => {
     const [pegawaiList, setPegawaiList] = useState([]);
+    const [hunterList, setHunterList] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
     const [searchQuery, setSearchQuery] = useState("");
 
+    // Function to fetch Pegawai data
     const fetchPegawaiData = async () => {
         setIsLoading(true);
         try {
             const data = await SearchPegawai();
             setPegawaiList(data.data);
+            console.log("Pegawai Data:", data);
         } catch (error) {
-            console.error("Error fetching data:", error);
+            console.error("Error fetching pegawai data:", error);
+        } finally {
+            setIsLoading(false);
+        }
+    };
+
+    // Function to fetch Hunter data
+    const fetchHunterData = async () => {
+        setIsLoading(true);
+        try {
+            const data = await SearchHunter();
+            setHunterList(data.data);
+            console.log("Hunter Data:", data);
+        } catch (error) {
+            console.error("Error fetching hunter data:", error);
         } finally {
             setIsLoading(false);
         }
@@ -43,34 +61,49 @@ const AdminMasterResetPage = () => {
                 setIsLoading(true);
                 SearchPegawai(searchQuery.trim())
                     .then((data) => {
-                        const hasil = Array.isArray(data) ? data : [data];
-                        setPegawaiList(hasil);
+                        const hasilPegawai = Array.isArray(data) ? data : [data];
+                        setPegawaiList(hasilPegawai);
                     })
                     .catch((error) => {
-                        console.error("Error searching address:", error);
+                        console.error("Error searching Pegawai:", error);
                         setPegawaiList([]);
                     })
-                    .finally(() => setIsLoading(false));
+                    .finally(() => {
+                        SearchHunter(searchQuery.trim())
+                            .then((data) => {
+                                const hasilHunter = Array.isArray(data) ? data : [data];
+                                setHunterList(hasilHunter);
+                            })
+                            .catch((error) => {
+                                console.error("Error searching Hunter:", error);
+                                setHunterList([]);
+                            })
+                            .finally(() => {
+                                setIsLoading(false);
+                            });
+                    });
             } else {
                 fetchPegawaiData();
+                fetchHunterData();
             }
         }, 500);
-
+    
         return () => clearTimeout(delayDebounce);
     }, [searchQuery]);
+    
 
     return (
         <Container>
             <div className="adminMasterOrganisasiPage">
-                <h1 className="pageTitle">Master Pegawai</h1>
+                <h1 className="pageTitle">Master Pegawai dan Hunter</h1>
                 <SearchComponent onSearch={setSearchQuery} />
                 <div className="tableContainer">
                     <table className="dataTable">
                         <thead>
                             <tr>
-                                <th>ID Pegawai</th>
-                                <th>Nama Pegawai</th>
-                                <th>Jabatan</th>
+                                <th>ID</th>
+                                <th>Nama</th>
+                                <th>Jabatan/Posisi</th>
                                 <th>Email</th>
                                 <th>Action</th>
                             </tr>
@@ -83,53 +116,46 @@ const AdminMasterResetPage = () => {
                                         <div>Loading...</div>
                                     </td>
                                 </tr>
-                            ) : pegawaiList.length > 0 ? (
-                                pegawaiList.map((pgw) => (
-                                    <tr key={pgw.id_pegawai}>
+                            ) : (pegawaiList.length > 0 || hunterList.length > 0) ? (
+                                [...pegawaiList, ...hunterList].map((item) => (
+                                    <tr key={item.id_pegawai || item.id_hunter}>
                                         <td>
                                             <span>
-                                                {(() => {
-                                                    switch (pgw.nama_jabatan) {
-                                                        case "Owner":
-                                                            return `OWNR.${pgw.id_pegawai}`;
-                                                        case "Admin":
-                                                            return `ADM.${pgw.id_pegawai}`;
-                                                        case "Pegawai Gudang":
-                                                            return `PG.${pgw.id_pegawai}`;
-                                                        case "Kurir":
-                                                            return `KR.${pgw.id_pegawai}`;
-                                                        default:
-                                                            return `CS.${pgw.id_pegawai}`;
-                                                    }
-                                                })()}
+                                                {item.nama_jabatan ? `PEG.${item.id_pegawai}` : `HT.${item.id_hunter}`}
                                             </span>
                                         </td>
-                                        <td>{pgw.nama_pegawai}</td>
-                                        <td>{pgw.nama_jabatan}</td>
-                                        <td>{pgw.email_pegawai}</td>
+                                        <td>{item.nama_pegawai || item.nama_hunter}</td>
+                                        <td>{item.nama_jabatan || "Hunter"}</td>
+                                        <td>{item.email_pegawai || item.email_hunter}</td>
                                         <td className="actionButtons">
-                                            <Button
-                                                variant="danger"
-                                                onClick={async () => {
-                                                    try {
-                                                        await ResetPassword(pgw.id_pegawai);
-                                                        toast.success(`Password berhasil direset ke tanggal lahir dengan format YYYY-MM-DD`);
-                                                    } catch (error) {
-                                                        console.error("Error resetting password:", error);
-                                                        toast.error("Gagal mereset password.");
+                                        <Button
+                                            variant="danger"
+                                            onClick={async () => {
+                                                try {
+                                                    if (item.nama_jabatan) {
+                                                        // Pegawai
+                                                        await ResetPassword(item.id_pegawai);
+                                                    } else {
+                                                        // Hunter
+                                                        await ResetPasswordHunter(item.id_hunter);
                                                     }
-                                                }}
-                                                style={{ width: "70%", margin: "0 auto" }}
-                                            >
-                                                Reset Password
-                                            </Button>
+                                                    toast.success(`Password berhasil direset`);
+                                                } catch (error) {
+                                                    console.error("Error resetting password:", error);
+                                                    toast.error("Gagal mereset password.");
+                                                }
+                                            }}
+                                            style={{ width: "60%", margin: "0 auto" }}
+                                        >
+                                            Reset Password
+                                        </Button>
                                         </td>
                                     </tr>
                                 ))
                             ) : (
                                 <tr>
                                     <td colSpan="5" className="text-center">
-                                        Tidak ada data pegawai yang ditemukan.
+                                        Tidak ada data ditemukan.
                                     </td>
                                 </tr>
                             )}

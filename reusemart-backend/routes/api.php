@@ -13,6 +13,7 @@ use App\Http\Controllers\PegawaiController;
 use App\Http\Controllers\DiskusiController;
 use App\Http\Controllers\OrganisasiController;
 use App\Http\Controllers\JabatanController;
+use App\Http\Controllers\HunterController;
 
 Route::post('/send-konfirmasi-email', [EmailController::class, 'sendKonfirmasiEmail']);
 Route::post('/reset-password', [LoginController::class, 'resetPassword']);
@@ -21,6 +22,8 @@ Route::post('/login', [LoginController::class, 'login']);
 Route::middleware('auth:sanctum')->post('/logout', [LoginController::class, 'logout']);
 Route::post ('/pembeli/register', [PembeliController::class, 'register'])->name('pembeli.register');
 Route::post ('/organisasi/register', [OrganisasiController::class, 'register'])->name('organisasi.register');
+
+Route::post('/mobile/login', [LoginController::class, 'loginMobile']);
 
 Route::post('/pegawai/register', [PegawaiController::class, 'register'])->name('pegawai.register');
 
@@ -97,6 +100,8 @@ Route::middleware('auth:admin')->group(function () {
     Route::post('/pegawai/update/{id_pegawai}', [PegawaiController::class, 'update']);
     Route::get('/jabatan/show', [JabatanController::class, 'show']);
 
+    Route::get('/hunter/search/{search_hunter}', [HunterController::class, 'searchHunter']);
+    Route::post('/hunter/reset-password/{id}', [HunterController::class, 'resetPassword']);
 });
 #endregion
 

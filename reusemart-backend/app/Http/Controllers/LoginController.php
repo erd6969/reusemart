@@ -8,6 +8,7 @@ use App\Models\Pembeli;
 use App\Models\Penitip;
 use App\Models\Pegawai;
 use App\Models\Organisasi;
+use App\Models\Hunter;
 use Illuminate\Support\Facades\DB;
 
 class LoginController
@@ -151,6 +152,68 @@ class LoginController
         DB::table('password_resets')->where('email', $resetRecord->email)->delete();
 
         return response()->json(['message' => 'Password berhasil diperbarui.']);
+    }
+
+    public function loginMobile(Request $request)
+    {
+        $credentials = $request->validate([
+            'email' => 'required|email',
+            'password' => 'required'
+        ]);
+
+        // Cek Pembeli
+        $pembeli = Pembeli::where('email_pembeli', $credentials['email'])->first();
+        if ($pembeli && Hash::check($credentials['password'], $pembeli->password_pembeli)) {
+            $token = $pembeli->createToken('auth_token', ['pembeli'])->plainTextToken;
+            return response()->json([
+                'message' => 'Login successful',
+                'token' => $token,
+                'role' => 'pembeli',
+                'user' => $pembeli
+            ]);
+        }
+
+        // Cek Penitip
+        $penitip = Penitip::where('email_penitip', $credentials['email'])->first();
+        if ($penitip && Hash::check($credentials['password'], $penitip->password_penitip)) {
+            $token = $penitip->createToken('auth_token', ['penitip'])->plainTextToken;
+            return response()->json([
+                'message' => 'Login successful',
+                'token' => $token,
+                'role' => 'penitip',
+                'user' => $penitip
+            ]);
+        }
+
+        // Cek Hunter
+        $hunter = Hunter::where('email_hunter', $credentials['email'])->first();
+        if ($hunter && Hash::check($credentials['password'], $hunter->password_hunter)) {
+            $token = $hunter->createToken('auth_token', ['hunter'])->plainTextToken;
+            return response()->json([
+                'message' => 'Login successful',
+                'token' => $token,
+                'role' => 'hunter',
+                'user' => $hunter
+            ]);
+        }
+
+        // Cek Kurir
+        $pegawai = Pegawai::where('email_pegawai', $credentials['email'])->first();
+        if ($pegawai && Hash::check($credentials['password'], $pegawai->password_pegawai)) {
+            if ($pegawai->jabatan->id_jabatan == 4) {
+                $token = $pegawai->createToken('auth_token', ['kurir'])->plainTextToken;
+                return response()->json([
+                    'message' => 'Login successful',
+                    'token' => $token,
+                    'role' => 'kurir',
+                    'user' => $pegawai
+                ]);
+            }
+        }
+
+        return response()->json([
+            'message' => 'Email atau password salah, atau role tidak diizinkan di mobile.'
+        ], 401);
     }
 
 }

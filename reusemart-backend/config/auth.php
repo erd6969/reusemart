@@ -67,6 +67,10 @@ return [
         'organisasi' => [
             'driver' => 'sanctum',
             'provider' => 'organisasi',
+        ],
+        'owner' => [
+            'driver' => 'sanctum',
+            'provider' => 'pegawai',
         ]
     ],
 

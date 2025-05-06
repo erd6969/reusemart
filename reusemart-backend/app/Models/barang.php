@@ -35,6 +35,11 @@ class Barang extends Model
         return $this->belongsTo(Hunter::class, 'id_hunter');
     }
 
+    public function request_donasi()
+    {
+        return $this->hasMany(request_donasi::class, 'id_barang', 'id_barang');
+    }
+
     public function detailtransaksipenitipan()
     {
         return $this->hasMany(DetailTransaksiPenitipan::class, 'id_barang', 'id_barang');

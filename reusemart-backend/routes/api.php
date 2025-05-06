@@ -15,6 +15,7 @@ use App\Http\Controllers\OrganisasiController;
 use App\Http\Controllers\JabatanController;
 use App\Http\Controllers\HunterController;
 use App\Http\Controllers\KeranjangController;
+use App\Http\Controllers\RequestDonasiController;
 
 Route::post('/send-konfirmasi-email', [EmailController::class, 'sendKonfirmasiEmail']);
 Route::post('/reset-password', [LoginController::class, 'resetPassword']);
@@ -78,6 +79,11 @@ Route::middleware('auth:pembeli')->group(function () {
 
 #region Pegawai
 Route::middleware('auth:owner')->group(function () {
+    Route::get('/request_donasi/show-all', [RequestDonasiController::class, 'show']);
+    Route::get('/request_donasi/show-waiting-request', [RequestDonasiController::class, 'showWaitingRequest']);
+    Route::get('/request_donasi/show-by-id/{id_barang}', [RequestDonasiController::class, 'showByIdBarang']);
+    Route::get('/request_donasi/search/{search_request_donasi}', [RequestDonasiController::class, 'search']);
+    Route::post('/request_donasi/acceptRequest', [RequestDonasiController::class, 'acceptRequest']);
 
 });
 Route::middleware('auth:gudang')->group(function () {

@@ -10,7 +10,6 @@ import LoginPage from "../Pages/LoginRegister/LoginPage";
 import RegisterBuyerPage from "../Pages/LoginRegister/RegisterBuyerPage";
 import RegisterOption from "../Pages/LoginRegister/RegisterOption";
 import DaftarDonasiPage from "../Pages/Organisasi/DaftarDonasi";
-import OwnerPage from "../Pages/Owner/OwnerPage";
 import ReqDonasi from "../Pages/Owner/ReqDonasi"; 
 import HistoryDonasiPage from "../Pages/Owner/HistoryDonasi"; 
 import LaporanPage from "../Pages/Owner/Laporan"; 
@@ -56,6 +55,9 @@ import DonatedProductPage from "../Pages/Penitip/DonatedProductPage";
 import CSLayout from "../Layouts/CSLayouts";
 import CSDiscussionPage from "../Pages/CustomerService/CSDiscussionPage";
 import CSPenitipManagementPage from "../Pages/CustomerService/CSPenitipManagementPage";
+
+// Owner
+import OwnerLayouts from "../Layouts/OwnerLayouts";
 
 const router = createBrowserRouter([
     {
@@ -145,7 +147,7 @@ const router = createBrowserRouter([
         path: "/owner",
         element: (
             <ProtectedRoutes allowedRoles={["owner"]}>
-                <OwnerPage />
+                <OwnerLayouts />
             </ProtectedRoutes>
         ),
         children: [

@@ -1,91 +1,225 @@
 import './PurchasePembeliPage.css';
 import { useState, useEffect } from 'react';
-import { FaStar } from 'react-icons/fa';
-import { Container } from 'react-bootstrap';
+import { FaStar, FaSearch } from 'react-icons/fa';
+import { Container, Badge, Button, Modal, InputGroup, Form } from 'react-bootstrap';
 import SearchIcon from "../../assets/images/search-icon.png";
 import defaultImage from "../../assets/images/Pembeli/Yuki.jpeg";
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
 
 import { ShowHistoryPurchase } from "../../api/apiPembeli";
 import { getThumbnail } from "../../api/index";
 
-
 const PurchasePembeliPage = () => {
     const [historyPurchase, setHistoryPurchase] = useState([]);
-        const [loading, setLoading] = useState(true);
-        // const [showModal, setShowModal] = useState(false);
-        // const [selectedProductId, setSelectedProductId] = useState(null);
-    
-        useEffect(() => {
-            const fetchPurchaseHistory = async () => {
-                try {
-                    const response = await ShowHistoryPurchase();
-                    setHistoryPurchase(response.data);
-                    console.log("Fetched history purchase:", response.data);
-                } catch (error) {
-                    console.error("Error fetching history purhase:", error);
-                } finally {
-                    setLoading(false);
-                }
-            };
-    
-            fetchPurchaseHistory();
-        }, []);
+    const [loading, setLoading] = useState(true);
+    const [modalShow, setModalShow] = useState(false);
+    const [selectedProduct, setSelectedProduct] = useState(null);
+    const [statusFilter, setStatusFilter] = useState('all');
+
+    const [startDate, setStartDate] = useState(null);
+    const [endDate, setEndDate] = useState(null);
+    const [searchQuery, setSearchQuery] = useState("");
+    const [searchValue, setSearchValue] = useState("");
+
+    useEffect(() => {
+        const fetchPurchaseHistory = async () => {
+            try {
+                const response = await ShowHistoryPurchase();
+                setHistoryPurchase(response.data);
+            } catch (error) {
+                console.error("Error fetching history purchase:", error);
+            } finally {
+                setLoading(false);
+            }
+        };
+        fetchPurchaseHistory();
+    }, []);
+
+    const handleOpenModal = (product) => {
+        setSelectedProduct(product);
+        setModalShow(true);
+    };
+
+    const handleSearch = () => {
+        setSearchQuery(searchValue);
+    };
+
+    const filteredPurchase = historyPurchase
+        .filter(history => {
+            if (statusFilter.toLowerCase() === 'sudah diterima') {
+                return ['sudah diambil', 'sudah sampai'].includes(history.status_pengiriman.toLowerCase());
+            }
+            if (statusFilter.toLowerCase() !== 'all') {
+                return history.status_pengiriman.toLowerCase() === statusFilter.toLowerCase();
+            }
+            return true;
+        })
+        .filter(history => {
+            if (startDate && endDate) {
+                const purchaseDate = new Date(history.tanggal_pembelian);
+                return purchaseDate >= startDate && purchaseDate <= endDate;
+            }
+            return true;
+        })
+        .filter(history => {
+            if (searchQuery.trim() !== '') {
+                return history.nama_barang.toLowerCase().includes(searchQuery.toLowerCase());
+            }
+            return true;
+        });
+
     return (
         <Container className="purchase-wrapper">
             <div className="purchase-container">
                 <h2><b>Produk Terjual</b></h2>
                 <div className="purchase-content-container">
-                    <div className="search-bar">
-                        <img src={SearchIcon} alt="Search Icon" className="search-icon-inside" />
-                        <input
-                            type="text"
-                            placeholder="Masukkan Nama Produk..."
-                            className="search-input"
+                    <div className="searchComponent1">
+                        <div className="searchContainer1">
+                            <InputGroup className="mb-3">
+                                <Form.Control
+                                    type="text"
+                                    placeholder="Masukkan Nama Barang..."
+                                    className="searchInput"
+                                    value={searchValue}
+                                    onChange={(e) => setSearchValue(e.target.value)}
+                                />
+                                <Button variant="secondary" onClick={handleSearch}>
+                                    <FaSearch />
+                                </Button>
+                            </InputGroup>
+                        </div>
+                    </div>
+
+                    <div className="mb-3">
+                        <Button variant={statusFilter.toLowerCase() === "all" ? "warning" : "outline-warning"} className="me-2" onClick={() => setStatusFilter('all')}>Semua</Button>
+                        <Button variant={statusFilter.toLowerCase() === "sedang disiapkan" ? "warning" : "outline-warning"} className="me-2" onClick={() => setStatusFilter('sedang disiapkan')}>Sedang Disiapkan</Button>
+                        <Button variant={statusFilter.toLowerCase() === "sedang diantar" ? "warning" : "outline-warning"} className="me-2" onClick={() => setStatusFilter('sedang diantar')}>Sedang Diantar</Button>
+                        <Button variant={statusFilter.toLowerCase() === "siap diambil" ? "warning" : "outline-warning"} className="me-2" onClick={() => setStatusFilter('siap diambil')}>Siap diambil</Button>
+                        <Button variant={statusFilter.toLowerCase() === "sudah diterima" ? "warning" : "outline-warning"} className="me-2" onClick={() => setStatusFilter('sudah diterima')}>Sudah diterima</Button>
+                    </div>
+
+                    <div className="mb-3 d-flex gap-2 align-items-center">
+                        <span>Pilih tanggal: </span>
+                        <DatePicker
+                            selected={startDate}
+                            onChange={(date) => setStartDate(date)}
+                            placeholderText="Dari Tanggal"
+                            dateFormat="yyyy-MM-dd"
+                        />
+                        <DatePicker
+                            selected={endDate}
+                            onChange={(date) => setEndDate(date)}
+                            placeholderText="Sampai Tanggal"
+                            dateFormat="yyyy-MM-dd"
                         />
                     </div>
 
                     {loading ? (
                         <p>Loading...</p>
-                    ) : historyPurchase.length === 0 ? (
+                    ) : filteredPurchase.length === 0 ? (
                         <p style={{ textAlign: "center" }}>Tidak ada history pembelian.</p>
                     ) : (
                         <table className="purchase-table">
                             <thead>
                                 <tr>
-                                    <th>Info Product</th>
+                                    <th>Info Produk</th>
                                     <th>Harga Barang</th>
                                     <th>Tanggal Pembelian</th>
                                     <th>Status Pengiriman</th>
+                                    <th>Detail</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                {historyPurchase.map((history, index) => (
-                                    <tr key={index} style={{ cursor: 'pointer' }} onClick={() => handleOpenModal(history.id_barang)}>
-                                        <td className="product-info">
-                                            <img src={getThumbnail(history.foto_barang) || defaultImage} alt={history.nama_barang} />
-                                            <b>{history.nama_barang}</b>
-                                        </td>
-                                        <td>Rp{history.harga_barang?.toLocaleString('id-ID') || '-'}</td>
-                                        <td>{history.tanggal_pembelian?.substring(0, 10)}</td>  
-                                        <td>{history.status_pengiriman}</td>
-                                    </tr>
-                                ))}
+                                {filteredPurchase
+                                    .sort((a, b) => new Date(b.tanggal_pembelian) - new Date(a.tanggal_pembelian))
+                                    .map((history, index) => {
+                                        const status = ['sudah diambil', 'sudah sampai'].includes(history.status_pengiriman)
+                                            ? 'sudah diterima'
+                                            : history.status_pengiriman;
+
+                                        const badgeColor =
+                                            status.toLowerCase() === 'sudah diterima' ? 'success'
+                                                : status.toLowerCase() === 'sedang disiapkan' ? 'secondary'
+                                                    : status.toLowerCase() === 'sedang diantar' ? 'warning'
+                                                        : status.toLowerCase() === 'siap diambil' ? 'info'
+                                                            : 'dark';
+
+                                        return (
+                                            <tr key={index} style={{ cursor: 'pointer' }}>
+                                                <td className="product-info">
+                                                    <img src={getThumbnail(history.foto_barang) || defaultImage} alt={history.nama_barang} />
+                                                    <b>{history.nama_barang}</b>
+                                                </td>
+                                                <td>Rp{history.harga_barang?.toLocaleString('id-ID') || '-'}</td>
+                                                <td>{history.tanggal_pembelian?.substring(0, 10)}</td>
+                                                <td>
+                                                    <Badge
+                                                        bg={badgeColor}
+                                                        style={{
+                                                            width: '10vw',
+                                                            height: '4vh',
+                                                            textAlign: 'center',
+                                                            fontSize: '1vw',
+                                                            fontWeight: 'bold'
+                                                        }}
+                                                    >
+                                                        {status}
+                                                    </Badge>
+                                                </td>
+                                                <td>
+                                                    <Button variant="primary" onClick={() => handleOpenModal(history)}>
+                                                        Detail
+                                                    </Button>
+                                                </td>
+                                            </tr>
+                                        );
+                                    })}
                             </tbody>
                         </table>
                     )}
                 </div>
             </div>
 
-           
-            {/* {selectedProductId && (
-                <ModalDetailPenjualan
-                    show={showModal}
-                    handleClose={handleCloseModal}
-                    id_barang={selectedProductId}
-                />
-            )} */}
+            <MyVerticallyCenteredModal
+                show={modalShow}
+                onHide={() => setModalShow(false)}
+                product={selectedProduct}
+            />
         </Container>
     );
 }
 
 export default PurchasePembeliPage;
+
+function MyVerticallyCenteredModal({ show, onHide, product }) {
+    if (!product) return null;
+
+    return (
+        <Modal show={show} onHide={onHide} size="lg" centered>
+            <Modal.Header closeButton>
+                <Modal.Title>Detail Produk</Modal.Title>
+            </Modal.Header>
+            <Modal.Body>
+                <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', gap: '20px' }}>
+                    <img
+                        src={getThumbnail(product.foto_barang) || defaultImage}
+                        alt={product.nama_barang}
+                        style={{ maxWidth: "30%" }}
+                    />
+                    <div>
+                        <h3 style={{ fontWeight: "bold" }}>{product.nama_barang}</h3>
+                        <p><strong>Harga:</strong> Rp{product.harga_barang?.toLocaleString('id-ID') || '-'}</p>
+                        <p><strong>Tanggal Pembelian:</strong> {product.tanggal_pembelian?.substring(0, 10)}</p>
+                        <p><strong>Status Pengiriman:</strong> {product.status_pengiriman}</p>
+                        <p><strong>Deskripsi Barang :</strong> {product.deskripsi_barang}</p>
+                        <p><strong>Kondisi Barang :</strong> {product.kondisi_barang}</p>
+                    </div>
+                </div>
+            </Modal.Body>
+            <Modal.Footer>
+                <Button variant="danger" onClick={onHide}>Tutup</Button>
+            </Modal.Footer>
+        </Modal>
+    );
+}

@@ -52,7 +52,7 @@
     font-weight: 600;
 }
 
-.actionButtons {
+.actionButtons{
     display: flex;
     justify-content: space-between;
     align-items: center;

@@ -4,6 +4,20 @@ const getToken = () => {
     return sessionStorage.getItem("token");
 };
 
+export const AddPenitip = async (data) => {
+    try {
+      const response = await useAxios.post("/penitip/register", data, {
+        headers: {
+          "Accept": "application/json",
+          "Authorization": `Bearer ${getToken()}`,
+        },
+      });
+      return response.data;
+    } catch (error) {
+      console.error("Error adding penitip:", error);
+      throw error?.response?.data || error;
+    }
+  };
 
 export const ShowProfilePenitip = async () => {
     try {

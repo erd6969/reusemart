@@ -147,6 +147,7 @@ class PegawaiController
                 'password_pegawai' => 'nullable|min:8',
                 'foto_pegawai' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048'
             ]);
+            Log::info($request->all());
     
             $updateData = [
                 'email_pegawai' => $validatedData['email_pegawai'],

@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 import { ShowAllPenitip, SearchPenitip, DeletePenitip } from '../../api/apiPenitip';
 import { FaChevronLeft, FaChevronRight, FaSearch } from "react-icons/fa";
 import { toast } from 'react-toastify';
-// import ModalEditPenitip from '../../Components/Modal/ModalAdmin/ModalEditPenitip';
+import ModalEditPenitip from '../../Components/Modal/ModalCS/ModalEditPenitip';
 import ModalCreatePenitip from '../../Components/Modal/ModalCS/ModalCreatePenitip';
 
 const CSPenitipManagementPage = () => {
@@ -104,7 +104,7 @@ const CSPenitipManagementPage = () => {
     const handlePagination = (page) => {
         if (page >= 1 && page <= totalPages) {
             setCurrentPage(page);
-            fetchPenitipData(page); // Memuat data untuk halaman yang dipilih
+            fetchPenitipData(page);
         }
     };
 

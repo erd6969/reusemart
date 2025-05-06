@@ -13,6 +13,8 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\ValidationException;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Storage;
+use Laravel\Pail\ValueObjects\Origin\Console;
 
 class PenitipController
 {
@@ -143,62 +145,72 @@ class PenitipController
      * Update the specified resource in storage.
      */
     public function update(Request $request, $id_penitip)
-    {
-        try {
-            $penitip = Penitip::find($id_penitip);
-            if (!$penitip) {
-                return response()->json(['message' => 'Penitip not found'], 404);
-            }
-    
-            $validatedData = $request->validate([
-                'email_penitip' => 'required|email|unique:penitip,email_penitip,' . $id_penitip . ',id_penitip',
-                'password_penitip' => 'nullable|min:8',
-                'nama_penitip' => 'required|string|max:255',
-                'nomor_telepon_penitip' => 'required|string|max:15',
-                'foto_penitip' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048'
-            ]);
-    
-            $updateData = [
-                'email_penitip' => $validatedData['email_penitip'],
-                'password_penitip' => $validatedData['password_penitip'] ? Hash::make($validatedData['password_penitip']) : $penitip->password_penitip,
-                'nama_penitip' => $validatedData['nama_penitip'],
-                'nomor_telepon_penitip' => $validatedData['nomor_telepon_penitip'],
-            ];
-    
-            if ($request->hasFile('foto_penitip')) {
-                $image = $request->file('foto_penitip');
-                $uploadFolder = 'img';
-                $image_uploaded_path = $image->store($uploadFolder, 'public');
-                $uploadedImageResponse = basename($image_uploaded_path);
-    
-                // Menghapus foto lama jika ada
-                if ($penitip->foto_penitip && Storage::disk('public')->exists($uploadFolder . '/' . $penitip->foto_penitip)) {
-                    Storage::disk('public')->delete($uploadFolder . '/' . $penitip->foto_penitip);
-                }
-    
-                // Update foto penitip
-                $updateData['foto_penitip'] = $uploadedImageResponse;
-            }
-    
-            $penitip->update($updateData);
-    
-            return response()->json([
-                'message' => 'penitip updated successfully',
-                'data' => $penitip
-            ]);
-    
-        } catch (ValidationException $e) {
-            return response()->json([
-                'message' => 'Validasi gagal',
-                'errors' => $e->errors()
-            ], 422);
-        } catch (\Exception $e) {
-            return response()->json([
-                'message' => 'Failed to update penitip',
-                'error' => $e->getMessage(),
-            ], 500);
+{
+    try {
+        $penitip = Penitip::find($id_penitip);
+        if (!$penitip) {
+            return response()->json(['message' => 'Penitip not found'], 404);
         }
+
+        // Validasi data
+        $validatedData = $request->validate([
+            'email_penitip' => 'required|email|unique:penitip,email_penitip,' . $id_penitip . ',id_penitip',
+            'nama_penitip' => 'required|string|max:255',
+            'password_penitip' => 'nullable|string|min:8',
+            'nomor_telepon_penitip' => 'required|string|max:15',
+            'foto_penitip' => 'nullable|image|mimes:jpeg,png,jpg,gif'
+        ]);
+
+        $updateData = [
+            'email_penitip' => $validatedData['email_penitip'],
+            'nama_penitip' => $validatedData['nama_penitip'],
+            'nomor_telepon_penitip' => $validatedData['nomor_telepon_penitip'],
+        ];
+
+        // Jika password ada, update password
+        if (!empty($validatedData['password_penitip'])) {
+            $updateData['password_penitip'] = Hash::make($validatedData['password_penitip']);
+        }
+
+        // Cek jika ada foto yang di-upload
+        if ($request->hasFile('foto_penitip')) {
+            $image = $request->file('foto_penitip');
+            $uploadFolder = 'penitip'; // Folder tempat foto disimpan
+
+            // Menghapus foto lama jika ada
+            if ($penitip->foto_penitip && Storage::disk('public')->exists($uploadFolder . '/' . $penitip->foto_penitip)) {
+                Storage::disk('public')->delete($uploadFolder . '/' . $penitip->foto_penitip);
+            }
+
+            // Simpan foto baru
+            $foto_penitip_path = $image->store($uploadFolder, 'public');
+            $uploadedImageResponse = basename($foto_penitip_path);
+
+            // Update data foto penitip
+            $updateData['foto_penitip'] = $uploadedImageResponse;
+        }
+
+        // Update data penitip
+        $penitip->update($updateData);
+
+        return response()->json([
+            'message' => 'Penitip updated successfully',
+            'data' => $penitip
+        ]);
+
+    } catch (ValidationException $e) {
+        return response()->json([
+            'message' => 'Validasi gagal',
+            'errors' => $e->errors()
+        ], 422);
+    } catch (\Exception $e) {
+        return response()->json([
+            'message' => 'Failed to update penitip',
+            'error' => $e->getMessage(),
+        ], 500);
     }
+}
+
 
     /**
      * Remove the specified resource from storage.

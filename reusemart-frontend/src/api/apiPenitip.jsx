@@ -115,9 +115,9 @@ export const UpdatePenitip = async (id, data) => {
     try {
         const token = sessionStorage.getItem("token");
 
-        const response = await useAxios.put(`/penitip/update/${id}`, data, {
+        const response = await useAxios.post(`/penitip/update/${id}`, data, {
             headers: {
-                "Content-Type": "application/json",
+                "Content-Type": "multipart/form-data",
                 "Accept": "application/json",
                 "Authorization": `Bearer ${token}`,
             },

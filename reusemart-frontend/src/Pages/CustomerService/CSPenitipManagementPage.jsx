@@ -5,14 +5,16 @@ import { ShowAllPenitip, SearchPenitip, DeletePenitip } from '../../api/apiPenit
 import { FaChevronLeft, FaChevronRight, FaSearch } from "react-icons/fa";
 import { toast } from 'react-toastify';
 // import ModalEditPenitip from '../../Components/Modal/ModalAdmin/ModalEditPenitip';
+import ModalCreatePenitip from '../../Components/Modal/ModalCS/ModalCreatePenitip';
 
 const CSPenitipManagementPage = () => {
     const [penitipList, setPenitipList] = useState([]);
     const [isLoading, setIsLoading] = useState(false);
-    const [searchQuery, setSearchQuery] = useState(""); // digunakan untuk request ke backend
-    const [searchValue, setSearchValue] = useState(""); // digunakan untuk input field
+    const [searchQuery, setSearchQuery] = useState(""); 
+    const [searchValue, setSearchValue] = useState(""); 
     const [isFirstLoad, setIsFirstLoad] = useState(true);
     const [showModal, setShowModal] = useState(false);
+    const [showModalCreate, setShowModalCreate] = useState(false);
     const [selectedPenitip, setSelectedPenitip] = useState(null);
     const [currentPage, setCurrentPage] = useState(1);
     const [totalPages, setTotalPages] = useState(1);
@@ -86,19 +88,38 @@ const CSPenitipManagementPage = () => {
         toast.success("Data Penitip Berhasil Diperbarui.");
     };
 
+    const handleCreate = () => {
+        setShowModalCreate(true);
+    };
+
+    const handleModalCreateClose = () => {
+        setShowModalCreate(false);
+    };
+
+    const handleCreateSuccess = () => {
+        fetchPenitipData(currentPage);
+        toast.success("Data penitip Berhasil Ditambahkan.");
+    };
+
+    const handlePagination = (page) => {
+        if (page >= 1 && page <= totalPages) {
+            setCurrentPage(page);
+            fetchPenitipData(page); // Memuat data untuk halaman yang dipilih
+        }
+    };
+
     return (
         <Container>
             <div className="CSPage">
                 <h1 className="pageTitle1">Master Penitip</h1>
 
-                {/* Search Input */}
                 <div className="searchComponent1">
                     <div className="searchContainer1">
                         <InputGroup className="mb-3">
                             <Form.Control
                                 type="text"
                                 placeholder="Masukkan Nama Penitip..."
-                                className="searchInput"
+                                className="searchInput1"
                                 value={searchValue}
                                 onChange={(e) => setSearchValue(e.target.value)}
                             />
@@ -106,6 +127,9 @@ const CSPenitipManagementPage = () => {
                                 <FaSearch />
                             </Button>
                         </InputGroup>
+                        <div style={{display: "flex", justifyContent: "end", paddingInlineEnd: "20px"}}>
+                            <Button variant="primary" onClick={() => handleCreate()}>Create New Penitip</Button>
+                        </div>
                     </div>
                 </div>
 
@@ -158,7 +182,7 @@ const CSPenitipManagementPage = () => {
                     <Button
                         variant="secondary"
                         disabled={currentPage === 1}
-                        onClick={() => setCurrentPage(prev => prev - 1)}
+                        onClick={() => handlePagination(currentPage - 1)}
                         className="me-2"
                     >
                         <FaChevronLeft />
@@ -167,7 +191,7 @@ const CSPenitipManagementPage = () => {
                     <Button
                         variant="secondary"
                         disabled={currentPage === totalPages}
-                        onClick={() => setCurrentPage(prev => prev + 1)}
+                        onClick={() => handlePagination(currentPage + 1)}
                         className="ms-2"
                     >
                         <FaChevronRight />
@@ -181,6 +205,13 @@ const CSPenitipManagementPage = () => {
                     handleClose={handleModalClose}
                     dataEdit={selectedPenitip}
                     onSuccess={handleUpdateSuccess}
+                />
+            )}
+            {showModalCreate && (
+                <ModalCreatePenitip
+                    show={showModalCreate}
+                    handleClose={handleModalCreateClose}
+                    onSuccess={handleCreateSuccess}
                 />
             )}
         </Container>

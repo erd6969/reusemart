@@ -215,9 +215,22 @@ class PenitipController
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(penitip $penitip)
+    public function destroy($id)
     {
-        
+        Log::info("Menghapus penitip dengan ID: " . $id);
+        try {
+            $penitip = Penitip::findOrFail($id);
+            $penitip->delete();
+
+            return response()->json([
+                'message' => 'penitip berhasil dihapus',
+            ], 200);
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' =>  $e->getMessage(),
+                'error' => $e->getMessage(),
+            ], 500);
+        }
     }
 
     public function showProfile()

@@ -35,6 +35,8 @@ const CSPenitipManagementPage = () => {
         }
     };
 
+    
+
     const fetchSearchData = async () => {
         if (searchQuery.trim() === "") {
             fetchPenitipData(1);
@@ -66,8 +68,10 @@ const CSPenitipManagementPage = () => {
         if (window.confirm("Apakah Anda yakin ingin menghapus penitip ini?")) {
             try {
                 await DeletePenitip(id);
+                toast.success("Data penitip Berhasil Dihapus.");
                 fetchPenitipData(currentPage);
             } catch (error) {
+                toast.error("gagal.");
                 console.error("Gagal menghapus penitip:", error);
             }
         }

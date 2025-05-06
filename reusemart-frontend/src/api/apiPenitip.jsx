@@ -53,7 +53,6 @@ export const ShowProfilePenitip = async () => {
 
 export const ShowAllPenitip = async (page = 1) => {
     try {
-        const token = sessionStorage.getItem("token");
 
         const response = await useAxios.get(`/penitip/show-all?page=${page}`, {
             headers: {
@@ -94,16 +93,13 @@ export const SearchPenitip = async (search_penitip) => {
 
 export const DeletePenitip = async (id) => {
     try {
-        const token = sessionStorage.getItem("token");
 
         const response = await useAxios.delete(`/penitip/delete/${id}`, {
             headers: {
                 "Content-Type": "application/json",
-                "Accept": "application/json",
-                "Authorization": `Bearer ${token}`,
+                "Authorization": `Bearer ${getToken()}`,
             },
         });
-        console.log("Delete Penitip response:", response.data);
         return response.data;
     } catch (error) {
         console.error("Error deleting penitip:", error);

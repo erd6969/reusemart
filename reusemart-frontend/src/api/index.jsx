@@ -10,6 +10,10 @@ export const GetProfilePembeli = (thumbnail) => {
     return `${BASE_URL}/storage/img/${thumbnail}`;
 }
 
+export const GetProfilePenitip = (thumbnail) => {
+    return `${BASE_URL}/storage/${thumbnail}`;
+}
+
 const useAxios = axios.create({
     baseURL : `${BASE_URL}/api`,
 });

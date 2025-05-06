@@ -5,11 +5,13 @@ const getToken = () => {
 };
 
 export const AddPenitip = async (data) => {
+    const token = sessionStorage.getItem("token");
     try {
       const response = await useAxios.post("/penitip/register", data, {
         headers: {
+            "Content-Type": "multipart/form-data",
           "Accept": "application/json",
-          "Authorization": `Bearer ${getToken()}`,
+          "Authorization": `Bearer ${token}`,
         },
       });
       return response.data;

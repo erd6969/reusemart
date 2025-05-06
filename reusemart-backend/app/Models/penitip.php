@@ -28,7 +28,7 @@ class Penitip extends Model
         'komisi_penitip',
         'rerata_rating'
     ];
-    public $timestamps = true;
+    public $timestamps = false;
 
     public function transaksiPenitipan()
     {

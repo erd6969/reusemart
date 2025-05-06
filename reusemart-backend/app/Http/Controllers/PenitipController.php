@@ -20,6 +20,7 @@ class PenitipController
     public function register(Request $request)
     {
         try {
+            // dd($request);
             $request->validate([
                 'email_penitip' => 'required|email|unique:penitip,email_penitip',
                 'password_penitip' => 'required|min:8',
@@ -27,14 +28,13 @@ class PenitipController
                 'nomor_telepon_penitip' => 'required|string|max:15',
                 'tanggal_lahir' => 'required|date',
                 'NIK' => 'required|string|max:16|unique:penitip,NIK',
-                'foto_ktp' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
-                'foto_penitip' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048'
+                'foto_ktp' => 'required|image|mimes:jpeg,png,jpg,gif',
+                'foto_penitip' => 'nullable|image|mimes:jpeg,png,jpg,gif'
             ]);
 
-
-            $foto_penitip_path = 'blank-profile-picture.jpg';
+            $foto_penitip_path = $request->file('foto_penitip')->store('penitip', 'public');
             $fotoKTPPath = $request->file('foto_ktp')->store('ktp', 'public');
-
+            Log::info($request);
             $penitip = penitip::create([
                 'email_penitip' => $request->email_penitip,
                 'password_penitip' => Hash::make($request->password_penitip),
@@ -58,7 +58,7 @@ class PenitipController
 
         } catch (ValidationException $e) {
             return response()->json([
-                'message' => 'Validasi gagal',
+                'message' => $e->getMessage(),
                 'errors' => $e->errors()
             ], 422);
 
@@ -142,9 +142,62 @@ class PenitipController
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, penitip $penitip)
+    public function update(Request $request, $id_penitip)
     {
-        //
+        try {
+            $penitip = Penitip::find($id_penitip);
+            if (!$penitip) {
+                return response()->json(['message' => 'Penitip not found'], 404);
+            }
+    
+            $validatedData = $request->validate([
+                'email_penitip' => 'required|email|unique:penitip,email_penitip,' . $id_penitip . ',id_penitip',
+                'password_penitip' => 'nullable|min:8',
+                'nama_penitip' => 'required|string|max:255',
+                'nomor_telepon_penitip' => 'required|string|max:15',
+                'foto_penitip' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048'
+            ]);
+    
+            $updateData = [
+                'email_penitip' => $validatedData['email_penitip'],
+                'password_penitip' => $validatedData['password_penitip'] ? Hash::make($validatedData['password_penitip']) : $penitip->password_penitip,
+                'nama_penitip' => $validatedData['nama_penitip'],
+                'nomor_telepon_penitip' => $validatedData['nomor_telepon_penitip'],
+            ];
+    
+            if ($request->hasFile('foto_penitip')) {
+                $image = $request->file('foto_penitip');
+                $uploadFolder = 'img';
+                $image_uploaded_path = $image->store($uploadFolder, 'public');
+                $uploadedImageResponse = basename($image_uploaded_path);
+    
+                // Menghapus foto lama jika ada
+                if ($penitip->foto_penitip && Storage::disk('public')->exists($uploadFolder . '/' . $penitip->foto_penitip)) {
+                    Storage::disk('public')->delete($uploadFolder . '/' . $penitip->foto_penitip);
+                }
+    
+                // Update foto penitip
+                $updateData['foto_penitip'] = $uploadedImageResponse;
+            }
+    
+            $penitip->update($updateData);
+    
+            return response()->json([
+                'message' => 'penitip updated successfully',
+                'data' => $penitip
+            ]);
+    
+        } catch (ValidationException $e) {
+            return response()->json([
+                'message' => 'Validasi gagal',
+                'errors' => $e->errors()
+            ], 422);
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'Failed to update penitip',
+                'error' => $e->getMessage(),
+            ], 500);
+        }
     }
 
     /**

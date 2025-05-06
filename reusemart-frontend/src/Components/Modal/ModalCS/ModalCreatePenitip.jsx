@@ -12,7 +12,7 @@ const ModalCreatePenitip = ({ show, handleClose, onSuccess }) => {
     nomor_telepon_penitip: '',
     NIK: '',
     tanggal_lahir: '',
-    foto_ktp: '',
+    foto_ktp: null,
     foto_penitip: null
   });
 
@@ -49,22 +49,9 @@ const ModalCreatePenitip = ({ show, handleClose, onSuccess }) => {
       if (formData.foto_penitip instanceof File) {
         formDataToSend.append('foto_penitip', formData.foto_penitip);
       }
-
-      const response = await AddPenitip(formDataToSend);
-      toast.success("Penitip berhasil ditambahkan");
+      await AddPenitip(formData);
       onSuccess?.();
       handleClose();
-
-      setFormData({
-        email_penitip: '',
-        password_penitip: '',
-        nama_penitip: '',
-        nomor_telepon_penitip: '',
-        NIK: '',
-        tanggal_lahir: '',
-        foto_ktp: null,
-        foto_penitip: null
-      });
     } catch (error) {
       console.error('Error:', {
         message: error.message,

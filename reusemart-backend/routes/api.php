@@ -65,6 +65,9 @@ Route::middleware('auth:pembeli')->group(function () {
     Route::post('/pembeli/add-to-cart/{id_barang}', [KeranjangController::class, 'store']);
     Route::get('/pembeli/show-cart', [KeranjangController::class, 'show']);
     Route::delete('/pembeli/delete-cart/{id_keranjang}', [KeranjangController::class, 'destroy']);
+    Route::get('/pembeli/check-cart', [KeranjangController::class, 'checkCart']);
+    Route::get('pembeli/count-cart', [KeranjangController::class, 'countCart']);
+    Route::delete('/pembeli/delete-all-cart', [KeranjangController::class, 'deleteAll']);
 });
 #endregion
 

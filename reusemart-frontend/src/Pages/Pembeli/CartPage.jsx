@@ -6,18 +6,20 @@ import gambarBarang from "../../assets/images/CinaBekas2.jpg";
 import gambarToko from "../../assets/images/BurniceKicil.jpg";
 import "./CartPage.css";
 
-import { ShowCart, DeleteCartItem } from "../../api/apiKeranjang";
+import { ShowCart, DeleteCartItem, CheckCart, DeleteAllCart } from "../../api/apiKeranjang";
+import { useCart } from "../../Components/Context/CartContext";
 
 const CartPage = () => {
     const [isLoading, setIsLoading] = useState(true);
     const [cartItems, setCartItems] = useState([]);
+    const { refreshCartCount } = useCart();
     const navigate = useNavigate();
 
     const fetchCartData = async () => {
         setIsLoading(true);
         try {
             const response = await ShowCart();
-            setCartItems(response); // karena ShowCart sudah return response.data
+            setCartItems(response);
         } catch (error) {
             console.error("Error fetching cart data:", error);
         } finally {
@@ -34,12 +36,65 @@ const CartPage = () => {
             try {
                 await DeleteCartItem(id_keranjang);
                 fetchCartData();
+                refreshCartCount();
             } catch (error) {
                 console.error("Error deleting cart item:", error);
             }
         }
     }
 
+    const handleDeleteAllCart = async () => {
+        if (window.confirm("Are you sure you want to delete all items from the cart?")) {
+            try {
+                await DeleteAllCart();
+                fetchCartData();
+                refreshCartCount();
+            } catch (error) {
+                console.error("Error deleting all cart items:", error);
+            }
+        }
+    };
+
+    const calculateTotal = () => {
+        let total = 0;
+        cartItems.forEach((toko) => {
+            toko.barang.forEach((item) => {
+                const price = item.harga_barang || 0;
+                const quantity = item.quantity || 1;
+                total += price * quantity;
+            });
+        });
+        return total;
+    };
+
+    const calculatePoints = () => {
+        const total = calculateTotal();
+        let points = Math.floor(total / 10000);
+        if (total > 500000) {
+            points += Math.floor(points * 0.2);
+        }
+        return points;
+    };
+
+    const handleCheckout = async () => {
+        try {
+            const response = await CheckCart();
+
+            if (response.status === "success") {
+                if (response.message.toLowerCase().includes("terjual")) {
+                    alert(response.message);
+                }else{
+                    navigate("/pembeli/checkout");
+                }
+            } else {
+                alert("Terjadi kesalahan saat memeriksa keranjang.");
+            }
+        } catch (error) {
+            alert("Terjadi kesalahan saat memeriksa keranjang.");
+            console.error(error);
+        }
+    };
+    
     return (
         <Container fluid className="cart-page">
             <h1 className="cart-title">CART</h1>
@@ -113,15 +168,25 @@ const CartPage = () => {
                     {/* Total & actions */}
                     <Row className="total-bill-row">
                         <Col xs={12} className="total-bill">
-                            <p>Total Bill : <span className="points">(+127 Points)</span> <b>Rp0</b></p>
+                            <p>
+                                Total Bill : <span className="points">(+{calculatePoints()} Points)</span>{" "}
+                                <b>Rp{calculateTotal().toLocaleString('id-ID')}</b>
+                            </p>
                         </Col>
                     </Row>
 
                     <div className="cart-actions-container">
                         <Row className="cart-actions">
                             <Col xs={12} className="cart-buttons">
-                                <Button className="delete-cart me-2 mb-2 mb-md-0" ><b>Delete Cart</b></Button>
-                                <Button className="checkout" onClick={() => navigate("/pembeli/checkout")}><b>Checkout</b></Button>
+                                <Button 
+                                    className="delete-cart me-2 mb-2 mb-md-0"
+                                    onClick={() => handleDeleteAllCart()} 
+                                >
+                                    <b>Delete Cart</b>
+                                </Button>
+                                <Button className="checkout" onClick={handleCheckout}>
+                                    <b>Checkout</b>
+                                </Button>
                             </Col>
                         </Row>
                     </div>

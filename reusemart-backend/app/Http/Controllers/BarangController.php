@@ -36,13 +36,19 @@ class BarangController
     public function showAll()
     {
         try {
-            $Barang = Barang::all();
-            return response()->json($Barang, 200);
-        } catch (Exception $e) {
-            return $e;
-            // return response()->json(['message' => 'Data Barang tidak ditemukan.'], 404);
+            $barang = Barang::join('detail_transaksi_penitipan', 'barang.id_barang', '=', 'detail_transaksi_penitipan.id_barang')
+                ->where('detail_transaksi_penitipan.status_penitipan', '=', 'ready jual')
+                ->get();
+
+            return response()->json($barang, 200);
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'Data Barang tidak ditemukan.',
+                'error' => $e->getMessage(),
+            ], 500);
         }
     }
+
 
     public function showByCategory($namacategory)
     {

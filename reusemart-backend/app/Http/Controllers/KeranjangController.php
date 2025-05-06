@@ -170,4 +170,102 @@ class KeranjangController
             ], 500);
         }
     }
+
+    public function checkCart()
+    {
+        try {
+            $user = Auth::user();
+            if (!$user) {
+                return response()->json([
+                    'status' => 'error',
+                    'message' => 'User not authenticated or invalid token',
+                ], 401);
+            }
+    
+            // Ambil semua item di keranjang yang barangnya tidak tersedia
+            $invalidItems = Keranjang::where('id_pembeli', $user->id_pembeli)
+                ->join('barang', 'keranjang.id_barang', '=', 'barang.id_barang')
+                ->join('detail_transaksi_penitipan', 'barang.id_barang', '=', 'detail_transaksi_penitipan.id_barang')
+                ->where('detail_transaksi_penitipan.status_penitipan', '!=', 'ready jual')
+                ->select('keranjang.id_keranjang')
+                ->get();
+    
+            if ($invalidItems->count() > 0) {
+                // Hapus item tidak valid dari keranjang
+                Keranjang::whereIn('id_keranjang', $invalidItems->pluck('id_keranjang'))->delete();
+    
+                return response()->json([
+                    'status' => 'success',
+                    'message' => 'Beberapa produk telah terjual dan telah dihapus dari keranjang.',
+                    'deleted_count' => $invalidItems->count()
+                ], 200);
+            }
+    
+            return response()->json([
+                'status' => 'success',
+                'message' => 'Keranjang aman, semua produk tersedia',
+            ], 200);
+    
+        } catch (\Exception $e) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Gagal memeriksa keranjang',
+                'error' => $e->getMessage(),
+            ], 500);
+        }
+    }
+
+    public function countCart()
+    {
+        try {
+            $user = Auth::user();
+            if (!$user) {
+                return response()->json([
+                    'status' => 'error',
+                    'message' => 'User not authenticated or invalid token',
+                ], 401);
+            }
+
+            $count = Keranjang::where('id_pembeli', $user->id_pembeli)->count();
+
+            return response()->json([
+                'status' => 'success',
+                'message' => 'Jumlah barang di keranjang',
+                'count' => $count,
+            ], 200);
+        } catch (\Exception $e) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Gagal menghitung keranjang',
+                'error' => $e->getMessage(),
+            ], 500);
+        }
+    }
+
+    public function deleteAll()
+    {
+        try {
+            $user = Auth::user();
+            if (!$user) {
+                return response()->json([
+                    'status' => 'error',
+                    'message' => 'User not authenticated or invalid token',
+                ], 401);
+            }
+
+            Keranjang::where('id_pembeli', $user->id_pembeli)->delete();
+
+            return response()->json([
+                'status' => 'success',
+                'message' => 'Semua barang di keranjang telah dihapus',
+            ], 200);
+        } catch (\Exception $e) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Gagal menghapus semua barang dari keranjang',
+                'error' => $e->getMessage(),
+            ], 500);
+        }
+    }
+    
 }

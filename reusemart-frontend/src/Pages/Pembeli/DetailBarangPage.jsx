@@ -1,9 +1,8 @@
 import { Container, Row, Col, Form, Button, FloatingLabel, Spinner } from "react-bootstrap";
-import gambarBarang from "../../assets/images/CinaBekas2.jpg";
 import gambarToko from "../../assets/images/BurniceKicil.jpg";
 import profileImage from "../../assets/images/Pembeli/Yuki.jpeg";
 import csProfileImage from "../../assets/images/blank-profile-picture.jpg";
-import './DetailBarangPage.css';
+import "./DetailBarangPage.css";
 import { FaStar } from "react-icons/fa";
 import { useNavigate, useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
@@ -12,28 +11,41 @@ import CarouselDetail from "../../Components/Carousel/CarouselDetail";
 
 import yuki from "../../assets/images/Pembeli/Yuki.jpeg";
 import test from "../../assets/images/testcarousel.jpg";
-
 import chen from "../../assets/images/chen-quotes.jpeg";
 
 import { AddToCart } from "../../api/apiKeranjang";
-
 import { ShowDiskusi, CreateDiskusi } from "../../api/apiDiskusi";
-const gambar = [
-    chen,
-    test,
-    yuki,
-]
+import { useCart } from "../../Components/Context/CartContext";
+import { toast } from "react-toastify";
+
+const gambar = [chen, test, yuki];
 
 const DetailBarang = ({ detailBarang }) => {
     const navigate = useNavigate();
-    const [gambarBarang, setGambarBarang] = useState([detailBarang.foto_barang, detailBarang.foto_barang1, detailBarang.foto_barang2, detailBarang.foto_barang3]);
+    const { refreshCartCount } = useCart();
+
+    const [gambarBarang] = useState([
+        detailBarang.foto_barang,
+        detailBarang.foto_barang1,
+        detailBarang.foto_barang2,
+        detailBarang.foto_barang3
+    ]);
+
+    const handleAddToCart = async () => {
+        try {
+            await AddToCart(detailBarang.id_barang);
+            toast.success("Barang berhasil ditambahkan ke keranjang!");
+            refreshCartCount();
+        } catch (error) {
+            console.error("Gagal tambah ke keranjang:", error);
+            toast.error("Gagal menambahkan ke keranjang.");
+        }
+    };
 
     return (
         <Container className="detail-barang-container">
             <div className="item-image-container-barang">
                 <CarouselDetail gambar={gambar} />
-                {/* <CarouselDetail gambar={gambarBarang} /> */}
-                {/* <img src={gambarBarang} alt="barang" className="gambar-barang" /> */}
             </div>
 
             <div className="isi-detail-barang-container">
@@ -50,9 +62,7 @@ const DetailBarang = ({ detailBarang }) => {
                         <div className="label">Deskripsi</div>
                         <div className="colon">:</div>
                         <div className="isi-deskripsi">
-                            <p>
-                                {detailBarang.deskripsi_barang}
-                            </p>
+                            <p>{detailBarang.deskripsi_barang}</p>
                         </div>
                     </div>
 
@@ -65,28 +75,33 @@ const DetailBarang = ({ detailBarang }) => {
                     </div>
 
                     <div className="button-barang-container">
-                        <button className="cart-button" onClick={() => AddToCart(detailBarang.id_barang)}><b>Tambah ke Keranjang</b></button>
-                        <button className="buy-button" onClick={() => navigate("/pembeli/checkout")}><b>Beli Langsung</b></button>
+                        <button className="cart-button" onClick={handleAddToCart}>
+                            <b>Tambah ke Keranjang</b>
+                        </button>
+                        <button
+                            className="buy-button"
+                            onClick={() => navigate("/pembeli/checkout")}
+                        >
+                            <b>Beli Langsung</b>
+                        </button>
                     </div>
                 </div>
             </div>
         </Container>
-    )
-}
+    );
+};
 
-const Rating = ({ jumlahBintang }) => {
-    return (
-        <Container className="rating-container">
-            {[...Array(5)].map((_, index) => (
-                <FaStar
-                    key={index}
-                    color={index < jumlahBintang ? "#ffc107" : "#e4e5e9"}
-                    size={24}
-                />
-            ))}
-        </Container>
-    )
-}
+const Rating = ({ jumlahBintang }) => (
+    <Container className="rating-container">
+        {[...Array(5)].map((_, index) => (
+            <FaStar
+                key={index}
+                color={index < jumlahBintang ? "#ffc107" : "#e4e5e9"}
+                size={24}
+            />
+        ))}
+    </Container>
+);
 
 const Toko = ({ penitip }) => {
     const navigate = useNavigate();
@@ -96,7 +111,6 @@ const Toko = ({ penitip }) => {
             <div className="toko-info">
                 <div className="toko-image-container">
                     <img src={gambarToko} alt="Toko" />
-                    {/* <img src={penitip.foto_penitip} alt="Toko" /> */}
                 </div>
                 <div className="toko-detail">
                     <h3><b>{penitip.nama_penitip}</b></h3>
@@ -118,7 +132,7 @@ const Toko = ({ penitip }) => {
             </div>
         </div>
     );
-}
+};
 
 const Diskusi = () => {
     const [diskusi, setDiskusi] = useState([]);
@@ -128,12 +142,11 @@ const Diskusi = () => {
     const [isCommenting, setIsCommenting] = useState(false);
     const id = useParams().id_barang;
 
-    // Ambil data diskusi
     const fetchDiskusi = async () => {
         setLoading(true);
         try {
             const response = await ShowDiskusi(id);
-            if (response.status === 'success' && Array.isArray(response.data)) {
+            if (response.status === "success" && Array.isArray(response.data)) {
                 setDiskusi(response.data);
             }
             setLoading(false);
@@ -144,16 +157,12 @@ const Diskusi = () => {
         }
     };
 
-    // Submit komentar
     const handleSubmit = async (e) => {
         e.preventDefault();
         if (!newComment.trim()) return;
         try {
             setIsCommenting(true);
-            await CreateDiskusi({
-                id_barang: id,
-                diskusi: newComment,
-            });
+            await CreateDiskusi({ id_barang: id, diskusi: newComment });
             setNewComment("");
             fetchDiskusi();
         } catch (error) {
@@ -190,7 +199,9 @@ const Diskusi = () => {
                 </div>
 
                 <div className="diskusi-buttons">
-                    <button type="button" className="cancel-btn" onClick={() => setNewComment("")}>Batal</button>
+                    <button type="button" className="cancel-btn" onClick={() => setNewComment("")}>
+                        Batal
+                    </button>
                     <button type="submit" className="discuss-btn" disabled={isCommenting}>
                         <b>{isCommenting ? "Memproses..." : "Tambah"}</b>
                     </button>
@@ -211,35 +222,46 @@ const Diskusi = () => {
                             >
                                 <div className="d-flex align-items-start w-100">
                                     <img
-                                        src={disc.id_pembeli ? disc.pembeli?.profil_pembeli : disc.pegawai?.profil_pegawai || csProfileImage}
+                                        src={
+                                            disc.id_pembeli
+                                                ? disc.pembeli?.profil_pembeli
+                                                : disc.pegawai?.profil_pegawai || csProfileImage
+                                        }
                                         alt="User"
                                         className="rounded-circle"
                                         style={{
                                             width: "50px",
                                             height: "50px",
                                             objectFit: "cover",
-                                            marginRight: "15px",
+                                            marginRight: "15px"
                                         }}
                                     />
                                     <div className="w-100">
                                         <div className="d-flex justify-content-between align-items-center">
-                                            <h5 className="mb-0" style={{ display: "flex", alignItems: "center" }}>
-                                                <b>{disc.id_pembeli ? disc.pembeli?.nama_pembeli : disc.pegawai?.nama_pegawai}</b>
+                                            <h5 className="mb-0">
+                                                <b>
+                                                    {disc.id_pembeli
+                                                        ? disc.pembeli?.nama_pembeli
+                                                        : disc.pegawai?.nama_pegawai}
+                                                </b>
                                                 {disc.id_pegawai && (
-                                                    <span 
-                                                        className="badge ms-2" 
+                                                    <span
+                                                        className="badge ms-2"
                                                         style={{
-                                                            backgroundColor: '#b6f7c1',
-                                                            color: '#155724',
-                                                            fontSize: '12px',
-                                                            padding: '5px 8px'
+                                                            backgroundColor: "#b6f7c1",
+                                                            color: "#155724",
+                                                            fontSize: "12px",
+                                                            padding: "5px 8px"
                                                         }}
                                                     >
                                                         Customer Service
                                                     </span>
                                                 )}
                                             </h5>
-                                            <span className="text-muted" style={{ fontSize: "14px", whiteSpace: "nowrap" }}>
+                                            <span
+                                                className="text-muted"
+                                                style={{ fontSize: "14px", whiteSpace: "nowrap" }}
+                                            >
                                                 {disc.waktu_diskusi}
                                             </span>
                                         </div>
@@ -250,25 +272,19 @@ const Diskusi = () => {
                         </Col>
                     ))
                 ) : (
-                    <>
-                        <Col md={12} className="mb-3 d-flex justify-content-center align-items-center">
-                            <p>Tidak Ada Diskusi Untuk Produk Ini</p>
-                        </Col>
-                    </>
+                    <Col md={12} className="mb-3 d-flex justify-content-center align-items-center">
+                        <p>Tidak Ada Diskusi Untuk Produk Ini</p>
+                    </Col>
                 )}
             </Row>
         </Container>
     );
 };
 
-
 const DetailBarangPage = () => {
-
     const [detailBarang, setDetailBarang] = useState([]);
     const id = useParams().id_barang;
-    console.log(id);
     const [penitip, setPenitip] = useState([]);
-
     const [isLoading, setIsLoading] = useState(true);
 
     const fetchBarangAndPenitip = async () => {
@@ -276,20 +292,17 @@ const DetailBarangPage = () => {
             const detailBarang = await GetDetailBarang(id);
             setDetailBarang(detailBarang.barang);
             setPenitip(detailBarang.penitip);
-            console.log("Detail Barang:", detailBarang.barang);
-            console.log("Penitip:", penitip);
             setIsLoading(false);
         } catch (error) {
             console.error("Error fetching Detail Barang:", error);
         }
-    }
+    };
 
     useEffect(() => {
         fetchBarangAndPenitip();
     }, []);
 
     return (
-
         <Container className="detail-barang-page-container">
             {isLoading ? (
                 <div
@@ -299,7 +312,7 @@ const DetailBarangPage = () => {
                         justifyContent: "center",
                         alignItems: "center",
                         height: "100%",
-                        padding: "20px",
+                        padding: "20px"
                     }}
                 >
                     <div style={{ textAlign: "center" }}>
@@ -325,6 +338,6 @@ const DetailBarangPage = () => {
             )}
         </Container>
     );
-}
+};
 
 export default DetailBarangPage;

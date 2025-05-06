@@ -2,13 +2,13 @@ import { useNavigate } from "react-router-dom";
 import React, { useState, useRef, useEffect } from "react";
 import { Navbar, Container, Nav, Spinner } from "react-bootstrap";
 import "./NavbarPembeli.css";
-import profileImage from "../../assets/images/Pembeli/Yuki.jpeg";
 import logoReuseMart from "../../assets/images/logo-reusemart.png";
 import coin from "../../assets/images/coin-icon.png";
-import { FaShoppingCart, FaChevronDown, FaBars, FaTimes } from "react-icons/fa";
+import { FaShoppingCart, FaChevronDown } from "react-icons/fa";
 import { Logout } from "../../api/apiAuth";
 import { GetProfile } from "../../api/apiPembeli";
 import { getThumbnail } from "../../api/index";
+import { useCart } from "../../Components/Context/CartContext";
 
 const TopNavbar = () => {
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
@@ -16,6 +16,8 @@ const TopNavbar = () => {
     const dropdownRef = useRef(null);
     const [profile, setProfile] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
+
+    const { cartCount } = useCart();
 
     const showProfile = async () => {
         try {
@@ -27,11 +29,12 @@ const TopNavbar = () => {
         } finally {
             setIsLoading(false);
         }
-    }
+    };
 
     useEffect(() => {
         showProfile();
     }, []);
+
     const handleLogout = async () => {
         try {
             await Logout();
@@ -56,11 +59,19 @@ const TopNavbar = () => {
                     <Nav.Link onClick={() => navigate("/help")}>Help</Nav.Link>
                 </Nav>
 
-                <FaShoppingCart
-                    className="cartIcon"
-                    onClick={() => navigate("/pembeli/cart")}
-                    style={{ cursor: "pointer" }}
-                />
+                <div style={{ position: "relative" }}>
+                    <FaShoppingCart
+                        className="cartIcon"
+                        onClick={() => navigate("/pembeli/cart")}
+                        style={{ cursor: "pointer" }}
+                    />
+                    {cartCount > 0 && (
+                        <div className="cartCountBubble">
+                            <span>{cartCount}</span>
+                        </div>
+                    )}
+                </div>
+
                 {isLoading ? (
                     <div style={{ textAlign: "center" }}>
                         <Spinner
@@ -73,7 +84,6 @@ const TopNavbar = () => {
                         />
                     </div>
                 ) : (
-
                     <div
                         className="profileContainer"
                         ref={dropdownRef}
@@ -82,8 +92,7 @@ const TopNavbar = () => {
                         onClick={() => setIsDropdownOpen((prev) => !prev)}
                     >
                         <div className="profileSection">
-                            <img src={getThumbnail(profile.foto_pembeli)}
-                             alt="profile" />
+                            <img src={getThumbnail(profile.foto_pembeli)} alt="profile" />
                             <div className="profileName">{profile.nama_pembeli}</div>
                             <FaChevronDown className="chevronIcon" />
                         </div>

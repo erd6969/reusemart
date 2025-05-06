@@ -14,6 +14,7 @@ use App\Http\Controllers\DiskusiController;
 use App\Http\Controllers\OrganisasiController;
 use App\Http\Controllers\JabatanController;
 use App\Http\Controllers\HunterController;
+use App\Http\Controllers\KeranjangController;
 
 Route::post('/send-konfirmasi-email', [EmailController::class, 'sendKonfirmasiEmail']);
 Route::post('/reset-password', [LoginController::class, 'resetPassword']);
@@ -60,6 +61,10 @@ Route::middleware('auth:pembeli')->group(function () {
     Route::delete('/pembeli/delete-alamat/{id}', [AlamatController::class, 'destroy']);
     Route::get('/pembeli/search-alamat/{search_alamat}', [AlamatController::class, 'search']);
     Route::put('/pembeli/change-alamat-utama/{id}', [AlamatController::class, 'updateAlamatUtama']);
+
+    Route::post('/pembeli/add-to-cart/{id_barang}', [KeranjangController::class, 'store']);
+    Route::get('/pembeli/show-cart', [KeranjangController::class, 'show']);
+    Route::delete('/pembeli/delete-cart/{id_keranjang}', [KeranjangController::class, 'destroy']);
 });
 #endregion
 

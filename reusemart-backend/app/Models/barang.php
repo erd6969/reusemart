@@ -7,6 +7,8 @@ use Illuminate\Database\Eloquent\Model;
 class Barang extends Model
 {
     protected $table = 'barang';
+    protected $primaryKey = 'id_barang';
+    
     protected $fillable = [
         'id_pegawai',
         'id_kategori',
@@ -26,10 +28,12 @@ class Barang extends Model
     {
         return $this->belongsTo(Pegawai::class, 'id_pegawai');
     }
+
     public function kategori()
     {
         return $this->belongsTo(Kategori::class, 'id_kategori');
     }
+
     public function hunter()
     {
         return $this->belongsTo(Hunter::class, 'id_hunter');
@@ -38,6 +42,11 @@ class Barang extends Model
     public function detailtransaksipenitipan()
     {
         return $this->hasMany(DetailTransaksiPenitipan::class, 'id_barang', 'id_barang');
+    }
+
+    public function keranjang()
+    {
+        return $this->hasMany(Keranjang::class, 'id_barang', 'id_barang');
     }
     
 }

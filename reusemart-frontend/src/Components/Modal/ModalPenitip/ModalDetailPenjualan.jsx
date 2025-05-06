@@ -7,6 +7,8 @@ import { ShowDetailPendapatan } from "../../../api/apiPenitip";
 
 import '../../../Pages/Pembeli/DetailBarangPage.css';
 
+import gambarBarang from "../../../assets/images/Pembeli/Yuki.jpeg";
+
 const ModalDetailPenjualan = ({ show, handleClose, id_barang }) => {
     const [detailBarang, setDetailBarang] = useState(null);
     const [pendapatan, setPendapatan] = useState(null);
@@ -56,17 +58,17 @@ const ModalDetailPenjualan = ({ show, handleClose, id_barang }) => {
                         <Container className="detail-barang-container">
                             <div className="item-image-container mb-3 text-center">
                                 <img
-                                    src={getThumbnail(detailBarang.foto_barang) || defaultImage}
-                                    // src={gambarBarang}
+                                    // src={getThumbnail(detailBarang.foto_barang) || defaultImage}
+                                    src={gambarBarang}
                                     alt={detailBarang.nama_barang}
                                     className="gambar-barang"
-                                    style={{ maxWidth: "100%", height: "auto", borderRadius: "8px" }}
+                                    style={{ maxWidth: "250px", height: "auto", borderRadius: "8px" }}
                                 />
                             </div>
 
                             <div className="isi-detail-barang-container mb-4">
                                 <h3 className="mb-2"><b>{detailBarang.nama_barang}</b></h3>
-                                <h4 className="mb-3 text-success"><b>Rp {Number(detailBarang.harga_barang).toLocaleString("id-ID")}</b></h4>
+                                <h4 className="mb-3 text-success text-start"><b>Rp {Number(detailBarang.harga_barang).toLocaleString("id-ID")}</b></h4>
 
                                 <div className="mb-2">
                                     <strong>Deskripsi:</strong>

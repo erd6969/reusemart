@@ -35,4 +35,9 @@ class Pembeli extends Model
     {
         return $this->hasMany(Diskusi::class, 'id_pembeli', 'id_pembeli');
     }
+
+    public function keranjang()
+    {
+        return $this->hasMany(Keranjang::class, 'id_pembeli', 'id_pembeli');
+    }
 }

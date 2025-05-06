@@ -15,6 +15,8 @@ import test from "../../assets/images/testcarousel.jpg";
 
 import chen from "../../assets/images/chen-quotes.jpeg";
 
+import { AddToCart } from "../../api/apiKeranjang";
+
 import { ShowDiskusi, CreateDiskusi } from "../../api/apiDiskusi";
 const gambar = [
     chen,
@@ -63,7 +65,7 @@ const DetailBarang = ({ detailBarang }) => {
                     </div>
 
                     <div className="button-barang-container">
-                        <button className="cart-button"><b>Tambah ke Keranjang</b></button>
+                        <button className="cart-button" onClick={() => AddToCart(detailBarang.id_barang)}><b>Tambah ke Keranjang</b></button>
                         <button className="buy-button" onClick={() => navigate("/pembeli/checkout")}><b>Beli Langsung</b></button>
                     </div>
                 </div>

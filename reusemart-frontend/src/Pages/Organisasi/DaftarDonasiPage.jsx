@@ -333,8 +333,8 @@ const DaftarDonasiPage = () => {
     const fetchBarang = async () => {
         try {
             // setIsLoading(true);
-            const data = await GetAllBarangRequest();
-            setBarang(data);
+            const response = await GetAllBarangRequest();
+            setBarang(response.data);
         } catch (error) {
             console.error("Error fetching barang:", error);
         } finally {

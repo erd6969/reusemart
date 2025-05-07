@@ -1,5 +1,10 @@
 import useAxios from ".";
 
+const getToken = () => {
+    return sessionStorage.getItem("token");
+};
+
+
 export const GetAllBarang = async () => {
     try {
         const response = await useAxios.get("/shop-page", {
@@ -12,6 +17,23 @@ export const GetAllBarang = async () => {
         return response.data;
     } catch (error) {
         console.error("Error fetching Barang:", error);
+        throw error?.response?.data || error;
+    }
+}
+
+export const GetAllBarangRequest = async () => {
+    
+    try {
+        const response = await useAxios.get("/show-request-barang", {
+            headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${getToken()}`
+            },
+        });
+        console.log("Barang request response:", response);
+        return response.data.data;
+    } catch (error) {
+        console.error("Error fetching Barang request:", error);
         throw error?.response?.data || error;
     }
 }

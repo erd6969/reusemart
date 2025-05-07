@@ -41,7 +41,7 @@ class Barang extends Model
 
     public function request_donasi()
     {
-        return $this->hasMany(request_donasi::class, 'id_barang', 'id_barang');
+        return $this->hasMany(RequestDonasi::class, 'id_barang', 'id_barang');
     }
 
     public function detailtransaksipenitipan()

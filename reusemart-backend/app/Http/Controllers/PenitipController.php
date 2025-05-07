@@ -167,27 +167,23 @@ class PenitipController
             'nomor_telepon_penitip' => $validatedData['nomor_telepon_penitip'],
         ];
 
-        // Jika password ada, update password
+        
         if (!empty($validatedData['password_penitip'])) {
             $updateData['password_penitip'] = Hash::make($validatedData['password_penitip']);
         }
 
-        // Cek jika ada foto yang di-upload
         if ($request->hasFile('foto_penitip')) {
             $image = $request->file('foto_penitip');
-            $uploadFolder = 'penitip'; // Folder tempat foto disimpan
+            $uploadFolder = 'penitip'; 
 
-            // Menghapus foto lama jika ada
             if ($penitip->foto_penitip && Storage::disk('public')->exists($uploadFolder . '/' . $penitip->foto_penitip)) {
                 Storage::disk('public')->delete($uploadFolder . '/' . $penitip->foto_penitip);
             }
 
-            // Simpan foto baru
-            $foto_penitip_path = $image->store($uploadFolder, 'public');
-            $uploadedImageResponse = basename($foto_penitip_path);
+            $foto_penitip_path = $request->file('foto_penitip')->store('penitip', 'public');
 
-            // Update data foto penitip
-            $updateData['foto_penitip'] = $uploadedImageResponse;
+            
+            $updateData['foto_penitip'] = $foto_penitip_path;
         }
 
         // Update data penitip

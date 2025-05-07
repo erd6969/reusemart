@@ -1,11 +1,11 @@
 import { useEffect, useState } from "react";
-import { Container } from "react-bootstrap";
+import { Container, Spinner} from "react-bootstrap";
 import "./ProfilePenitipPage.css";
 import FotoPenitip from "../../Components/Penitip/FotoPenitip";
 import InputColumn from "../../Components/InputColumn";
 import { ShowProfilePenitip } from "../../api/apiPenitip";
 
-import { getThumbnail } from "../../api/index";
+import { GetProfilePenitip } from "../../api/index";
 
 const ProfilePenitip = () => {
   const [penitip, setPenitip] = useState(null);
@@ -23,7 +23,11 @@ const ProfilePenitip = () => {
     fetchData();
   }, []);
 
-  if (!penitip) return <p></p>;
+  if (!penitip) return (
+    <div style={{ textAlign: "center", padding: "20px" }}>
+      <Spinner animation="border" variant="primary" />
+    </div>
+  );
 
   return (
     <>
@@ -34,7 +38,7 @@ const ProfilePenitip = () => {
       </div>
       <div className="profile-content">
         <div className="profile-left">
-          <FotoPenitip Foto={getThumbnail(penitip.foto_penitip)} />
+          <FotoPenitip Foto={GetProfilePenitip(penitip.foto_penitip)} />
           <div className="profile-details-container">
             <div className="left-details">
               <div className="detail-item">

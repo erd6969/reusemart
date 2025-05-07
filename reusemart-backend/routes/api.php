@@ -51,6 +51,16 @@ Route::middleware('auth:penitip')->group(function () {
 });
  #endregion
 
+
+Route::middleware('auth:organisasi')->group(function () {
+    Route::get('/show-request-barang', [OrganisasiController::class, 'showByOpenDonasi']);
+    Route::get('/organisasi/show-profile', [OrganisasiController::class, 'profile']);
+    Route::get('/organisasi/search/{search_organisasi}', [OrganisasiController::class, 'search']);
+    Route::delete('/organisasi/delete/{id_organisasi}', [OrganisasiController::class, 'destroy']);
+    Route::post('/organisasi/update/{id_organisasi}', [OrganisasiController::class, 'update']);
+
+    Route::get('/organisasi/show-detail-pendapatan/{id_barang}', [OrganisasiController::class, 'showDetailPendapatan']);
+});
 #region Pembeli
 Route::middleware('auth:pembeli')->group(function () {
     Route::post('/pembeli/create-alamat', [AlamatController::class, 'store']);

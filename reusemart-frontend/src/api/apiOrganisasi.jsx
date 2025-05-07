@@ -1,5 +1,24 @@
 import useAxios from ".";
 
+const getToken = () => {
+    return sessionStorage.getItem("token");
+};
+
+export const GetProfile = async () => {
+    try {
+        const response = await useAxios.get("/organisasi/show-profile", {
+          headers: {
+            "Content-Type": "application/json",
+            "Accept": "application/json",
+            Authorization: `Bearer ${getToken()}`,
+          },
+        });
+        return response.data;
+      } catch (error) {
+        console.error("Error fetching profile", error);
+        throw error?.response?.data || error;
+      }
+};
 export const RegisterOrganisasi = async (data) => {
     try {
         const response = await useAxios.post("/organisasi/register", data, {
@@ -103,3 +122,4 @@ export const EditOrganisasi = async (id, data) => {
         throw error;
     }
 }
+

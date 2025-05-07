@@ -9,7 +9,6 @@ import Home from "../Homepage/Home";
 import LoginPage from "../Pages/LoginRegister/LoginPage";
 import RegisterBuyerPage from "../Pages/LoginRegister/RegisterBuyerPage";
 import RegisterOption from "../Pages/LoginRegister/RegisterOption";
-import DaftarDonasiPage from "../Pages/Organisasi/DaftarDonasi";
 import ReqDonasi from "../Pages/Owner/ReqDonasi"; 
 import HistoryDonasiPage from "../Pages/Owner/HistoryDonasi"; 
 import LaporanPage from "../Pages/Owner/Laporan"; 
@@ -34,8 +33,9 @@ import ForgotPassword from "../Pages/LoginRegister/VerifyEmailPage";
 import ResetPassword from "../Pages/LoginRegister/ResetPasswordPage";
 
 //Organisasi
+import OrganisasiLayout from "../Layouts/OrganisasiLayouts";
 import RegisterOrganisasi from "../Pages/LoginRegister/RegisterOrganisasiPage";
-
+import DaftarDonasiPage from "../Pages/Organisasi/DaftarDonasiPage";
 //Admin
 import AdminLayout from "../Layouts/AdminLayouts";
 import AdminMasterOrganisasiPage from "../Pages/Admin/AdminMasterOrganisasiPage";
@@ -131,14 +131,16 @@ const router = createBrowserRouter([
     },
     {
         path: "/organisasi",
-        element: <div>Organisasi Page</div>,
+        element: (
+                <ProtectedRoutes allowedRoles={["organisasi"]}>
+                    <OrganisasiLayout />
+                </ProtectedRoutes>
+        ),
         children: [
             {
                 path: "daftar-donasi",
                 element: (
-                    <ProtectedRoutes allowedRoles={["organisasi"]}>
-                        <DaftarDonasiPage />
-                    </ProtectedRoutes>
+                    <DaftarDonasiPage />
                 )
             },
         ],

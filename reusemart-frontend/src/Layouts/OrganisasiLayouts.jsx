@@ -8,7 +8,7 @@ const OrganisasiLayout = () => {
         <div>
             <TopNavbar />
             {/* <SideBarOrganisasi /> */}
-                <Outlet />
+            <Outlet />
             
         </div>
     );

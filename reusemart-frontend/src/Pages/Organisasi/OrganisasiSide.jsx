@@ -1,0 +1,58 @@
+import './OrganisasiSide.css';
+// import profileImage from "../../assets/images/Organisasi/Yuki.jpeg";
+import { FaMedal } from "react-icons/fa";
+import { GiMoneyStack, GiReceiveMoney } from "react-icons/gi";
+import { GetProfile} from "../../api/apiOrganisasi";
+import { useEffect, useState } from "react";
+import { useNavigate } from 'react-router-dom';
+
+import { getThumbnail } from "../../api/index";
+
+const OrganisasiSide = () => {
+    const [organisasi, setOrganisasi] = useState(null);
+    const navigate = useNavigate();
+
+    useEffect(() => {
+    const fetchData = async () => {
+        try {
+        const data = await GetProfile();
+        setOrganisasi(data);
+        } catch (error) {
+        console.error("Gagal mengambil data Organisasi:", error);
+        }
+    };
+
+    fetchData();
+    }, []);
+
+    if (!organisasi) return <p></p>;
+
+    return (
+        <div className="organisasi-side-container">
+            <div className='organisasi-profile-container'>
+                <img src={getThumbnail(organisasi.foto_organisasi)} alt="Profile" />
+                <div>
+                    <b style={{marginRight:"5px"}}>{organisasi.nama_organisasi}</b>  
+                </div>
+            </div>
+            <hr />
+            <div className='organisasi-balance-container'>
+                <div className='loyalty-points'>
+                    <GiMoneyStack size={24} />
+                </div>
+            </div>
+            <hr />
+            <div className='organisasi-product-section'>
+                <b>Product</b>
+                <ul>
+                    <li onClick={() => navigate('/organisasi/request-donasi')}>Purchase List</li>
+                    {/* <li onClick={() => navigate('/Organisasi/history')}>Sold Products</li>
+                    <li onClick={() => navigate('/Organisasi/expired')}>Expired Custody Products</li>
+                    <li onClick={() => navigate('/Organisasi/donated')}>Donated Products</li> */}
+                </ul>
+            </div>
+        </div>
+    );
+}
+
+export default OrganisasiSide;

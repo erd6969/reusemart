@@ -31,7 +31,7 @@ export const GetAllBarangRequest = async () => {
             },
         });
         console.log("Barang request response:", response);
-        return response.data.data;
+        return response.data;
     } catch (error) {
         console.error("Error fetching Barang request:", error);
         throw error?.response?.data || error;

@@ -1,0 +1,72 @@
+.organisasi-side-container {
+    border: 2px solid black;
+    border-radius: 10px;
+    padding: 20px;
+    margin: 20px;
+    width: 280px;
+    font-family: Arial, sans-serif;
+    background-color: white;
+    height: 704px;
+}
+
+.organisasi-profile-container {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.organisasi-profile-container img {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 1px solid #ccc;
+}
+
+.organisasi-balance-container {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    margin-top: 15px;
+}
+
+.loyalty-points-organisasi,
+.balance {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.loyalty-points-organisasi p,
+.balance p {
+    margin: 0;
+    font-size: 14px;
+    color: #555;
+}
+
+.loyalty-points-organisasi b,
+.balance b {
+    font-size: 15px;
+}
+
+.organisasi-product-section {
+    margin-top: 20px;
+}
+
+.organisasi-product-section ul {
+    list-style: none;
+    padding: 0;
+    margin: 5px 0 0 0;
+}
+
+.organisasi-product-section li {
+    padding: 4px 0;
+    cursor: pointer;
+    color: #444;
+    margin-left: 10px;
+}
+
+.organisasi-product-section .active-link {
+    color: #4f46e5;
+    text-decoration: underline;
+}

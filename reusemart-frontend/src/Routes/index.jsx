@@ -1,7 +1,7 @@
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
 import ProtectedRoutes from "../Routes/ProtectedRoutes";
-import GuestOnlyRoute  from "../Routes/GuestOnlyRoutes";
+import GuestOnlyRoute from "../Routes/GuestOnlyRoutes";
 
 // Pages & Layouts
 import HomePage from "../Homepage/Homepage";
@@ -9,9 +9,9 @@ import Home from "../Homepage/Home";
 import LoginPage from "../Pages/LoginRegister/LoginPage";
 import RegisterBuyerPage from "../Pages/LoginRegister/RegisterBuyerPage";
 import RegisterOption from "../Pages/LoginRegister/RegisterOption";
-import ReqDonasi from "../Pages/Owner/ReqDonasi"; 
-import HistoryDonasiPage from "../Pages/Owner/HistoryDonasi"; 
-import LaporanPage from "../Pages/Owner/Laporan"; 
+import ReqDonasi from "../Pages/Owner/ReqDonasi";
+import HistoryDonasiPage from "../Pages/Owner/HistoryDonasi";
+import LaporanPage from "../Pages/Owner/Laporan";
 import PegawaiGudangPage from "../Pages/PegawaiGudang/PegawaiGudangPage";
 
 //Pembeli
@@ -33,6 +33,8 @@ import ForgotPassword from "../Pages/LoginRegister/VerifyEmailPage";
 import ResetPassword from "../Pages/LoginRegister/ResetPasswordPage";
 
 //Organisasi
+import OrganisasiRequestLayout from "../Layouts/OrganisasiRequestLayouts";
+import RequestDonasiPage from "../Pages/Organisasi/RequestDonasiPage";
 import OrganisasiLayout from "../Layouts/OrganisasiLayouts";
 import RegisterOrganisasi from "../Pages/LoginRegister/RegisterOrganisasiPage";
 import DaftarDonasiPage from "../Pages/Organisasi/DaftarDonasiPage";
@@ -74,8 +76,8 @@ const router = createBrowserRouter([
             },
         ],
     },
-    
-    
+
+
     {
         path: "/auth",
         children: [
@@ -89,7 +91,7 @@ const router = createBrowserRouter([
             },
             {
                 path: "register-buyer",
-                element:(
+                element: (
                     <GuestOnlyRoute>
                         <RegisterBuyerPage />
                     </GuestOnlyRoute>
@@ -132,9 +134,9 @@ const router = createBrowserRouter([
     {
         path: "/organisasi",
         element: (
-                <ProtectedRoutes allowedRoles={["organisasi"]}>
-                    <OrganisasiLayout />
-                </ProtectedRoutes>
+            <ProtectedRoutes allowedRoles={["organisasi"]}>
+                <OrganisasiLayout />
+            </ProtectedRoutes>
         ),
         children: [
             {
@@ -142,6 +144,13 @@ const router = createBrowserRouter([
                 element: (
                     <DaftarDonasiPage />
                 )
+            },
+            {
+                path: "",
+                element: <OrganisasiRequestLayout />,
+                children: [
+                    { path: "request-donasi", element: <RequestDonasiPage /> },
+                ],
             },
         ],
     },
@@ -235,7 +244,7 @@ const router = createBrowserRouter([
                 path: "alamat",
                 element: <AlamatPembeliPage />,
             },
-            
+
             {
                 path: "shop",
                 element: <ShopPage />,
@@ -268,35 +277,35 @@ const router = createBrowserRouter([
                 path: "",
                 element: <PembeliProductLayout />,
                 children: [
-                  { path: "purchase", element: <PurchasePembeliPage />},    
+                    { path: "purchase", element: <PurchasePembeliPage /> },
                 ],
-              },
+            },
         ],
     },
     {
         path: "/penitip",
         element: (
-          <ProtectedRoutes allowedRoles={["penitip"]}>
-            <PenitipLayout />
-          </ProtectedRoutes>
+            <ProtectedRoutes allowedRoles={["penitip"]}>
+                <PenitipLayout />
+            </ProtectedRoutes>
         ),
         children: [
-          {
-            path: "profile",
-            element: <ProfilPenitip />,
-          },
-          {
-            path: "",
-            element: <PenitipProductLayout />,
-            children: [
-              { path: "history", element: <SoldProductPage /> },
-              { path: "on-sale", element: <OnSaleProductPage /> },
-              { path: "expired", element: <ExpiredProductPage /> },
-              { path: "donated", element: <DonatedProductPage /> },
-            ],
-          },
+            {
+                path: "profile",
+                element: <ProfilPenitip />,
+            },
+            {
+                path: "",
+                element: <PenitipProductLayout />,
+                children: [
+                    { path: "history", element: <SoldProductPage /> },
+                    { path: "on-sale", element: <OnSaleProductPage /> },
+                    { path: "expired", element: <ExpiredProductPage /> },
+                    { path: "donated", element: <DonatedProductPage /> },
+                ],
+            },
         ],
-      },      
+    },
     {
         path: "*",
         element: <div>Routes Not Found!</div>,

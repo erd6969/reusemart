@@ -100,9 +100,10 @@ class RequestDonasiController
         }
     }
 
-    public function acceptRequest(Request $request)
+    public function acceptRequest_donasi(Request $request)
     {
         try {
+            dd($request);
             $request->validate([
                 'id_request_donasi' => 'required|integer',
                 'tanggal_donasi' => 'required|date',
@@ -130,6 +131,29 @@ class RequestDonasiController
                 'data' => $request_donasi,
                 'data_transaksi' => $transaksi_donasi,
                 'status_penitipan' => $detail_transaksi_penitipan
+            ], 200);
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'Request Donasi not found',
+                'error' => $e->getMessage(),
+            ], 404);
+        }
+    }
+
+    public function rejectRequest(Request $request)
+    {
+        try { 
+            $request->validate([
+                'id_request_donasi' => 'required|integer',
+            ]);
+            $id_request_donasi = $request->id_request_donasi;
+            $request_donasi = RequestDonasi::findOrFail($id_request_donasi);
+            $request_donasi->status_request = "Rejected";
+            $request_donasi->save();
+
+            return response()->json([
+                'message' => 'Request Donasi rejected',
+                'data' => $request_donasi
             ], 200);
         } catch (\Exception $e) {
             return response()->json([

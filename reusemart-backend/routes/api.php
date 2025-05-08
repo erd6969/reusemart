@@ -93,7 +93,8 @@ Route::middleware('auth:owner')->group(function () {
     Route::get('/request_donasi/show-waiting-request', [RequestDonasiController::class, 'showWaitingRequest']);
     Route::get('/request_donasi/show-by-id/{id_barang}', [RequestDonasiController::class, 'showByIdBarang']);
     Route::get('/request_donasi/search/{search_request_donasi}', [RequestDonasiController::class, 'search']);
-    Route::post('/request_donasi/acceptRequest', [RequestDonasiController::class, 'acceptRequest']);
+    Route::post('/request_donasi/acceptRequest_donasi', [RequestDonasiController::class, 'acceptRequest_donasi']);
+    Route::post('/request_donasi/rejectRequest', [RequestDonasiController::class, 'rejectRequest']);
 
 });
 Route::middleware('auth:gudang')->group(function () {

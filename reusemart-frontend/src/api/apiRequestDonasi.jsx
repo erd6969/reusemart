@@ -4,6 +4,10 @@ const getToken = () => {
     return sessionStorage.getItem("token");
 };
 
+const getRole = () => {
+    return sessionStorage.getItem("role");
+};
+
 export const ShowAllRequestDonasi = async (page = 1) => {
     try {
         const token = getToken();
@@ -85,7 +89,7 @@ export const AcceptRequestDonasi = async (data) => {
     try {
         const token = getToken();
 
-        const response = await useAxios.post(`/request_donasi/acceptRequest`, data, {
+        const response = await useAxios.post(`/request_donasi/acceptRequest_donasi`, data, {
             headers: {
                 "Content-Type": "application/json",
                 "Accept": "application/json",
@@ -96,6 +100,26 @@ export const AcceptRequestDonasi = async (data) => {
         return response.data;
     } catch (error) {
         console.error("Error accepting request donasi:", error);
+        throw error;
+    }
+}
+
+export const RejectRequestDonasi = async (data) => {
+    try {
+        const token = getToken();
+
+        const response = await useAxios.post(`/request_donasi/rejectRequest`, data, {
+            headers: {
+                "Content-Type": "application/json",
+                "Accept": "application/json",
+                "Authorization": `Bearer ${token}`,
+            },
+        });
+        console.log("Reject Request Donasi response:", response.data);
+        return response.data;
+    } catch (error) {
+        console.log("Role dan token:", getRole());
+        console.error("Error Rejecting request donasi:", error);
         throw error;
     }
 }

@@ -191,4 +191,20 @@ class PegawaiController
             ], 500);
         }
     }
+
+    public function showProfile(){
+        try {
+            $pegawai = Auth::guard()->user();
+            if (!$pegawai) {
+                return response()->json(['message' => 'Pegawai not found'], 404);
+            }
+    
+            return response()->json($pegawai, 200);
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'Gagal mengambil data pegawai',
+                'error' => $e->getMessage(),
+            ], 500);
+        }
+    }
 }

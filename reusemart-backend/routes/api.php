@@ -16,6 +16,7 @@ use App\Http\Controllers\JabatanController;
 use App\Http\Controllers\HunterController;
 use App\Http\Controllers\KeranjangController;
 use App\Http\Controllers\RequestDonasiController;
+use App\Http\Controllers\NotificationController;
 
 Route::post('/send-konfirmasi-email', [EmailController::class, 'sendKonfirmasiEmail']);
 Route::post('/reset-password', [LoginController::class, 'resetPassword']);
@@ -26,6 +27,8 @@ Route::post ('/pembeli/register', [PembeliController::class, 'register'])->name(
 Route::post ('/organisasi/register', [OrganisasiController::class, 'register'])->name('organisasi.register');
 
 Route::post('/mobile/login', [LoginController::class, 'loginMobile']);
+
+Route::post('/send-notification', [NotificationController::class, 'sendNotification']);
 
 Route::post('/pegawai/register', [PegawaiController::class, 'register'])->name('pegawai.register');
 
@@ -101,6 +104,8 @@ Route::middleware('auth:owner')->group(function () {
     Route::get('/request_donasi/searchBarangOpenDonasi/{search_barang}', [BarangController::class, 'searchBarangOpenDonasi']);
     Route::post('/request_donasi/updateRequest-Transaksi-Donasi', [RequestDonasiController::class, 'update']);
 
+    Route::get('/pegawai/show-profile', [PegawaiController::class, 'showProfile']);
+
 });
 Route::middleware('auth:gudang')->group(function () {
 
@@ -114,6 +119,8 @@ Route::middleware('auth:cs')->group(function () {
     Route::post('/penitip/update/{id_penitip}', [PenitipController::class, 'update']);
 
     Route::get('/penitip/show-diskusi-by-date', [DiskusiController::class, 'showDiskusiByDate']);
+
+    Route::get('/pegawai/show-profile', [PegawaiController::class, 'showProfile']);
 });
 
 Route::middleware('auth:admin')->group(function () {
@@ -133,6 +140,8 @@ Route::middleware('auth:admin')->group(function () {
 
     Route::get('/hunter/search/{search_hunter}', [HunterController::class, 'searchHunter']);
     Route::post('/hunter/reset-password/{id}', [HunterController::class, 'resetPassword']);
+
+    Route::get('/pegawai/show-profile', [PegawaiController::class, 'showProfile']);
 });
 #endregion
 

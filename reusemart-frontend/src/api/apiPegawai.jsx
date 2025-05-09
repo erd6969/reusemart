@@ -102,3 +102,18 @@ export const CreatePegawai = async (data) => {
         throw error;
     }
 }
+
+export const GetProfile = async () => {
+    try {
+        const response = await useAxios.get("/pegawai/show-profile", {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${getToken()}`,
+          },
+        });
+        return response.data;
+      } catch (error) {
+        console.error("Error fetching profile", error);
+        throw error?.response?.data || error;
+      }
+};

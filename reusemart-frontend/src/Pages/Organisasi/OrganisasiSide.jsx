@@ -40,9 +40,7 @@ const OrganisasiSide = () => {
                 <b>Donasi</b>
                 <ul>
                     <li onClick={() => navigate('/organisasi/request-donasi')}>Request Donasi</li>
-                    <li onClick={() => navigate('/Organisasi/request-history')}>History Request Donasi</li>
-                    {/* <li onClick={() => navigate('/Organisasi/expired')}>Expired Custody Products</li>
-                    <li onClick={() => navigate('/Organisasi/donated')}>Donated Products</li> */} 
+                    <li onClick={() => navigate('/Organisasi/history-donasi')}>History Request Donasi</li>
                 </ul>
             </div>
         </div>

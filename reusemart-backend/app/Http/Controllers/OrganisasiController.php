@@ -136,7 +136,10 @@ class OrganisasiController
             ->where('request_donasi.id_organisasi', $organisasi->id_organisasi)              
             ->whereIn('status_request', ['rejected', 'accepted'])
             ->get();
-            return response()->json($donasi, 200);
+            return response()->json([
+                'meesage' => 'Request Donasi found',
+                'data' => $donasi
+            ], 200);
         } catch (\Exception $e) {
             return response()->json([
                 'message' => 'Request Donasi not found',
@@ -299,8 +302,36 @@ class OrganisasiController
 
     public function searchRequestDonasi($search_)
     {
+        $organisasi = auth('organisasi')->user();
         try {
-            $organisasi = RequestDonasi::where('detail_request', 'like', '%' . $search_ . '%')->get();
+            $organisasi = RequestDonasi::where('detail_request', 'like', '%' . $search_ . '%')
+            ->where('id_organisasi', $organisasi->id_organisasi)
+            ->where('status_request', 'waiting')
+            ->get();
+            if ($organisasi->isEmpty()) {
+                return response()->json([
+                    'message' => 'Request tidak ada',
+                ], 404);
+            }
+            return response()->json(
+               $organisasi
+            , 200);
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'Request ga ada',
+                'error' => $e->getMessage(),
+            ], 404);
+        }
+    }
+
+    public function searchHistoryReqDonasi($search_)
+    {
+        $organisasi = auth('organisasi')->user();
+        try {
+            $organisasi = RequestDonasi::where('detail_request', 'like', '%' . $search_ . '%')
+            ->where('id_organisasi', $organisasi->id_organisasi)
+            ->whereIn('status_request', ['rejected', 'accepted'])
+            ->get();
             if ($organisasi->isEmpty()) {
                 return response()->json([
                     'message' => 'Request tidak ada',

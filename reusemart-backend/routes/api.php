@@ -60,6 +60,7 @@ Route::middleware('auth:organisasi')->group(function () {
     Route::post('/organisasi/create-req', [OrganisasiController::class, 'createRequestDonasi']);
     Route::post('/organisasi/update-req/{id_organisasi}', [OrganisasiController::class, 'updateRequestDonasi']);
     Route::get('/organisasi/search-req/{search_request}', [OrganisasiController::class, 'SearchRequestDonasi']);
+    Route::get('/organisasi/search-histo-req/{search_request}', [OrganisasiController::class, 'SearchHistoryReqDonasi']);
     Route::delete('/organisasi/delete-req/{id_request}', [OrganisasiController::class, 'DeleteRequestDonasi']);
     Route::get('/organisasi/search/{search_organisasi}', [OrganisasiController::class, 'search']);
     Route::delete('/organisasi/delete/{id_organisasi}', [OrganisasiController::class, 'destroy']);

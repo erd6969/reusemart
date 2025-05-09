@@ -40,6 +40,25 @@ export const UpdateRequestDonasi = async (id_request_donasi, data) => {
         throw error;
     }
 }
+export const SearchRequestHistory = async (search_request_donasi) => {
+    try {
+        const token = sessionStorage.getItem("token");
+
+        const response = await useAxios.get(`/organisasi/search-histo-req/${search_request_donasi}`, {
+            headers: {
+                "Content-Type": "application/json",
+                "Accept": "application/json",
+                "Authorization": `Bearer ${token}`,
+            },
+        });
+        console.log("Search request response:", response.data);
+        return response.data;
+    } catch (error) {
+        console.error("Error searching request:", error);
+        throw error;
+    }
+}
+
 
 export const SearchRequest = async (search_request_donasi) => {
     try {

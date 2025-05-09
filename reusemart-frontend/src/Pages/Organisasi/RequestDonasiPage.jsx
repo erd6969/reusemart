@@ -2,7 +2,7 @@
 import './RequestDonasiPage.css';
 import { useState, useEffect } from 'react';
 import { FaStar } from 'react-icons/fa';
-import { Container, Button } from 'react-bootstrap';
+import { Container, Button, Badge } from 'react-bootstrap';
 import { toast } from 'react-toastify';
 import SearchIcon from "../../assets/images/search-icon.png";
 import defaultImage from "../../assets/images/Pembeli/Yuki.jpeg";
@@ -128,6 +128,7 @@ const RequestDonasiPage = () => {
                             <thead>
                                 <tr>
                                     <th>Detail Request</th>
+                                    <th>Status Request</th>
                                     <th>Action</th>
                                 </tr>
                             </thead>
@@ -135,6 +136,7 @@ const RequestDonasiPage = () => {
                                 {requestDonasi.map((req, index) => (
                                     <tr key={index}>
                                         <td>{req.detail_request}</td>
+                                        <td><h4><Badge bg="secondary">{req.status_request}</Badge></h4></td>
                                         <td className='action-buttons-req'>
                                             <Button variant="warning" onClick={() => handleEdit(req)}>Edit</Button>
                                             <Button variant="danger" onClick={() => handleDelete(req.id_request_donasi)}>Delete</Button>

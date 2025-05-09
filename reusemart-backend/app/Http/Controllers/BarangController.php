@@ -144,4 +144,46 @@ class BarangController
             ], 500);
         }
     }
+
+    public function searchBarangOpenDonasi($search_barang){
+        try {
+            
+
+            $barang = Barang::join('detail_transaksi_penitipan', 'barang.id_barang', '=', 'detail_transaksi_penitipan.id_barang')
+                ->where('detail_transaksi_penitipan.status_penitipan', '=', 'open donasi')
+                ->where('barang.nama_barang', 'LIKE', '%' . $search_barang . '%')
+                ->paginate(10);
+    
+            if (!$barang) {
+                return response()->json([
+                    'message' => 'Barang not found',
+                ], 404);
+            }
+    
+            return response()->json($barang, 200);
+    
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'Failed to retrieve address',
+                'error' => $e->getMessage(),
+            ], 500);
+        }
+    }
+
+    public function showBarangByOpenDonasi()
+    {
+        try {
+            $barang = Barang::join('detail_transaksi_penitipan', 'barang.id_barang', '=', 'detail_transaksi_penitipan.id_barang')
+                ->where('detail_transaksi_penitipan.status_penitipan', '=', 'open donasi')
+                ->select('barang.*')
+                ->paginate(10);
+
+            return response()->json($barang, 200);
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'data ga ada woiii',
+                'error' => $e->getMessage(),
+            ], 404);
+        }
+    }
 }

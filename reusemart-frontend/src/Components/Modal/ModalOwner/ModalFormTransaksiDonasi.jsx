@@ -2,10 +2,12 @@ import { Modal, Button, Form } from "react-bootstrap";
 import { useState, useEffect } from "react";
 import { toast } from "react-toastify";
 import { AcceptRequestDonasi } from "../../../api/apiRequestDonasi";
+import { useNavigate } from "react-router-dom";
 
-const ModalFormTransaksiDonasi = ({ showModalForm, handleClose, id_request_donasi }) => {
+const ModalFormTransaksiDonasi = ({ showModalForm, handleClose, id_request_donasi, id_barang }) => {
     const [namaPenerima, setNamaPenerima] = useState("");
     const [tanggalDiambil, setTanggalDiambil] = useState("");
+    const navigate = useNavigate();
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -18,6 +20,7 @@ const ModalFormTransaksiDonasi = ({ showModalForm, handleClose, id_request_donas
         formDataToSend.append("id_request_donasi", id_request_donasi);
         formDataToSend.append("tanggal_donasi", tanggalDiambil);
         formDataToSend.append("nama_penerima", namaPenerima);
+        formDataToSend.append("id_barang", id_barang);
         console.log("Payload yang akan dikirim:", formDataToSend.get("id_request_donasi"), formDataToSend.get("tanggal_donasi"), formDataToSend.get("nama_penerima"));
 
         try {
@@ -26,6 +29,7 @@ const ModalFormTransaksiDonasi = ({ showModalForm, handleClose, id_request_donas
             console.log("Payload dikirim:", response.data);
             toast.success("Transaksi donasi berhasil diproses!");
             handleClose();
+            navigate("/owner/req-donasi");
         } catch (error) {
             toast.error("Gagal menyimpan transaksi donasi.");
         }

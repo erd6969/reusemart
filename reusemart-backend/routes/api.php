@@ -89,12 +89,17 @@ Route::middleware('auth:pembeli')->group(function () {
 
 #region Pegawai
 Route::middleware('auth:owner')->group(function () {
-    Route::get('/request_donasi/show-all', [RequestDonasiController::class, 'show']);
+    Route::get('/request_donasi/show-accept-reject', [RequestDonasiController::class, 'showAcceptReject']);
     Route::get('/request_donasi/show-waiting-request', [RequestDonasiController::class, 'showWaitingRequest']);
     Route::get('/request_donasi/show-by-id/{id_barang}', [RequestDonasiController::class, 'showByIdBarang']);
-    Route::get('/request_donasi/search/{search_request_donasi}', [RequestDonasiController::class, 'search']);
+    Route::get('/request_donasi/searchWaiting/{search_request_donasi}', [RequestDonasiController::class, 'searchWaiting']);
+    Route::get('/request_donasi/searchDiterimaDitolak/{search_request_donasi}', [RequestDonasiController::class, 'searchDiterimaDitolak']);
     Route::post('/request_donasi/acceptRequest_donasi', [RequestDonasiController::class, 'acceptRequest_donasi']);
     Route::post('/request_donasi/rejectRequest', [RequestDonasiController::class, 'rejectRequest']);
+    
+    Route::get('/request_donasi/show-barang-open-donasi', [BarangController::class, 'showBarangByOpenDonasi']);
+    Route::get('/request_donasi/searchBarangOpenDonasi/{search_barang}', [BarangController::class, 'searchBarangOpenDonasi']);
+    Route::post('/request_donasi/updateRequest-Transaksi-Donasi', [RequestDonasiController::class, 'update']);
 
 });
 Route::middleware('auth:gudang')->group(function () {

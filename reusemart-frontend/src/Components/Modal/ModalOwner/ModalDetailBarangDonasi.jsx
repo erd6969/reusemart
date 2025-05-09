@@ -9,54 +9,42 @@ import { RejectRequestDonasi, ShowRequestDonasiByIdBarang } from "../../../api/a
 import ModalFormTransaksiDonasi from './ModalFormTransaksiDonasi';
 import { data, useNavigate } from "react-router-dom";
 
-const ModalDetailRequestDonasi = ({ show, handleClose, dataDetail,  onSuccess, onAccept }) => {
+const ModalDetailBarangDonasi = ({ show, handleClose, dataBarang,  onSuccess, dataReqDon, onAccept }) => {
     const [formData, setFormData] = useState({
-        id_request_donasi: 0,
-        email_organisasi: '',
-        nama_organisasi: '',
-        alamat_organisasi: '',
-        id_organisasi: 0,
-        foto_organisasi: '',
-        detail_request: '',
-        nomor_telepon_organisasi: ''
+        nama_barang: '',
+        harga_barang: '',
+        kondisi_barang: 0,
+        foto_barang: '',
+        deskripsi_barang: '',
+        tanggal_garansi: '',
+        nama_organisasi:  '',
+        id_request_donasi: '',
     });
 
     const [isLoading, setIsLoading] = useState(false);
-    const [showForm, setShowForm] = useState(false);
-    const [selectedIdRequestDonasi, setSelectedIdRequestDonasi] = useState(null);
     const navigate = useNavigate();
-    const [dataOrganisasi, setDataOrganisasi] = useState(
-        {
-            nama_organisasi:  '',
-            detail_request: '',
-        }
-    );
 
     useEffect(() => {
-        if (dataDetail) {
+        if (dataBarang) {
             setFormData({
-                id_request_donasi: dataDetail.id_request_donasi || 0,
-                email_organisasi: dataDetail.organisasi.email_organisasi || '',
-                nama_organisasi: dataDetail.organisasi.nama_organisasi || '',
-                alamat_organisasi: dataDetail.organisasi.alamat_organisasi || '',
-                foto_organisasi: dataDetail.organisasi.foto_organisasi || '',
-                id_organisasi: dataDetail.organisasi.id_organisasi || 0,
-                detail_request: dataDetail.detail_request || '',
-                nomor_telepon_organisasi: dataDetail.organisasi.nomor_telepon_organisasi || ''
-            });
-            setDataOrganisasi({
-                nama_organisasi: dataDetail.organisasi.nama_organisasi || '',
-                detail_request: dataDetail.detail_request || '',
+                nama_barang: dataBarang.nama_barang || '',
+                harga_barang: dataBarang.harga_barang || '',
+                foto_barang: dataBarang.foto_barang || '',
+                kondisi_barang: dataBarang.kondisi_barang || 0,
+                deskripsi_barang: dataBarang.deskripsi_barang || '',
+                tanggal_garansi: dataBarang.tanggal_garansi || '',
+                nama_organisasi: dataReqDon.nama_organisasi || '',
+                id_request_donasi: dataReqDon.id_request_donasi || 0,
             });
         }
-    }, [dataDetail]);
+    }, [dataBarang]);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            if (dataDetail) {
+            if (dataBarang) {
                 const formDataToSend = new FormData();
-                formDataToSend.append('id_request_donasi', dataDetail.id_request_donasi);
+                formDataToSend.append('id_request_donasi', dataBarang.id_request_donasi);
                 console.log("Payload yang akan dikirim:", formDataToSend);
 
                 await RejectRequestDonasi(formDataToSend);
@@ -77,13 +65,11 @@ const ModalDetailRequestDonasi = ({ show, handleClose, dataDetail,  onSuccess, o
     };
 
     const handleAccept = () => {
-        setSelectedIdRequestDonasi(dataDetail.id_request_donasi);
-        setShowForm(true);
-        handleClose(); // Menutup modal sekarang
+        onAccept(dataBarang.id_barang);
     };
     
     const handleShowBarang = () => {
-        navigate(`/owner/req-donasi-show-barang/${dataOrganisasi.nama_organisasi}/${formData.id_request_donasi}`);
+        navigate(`/owner/req-donasi-show-barang/${dataOrganisasi.nama_barang}/${dataBarang.id_request_donasi}`);
         handleClose(); // Menutup modal sekarang
     }
 
@@ -119,10 +105,10 @@ const ModalDetailRequestDonasi = ({ show, handleClose, dataDetail,  onSuccess, o
                 <Container className="modal-body">
                     <form onSubmit={handleSubmit}>
                         <div className="image-container text-center">
-                            {formData.foto_organisasi && (
+                            {formData.foto_barang && (
                                 <div className="existing-image">
                                     <img
-                                        src={getThumbnail(formData.foto_organisasi)}
+                                        src={getThumbnail(formData.foto_barang)}
                                         alt="Gambar belum hehe"
                                         className="img-thumbnail" />
                                 </div>
@@ -133,40 +119,41 @@ const ModalDetailRequestDonasi = ({ show, handleClose, dataDetail,  onSuccess, o
 
                         <br />
                         <ShowColumn
-                            nameLabel="nama_organisasi"
-                            contentLabel="Nama Organisasi"
+                            nameLabel="nama_barang"
+                            contentLabel="Nama Barang"
                             typeInput="text"
-                            idInput="nama_organisasi"
-                            placeholderInput={formData.nama_organisasi}
-                            value={formData.nama_organisasi}
+                            idInput="nama_barang"
+                            placeholderInput={formData.nama_barang}
+                            value={formData.nama_barang}
                             disabled={true}
                             onChange="" />
                         <ShowColumn
-                            nameLabel="email_organisasi"
-                            contentLabel="Email Organisasi"
+                            nameLabel="harga_barang"
+                            contentLabel="Harga Barang"
                             typeInput="text"
-                            idInput="email_organisasi"
-                            placeholderInput={formData.email_organisasi}
-                            value={formData.email_organisasi}
-                            disabled={true}
-                            onChange="" />
-                        <ShowColumn
-                            nameLabel="alamat_organisasi"
-                            contentLabel="Alamat Organisasi"
-                            typeInput="text"
-                            idInput="alamat_organisasi"
-                            placeholderInput={formData.alamat_organisasi}
-                            value={formData.alamat_organisasi}
+                            idInput="harga_barang"
+                            placeholderInput={formData.harga_barang}
+                            value={formData.harga_barang}
                             onChange=""
                             disabled={true} />
 
                         <ShowColumn
-                            nameLabel="nomor_telepon_organisasi"
-                            contentLabel="Nomor Telepon"
+                            nameLabel="tanggal_garansi"
+                            contentLabel="Tanggal Garansi"
                             typeInput="text"
-                            idInput="nomor_telepon_organisasi"
-                            placeholderInput={formData.nomor_telepon_organisasi}
-                            value={formData.nomor_telepon_organisasi}
+                            idInput="tanggal_garansi"
+                            placeholderInput={formData.tanggal_garansi || 'Tidak ada Garansi'}
+                            value={formData.tanggal_garansi}
+                            onChange=""
+                            disabled={true} />
+
+                        <ShowColumn
+                            nameLabel="kondisi_barang"
+                            contentLabel="Kondisi Barang"
+                            typeInput="text"
+                            idInput="kondisi_barang"
+                            placeholderInput={formData.kondisi_barang}
+                            value={formData.kondisi_barang}
                             onChange=""
                             disabled={true} />
 
@@ -175,8 +162,8 @@ const ModalDetailRequestDonasi = ({ show, handleClose, dataDetail,  onSuccess, o
                             contentLabel="Detail Request"
                             typeInput="textarea"
                             idInput="Detail Request"
-                            placeholderInput={formData.detail_request}
-                            value={formData.detail_request}
+                            placeholderInput={formData.deskripsi_barang}
+                            value={formData.deskripsi_barang}
                             onChange=""
                             disabled={true} />
 
@@ -185,16 +172,9 @@ const ModalDetailRequestDonasi = ({ show, handleClose, dataDetail,  onSuccess, o
                                 <Button
                                     variant="primary"
                                     style={{ border: "none" }}
-                                    onClick={() => handleShowBarang()}
+                                    onClick={handleAccept}
                                 >
                                     <b>Pilih Barang</b>
-                                </Button>
-                                <Button
-                                    variant="danger"
-                                    type="submit"
-                                    style={{ border: "none" }}
-                                >
-                                    <b>Tolak</b>
                                 </Button>
                             </div>
                         </div>
@@ -203,13 +183,8 @@ const ModalDetailRequestDonasi = ({ show, handleClose, dataDetail,  onSuccess, o
             )}
         </Modal>
         
-        <ModalFormTransaksiDonasi
-                showModalForm={showForm}
-                handleClose={() => setShowForm(false)}
-                id_request_donasi={selectedIdRequestDonasi}
-        />
         </>
     );
 };
 
-export default ModalDetailRequestDonasi;
+export default ModalDetailBarangDonasi;

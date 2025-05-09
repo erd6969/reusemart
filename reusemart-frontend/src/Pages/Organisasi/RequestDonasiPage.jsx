@@ -1,11 +1,11 @@
-// import './SoldProductPage.css';
+import '../Penitip/SoldProductPage.css';
 import { useState, useEffect } from 'react';
 import { FaStar } from 'react-icons/fa';
 import { Container } from 'react-bootstrap';
 import SearchIcon from "../../assets/images/search-icon.png";
 import defaultImage from "../../assets/images/Pembeli/Yuki.jpeg";
 
-// import { ShowSoldProducts } from "../../api/apiPenitip";
+import { ShowSoldProducts } from "../../api/apiPenitip";
 import { getThumbnail } from "../../api/index";
 
 import ModalDetailPenjualan from "../../Components/Modal/ModalPenitip/ModalDetailPenjualan";
@@ -107,4 +107,4 @@ const RequestDonasiPage = () => {
     );
 };
 
-export default SoldProductPage;
+export default RequestDonasiPage;

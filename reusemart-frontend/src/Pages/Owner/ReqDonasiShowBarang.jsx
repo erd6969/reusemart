@@ -1,12 +1,15 @@
-import './HistoryDonasi.css';
+import './ReqDonasiShowBarang.css';
 import InputColumn from '../../Components/InputColumn';
 import { Container, Button, Spinner } from 'react-bootstrap';
 import { useEffect, useState } from 'react';
-import { ShowAcceptRejectRequestDonasi, SearchRequestDonasiDiterimaDitolak } from '../../api/apiRequestDonasi';
-import ModalEditTransaksiDonasi from '../../Components/Modal/ModalOwner/ModalEditTransaksiDonasi';
+import { SearchBarangByOpenDonasi } from '../../api/apiRequestDonasi';
+import ModalDetailRequestDonasi from '../../Components/Modal/ModalOwner/ModalDetailRequestDonasi';
 import ModalFormTransaksiDonasi from '../../Components/Modal/ModalOwner/ModalFormTransaksiDonasi';
+import { ShowBarangByOpenDonasi } from '../../api/apiRequestDonasi';
 import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
 import { toast } from 'react-toastify';
+import { useParams } from 'react-router-dom';
+import ModalDetailBarangDonasi from '../../Components/Modal/ModalOwner/ModalDetailBarangDonasi';
 
 const SearchComponent = ({ onSearch }) => {
     return (
@@ -23,24 +26,30 @@ const SearchComponent = ({ onSearch }) => {
     );
 };
 
-const HistoryDonasi = () => {
-    const [request_donasiList, setRequestDonasiList] = useState([]);
+const ReqDonasiShowBarang = () => {
+    const { nama_organisasi, id_request_donasi } = useParams();
+    const [barangOpenDonasi, setBarangOpenDonasi] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
     const [searchQuery, setSearchQuery] = useState("");
     const [isFirstLoad, setIsFirstLoad] = useState(true);
     const [showModal, setShowModal] = useState(false);
-    const [selectedRequestDonasi, setSelectedRequestDonasi] = useState(null);
+    const [selectedBarangDonasi, setSelectedBarangDonasi] = useState(null);
+    const [selectedIdBarang, setSelectedIdBarang] = useState(null);
+    const dataReqDon = {
+        id_request_donasi: id_request_donasi,
+        nama_organisasi: nama_organisasi,
+    };
     const [showFormModal, setShowFormModal] = useState(false);
     // Pagination states
     const [currentPage, setCurrentPage] = useState(1);
     const [totalPages, setTotalPages] = useState(1);
 
-    const fetchHistoryRequestDonasiData = async (page = 1) => {
+    const fetchBarangDonasiData = async (page = 1) => {
         setIsLoading(true);
-        ShowAcceptRejectRequestDonasi(page)
+        ShowBarangByOpenDonasi(page)
             .then((data) => {
                 console.log("Data fetched:", data.data);
-                setRequestDonasiList(data.data);
+                setBarangOpenDonasi(data.data);
                 setTotalPages(data.last_page);
                 setCurrentPage(data.current_page);
                 setIsLoading(false);
@@ -55,11 +64,12 @@ const HistoryDonasi = () => {
 
     const handleModalClose = () => {
         setShowModal(false);
-        setSelectedRequestDonasi(null);
+        setSelectedBarangDonasi(null);
     };
 
     const handleDetail = (data) => {
-        setSelectedRequestDonasi(data);
+        setSelectedBarangDonasi(data);
+        
         setShowModal(true);
     };
 
@@ -67,20 +77,20 @@ const HistoryDonasi = () => {
         const delayDebounce = setTimeout(() => {
             if (searchQuery.trim().length >= 3) {
                 setIsLoading(true);
-                SearchRequestDonasiDiterimaDitolak(searchQuery.trim())
+                SearchBarangByOpenDonasi(searchQuery.trim())
                     .then((response) => {
-                        const hasil = Array.isArray(response.data.data) ? response.data.data : [response.data.data];
-                        setRequestDonasiList(hasil);
+                        const hasil = Array.isArray(response.data) ? response.data : [response.data];
+                        setBarangOpenDonasi(hasil);
                         setTotalPages(1); // Karena hasil pencarian tidak paginasi
                         setCurrentPage(1);
                     })
                     .catch((error) => {
                         console.error("Error searching request_donasi:", error);
-                        setRequestDonasiList([]);
+                        setBarangOpenDonasi([]);
                     })
                     .finally(() => setIsLoading(false));
             } else {
-                fetchHistoryRequestDonasiData(currentPage); // Aktifkan pagination saat tidak mencari
+                fetchBarangDonasiData(currentPage); // Aktifkan pagination saat tidak mencari
             }
         }, 50);
 
@@ -90,18 +100,18 @@ const HistoryDonasi = () => {
 
     return (
         <Container>
-            <div className="adminMasterRequestDonasiPage">
-                <h1 className="pageTitle">History Donasi</h1>
+            <div className="adminMasterBarangDonasiPage">
+                <h1 className="pageTitle">Nama Organisasi : {nama_organisasi}</h1>
+                <h1 className="pageTitle">Pilihan Barang yang siap didonasikan</h1>
                 <SearchComponent onSearch={setSearchQuery} />
                 <div className="tableContainer">
                     <table className="dataTable">
                         <thead>
                             <tr>
-                                <th>ID Request Donasi</th>
-                                <th>Nama Organisasi</th>
-                                <th>Email</th>
-                                <th>Telepon</th>
-                                <th>Status Request</th>
+                                <th>ID Barang</th>
+                                <th>Nama Barang</th>
+                                <th>Harga Barang</th>
+                                <th>Tanggal Garansi</th>
                                 <th>Action</th>
                             </tr>
                         </thead>
@@ -113,23 +123,16 @@ const HistoryDonasi = () => {
                                         <div>Loading...</div>
                                     </td>
                                 </tr>
-                            ) : request_donasiList.length > 0 ? (
-                                request_donasiList.map((data) => (
-                                    <tr key={data.id_request_donasi}>
-                                        <td>RQD.{data.id_request_donasi}</td>
-                                        <td>{data.organisasi?.nama_organisasi}</td>
-                                        <td>{data.organisasi?.email_organisasi}</td>
-                                        <td>{data.organisasi?.nomor_telepon_organisasi}</td>
-                                        <td 
-                                            style={{
-                                                color: data.status_request === "Accepted" ? "green" : 
-                                                data.status_request === "Rejected" ? "red" : "orange"
-                                            }}>
-                                            {data.status_request}
-                                        </td>
+                            ) : barangOpenDonasi.length > 0 ? (
+                                barangOpenDonasi.map((data) => (
+                                    <tr key={data.id_barang}>
+                                        <td>BR.{data.id_barang}</td>
+                                        <td>{data.nama_barang}</td>
+                                        <td>{data.harga_barang}</td>
+                                        <td>{data.tanggal_garansi || 'Tidak ada Garansi'}</td>
                                         <td className="actionButtons">
                                             <Button
-                                                variant="warning"
+                                                variant="success"
                                                 onClick={() => handleDetail(data)}
                                                 style={{
                                                     height: '35px',
@@ -142,7 +145,7 @@ const HistoryDonasi = () => {
                                                     padding: 0,
                                                 }}
                                             >
-                                                Edit
+                                                Detail
                                             </Button>
 
                                         </td>
@@ -184,27 +187,34 @@ const HistoryDonasi = () => {
             </div>
 
 
-            <ModalEditTransaksiDonasi
+            <ModalDetailBarangDonasi
                 show={showModal}
                 handleClose={() => setShowModal(false)}
-                dataDetail={selectedRequestDonasi}
+                dataBarang={selectedBarangDonasi}
                 onSuccess={() => {
-                    fetchHistoryRequestDonasiData(currentPage);  // Refresh list setelah terima/tolak
+                    fetchBarangDonasiData(currentPage);  // Refresh list setelah terima/tolak
                     setShowModal(false);
                 }}
+                onAccept={(idBarang) => {
+                    setSelectedIdBarang(idBarang); // simpan id_barang
+                    setShowModal(false);
+                    setShowFormModal(true);
+                }}
+                dataReqDon={dataReqDon}
             />
 
             <ModalFormTransaksiDonasi
                 showModalForm={showFormModal}
                 handleClose={() => {
                     setShowFormModal(false);  // Tutup form
-                    setShowModal(true);       // Buka kembali modal detail
+                    setShowModal(false);
                 }}
-                id_request_donasi={selectedRequestDonasi?.id_request_donasi}
+                id_request_donasi={dataReqDon.id_request_donasi}
+                id_barang={selectedIdBarang} 
             />
 
         </Container>
     );
 };
 
-export default HistoryDonasi;
+export default ReqDonasiShowBarang;

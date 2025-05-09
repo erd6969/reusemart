@@ -2,7 +2,7 @@ import './ReqDonasi.css';
 import InputColumn from '../../Components/InputColumn';
 import { Container, Button, Spinner } from 'react-bootstrap';
 import { useEffect, useState } from 'react';
-import { ShowAllRequestDonasi, SearchRequestDonasi } from '../../api/apiRequestDonasi';
+import {  SearchRequestDonasiWaiting, ShowWaitingRequestDonasi } from '../../api/apiRequestDonasi';
 import ModalDetailRequestDonasi from '../../Components/Modal/ModalOwner/ModalDetailRequestDonasi';
 import ModalFormTransaksiDonasi from '../../Components/Modal/ModalOwner/ModalFormTransaksiDonasi';
 import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
@@ -37,7 +37,7 @@ const ReqDonasi = () => {
 
     const fetchRequestDonasiData = async (page = 1) => {
         setIsLoading(true);
-        ShowAllRequestDonasi(page)
+        ShowWaitingRequestDonasi(page)
             .then((data) => {
                 console.log("Data fetched:", data.data);
                 setRequestDonasiList(data.data);
@@ -67,7 +67,7 @@ const ReqDonasi = () => {
         const delayDebounce = setTimeout(() => {
             if (searchQuery.trim().length >= 3) {
                 setIsLoading(true);
-                SearchRequestDonasi(searchQuery.trim())
+                SearchRequestDonasiWaiting(searchQuery.trim())
                     .then((response) => {
                         const hasil = Array.isArray(response.data.data) ? response.data.data : [response.data.data];
                         setRequestDonasiList(hasil);
@@ -101,6 +101,7 @@ const ReqDonasi = () => {
                                 <th>Nama Organisasi</th>
                                 <th>Email</th>
                                 <th>Telepon</th>
+                                <th>Status Request</th>
                                 <th>Action</th>
                             </tr>
                         </thead>
@@ -119,6 +120,7 @@ const ReqDonasi = () => {
                                         <td>{data.organisasi?.nama_organisasi}</td>
                                         <td>{data.organisasi?.email_organisasi}</td>
                                         <td>{data.organisasi?.nomor_telepon_organisasi}</td>
+                                        <td style={{color:'blue'}}>{data.status_request}</td>
                                         <td className="actionButtons">
                                             <Button
                                                 variant="success"

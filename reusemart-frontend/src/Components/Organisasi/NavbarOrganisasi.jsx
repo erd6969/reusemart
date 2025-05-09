@@ -1,7 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import React, { useState, useRef, useEffect } from "react";
 import { Navbar, Container, Nav, Spinner} from "react-bootstrap";
-import "../pembeli/NavbarPembeli.css";
 import "./NavbarOrganisasi.css";
 import logoReuseMart from "../../assets/images/logo-reusemart.png";
 import { FaChevronDown } from "react-icons/fa";
@@ -46,7 +45,7 @@ const TopNavbar = () => {
                     <Navbar.Brand className="navTitle">ReuseMart</Navbar.Brand>
                 </div>
                 <div
-                    className="profileContainer"
+                    className="profile-container-org"
                     ref={dropdownRef}
                     onMouseEnter={() => setIsDropdownOpen(true)}
                     onMouseLeave={() => setIsDropdownOpen(false)}

@@ -19,3 +19,11 @@
     visibility: visible;
     transform: translateY(0) scale(1);
 }
+
+.profile-container-org {
+    display: flex;
+    justify-content: flex-end;
+    margin-right: -38px;
+    /* gap: 15px; */
+    width: 70%;
+}

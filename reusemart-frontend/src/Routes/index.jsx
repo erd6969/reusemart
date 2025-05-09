@@ -9,10 +9,10 @@ import Home from "../Homepage/Home";
 import LoginPage from "../Pages/LoginRegister/LoginPage";
 import RegisterBuyerPage from "../Pages/LoginRegister/RegisterBuyerPage";
 import RegisterOption from "../Pages/LoginRegister/RegisterOption";
-import ReqDonasi from "../Pages/Owner/ReqDonasi";
 import HistoryDonasiPage from "../Pages/Owner/HistoryDonasi";
 import LaporanPage from "../Pages/Owner/Laporan";
 import PegawaiGudangPage from "../Pages/PegawaiGudang/PegawaiGudangPage";
+import ReqDonasi from "../Pages/Owner/ReqDonasi";
 
 //Pembeli
 import PembeliLayout from "../Layouts/PembeliLayouts";
@@ -35,9 +35,9 @@ import ResetPassword from "../Pages/LoginRegister/ResetPasswordPage";
 //Organisasi
 import OrganisasiRequestLayout from "../Layouts/OrganisasiRequestLayouts";
 import RequestDonasiPage from "../Pages/Organisasi/RequestDonasiPage";
-import OrganisasiLayout from "../Layouts/OrganisasiLayouts";
+import HistoryRequestDonasiPage from "../Pages/Organisasi/HistoryRequestDonasiPage";
 import RegisterOrganisasi from "../Pages/LoginRegister/RegisterOrganisasiPage";
-import DaftarDonasiPage from "../Pages/Organisasi/DaftarDonasiPage";
+import ProfileOrganisasiiPage from "../Pages/Organisasi/ProfileOrganisasiPage";
 //Admin
 import AdminLayout from "../Layouts/AdminLayouts";
 import AdminMasterOrganisasiPage from "../Pages/Admin/AdminMasterOrganisasiPage";
@@ -136,22 +136,25 @@ const router = createBrowserRouter([
         path: "/organisasi",
         element: (
             <ProtectedRoutes allowedRoles={["organisasi"]}>
-                <OrganisasiLayout />
+                <OrganisasiRequestLayout />
             </ProtectedRoutes>
         ),
         children: [
             {
-                path: "daftar-donasi",
+                path: "profile",
+                element: <ProfileOrganisasiiPage />,
+            },
+            {
+                path: "request-donasi",
                 element: (
-                    <DaftarDonasiPage />
+                    <RequestDonasiPage />
                 )
             },
             {
-                path: "",
-                element: <OrganisasiRequestLayout />,
-                children: [
-                    { path: "request-donasi", element: <RequestDonasiPage /> },
-                ],
+                path: "history-donasi",
+                element: (
+                    <HistoryRequestDonasiPage />
+                )
             },
         ],
     },

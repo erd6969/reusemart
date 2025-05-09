@@ -2,14 +2,17 @@ import { Outlet } from "react-router-dom";
 import { Container } from "react-bootstrap";
 
 import SideOrganisasi from "../Pages/Organisasi/OrganisasiSide";
+import TopNavbar from "../Components/Organisasi/NavbarOrganisasi.jsx";
 
 const MainLayout = () => {
     return (
         <div>
+             <TopNavbar/>
+            <br />
             <Container className="organisasi-container">
-                <div className="purchase-wrapper">
+                <div className="org-wrapper">
                     <SideOrganisasi />
-                    <div className="purchase-container">
+                    <div className="org-container">
                     <Outlet />
                     </div>
                 </div>

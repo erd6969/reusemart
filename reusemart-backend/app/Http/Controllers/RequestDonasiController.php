@@ -8,6 +8,7 @@ use App\Models\Barang;
 use App\Models\Organisasi;
 use App\Models\TransaksiDonasi;
 use App\Models\DetailTransaksiPenitipan;
+use Illuminate\Support\Facades\DB;
 
 
 class RequestDonasiController
@@ -56,6 +57,8 @@ class RequestDonasiController
             ], 404);
         }
     }
+
+    
 
     public function showByIdBarang($id)
     {

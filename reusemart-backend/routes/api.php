@@ -58,6 +58,12 @@ Route::middleware('auth:penitip')->group(function () {
 Route::middleware('auth:organisasi')->group(function () {
     Route::get('/show-request-barang', [OrganisasiController::class, 'showByOpenDonasi']);
     Route::get('/organisasi/show-profile', [OrganisasiController::class, 'profile']);
+    Route::get('/organisasi/show-waiting', [OrganisasiController::class, 'showWaitingRequestById']);
+    Route::get('/organisasi/show-history', [OrganisasiController::class, 'showHistoryRequestById']);
+    Route::post('/organisasi/create-req', [OrganisasiController::class, 'createRequestDonasi']);
+    Route::post('/organisasi/update-req/{id_organisasi}', [OrganisasiController::class, 'updateRequestDonasi']);
+    Route::get('/organisasi/search-req/{search_request}', [OrganisasiController::class, 'SearchRequestDonasi']);
+    Route::delete('/organisasi/delete-req/{id_request}', [OrganisasiController::class, 'DeleteRequestDonasi']);
     Route::get('/organisasi/search/{search_organisasi}', [OrganisasiController::class, 'search']);
     Route::delete('/organisasi/delete/{id_organisasi}', [OrganisasiController::class, 'destroy']);
     Route::post('/organisasi/update/{id_organisasi}', [OrganisasiController::class, 'update']);

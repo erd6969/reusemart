@@ -36,7 +36,7 @@ function LoginPage() {
             } else if (role === "cs") {
                 navigate("/customerservice/penitip-management");
             } else if(role === "organisasi"){
-                navigate("/organisasi/daftar-donasi")
+                navigate("/organisasi/request-donasi")
             } else {
                 alert("Role tidak dikenali.");
             }

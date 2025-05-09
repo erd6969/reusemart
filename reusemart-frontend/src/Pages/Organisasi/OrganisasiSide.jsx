@@ -36,19 +36,13 @@ const OrganisasiSide = () => {
                 </div>
             </div>
             <hr />
-            <div className='organisasi-balance-container'>
-                <div className='loyalty-points'>
-                    <GiMoneyStack size={24} />
-                </div>
-            </div>
-            <hr />
             <div className='organisasi-product-section'>
-                <b>Product</b>
+                <b>Donasi</b>
                 <ul>
-                    <li onClick={() => navigate('/organisasi/request-donasi')}>Purchase List</li>
-                    {/* <li onClick={() => navigate('/Organisasi/history')}>Sold Products</li>
-                    <li onClick={() => navigate('/Organisasi/expired')}>Expired Custody Products</li>
-                    <li onClick={() => navigate('/Organisasi/donated')}>Donated Products</li> */}
+                    <li onClick={() => navigate('/organisasi/request-donasi')}>Request Donasi</li>
+                    <li onClick={() => navigate('/Organisasi/request-history')}>History Request Donasi</li>
+                    {/* <li onClick={() => navigate('/Organisasi/expired')}>Expired Custody Products</li>
+                    <li onClick={() => navigate('/Organisasi/donated')}>Donated Products</li> */} 
                 </ul>
             </div>
         </div>

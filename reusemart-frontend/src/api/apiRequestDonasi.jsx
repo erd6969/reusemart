@@ -4,6 +4,7 @@ const getToken = () => {
     return sessionStorage.getItem("token");
 };
 
+
 const getRole = () => {
     return sessionStorage.getItem("role");
 };

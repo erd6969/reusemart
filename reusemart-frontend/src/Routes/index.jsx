@@ -60,6 +60,7 @@ import CSPenitipManagementPage from "../Pages/CustomerService/CSPenitipManagemen
 
 // Owner
 import OwnerLayouts from "../Layouts/OwnerLayouts";
+import ReqDonasiShowBarang from "../Pages/Owner/ReqDonasiShowBarang";
 
 const router = createBrowserRouter([
     {
@@ -177,6 +178,10 @@ const router = createBrowserRouter([
                 path: "laporan",
                 element: <LaporanPage />,
             },
+            {
+                path: "req-donasi-show-barang/:nama_organisasi/:id_request_donasi",
+                element: <ReqDonasiShowBarang />,
+            }
         ],
     },
     {

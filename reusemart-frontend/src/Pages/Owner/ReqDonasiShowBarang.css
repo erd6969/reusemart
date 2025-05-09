@@ -1,0 +1,73 @@
+.ReqDonasi {
+    margin-top: 30px;
+    padding: 20px;
+    background-color: #f9f9f9;
+    border-radius: 10px;
+}
+
+.pageTitle {
+    font-size: 28px;
+    font-weight: bold;
+    margin-bottom: 25px;
+    justify-content: center;
+    color: #ffffff;
+}
+
+.searchComponent {
+    display: flex;
+    justify-content: flex-start;
+    margin-bottom: 20px;
+    background-color: #fff;
+    padding-top: 10px;
+    padding-left: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+}
+
+.searchContainer {
+    width: 500px;
+    align-items: center;
+}
+
+.tableContainer {
+    overflow-x: auto;
+    background-color: white;
+    padding: 20px;
+    border-radius: 8px;
+}
+
+.dataTable {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.dataTable th,
+.dataTable td {
+    padding: 12px 15px;
+    border: 1px solid #ddd;
+    text-align: left;
+}
+
+.dataTable th {
+    background-color: #f0f0f0;
+    font-weight: 600;
+}
+
+.actionButtons {
+    width: 100%;
+    text-align: center;
+    white-space: nowrap;
+    position: relative;
+}
+
+.actionButtons .btn {
+    width: 47%;
+    display: inline-block;
+    padding: 2px 6px;
+    font-size: 0.8rem;
+}
+
+.actionButtons .btn:first-child {
+    margin-right: 6%;
+}
+

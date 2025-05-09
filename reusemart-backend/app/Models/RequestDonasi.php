@@ -13,16 +13,11 @@ class RequestDonasi extends Model
     protected $table = 'request_donasi';
     protected $primaryKey = 'id_request_donasi';
     protected $fillable = [
-        'id_barang',
         'id_organisasi',
         'detail_request',
         'status_request',
     ];
 
-    public function barang()
-    {
-        return $this->belongsTo(Barang::class, 'id_barang', 'id_barang');
-    }
     public function organisasi()
     {
         return $this->belongsTo(Organisasi::class, 'id_organisasi', 'id_organisasi');

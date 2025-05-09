@@ -68,7 +68,7 @@ const ModalEditPenitip = ({ show, handleClose, dataEdit, onSuccess }) => {
   return (
     <Modal show={show} onHide={handleClose} className="custom-modal-width">
       <Modal.Header closeButton>
-        <Modal.Title><b>Tambah Penitip</b></Modal.Title>
+        <Modal.Title><b>Edit Penitip</b></Modal.Title>
       </Modal.Header>
 
       <form onSubmit={handleSubmit} encType="multipart/form-data">

@@ -1,0 +1,96 @@
+.org-wrapper {
+    display: flex;
+    align-items: flex-start;
+    gap: 20px;
+    background-color: #fefefe;
+}
+
+.org-container {
+    flex: 1;
+    padding: 20px;
+    background-color: #fff;
+}
+.action-buttons-req{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+}
+.org-wrapper {
+    display: flex;
+    align-items: flex-start;
+    gap: 20px;
+    background-color: #fefefe;
+}
+
+.req-donasi-container {
+    flex: 1;
+    padding: 20px;
+    background-color: #fff;
+}
+
+.req-donasi-content-container {
+    flex: 1;
+    padding: 20px;
+    border: 2px solid black;
+    border-radius: 10px;
+    height: 100%;
+}
+
+.req-donasi-container h2 {
+    margin-bottom: 15px;
+}
+
+.search-bar-org {
+    display: flex;
+    align-items: center;
+    border: 1px solid #ccc;
+    border-radius: 7px;
+    padding: 5px 10px;
+    margin-bottom: 15px;
+}
+
+.search-bar input {
+    border: none;
+    outline: none;
+    padding: 5px;
+    flex: 1;
+}
+
+.req-donasi-table {
+    width: 100%;
+    border-collapse: collapse;
+    
+}
+
+.req-donasi-table th,
+.req-donasi-table td {
+    border-top: 1px solid #ddd;
+    padding: 12px;
+    text-align: center;
+}
+
+.req-donasi-table tr{
+    cursor: pointer;
+}
+
+.req-donasi-table tr:hover {
+    background-color: #f1f1f1;
+}
+
+.req-donasi-table th {
+    background-color: #f5f5f5;
+}
+
+.product-info {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.product-info img {
+    width: 60px;
+    height: 60px;
+    object-fit: cover;
+    border-radius: 5px;
+}

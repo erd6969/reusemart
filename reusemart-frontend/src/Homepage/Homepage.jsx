@@ -16,7 +16,7 @@ const Homepage = () => {
                 <button onClick={() => navigate("/pembeli/shop")}>Pembeli</button>
                 <p>Pembeli ni langsung masuk ke profil</p>
 
-                <button onClick={() => navigate("/organisasi/daftar-donasi")}>Organisasi</button>
+                <button onClick={() => navigate("/organisasi/request-donasi")}>Organisasi</button>
                 <p>Langsung masuk halaman daftar barang yang didonasikan</p>
 
                 <button onClick={() => navigate("/customerservice")}>Counter Strike</button>

@@ -4,12 +4,14 @@ namespace App\Http\Controllers;
 
 use App\Models\Organisasi;
 use App\Models\Barang;
+use App\Models\RequestDonasi;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\ValidationException;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\DB;
 
 
 class OrganisasiController
@@ -101,6 +103,43 @@ class OrganisasiController
         } catch (\Exception $e) {
             return response()->json([
                 'message' => 'data ga ada woiii',
+                'error' => $e->getMessage(),
+            ], 404);
+        }
+    }
+
+    public function showWaitingRequestById()
+    {
+        try {
+            $organisasi = auth('organisasi')->user();
+            $donasi = DB::table('request_donasi')  
+            ->where('request_donasi.id_organisasi', $organisasi->id_organisasi)              
+            ->where('request_donasi.status_request', '=', 'waiting')
+            ->get();
+            return response()->json([
+                'meesage' => 'Request Donasi found',
+                'data' => $donasi
+            ], 200);
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'Request Donasi not found',
+                'error' => $e->getMessage(),
+            ], 404);
+        }
+    }
+   
+    public function showHistoryRequestById()
+    {
+        try {
+            $organisasi = auth('organisasi')->user();
+            $donasi = DB::table('request_donasi')  
+            ->where('request_donasi.id_organisasi', $organisasi->id_organisasi)              
+            ->whereIn('status_request', ['rejected', 'accepted'])
+            ->get();
+            return response()->json($donasi, 200);
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'Request Donasi not found',
                 'error' => $e->getMessage(),
             ], 404);
         }
@@ -223,4 +262,117 @@ class OrganisasiController
             ], 404);
         }
     }
+
+
+    public function createRequestDonasi(Request $request)
+    {
+        $organisasi = auth('organisasi')->user();
+        try {
+            $request->validate([
+                'detail_request' => 'required|string|max:255',
+            ]);
+
+            $request_donasi = RequestDonasi::create([
+                'id_organisasi' => $organisasi->id_organisasi,
+                'detail_request' => $request->detail_request,
+                'status_request' => 'Waiting',
+            ]);
+
+            return response()->json([
+                'message' => 'Request Donasi created successfully',
+                'data' => $request_donasi
+            ], 201);
+
+        } catch (ValidationException $e) {
+            return response()->json([
+                'message' => 'Validasi gagal',
+                'errors' => $e->errors()
+            ], 422);
+
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'Failed to create Request Donasi',
+                'error' => $e->getMessage(),
+            ], 500);
+        }
+    }
+
+    public function searchRequestDonasi($search_)
+    {
+        try {
+            $organisasi = RequestDonasi::where('detail_request', 'like', '%' . $search_ . '%')->get();
+            if ($organisasi->isEmpty()) {
+                return response()->json([
+                    'message' => 'Request tidak ada',
+                ], 404);
+            }
+            return response()->json(
+               $organisasi
+            , 200);
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'Request ga ada',
+                'error' => $e->getMessage(),
+            ], 404);
+        }
+    }
+
+    public function updateRequestDonasi(Request $request, $id_request_donasi)
+    {
+        try {
+            $organisasi = RequestDonasi::find($id_request_donasi);
+            if (!$organisasi) {
+                return response()->json(['message' => 'req donasi tidak ditemukan'], 404);
+            }
+
+            $validatedData = $request->validate([
+              'detail_request' => 'required|string|max:255',
+            ]);
+
+            $updateData = [
+                'detail_request' => $validatedData['detail_request']
+            ];
+
+            $organisasi->update($updateData);
+
+            return response()->json([
+                'message' => 'Organisasi updated successfully',
+                'data' => $organisasi
+            ]);
+
+        } catch (ValidationException $e) {
+            return response()->json([
+                'message' => 'Validasi gagal',
+                'errors' => $e->errors()
+            ], 422);
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'Failed to update organisasi',
+                'error' => $e->getMessage(),
+            ], 500);
+        }
+    }
+
+    public function DeleteRequestDonasi($id_request_donasi)
+    {
+        try {
+            $organisasi = RequestDonasi::find($id_request_donasi);
+            if (!$organisasi) {
+                return response()->json([
+                    'message' => 'request not found',
+                ], 404);
+            }
+            $organisasi->delete();
+            return response()->json([
+                'message' => 'request deleted successfully',
+            ], 200);
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'request not found',
+                'error' => $e->getMessage(),
+            ], 404);
+        }
+    }
+
+
 }

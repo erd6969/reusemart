@@ -102,8 +102,7 @@ class KeranjangController
                             'id_barang' => $item->id_barang,
                             'nama_barang' => $item->nama_barang,
                             'harga_barang' => $item->harga_barang,
-                            'jumlah' => $item->jumlah ?? 1, // jika ada
-                            // Tambah field lain sesuai kebutuhan
+                            'jumlah' => $item->jumlah ?? 1,
                         ];
                     })->values()
                 ];
@@ -151,7 +150,6 @@ class KeranjangController
                 ], 404);
             }
 
-            // Check if the item belongs to the authenticated user
             if ($keranjang->id_pembeli !== $user->id_pembeli) {
                 return response()->json([
                     'message' => 'Unauthorized action',

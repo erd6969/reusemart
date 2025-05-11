@@ -1,9 +1,10 @@
-import { getThumbnail } from "../../../api/index";
 import { Modal, Container, Button } from "react-bootstrap";
 import { useState, useEffect } from 'react';
 import InputColumn from "../../../Components/InputColumn";
 import { EditOrganisasi } from '../../../api/apiOrganisasi';
 import { toast } from 'react-toastify';
+
+import { getThumbnailOrganisasi } from "../../../api/index";
 
 const ModalEditOrganisasi = ({ show, handleClose, dataEdit, onSuccess }) => {
     const [formData, setFormData] = useState({
@@ -38,7 +39,7 @@ const ModalEditOrganisasi = ({ show, handleClose, dataEdit, onSuccess }) => {
     const handleImageChange = (e) => {
         const file = e.target.files[0];
         if (file) {
-            setSelectedImage(URL.createObjectURL(file)); // Preview image
+            setSelectedImage(URL.createObjectURL(file));
             setFormData(prev => ({
                 ...prev,
                 foto_organisasi: file
@@ -88,9 +89,10 @@ const ModalEditOrganisasi = ({ show, handleClose, dataEdit, onSuccess }) => {
                         {formData.foto_organisasi && !selectedImage && (
                             <div className="existing-image">
                                 <img
-                                    src={getThumbnail(formData.foto_organisasi)}
+                                    src={getThumbnailOrganisasi(formData.foto_organisasi)}
                                     alt="Existing Organisasi Foto"
                                     className="img-thumbnail"
+                                    style={{ width: '250px', height: '250px' }}
                                 />
                             </div>
                         )}

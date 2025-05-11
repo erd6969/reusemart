@@ -131,8 +131,8 @@ const CSPenitipManagementPage = () => {
                                 <FaSearch />
                             </Button>
                         </InputGroup>
-                        <div style={{display: "flex", justifyContent: "end", paddingInlineEnd: "20px"}}>
-                            <Button variant="primary" onClick={() => handleCreate()}>Create New Penitip</Button>
+                        <div style={{  }}>
+                            <Button style={{ padding: '7px', width: '150px', marginTop:'-12px' }} variant="primary" onClick={() => handleCreate()}>Buat Penitip Baru</Button>
                         </div>
                     </div>
                 </div>

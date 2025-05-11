@@ -34,8 +34,13 @@ class PenitipController
                 'foto_penitip' => 'nullable|image|mimes:jpeg,png,jpg,gif'
             ]);
 
-            $foto_penitip_path = $request->file('foto_penitip')->store('penitip', 'public');
+
             $fotoKTPPath = $request->file('foto_ktp')->store('ktp', 'public');
+            if ($request->hasFile('foto_penitip')) {
+                $foto_penitip_path = $request->file('foto_penitip')->store('penitip', 'public');
+            } else {
+                $foto_penitip_path = 'img/blank-profile-picture.jpg';
+            }
             Log::info($request);
             $penitip = penitip::create([
                 'email_penitip' => $request->email_penitip,
@@ -105,13 +110,13 @@ class PenitipController
     {
         try {
             $penitip = Penitip::where('nama_penitip', 'LIKE', '%' . $search_ . '%')->get();
-    
+
             if ($penitip->isEmpty()) {
                 return response()->json([
                     'message' => 'Penitip not found',
                 ], 404);
             }
-    
+
             return response()->json([
                 'message' => 'Penitip found',
                 'data' => $penitip
@@ -123,7 +128,7 @@ class PenitipController
             ], 500);
         }
     }
-    
+
 
 
     /**
@@ -145,67 +150,67 @@ class PenitipController
      * Update the specified resource in storage.
      */
     public function update(Request $request, $id_penitip)
-{
-    try {
-        $penitip = Penitip::find($id_penitip);
-        if (!$penitip) {
-            return response()->json(['message' => 'Penitip not found'], 404);
-        }
-
-        // Validasi data
-        $validatedData = $request->validate([
-            'email_penitip' => 'required|email|unique:penitip,email_penitip,' . $id_penitip . ',id_penitip',
-            'nama_penitip' => 'required|string|max:255',
-            'password_penitip' => 'nullable|string|min:8',
-            'nomor_telepon_penitip' => 'required|string|max:15',
-            'foto_penitip' => 'nullable|image|mimes:jpeg,png,jpg,gif'
-        ]);
-
-        $updateData = [
-            'email_penitip' => $validatedData['email_penitip'],
-            'nama_penitip' => $validatedData['nama_penitip'],
-            'nomor_telepon_penitip' => $validatedData['nomor_telepon_penitip'],
-        ];
-
-        
-        if (!empty($validatedData['password_penitip'])) {
-            $updateData['password_penitip'] = Hash::make($validatedData['password_penitip']);
-        }
-
-        if ($request->hasFile('foto_penitip')) {
-            $image = $request->file('foto_penitip');
-            $uploadFolder = 'penitip'; 
-
-            if ($penitip->foto_penitip && Storage::disk('public')->exists($uploadFolder . '/' . $penitip->foto_penitip)) {
-                Storage::disk('public')->delete($uploadFolder . '/' . $penitip->foto_penitip);
+    {
+        try {
+            $penitip = Penitip::find($id_penitip);
+            if (!$penitip) {
+                return response()->json(['message' => 'Penitip not found'], 404);
             }
 
-            $foto_penitip_path = $request->file('foto_penitip')->store('penitip', 'public');
+            // Validasi data
+            $validatedData = $request->validate([
+                'email_penitip' => 'required|email|unique:penitip,email_penitip,' . $id_penitip . ',id_penitip',
+                'nama_penitip' => 'required|string|max:255',
+                'password_penitip' => 'nullable|string|min:8',
+                'nomor_telepon_penitip' => 'required|string|max:15',
+                'foto_penitip' => 'nullable|image|mimes:jpeg,png,jpg,gif'
+            ]);
 
-            
-            $updateData['foto_penitip'] = $foto_penitip_path;
+            $updateData = [
+                'email_penitip' => $validatedData['email_penitip'],
+                'nama_penitip' => $validatedData['nama_penitip'],
+                'nomor_telepon_penitip' => $validatedData['nomor_telepon_penitip'],
+            ];
+
+
+            if (!empty($validatedData['password_penitip'])) {
+                $updateData['password_penitip'] = Hash::make($validatedData['password_penitip']);
+            }
+
+            if ($request->hasFile('foto_penitip')) {
+                $image = $request->file('foto_penitip');
+                $uploadFolder = 'penitip';
+
+                if ($penitip->foto_penitip && Storage::disk('public')->exists($uploadFolder . '/' . $penitip->foto_penitip)) {
+                    Storage::disk('public')->delete($uploadFolder . '/' . $penitip->foto_penitip);
+                }
+
+                $foto_penitip_path = $request->file('foto_penitip')->store('penitip', 'public');
+
+
+                $updateData['foto_penitip'] = $foto_penitip_path;
+            }
+
+            // Update data penitip
+            $penitip->update($updateData);
+
+            return response()->json([
+                'message' => 'Penitip updated successfully',
+                'data' => $penitip
+            ]);
+
+        } catch (ValidationException $e) {
+            return response()->json([
+                'message' => 'Validasi gagal',
+                'errors' => $e->errors()
+            ], 422);
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'Failed to update penitip',
+                'error' => $e->getMessage(),
+            ], 500);
         }
-
-        // Update data penitip
-        $penitip->update($updateData);
-
-        return response()->json([
-            'message' => 'Penitip updated successfully',
-            'data' => $penitip
-        ]);
-
-    } catch (ValidationException $e) {
-        return response()->json([
-            'message' => 'Validasi gagal',
-            'errors' => $e->errors()
-        ], 422);
-    } catch (\Exception $e) {
-        return response()->json([
-            'message' => 'Failed to update penitip',
-            'error' => $e->getMessage(),
-        ], 500);
     }
-}
 
 
     /**
@@ -223,7 +228,7 @@ class PenitipController
             ], 200);
         } catch (\Exception $e) {
             return response()->json([
-                'message' =>  $e->getMessage(),
+                'message' => $e->getMessage(),
                 'error' => $e->getMessage(),
             ], 500);
         }
@@ -248,17 +253,17 @@ class PenitipController
             $penitip = auth('penitip')->user();
 
             $products = DB::table('transaksi_penitipan')
-            ->join('detail_transaksi_penitipan', 'transaksi_penitipan.id_transaksi_penitipan', '=', 'detail_transaksi_penitipan.id_transaksi_penitipan')
-            ->join('barang', 'detail_transaksi_penitipan.id_barang', '=', 'barang.id_barang')
-            ->join('komisi', 'komisi.id_barang', '=', 'barang.id_barang')
-            ->join('transaksi_pembelian', 'transaksi_pembelian.id_transaksi_pembelian', '=', 'komisi.id_transaksi_pembelian')
-            ->where('transaksi_penitipan.id_penitip', $penitip->id_penitip)
-            ->where('detail_transaksi_penitipan.status_penitipan', 'terjual')
-            ->select(
-                'barang.*',
-                'transaksi_pembelian.tanggal_pembelian'
-            )
-            ->get();
+                ->join('detail_transaksi_penitipan', 'transaksi_penitipan.id_transaksi_penitipan', '=', 'detail_transaksi_penitipan.id_transaksi_penitipan')
+                ->join('barang', 'detail_transaksi_penitipan.id_barang', '=', 'barang.id_barang')
+                ->join('komisi', 'komisi.id_barang', '=', 'barang.id_barang')
+                ->join('transaksi_pembelian', 'transaksi_pembelian.id_transaksi_pembelian', '=', 'komisi.id_transaksi_pembelian')
+                ->where('transaksi_penitipan.id_penitip', $penitip->id_penitip)
+                ->where('detail_transaksi_penitipan.status_penitipan', 'terjual')
+                ->select(
+                    'barang.*',
+                    'transaksi_pembelian.tanggal_pembelian'
+                )
+                ->get();
 
             return response()->json([
                 'message' => 'Success',
@@ -273,25 +278,26 @@ class PenitipController
         }
     }
 
-    public function showDonatedProducts(){
+    public function showDonatedProducts()
+    {
         try {
             $penitip = auth('penitip')->user();
 
             $products = DB::table('transaksi_penitipan')
-            ->join('detail_transaksi_penitipan', 'transaksi_penitipan.id_transaksi_penitipan', '=', 'detail_transaksi_penitipan.id_transaksi_penitipan')
-            ->join('barang', 'detail_transaksi_penitipan.id_barang', '=', 'barang.id_barang')
-            ->join('request_donasi', 'request_donasi.id_barang', '=', 'barang.id_barang')
-            ->join('transaksi_donasi', 'transaksi_donasi.id_request_donasi', '=', 'request_donasi.id_request_donasi')
-            ->join('organisasi', 'transaksi_donasi.id_organisasi', '=', 'organisasi.id_organisasi')
-            ->where('transaksi_penitipan.id_penitip', $penitip->id_penitip)
-            ->whereIn('detail_transaksi_penitipan.status_penitipan', ['sudah didonasikan'])
-            ->select(
-                'barang.*',
-                'transaksi_donasi.tanggal_donasi',
-                'transaksi_donasi.nama_penerima',
-                'organisasi.nama_organisasi'
-            )
-            ->get();
+                ->join('detail_transaksi_penitipan', 'transaksi_penitipan.id_transaksi_penitipan', '=', 'detail_transaksi_penitipan.id_transaksi_penitipan')
+                ->join('barang', 'detail_transaksi_penitipan.id_barang', '=', 'barang.id_barang')
+                ->join('request_donasi', 'request_donasi.id_barang', '=', 'barang.id_barang')
+                ->join('transaksi_donasi', 'transaksi_donasi.id_request_donasi', '=', 'request_donasi.id_request_donasi')
+                ->join('organisasi', 'transaksi_donasi.id_organisasi', '=', 'organisasi.id_organisasi')
+                ->where('transaksi_penitipan.id_penitip', $penitip->id_penitip)
+                ->whereIn('detail_transaksi_penitipan.status_penitipan', ['sudah didonasikan'])
+                ->select(
+                    'barang.*',
+                    'transaksi_donasi.tanggal_donasi',
+                    'transaksi_donasi.nama_penerima',
+                    'organisasi.nama_organisasi'
+                )
+                ->get();
 
             return response()->json([
                 'message' => 'Success',

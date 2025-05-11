@@ -25,10 +25,11 @@
 }
 
 .searchContainer1 {
-    width: 50%;
+    width: 100%;
     align-items: center;
     display: flex;
-    flex-direction: row;   
+    flex-direction: row;
+    gap : 10px; 
 }
 
 .searcInput1 {

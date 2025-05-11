@@ -67,9 +67,6 @@ const HistoryDonasiPage = () => {
                                 onChange={(e) => setSearchQuery(e.target.value)}
                             />
                         </div>
-                        <div style={{ padding: '3px' }}>
-                            <Button style={{ padding: '12px' }} variant="primary" onClick={() => handleCreate()}>Buat Req Donasi</Button>
-                        </div>
                     </div>
                     {loading ? (
                         <p>Loading...</p>

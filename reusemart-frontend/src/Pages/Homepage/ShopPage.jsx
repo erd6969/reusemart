@@ -13,6 +13,8 @@ import "./ShopPage.css";
 import { GetAllBarang, GetAllBarangByCategory, SearchBarang } from "../../api/apiBarang";
 import { useEffect } from 'react';
 
+import { getThumbnailBarang } from '../../api';
+
 const kategori = [
     {
         icon: FaMobile,
@@ -90,7 +92,7 @@ const kategori = [
         name: "Otomotif & Aksesori",
         subcategories: [
             "Sepeda Motor & Sepeda Bekas",
-            "Suku Cadang & Aksesori Mobil/Motor",
+            "Suku Cadang & Aksesori Mobil atau Motor",
             "Helm, Jaket Riding, dan Sarung Tangan",
             "Ban, Velg, dan Aksesori Kendaraan",
             "Peralatan Perawatan Kendaraan"
@@ -172,7 +174,7 @@ const ItemList = ({ barang }) => {
                 >
 
                     <img
-                        src={foto_barang}
+                        src={getThumbnailBarang(foto_barang)}
                         alt="item"
                         style={{
                             width: "180px",

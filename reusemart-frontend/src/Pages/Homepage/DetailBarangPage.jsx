@@ -9,28 +9,21 @@ import { useEffect, useState } from "react";
 import { GetDetailBarang } from "../../api/apiBarang";
 import CarouselDetail from "../../Components/Carousel/CarouselDetail";
 
-import yuki from "../../assets/images/Pembeli/Yuki.jpeg";
-import test from "../../assets/images/testcarousel.jpg";
-import chen from "../../assets/images/chen-quotes.jpeg";
-
 import { AddToCart } from "../../api/apiKeranjang";
 import { ShowDiskusi, CreateDiskusi } from "../../api/apiDiskusi";
 import { useCart } from "../../Components/Context/CartContext";
 import { toast } from "react-toastify";
 
-const gambar = [chen, test, yuki];
-
-const DetailBarang = ({ detailBarang }) => {
+const DetailBarang = ({ detailBarang, gambar }) => {
     const token = sessionStorage.getItem("token");
     const navigate = useNavigate();
     const { refreshCartCount } = useCart() || {};
 
-    const [gambarBarang] = useState([
+    const gambarBarang = [
         detailBarang.foto_barang,
-        detailBarang.foto_barang1,
         detailBarang.foto_barang2,
         detailBarang.foto_barang3
-    ]);
+    ];
 
     const handleAddToCart = async () => {
         try {
@@ -46,7 +39,7 @@ const DetailBarang = ({ detailBarang }) => {
     return (
         <Container className="detail-barang-container">
             <div className="item-image-container-barang">
-                <CarouselDetail gambar={gambar} />
+                <CarouselDetail gambar={gambarBarang} />
             </div>
 
             <div className="isi-detail-barang-container">
@@ -306,6 +299,7 @@ const Diskusi = () => {
 
 const DetailBarangPage = () => {
     const [detailBarang, setDetailBarang] = useState([]);
+    const [thumbnailGambar, setThumbnailGambar] = useState([]);
     const id = useParams().id_barang;
     const [penitip, setPenitip] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
@@ -315,6 +309,12 @@ const DetailBarangPage = () => {
             const detailBarang = await GetDetailBarang(id);
             setDetailBarang(detailBarang.barang);
             setPenitip(detailBarang.penitip);
+            const thumbnails = [
+                detailBarang.barang.foto_barang1,
+                detailBarang.barang.foto_barang2,
+                detailBarang.barang.foto_barang3
+            ];
+            setThumbnailGambar(thumbnails);
             setIsLoading(false);
         } catch (error) {
             console.error("Error fetching Detail Barang:", error);
@@ -352,7 +352,7 @@ const DetailBarangPage = () => {
                 </div>
             ) : (
                 <div>
-                    <DetailBarang detailBarang={detailBarang} />
+                    <DetailBarang detailBarang={detailBarang} gambar={thumbnailGambar} />
                     <hr />
                     <Toko penitip={penitip} />
                     <hr />

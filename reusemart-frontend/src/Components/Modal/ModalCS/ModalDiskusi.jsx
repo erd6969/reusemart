@@ -6,6 +6,12 @@ import profileImage from "../../../assets/images/Pembeli/Yuki.jpeg";
 import csProfileImage from "../../../assets/images/blank-profile-picture.jpg";
 import "./ModalDiskusi.css";
 
+import { getThumbnailBarang } from "../../../api";
+import { getThumbnailPembeli } from "../../../api";
+import { getThumbnailPegawai } from "../../../api";
+
+import { GetProfile } from "../../../api/apiPegawai";
+
 const ModalDiskusi = ({ show, onHide, id_barang }) => {
   const [detailBarang, setDetailBarang] = useState(null);
   const [diskusi, setDiskusi] = useState([]);
@@ -13,6 +19,8 @@ const ModalDiskusi = ({ show, onHide, id_barang }) => {
   const [loading, setLoading] = useState(true);
   const [posting, setPosting] = useState(false);
   const [error, setError] = useState(null);
+
+  const [profile, setProfile] = useState({});
 
   useEffect(() => {
     if (show && id_barang) {
@@ -50,6 +58,19 @@ const ModalDiskusi = ({ show, onHide, id_barang }) => {
     }
   };
 
+  useEffect(() => {
+      const showProfile = async () => {
+      try {
+          const data = await GetProfile();
+          setProfile(data);
+      } catch (error) {
+          console.error("Error fetching profile", error);
+      }
+      }
+
+      showProfile();
+  }, []);
+
   return (
     <Modal show={show} onHide={onHide} size="lg" centered scrollable>
       <Modal.Header closeButton className="modal-diskusi-header">
@@ -65,7 +86,7 @@ const ModalDiskusi = ({ show, onHide, id_barang }) => {
           <>
             <div className="modal-detail-barang-content">
               <img
-                src={detailBarang.gambar_barang}
+                src={getThumbnailBarang(detailBarang.foto_barang)}
                 alt="Barang"
                 className="modal-gambar-barang"
               />
@@ -99,7 +120,7 @@ const ModalDiskusi = ({ show, onHide, id_barang }) => {
               <Form onSubmit={handleSubmit}>
                 <div className="diskusi-input-container">
                   <img
-                    src={profileImage}
+                    src={getThumbnailPegawai(profile.foto_pegawai)}
                     alt="User Avatar"
                     className="diskusi-avatar"
                   />
@@ -136,7 +157,11 @@ const ModalDiskusi = ({ show, onHide, id_barang }) => {
                   <div key={i} className="diskusi-box">
                     <div className="d-flex align-items-start" style={{ gap: "10px" }}>
                       <img
-                        src={d.id_pembeli ? d.pembeli?.profil_pembeli : d.pegawai?.profil_pegawai || csProfileImage}
+                        src={
+                          d.id_pembeli
+                              ? getThumbnailPembeli(d.pembeli.foto_pembeli)
+                              : getThumbnailPegawai(d.pegawai.foto_pegawai)
+                        }
                         alt="User"
                         className="diskusi-avatar"
                       />

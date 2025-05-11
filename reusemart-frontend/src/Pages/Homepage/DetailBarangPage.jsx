@@ -9,28 +9,24 @@ import { useEffect, useState } from "react";
 import { GetDetailBarang } from "../../api/apiBarang";
 import CarouselDetail from "../../Components/Carousel/CarouselDetail";
 
-import yuki from "../../assets/images/Pembeli/Yuki.jpeg";
-import test from "../../assets/images/testcarousel.jpg";
-import chen from "../../assets/images/chen-quotes.jpeg";
-
 import { AddToCart } from "../../api/apiKeranjang";
 import { ShowDiskusi, CreateDiskusi } from "../../api/apiDiskusi";
+import { GetProfile } from "../../api/apiPembeli";
 import { useCart } from "../../Components/Context/CartContext";
 import { toast } from "react-toastify";
 
-const gambar = [chen, test, yuki];
+import { getThumbnailPembeli, getThumbnailPegawai, getThumbnailPenitip } from "../../api";
 
-const DetailBarang = ({ detailBarang }) => {
+const DetailBarang = ({ detailBarang, gambar }) => {
     const token = sessionStorage.getItem("token");
     const navigate = useNavigate();
     const { refreshCartCount } = useCart() || {};
 
-    const [gambarBarang] = useState([
+    const gambarBarang = [
         detailBarang.foto_barang,
-        detailBarang.foto_barang1,
         detailBarang.foto_barang2,
         detailBarang.foto_barang3
-    ]);
+    ];
 
     const handleAddToCart = async () => {
         try {
@@ -46,7 +42,7 @@ const DetailBarang = ({ detailBarang }) => {
     return (
         <Container className="detail-barang-container">
             <div className="item-image-container-barang">
-                <CarouselDetail gambar={gambar} />
+                <CarouselDetail gambar={gambarBarang} />
             </div>
 
             <div className="isi-detail-barang-container">
@@ -118,11 +114,11 @@ const Toko = ({ penitip }) => {
         <div className="toko-container">
             <div className="toko-info">
                 <div className="toko-image-container">
-                    <img src={gambarToko} alt="Toko" />
+                    <img src={getThumbnailPenitip(penitip.foto_penitip)} alt="Toko" />
                 </div>
                 <div className="toko-detail">
                     <h3><b>{penitip.nama_penitip}</b></h3>
-                    <button
+                    {/* <button
                         className="buy-button"
                         onClick={() => {
                             if (token) {
@@ -133,7 +129,7 @@ const Toko = ({ penitip }) => {
                         }}
                     >
                         <b>See Store</b>
-                    </button>
+                    </button> */}
                 </div>
             </div>
             <div className="rating-toko-container">
@@ -154,6 +150,7 @@ const Diskusi = () => {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
     const [isCommenting, setIsCommenting] = useState(false);
+    const [profile, setProfile] = useState({});
     const id = useParams().id_barang;
     const token = sessionStorage.getItem("token");
     const navigate = useNavigate();
@@ -172,6 +169,19 @@ const Diskusi = () => {
             setLoading(false);
         }
     };
+
+    useEffect(() => {
+        const showProfile = async () => {
+        try {
+            const data = await GetProfile();
+            setProfile(data);
+        } catch (error) {
+            console.error("Error fetching profile", error);
+        }
+        }
+
+        showProfile();
+    }, []);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -205,7 +215,7 @@ const Diskusi = () => {
             <Form onSubmit={handleSubmit}>
                 <div className="d-flex align-items-center">
                     <img
-                        src={profileImage}
+                        src={getThumbnailPembeli(profile.foto_pembeli)}
                         alt="User Avatar"
                         className="rounded-circle me-2"
                         style={{ width: 40, height: 40 }}
@@ -247,9 +257,9 @@ const Diskusi = () => {
                                     <img
                                         src={
                                             disc.id_pembeli
-                                                ? disc.pembeli?.profil_pembeli
-                                                : disc.pegawai?.profil_pegawai || csProfileImage
-                                        }
+                                                ? getThumbnailPembeli(disc.pembeli.foto_pembeli)
+                                                : getThumbnailPegawai(disc.pegawai.foto_pegawai)
+                                            }
                                         alt="User"
                                         className="rounded-circle"
                                         style={{
@@ -306,6 +316,7 @@ const Diskusi = () => {
 
 const DetailBarangPage = () => {
     const [detailBarang, setDetailBarang] = useState([]);
+    const [thumbnailGambar, setThumbnailGambar] = useState([]);
     const id = useParams().id_barang;
     const [penitip, setPenitip] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
@@ -315,6 +326,12 @@ const DetailBarangPage = () => {
             const detailBarang = await GetDetailBarang(id);
             setDetailBarang(detailBarang.barang);
             setPenitip(detailBarang.penitip);
+            const thumbnails = [
+                detailBarang.barang.foto_barang1,
+                detailBarang.barang.foto_barang2,
+                detailBarang.barang.foto_barang3
+            ];
+            setThumbnailGambar(thumbnails);
             setIsLoading(false);
         } catch (error) {
             console.error("Error fetching Detail Barang:", error);
@@ -352,7 +369,7 @@ const DetailBarangPage = () => {
                 </div>
             ) : (
                 <div>
-                    <DetailBarang detailBarang={detailBarang} />
+                    <DetailBarang detailBarang={detailBarang} gambar={thumbnailGambar} />
                     <hr />
                     <Toko penitip={penitip} />
                     <hr />

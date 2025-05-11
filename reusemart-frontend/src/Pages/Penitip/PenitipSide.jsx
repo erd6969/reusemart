@@ -6,7 +6,7 @@ import { ShowProfilePenitip } from "../../api/apiPenitip";
 import { useEffect, useState } from "react";
 import { useNavigate } from 'react-router-dom';
 
-import { getThumbnail } from "../../api/index";
+import { getThumbnailPenitip } from "../../api/index";
 
 const PenitipSide = () => {
     const [penitip, setPenitip] = useState(null);
@@ -30,7 +30,7 @@ const PenitipSide = () => {
     return (
         <div className="penitip-side-container">
             <div className='penitip-profile-container'>
-                <img src={getThumbnail(penitip.foto_penitip)} alt="Profile" />
+                <img src={getThumbnailPenitip(penitip.foto_penitip)} alt="Profile" />
                 <div>
                     <b style={{marginRight:"5px"}}>{penitip.nama_penitip}</b>  
                     {penitip.badge === 0 && <FaMedal color="#facc15" />}

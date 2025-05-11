@@ -29,7 +29,7 @@ class OrganisasiController
                 'foto_organisasi' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048'
             ]);
 
-            $foto_organisasi_path = 'blank-profile-picture.jpg';
+            $foto_organisasi_path = 'blank-organisasi-profile-picture.png';
 
             $organisasi = Organisasi::create([
                 'email_organisasi' => $request->email_organisasi,

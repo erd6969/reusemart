@@ -6,8 +6,32 @@ export const getThumbnail = (thumbnail) => {
     return `${BASE_URL}/storage/img/${thumbnail}`;
 }
 
-export const GetProfilePembeli = (thumbnail) => {
-    return `${BASE_URL}/storage/img/${thumbnail}`;
+export const getThumbnailPembeli = (thumbnail) => {
+    return `${BASE_URL}/storage/img/Pembeli/${thumbnail}`;
+}
+
+export const getThumbnailPenitip = (thumbnail) => {
+    return `${BASE_URL}/storage/img/Penitip/${thumbnail}`;
+}
+
+export const getThumbnailPegawai = (thumbnail) => {
+    return `${BASE_URL}/storage/img/Pegawai/${thumbnail}`;
+}
+
+export const getThumbnailOrganisasi = (thumbnail) => {
+    return `${BASE_URL}/storage/img/Organisasi/${thumbnail}`;
+}
+
+export const getThumbnailBarang = (thumbnail) => {
+    return `${BASE_URL}/storage/img/Barang/${thumbnail}`;
+}
+
+export const getThumbnailMerchandise = (thumbnail) => {
+    return `${BASE_URL}/storage/img/Merchandise/${thumbnail}`;
+}
+
+export const getThumbnailComponents = (thumbnail) => {
+    return `${BASE_URL}/storage/img/Components/${thumbnail}`;
 }
 
 export const GetProfilePenitip = (thumbnail) => {

@@ -7,14 +7,17 @@ import { ShowDiskusiByDate } from "../../api/apiDiskusi";
 import FotoProfil from "../../../src/assets/images/Pembeli/Yuki.jpeg";
 import ModalDiskusi from "../../Components/Modal/ModalCS/ModalDiskusi";
 
+import { GetProfile } from "../../api/apiPembeli";
+import { getThumbnailPembeli } from "../../api";
+
 const DiscussionBox = ({ diskusi, onClick }) => {
     return (
         <div className="cs-diskusi-container" onClick={() => onClick(diskusi.barang?.id_barang)}>
             <div className="cs-diskusi-header">
                 <div className="cs-diskusi-user">
-                    <img src={FotoProfil} alt="avatar" className="cs-diskusi-avatar" />
+                    <img src={getThumbnailPembeli(diskusi.pembeli?.foto_pembeli)} alt="avatar" className="cs-diskusi-avatar" />
                     <div className="cs-diskusi-user-info">
-                        <p className="cs-diskusi-nama">{diskusi.pembeli?.nama || "Nama Pembeli"}</p>
+                        <p className="cs-diskusi-nama">{diskusi.pembeli?.nama_pembeli || "Nama Pembeli"}</p>
                         <p className="cs-diskusi-produk">
                             Produk: <span className="cs-diskusi-produk-nama">{diskusi.barang?.nama_barang || "Nama Barang"}</span>
                         </p>

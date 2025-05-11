@@ -1,24 +1,23 @@
 import Carousel from 'react-bootstrap/Carousel';
-import yuki from "../../assets/images/Pembeli/Yuki.jpeg";
-import test from "../../assets/images/testcarousel.jpg";
-import dhiaz from "../../assets/images/Orang Palu.png";
 import "./CarouselDetail.css";
+import { getThumbnailBarang } from "../../api";
 
 function CarouselDetail({ gambar }) {
+  if (!Array.isArray(gambar)) return <p>Tidak ada gambar tersedia.</p>;
+
   return (
     <div className="carousel-detail">
-
       <Carousel>
-        {gambar.map((item) => (
-          <Carousel.Item >
-            <img src={item} alt="" className='carousel-image' />
-
+        {gambar.map((item, index) => (
+          console.log(getThumbnailBarang(item)),
+          <Carousel.Item key={index}>
+            <img src={getThumbnailBarang(item)} alt={`gambar-${index}`} className='carousel-image' />
           </Carousel.Item>
         ))}
-
       </Carousel>
-    </div >
+    </div>
   );
 }
+
 
 export default CarouselDetail;

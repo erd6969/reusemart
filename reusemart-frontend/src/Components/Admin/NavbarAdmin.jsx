@@ -1,15 +1,14 @@
 import { useNavigate } from "react-router-dom";
-import React, { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect } from "react";
 import { Navbar, Container, Spinner } from "react-bootstrap";
 import "../pembeli/NavbarPembeli.css";
 import "./NavbarAdmin.css";
-import profileImage from "../../assets/images/Pembeli/Yuki.jpeg";
 import logoReuseMart from "../../assets/images/logo-reusemart.png";
 import { FaChevronDown } from "react-icons/fa";
 import { Logout } from "../../api/apiAuth";
 
 import { GetProfile } from "../../api/apiPegawai";
-import { getThumbnail } from "../../api/index";
+import { getThumbnailPegawai } from "../../api/index";
 
 const TopNavbar = () => {
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
@@ -72,7 +71,7 @@ const TopNavbar = () => {
                     ) : (
                         <>
                             <div className="profileSection">
-                                <img src={getThumbnail(profile.foto_pegawai)} alt="profile" />
+                                <img src={getThumbnailPegawai(profile.foto_pegawai)} alt="profile" />
                                 <div className="profileName">{profile.nama_pegawai}</div>
                                 <FaChevronDown className="chevronIcon" />
                             </div>

@@ -5,7 +5,7 @@ import ProfileNavigation from "../../Components/Pembeli/ProfileHeader";
 import InputColumn from "../../Components/InputColumn";
 import { useState, useEffect } from "react";
 import { GetProfile } from "../../api/apiPembeli";
-import { getThumbnail } from "../../api/index";
+import { getThumbnailPembeli } from "../../api/index";
 
 
 const Poin = (profile) => {
@@ -107,7 +107,7 @@ const ProfilePembeli = () => {
         <div className="profile-left">
           {profile.foto_pembeli && (
             <FotoPembeli
-              Foto={getThumbnail(profile.foto_pembeli)}
+              Foto={getThumbnailPembeli(profile.foto_pembeli)}
               SubProp={
                 <>
                   {/* <label htmlFor="upload" className="button-profile">Pilih Gambar</label> */}

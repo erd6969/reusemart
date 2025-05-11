@@ -1,9 +1,10 @@
 import { useState } from "react";
-import { Container } from "react-bootstrap";
+import { Container, Spinner } from "react-bootstrap";
 import "./FotoPembeli.css";
 
 const FotoPembeli = ({ Foto, SubProp }) => {
   const [imagePreview, setImagePreview] = useState(Foto);
+  const [isLoading, setIsLoading] = useState(true);
 
   const handleImageChange = (e) => {
     const file = e.target.files[0];
@@ -11,6 +12,7 @@ const FotoPembeli = ({ Foto, SubProp }) => {
       const reader = new FileReader();
       reader.onloadend = () => {
         setImagePreview(reader.result);
+        setIsLoading(true);
       };
       reader.readAsDataURL(file);
     }
@@ -21,10 +23,18 @@ const FotoPembeli = ({ Foto, SubProp }) => {
       <br />
       <div className="foto-container">
         <div className="foto-pembeli">
+          {isLoading && (
+            <div className="foto-spinner">
+              <Spinner animation="border" variant="primary" />
+            </div>
+          )}
           <img
             src={imagePreview}
             alt="Foto Pembeli"
             className="profile-image"
+            style={{ display: isLoading ? "none" : "block" }}
+            onLoad={() => setIsLoading(false)}
+            onError={() => setIsLoading(false)}
           />
           {SubProp}
         </div>

@@ -8,7 +8,7 @@ import coin from "../../assets/images/coin-icon.png";
 import { FaChevronDown } from "react-icons/fa";
 import { Logout } from "../../api/apiAuth";
 import { ShowProfilePenitip } from "../../api/apiPenitip";
-import { GetProfilePenitip } from "../../api/index";
+import { getThumbnailPenitip } from "../../api/index";
 
 const TopNavbar = () => {
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
@@ -57,7 +57,7 @@ const TopNavbar = () => {
                     <div className="profileSection">
                         {penitip ? (
                             <img
-                                src={GetProfilePenitip(penitip.foto_penitip)}
+                                src={getThumbnailPenitip(penitip.foto_penitip)}
                                 alt="profile"
                             />
                         ) : (

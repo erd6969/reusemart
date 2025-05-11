@@ -21,7 +21,7 @@ class PegawaiController
                 'foto_pegawai' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048'
             ]);
 
-            $foto_pegawai_path = 'blank-profile-picture.jpg';
+            $foto_pegawai_path = 'blank-pegawai-profile-pict.png';
     
             $pegawai = pegawai::create([
                 'id_jabatan' => $request->id_jabatan,

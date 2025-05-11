@@ -28,7 +28,7 @@ class PembeliController
 
 
 
-            $foto_pembeli_path = 'blank-profile-picture.jpg';
+            $foto_pembeli_path = 'blank-pembeli-profile-picture.png';
      
              $pembeli = Pembeli::create([
                  'email_pembeli' => $request->email_pembeli,

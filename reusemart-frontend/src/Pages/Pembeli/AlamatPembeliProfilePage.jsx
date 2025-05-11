@@ -3,12 +3,14 @@ import { useState, useEffect } from "react";
 import "./AlamatPembeliProfilePage.css";
 import FotoPembeli from "../../Components/Pembeli/FotoPembeli";
 import ProfileNavigation from "../../Components/Pembeli/ProfileHeader";
-import profileImage from "../../assets/images/Pembeli/Yuki.jpeg";
 import SearchIcon from "../../assets/images/search-icon.png";
 import ModalTambahAlamat from "../../Components/Modal/ModalAlamat/ModalTambahAlamat";
 import ModalEditAlamat from "../../Components/Modal/ModalAlamat/ModalEditAlamat";
 
 import { GetAllAlamat, ChangeMainAlamat, SearchAlamat, DeleteAlamat } from "../../api/apiAlamat";
+import { GetProfile } from "../../api/apiPembeli";
+
+import { getThumbnailPembeli } from "../../api/index";
 
 const Poin = () => (
   <Container className="poin-container">
@@ -64,6 +66,7 @@ const AlamatPembeliPage = () => {
   const [selectedAlamat, setSelectedAlamat] = useState(null);
   const [searchQuery, setSearchQuery] = useState("");
   const [isFirstLoad, setIsFirstLoad] = useState(true);
+  const [profile, setProfile] = useState({});
 
   const fetchAlamat = () => {
     setIsLoading(true);
@@ -122,6 +125,19 @@ const AlamatPembeliPage = () => {
     }
   };
 
+  useEffect(() => {
+    const showProfile = async () => {
+      try {
+        const data = await GetProfile();
+        setProfile(data);
+      } catch (error) {
+        console.error("Error fetching profile", error);
+      }
+    }
+
+    showProfile();
+  }, []);
+
   return (
     <>
       <Container className="pembeli-container">
@@ -131,7 +147,12 @@ const AlamatPembeliPage = () => {
         />
         <div className="profile-content">
           <div className="profile-left">
-            <FotoPembeli Foto={profileImage} SubProp={<p className="nama-pembeli">Yuki Suou</p>} />
+            {profile.foto_pembeli && (
+            <FotoPembeli
+              Foto={getThumbnailPembeli(profile.foto_pembeli)}
+              SubProp={<p className="nama-pembeli">{profile.nama_pembeli}</p>} 
+            />
+          )}
             <Poin />
           </div>
           <div className="alamat-container">

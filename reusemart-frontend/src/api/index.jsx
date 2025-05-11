@@ -14,20 +14,8 @@ export const getThumbnailPenitip = (thumbnail) => {
     return `${BASE_URL}/storage/img/Penitip/${thumbnail}`;
 }
 
-export const getThumbnailOwner = (thumbnail) => {
-    return `${BASE_URL}/storage/img/Owner/${thumbnail}`;
-}
-
-export const getThumbnailAdmin = (thumbnail) => {
-    return `${BASE_URL}/storage/img/Admin/${thumbnail}`;
-}
-
-export const getThumbnailGudang = (thumbnail) => {
-    return `${BASE_URL}/storage/img/Gudang/${thumbnail}`;
-}
-
-export const getThumbnailCS = (thumbnail) => {
-    return `${BASE_URL}/storage/img/CS/${thumbnail}`;
+export const getThumbnailPegawai = (thumbnail) => {
+    return `${BASE_URL}/storage/img/Pegawai/${thumbnail}`;
 }
 
 export const getThumbnailOrganisasi = (thumbnail) => {
@@ -44,14 +32,6 @@ export const getThumbnailMerchandise = (thumbnail) => {
 
 export const getThumbnailComponents = (thumbnail) => {
     return `${BASE_URL}/storage/img/Components/${thumbnail}`;
-}
-
-
-
-
-
-export const GetProfilePembeli = (thumbnail) => {
-    return `${BASE_URL}/storage/img/${thumbnail}`;
 }
 
 export const GetProfilePenitip = (thumbnail) => {

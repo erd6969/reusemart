@@ -11,8 +11,11 @@ import CarouselDetail from "../../Components/Carousel/CarouselDetail";
 
 import { AddToCart } from "../../api/apiKeranjang";
 import { ShowDiskusi, CreateDiskusi } from "../../api/apiDiskusi";
+import { GetProfile } from "../../api/apiPembeli";
 import { useCart } from "../../Components/Context/CartContext";
 import { toast } from "react-toastify";
+
+import { getThumbnailPembeli, getThumbnailPegawai, getThumbnailPenitip } from "../../api";
 
 const DetailBarang = ({ detailBarang, gambar }) => {
     const token = sessionStorage.getItem("token");
@@ -111,11 +114,11 @@ const Toko = ({ penitip }) => {
         <div className="toko-container">
             <div className="toko-info">
                 <div className="toko-image-container">
-                    <img src={gambarToko} alt="Toko" />
+                    <img src={getThumbnailPenitip(penitip.foto_penitip)} alt="Toko" />
                 </div>
                 <div className="toko-detail">
                     <h3><b>{penitip.nama_penitip}</b></h3>
-                    <button
+                    {/* <button
                         className="buy-button"
                         onClick={() => {
                             if (token) {
@@ -126,7 +129,7 @@ const Toko = ({ penitip }) => {
                         }}
                     >
                         <b>See Store</b>
-                    </button>
+                    </button> */}
                 </div>
             </div>
             <div className="rating-toko-container">
@@ -147,6 +150,7 @@ const Diskusi = () => {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
     const [isCommenting, setIsCommenting] = useState(false);
+    const [profile, setProfile] = useState({});
     const id = useParams().id_barang;
     const token = sessionStorage.getItem("token");
     const navigate = useNavigate();
@@ -165,6 +169,19 @@ const Diskusi = () => {
             setLoading(false);
         }
     };
+
+    useEffect(() => {
+        const showProfile = async () => {
+        try {
+            const data = await GetProfile();
+            setProfile(data);
+        } catch (error) {
+            console.error("Error fetching profile", error);
+        }
+        }
+
+        showProfile();
+    }, []);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -198,7 +215,7 @@ const Diskusi = () => {
             <Form onSubmit={handleSubmit}>
                 <div className="d-flex align-items-center">
                     <img
-                        src={profileImage}
+                        src={getThumbnailPembeli(profile.foto_pembeli)}
                         alt="User Avatar"
                         className="rounded-circle me-2"
                         style={{ width: 40, height: 40 }}
@@ -240,9 +257,9 @@ const Diskusi = () => {
                                     <img
                                         src={
                                             disc.id_pembeli
-                                                ? disc.pembeli?.profil_pembeli
-                                                : disc.pegawai?.profil_pegawai || csProfileImage
-                                        }
+                                                ? getThumbnailPembeli(disc.pembeli.foto_pembeli)
+                                                : getThumbnailPegawai(disc.pegawai.foto_pegawai)
+                                            }
                                         alt="User"
                                         className="rounded-circle"
                                         style={{

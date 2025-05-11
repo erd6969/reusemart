@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Container } from "react-bootstrap";
 import "./FotoPenitip.css";
+import { getThumbnailPenitip } from "../../api/index";
 
 const FotoPenitip = ({ Foto }) => {
   const [imagePreview, setImagePreview] = useState(Foto);
@@ -8,10 +9,10 @@ const FotoPenitip = ({ Foto }) => {
   return (
     <Container>
       <br />
-      <div className="foto-container">
+      <div className="foto-container-penitip">
         <div className="foto-penitip">
           <img
-            src={imagePreview}
+            src={getThumbnailPenitip(imagePreview)}
             alt="Foto Penitip"
             className="profile-image"
           />

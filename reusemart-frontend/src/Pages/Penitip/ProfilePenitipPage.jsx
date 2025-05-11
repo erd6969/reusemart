@@ -38,7 +38,7 @@ const ProfilePenitip = () => {
       </div>
       <div className="profile-content">
         <div className="profile-left">
-          <FotoPenitip Foto={GetProfilePenitip(penitip.foto_penitip)} />
+          <FotoPenitip Foto={penitip.foto_penitip} />
           <div className="profile-details-container">
             <div className="left-details">
               <div className="detail-item">

@@ -7,7 +7,7 @@ import coin from "../../assets/images/coin-icon.png";
 import { FaShoppingCart, FaChevronDown } from "react-icons/fa";
 import { Logout } from "../../api/apiAuth";
 import { GetProfile } from "../../api/apiPembeli";
-import { getThumbnail } from "../../api/index";
+import { getThumbnailPembeli } from "../../api/index";
 import { useCart } from "../../Components/Context/CartContext";
 
 const TopNavbar = () => {
@@ -92,7 +92,7 @@ const TopNavbar = () => {
                         onClick={() => setIsDropdownOpen((prev) => !prev)}
                     >
                         <div className="profileSection">
-                            <img src={getThumbnail(profile.foto_pembeli)} alt="profile" />
+                            <img src={getThumbnailPembeli(profile.foto_pembeli)} alt="profile" />
                             <div className="profileName">{profile.nama_pembeli}</div>
                             <FaChevronDown className="chevronIcon" />
                         </div>

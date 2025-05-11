@@ -7,12 +7,10 @@ import {
     FaChevronDown, FaChevronRight, FaSearch
 } from 'react-icons/fa';
 import { data, useNavigate } from "react-router-dom";
-import image1 from "../assets/images/Pembeli/Yuki.jpeg";
-import image2 from "../assets/images/Orang Palu.png";
-import image3 from "../assets/images/Search.png";
-import "../Homepage/ShopPage.css";
+import image3 from "../../assets/images/Search.png";
+import "./ShopPage.css";
 
-import { GetAllBarang, GetAllBarangByCategory, SearchBarang } from "../api/apiBarang";
+import { GetAllBarang, GetAllBarangByCategory, SearchBarang } from "../../api/apiBarang";
 import { useEffect } from 'react';
 
 const kategori = [
@@ -144,7 +142,14 @@ const ItemList = ({ barang }) => {
                 height: "360px",
                 boxShadow: "0px 2px 5px 5px rgb(16, 78, 13)",
             }}
-            onClick={() => navigate(`/pembeli/detailBarang/${barang.id_barang}`)}
+            onClick={() => {
+                const token = sessionStorage.getItem("token");
+                if (token) {
+                    navigate(`/pembeli/detailBarang/${barang.id_barang}`);
+                } else {
+                    navigate(`/detailBarang/${barang.id_barang}`);
+                }
+            }}
         >
             <div
                 className="item-image-container"

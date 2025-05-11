@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import { Card, Form, Button, Spinner } from 'react-bootstrap';
 import './VerifyEmailPage.css';
-import TopsNavbar from "./NavbarLogin.jsx";
 import { ShoppingCart } from 'lucide-react';
 import { sendKonfirmasiEmail } from '../../api/apiAuth';
 
@@ -43,7 +42,6 @@ function VerifyEmailPage() {
 
     return (
         <div>
-            <TopsNavbar />
             <div className="verify-email-wrapper">
                 <Card className="p-3 verify-email-welcome" style={{ backgroundColor: '#347928', border: 'none' }}>
                     <p className='verify-email-welcome-text'>Welcome To</p>

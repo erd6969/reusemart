@@ -21,8 +21,9 @@ import { toast } from "react-toastify";
 const gambar = [chen, test, yuki];
 
 const DetailBarang = ({ detailBarang }) => {
+    const token = sessionStorage.getItem("token");
     const navigate = useNavigate();
-    const { refreshCartCount } = useCart();
+    const { refreshCartCount } = useCart() || {};
 
     const [gambarBarang] = useState([
         detailBarang.foto_barang,
@@ -75,7 +76,13 @@ const DetailBarang = ({ detailBarang }) => {
                     </div>
 
                     <div className="button-barang-container">
-                        <button className="cart-button" onClick={handleAddToCart}>
+                        <button className="cart-button" onClick={() => {
+                            if (token) {
+                                handleAddToCart();
+                            } else {
+                                navigate("/auth/login");
+                            }
+                        }}>
                             <b>Tambah ke Keranjang</b>
                         </button>
                         <button
@@ -104,6 +111,7 @@ const Rating = ({ jumlahBintang }) => (
 );
 
 const Toko = ({ penitip }) => {
+    const token = sessionStorage.getItem("token");
     const navigate = useNavigate();
 
     return (
@@ -116,7 +124,13 @@ const Toko = ({ penitip }) => {
                     <h3><b>{penitip.nama_penitip}</b></h3>
                     <button
                         className="buy-button"
-                        onClick={() => navigate("/pembeli/list-barang-penitip")}
+                        onClick={() => {
+                            if (token) {
+                                navigate("/pembeli/list-barang-penitip");
+                            } else {
+                                navigate("/list-barang-penitip");
+                            }
+                        }}
                     >
                         <b>See Store</b>
                     </button>
@@ -141,6 +155,8 @@ const Diskusi = () => {
     const [error, setError] = useState(null);
     const [isCommenting, setIsCommenting] = useState(false);
     const id = useParams().id_barang;
+    const token = sessionStorage.getItem("token");
+    const navigate = useNavigate();
 
     const fetchDiskusi = async () => {
         setLoading(true);
@@ -160,6 +176,12 @@ const Diskusi = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         if (!newComment.trim()) return;
+
+        if (!token) {
+            navigate("/auth/login");
+            return;
+        }
+
         try {
             setIsCommenting(true);
             await CreateDiskusi({ id_barang: id, diskusi: newComment });
@@ -172,6 +194,7 @@ const Diskusi = () => {
             setIsCommenting(false);
         }
     };
+
 
     useEffect(() => {
         fetchDiskusi();

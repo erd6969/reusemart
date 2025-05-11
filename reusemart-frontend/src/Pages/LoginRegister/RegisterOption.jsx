@@ -1,7 +1,6 @@
 import { useNavigate } from 'react-router-dom';
 import { Card } from 'react-bootstrap';
 import './RegisterOption.css';
-import TopsNavbar from "./NavbarLogin.jsx";
 import { ShoppingCart, Users, User } from 'lucide-react';
 
 const Option = () => {
@@ -24,7 +23,6 @@ const Option = () => {
 function RegisterOptionPage() {
     return (
         <div>
-            <TopsNavbar />
                 <div className="register-wrapper">
                     <Card className="p-3 register-welcome" style={{ backgroundColor: '#347928', border: 'none' }}>
                         <p className='register-welcome-text'>Welcome To</p>

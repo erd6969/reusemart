@@ -2,15 +2,9 @@ import useAxios from ".";
 
 export const ShowDiskusi = async (id) => {
     try {
-        const token = sessionStorage.getItem("token");
-        if (!token) {
-            throw new Error("Authorization token is missing.");
-        }
-
         const response = await useAxios.get(`/diskusi/${id}`, {
             headers: {
                 "Content-Type": "application/json",
-                Authorization: `Bearer ${token}`,
             },
         });
 

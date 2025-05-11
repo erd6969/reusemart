@@ -48,15 +48,15 @@ const TopNavbar = () => {
     return (
         <Navbar className="navBar">
             <Container fluid>
-                <div className="navLeft" onClick={() => navigate("/")}>
+                <div className="navLeft" onClick={() => navigate("/pembeli/home")}>
                     <img src={logoReuseMart} alt="logo" className="logoReuseMart" />
                     <Navbar.Brand className="navTitle">ReuseMart</Navbar.Brand>
                 </div>
 
                 <Nav className="navContent">
-                    <Nav.Link onClick={() => navigate("/home")}>Home</Nav.Link>
+                    <Nav.Link onClick={() => navigate("/pembeli/home")}>Home</Nav.Link>
                     <Nav.Link onClick={() => navigate("/pembeli/shop")}>Shop</Nav.Link>
-                    <Nav.Link onClick={() => navigate("/help")}>Help</Nav.Link>
+                    <Nav.Link onClick={() => navigate("/pembeli/help")}>Help</Nav.Link>
                 </Nav>
 
                 <div style={{ position: "relative" }}>

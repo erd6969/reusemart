@@ -8,11 +8,11 @@ import { GetProfile } from "../../api/apiPembeli";
 import { getThumbnail } from "../../api/index";
 
 
-const Poin = () => {
+const Poin = (profile) => {
   return (
     <Container className="poin-container">
       <b>Poin Loyalitas</b>
-      <p>119 Poin</p>
+      <p>{profile.poin_loyalitas ?? 0} Poin</p>
     </Container>
   );
 };
@@ -77,7 +77,7 @@ const InputDataPembeli = ({ profile }) => {
           value={formData.dateBirth}
           onChange={handleChange}
         />
-        <button type="submit" className="input-button"><b>Simpan</b></button>
+        {/* <button type="submit" className="input-button"><b>Simpan</b></button> */}
       </form>
     </Container>
   );
@@ -110,13 +110,12 @@ const ProfilePembeli = () => {
               Foto={getThumbnail(profile.foto_pembeli)}
               SubProp={
                 <>
-                  <label htmlFor="upload" className="button-profile">Pilih Gambar</label>
+                  {/* <label htmlFor="upload" className="button-profile">Pilih Gambar</label> */}
                 </>
               }
             />
           )}
-
-          <Poin />
+          <Poin profile={profile} />
         </div>
         <InputDataPembeli profile={profile} />
       </div>

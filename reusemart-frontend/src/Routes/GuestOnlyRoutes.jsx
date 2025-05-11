@@ -7,7 +7,7 @@ const GuestOnlyRoute = ({ children }) => {
     const navigate = useNavigate();
 
     useEffect(() => {
-        if (!token) {
+        if (token) {
             if (role === "pembeli") {
                 navigate("/pembeli/home");
             } else if (role === "penitip") {
@@ -23,6 +23,8 @@ const GuestOnlyRoute = ({ children }) => {
             } else if (role === "organisasi"){
                 navigate("/organisasi/request-donasi");
             }
+        }else{
+            
         }
     }, [token, navigate]);
 

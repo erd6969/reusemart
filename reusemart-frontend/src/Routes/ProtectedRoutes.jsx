@@ -32,7 +32,8 @@ const ProtectedRoutes = ({ children, allowedRoles }) => {
     }
   }, [navigate, allowedRoles]);
 
-  return isAllowed ? (children ? children : <Outlet />) : null;
+  // return isAllowed ? (children ? children : <Outlet />) : null;
+  return isAllowed ? <Outlet /> : null;
 };
 
 export default ProtectedRoutes;

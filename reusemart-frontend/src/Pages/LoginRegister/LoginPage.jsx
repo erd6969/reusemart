@@ -2,7 +2,6 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Card, Form, Button, Spinner } from 'react-bootstrap';
 import './LoginPage.css';
-import TopsNavbar from "./NavbarLogin.jsx";
 import { ShoppingCart } from 'lucide-react';
 import { Login } from '../../api/apiAuth';
 
@@ -53,7 +52,6 @@ function LoginPage() {
 
     return (
         <div>
-            <TopsNavbar />
             <div className="login-wrapper">
                 <Card className="p-3 login-welcome" style={{ backgroundColor: '#347928', border: 'none' }}>
                     <p className='login-welcome-text'>Welcome To</p>

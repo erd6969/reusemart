@@ -5,7 +5,7 @@ import { getThumbnail } from "../../../api/index";
 import { GetDetailBarang } from "../../../api/apiBarang";
 import { ShowDetailPendapatan } from "../../../api/apiPenitip";
 
-import '../../../Pages/Pembeli/DetailBarangPage.css';
+import '../../../Pages/Homepage/DetailBarangPage.css';
 
 import gambarBarang from "../../../assets/images/Pembeli/Yuki.jpeg";
 

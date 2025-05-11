@@ -1,5 +1,5 @@
 import { useNavigate, Outlet } from "react-router-dom";
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect } from "react";
 
 const ProtectedRoutes = ({ children, allowedRoles }) => {
   const navigate = useNavigate();
@@ -10,10 +10,21 @@ const ProtectedRoutes = ({ children, allowedRoles }) => {
     const role = sessionStorage.getItem("role");
 
     if (!token) {
-        navigate("/auth/login");
+      navigate("/auth/login");
     } else if (!allowedRoles.includes(role)) {
-      setIsAllowed(false);
-      navigate(-1);
+      if (role === "pembeli") {
+        navigate("/pembeli/home");
+      } else if (role === "penitip") {
+        navigate("/penitip/profile");
+      } else if (role === "owner") {
+        navigate("/owner/req-donasi");
+      } else if (role === "admin"){
+        navigate("/admin/admin-organisasi-master");
+      } else if (role === "gudang"){
+        navigate("/pegawai-gudang");
+      } else if (role === "cs"){
+        navigate("/customerservice/penitip-management");
+      }
     } else {
       setIsAllowed(true);
     }

@@ -2,7 +2,6 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Card, Form, Button} from 'react-bootstrap';
 import './RegisterBuyerPage.css';
-import TopsNavbar from "./NavbarLogin.jsx";
 import InputColumn from "../../Components/InputColumn";
 import { ShoppingCart } from 'lucide-react';
 
@@ -73,7 +72,6 @@ function RegisterOrganisasiPage() {
 
     return (
         <div>
-            <TopsNavbar />
             <div className="register-wrapper">
                 <Card className="p-3 register-welcome" style={{ backgroundColor: '#347928', border: 'none' }}>
                     <p className='register-welcome-text'>Welcome To</p>

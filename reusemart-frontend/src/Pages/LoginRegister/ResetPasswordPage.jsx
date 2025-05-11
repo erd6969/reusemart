@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { Card, Form, Button, Spinner } from 'react-bootstrap';
-import TopsNavbar from './NavbarLogin';
 import { ShoppingCart } from 'lucide-react';
 import './VerifyEmailPage.css';
 import { ResetPassword } from '../../api/apiAuth';
@@ -58,7 +57,6 @@ function ResetPasswordPage() {
 
     return (
         <div>
-            <TopsNavbar />
             <div className="login-wrapper">
                 <Card className="p-3 login-welcome" style={{ backgroundColor: '#347928', border: 'none' }}>
                     <p className='login-welcome-text'>Welcome To</p>

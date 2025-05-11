@@ -3,9 +3,12 @@ import { ToastContainer } from "react-toastify";
 import ProtectedRoutes from "../Routes/ProtectedRoutes";
 import GuestOnlyRoute from "../Routes/GuestOnlyRoutes";
 
+//Guess
+import GuestLayouts from "../Layouts/GuestLayouts";
+
 // Pages & Layouts
-import HomePage from "../Homepage/Homepage";
-import Home from "../Homepage/Home";
+import HomePage from "../Pages/Homepage/Homepage";
+import Home from "../Pages/Homepage/Home";
 import LoginPage from "../Pages/LoginRegister/LoginPage";
 import RegisterBuyerPage from "../Pages/LoginRegister/RegisterBuyerPage";
 import RegisterOption from "../Pages/LoginRegister/RegisterOption";
@@ -20,8 +23,8 @@ import ProfilePembeliPage from "../Pages/Pembeli/ProfilePembeliPage";
 import PembeliProductLayout from "../Layouts/PembeliContentLayouts";
 import AlamatPembeliPage from "../Pages/Pembeli/AlamatPembeliProfilePage";
 import PurchasePembeliPage from "../Pages/Pembeli/PurchasePembeliPage";
-import ShopPage from "../Homepage/ShopPage";
-import DetailBarangPage from "../Pages/Pembeli/DetailBarangPage";
+import ShopPage from "../Pages/Homepage/ShopPage";
+import DetailBarangPage from "../Pages/Homepage/DetailBarangPage";
 import ListBarangPenitipPage from "../Pages/Pembeli/ListBarangPenitipPage";
 import CartPage from "../Pages/Pembeli/CartPage";
 import CheckoutPage from "../Pages/Pembeli/CheckoutPage";
@@ -65,25 +68,26 @@ import ReqDonasiShowBarang from "../Pages/Owner/ReqDonasiShowBarang";
 const router = createBrowserRouter([
     {
         path: "/",
-        element: <HomePage />,
-    },
-    {
-        path: "/home",
-        element: <PembeliLayout />,
+        element: <GuestLayouts />,
         children: [
             {
-                path: "/home",
+                path: "",
                 element: <Home />,
             },
-        ],
-    },
-
-
-    {
-        path: "/auth",
-        children: [
             {
-                path: "login",
+                path: "shop",
+                element: <ShopPage />,
+            },
+            {
+                path: "detailBarang/:id_barang",
+                element: <DetailBarangPage />,
+            },
+            {
+                path: "list-barang-penitip",
+                element: <ListBarangPenitipPage />,
+            },
+            {
+                path: "auth/login",
                 element: (
                     <GuestOnlyRoute>
                         <LoginPage />
@@ -91,7 +95,7 @@ const router = createBrowserRouter([
                 ),
             },
             {
-                path: "register-buyer",
+                path: "auth/register-buyer",
                 element: (
                     <GuestOnlyRoute>
                         <RegisterBuyerPage />
@@ -99,7 +103,7 @@ const router = createBrowserRouter([
                 ),
             },
             {
-                path: "register-option",
+                path: "auth/register-option",
                 element: (
                     <GuestOnlyRoute>
                         <RegisterOption />
@@ -107,7 +111,7 @@ const router = createBrowserRouter([
                 ),
             },
             {
-                path: "register-organisasi",
+                path: "auth/register-organisasi",
                 element: (
                     <GuestOnlyRoute>
                         <RegisterOrganisasi />
@@ -115,7 +119,7 @@ const router = createBrowserRouter([
                 ),
             },
             {
-                path: "forgot-password",
+                path: "auth/forgot-password",
                 element: (
                     <GuestOnlyRoute>
                         <ForgotPassword />
@@ -123,7 +127,7 @@ const router = createBrowserRouter([
                 ),
             },
             {
-                path: "reset-password",
+                path: "auth/reset-password",
                 element: (
                     <GuestOnlyRoute>
                         <ResetPassword />
@@ -244,6 +248,10 @@ const router = createBrowserRouter([
             </ProtectedRoutes>
         ),
         children: [
+            {
+                path: "home",
+                element: <Home />,
+            },
             {
                 path: "profile",
                 element: <ProfilePembeliPage />,

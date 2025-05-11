@@ -1,8 +1,8 @@
 import { useState } from "react";
 import { Card } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
-import image3 from "../assets/images/Search.png";
-import CarouselHome from "../Components/Carousel/CarouselHome.jsx";
+import image3 from "../../assets/images/Search.png";
+import CarouselHome from "../../Components/Carousel/CarouselHome.jsx";
 import {
     FaSearch, FaEye, FaBullseye
 } from 'react-icons/fa';
@@ -10,16 +10,16 @@ import "./Home.css";
 import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
 
-import logo from "../assets/images/logohomehd.png";
-import burnice from "../assets/images/BurniceKicil.jpg";
-import benefit2 from "../assets/images/benefit2.png";
-import chen from "../assets/images/chen-quotes.jpeg";
-import benefit1 from "../assets/images/onkle.png";
+import logo from "../../assets/images/logohomehd.png";
+import burnice from "../../assets/images/BurniceKicil.jpg";
+import benefit2 from "../../assets/images/benefit2.png";
+import chen from "../../assets/images/chen-quotes.jpeg";
+import benefit1 from "../../assets/images/onkle.png";
 
-import yuki from "../assets/images/Pembeli/Yuki.jpeg";
-import test from "../assets/images/testcarousel.jpg";
+import yuki from "../../assets/images/Pembeli/Yuki.jpeg";
+import test from "../../assets/images/testcarousel.jpg";
 
-import dhiaz from "../assets/images/Orang Palu.png";
+import dhiaz from "../../assets/images/Orang Palu.png";
 const gambar = [
     chen,
     test,

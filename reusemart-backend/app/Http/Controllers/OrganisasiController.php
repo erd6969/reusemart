@@ -20,7 +20,7 @@ class OrganisasiController
     {
         try {
             $request->validate([
-                'email_organisasi' => 'required|email|unique:organisasi,email_organisasi',
+                'email_organisasi' => 'required|email|unique:organisasi,email_organisasi|unique:penitip,email_penitip|unique:pegawai,email_pegawai|unique:hunter,email_hunter|unique:pembeli,email_pembeli',
                 'password_organisasi' => 'required|min:8|same:konfirmasi_password_organisasi',
                 'konfirmasi_password_organisasi' => 'required',
                 'nama_organisasi' => 'required|string|max:255',

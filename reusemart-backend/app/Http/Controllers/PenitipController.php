@@ -24,7 +24,8 @@ class PenitipController
         try {
             // dd($request);
             $request->validate([
-                'email_penitip' => 'required|email|unique:penitip,email_penitip',
+                'email_penitip' => 'required|email|unique:penitip,email_penitip|unique:pegawai,email_pegawai
+                |unique:organisasi,email_organisasi|unique:hunter,email_hunter|unique:pembeli,email_pembeli',
                 'password_penitip' => 'required|min:8',
                 'nama_penitip' => 'required|string|max:255',
                 'nomor_telepon_penitip' => 'required|string|max:15',
@@ -32,6 +33,8 @@ class PenitipController
                 'NIK' => 'required|string|max:16|unique:penitip,NIK',
                 'foto_ktp' => 'required|image|mimes:jpeg,png,jpg,gif',
                 'foto_penitip' => 'nullable|image|mimes:jpeg,png,jpg,gif'
+            ],[
+                'NIK.unique' => 'NIK sudah terdaftar',
             ]);
 
 

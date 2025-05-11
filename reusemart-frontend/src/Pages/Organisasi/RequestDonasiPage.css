@@ -25,7 +25,7 @@
 
 .req-donasi-container {
     flex: 1;
-    padding: 20px;
+    padding: 5%;
     background-color: #fff;
 }
 
@@ -94,3 +94,32 @@
     object-fit: cover;
     border-radius: 5px;
 }
+
+@media (max-width: 768px) {
+    .req-donasi-container {
+        padding: 10px;
+    }
+    .req-donasi-content-container {
+        padding: 10px;
+    }
+    .req-donasi-table th,
+    .req-donasi-table td {
+        font-size: 14px;
+        padding: 8px;
+    }
+}
+
+@media (max-width: 480px) {
+    .req-donasi-container {
+        padding: 5px;
+    }
+    .req-donasi-content-container {
+        padding: 5px;
+    }
+    .req-donasi-table th,
+    .req-donasi-table td {
+        font-size: 12px;
+        padding: 6px;
+    }
+}
+

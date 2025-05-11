@@ -6,7 +6,7 @@ import { GetProfile} from "../../api/apiOrganisasi";
 import { useEffect, useState } from "react";
 import { useNavigate } from 'react-router-dom';
 
-import { getThumbnail } from "../../api/index";
+import { getThumbnailOrganisasi } from "../../api/index";
 
 const OrganisasiSide = () => {
     const [organisasi, setOrganisasi] = useState(null);
@@ -30,7 +30,7 @@ const OrganisasiSide = () => {
     return (
         <div className="organisasi-side-container">
             <div className='organisasi-profile-container'>
-                <img src={getThumbnail(organisasi.foto_organisasi)} alt="Profile" />
+                <img src={getThumbnailOrganisasi(organisasi.foto_organisasi)} alt="Profile" />
                 <div>
                     <b style={{marginRight:"5px"}}>{organisasi.nama_organisasi}</b>  
                 </div>

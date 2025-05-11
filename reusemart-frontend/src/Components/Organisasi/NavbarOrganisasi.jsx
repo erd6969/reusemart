@@ -6,7 +6,7 @@ import logoReuseMart from "../../assets/images/logo-reusemart.png";
 import { FaChevronDown } from "react-icons/fa";
 import { Logout } from "../../api/apiAuth";
 import { GetProfile } from "../../api/apiOrganisasi";
-import { getThumbnail } from "../../api/index";
+import { getThumbnailOrganisasi } from "../../api/index";
 
 const TopNavbar = () => {
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
@@ -55,7 +55,7 @@ const TopNavbar = () => {
                         <div className="profileSection">
                             {organisasi ? (
                                 <img
-                                    src={getThumbnail(organisasi.foto_organisasi)}
+                                    src={getThumbnailOrganisasi(organisasi.foto_organisasi)}
                                     alt="profile"
                                 />
                             ) : (

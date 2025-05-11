@@ -18,12 +18,14 @@ const ProtectedRoutes = ({ children, allowedRoles }) => {
         navigate("/penitip/profile");
       } else if (role === "owner") {
         navigate("/owner/req-donasi");
-      } else if (role === "admin"){
+      } else if (role === "admin") {
         navigate("/admin/admin-organisasi-master");
-      } else if (role === "gudang"){
+      } else if (role === "gudang") {
         navigate("/pegawai-gudang");
-      } else if (role === "cs"){
+      } else if (role === "cs") {
         navigate("/customerservice/penitip-management");
+      } else if (role === "organisasi") {
+        navigate("/organisasi/request-donasi");
       }
     } else {
       setIsAllowed(true);

@@ -15,7 +15,7 @@ class PembeliController
     {
         try {
             $request->validate([
-                'email_pembeli' => 'required|email|unique:pembeli,email_pembeli',
+                'email_pembeli' => 'required|email|unique:pembeli,email_pembeli|unique:penitip,email_penitip|unique:pegawai,email_pegawai|unique:organisasi,email_organisasi',
                  'password_pembeli' => 'required|min:8',
                  'konfirmasi_password_pembeli' => 'required|same:password_pembeli',
                  'nama_pembeli' => 'required|string|max:255',
@@ -23,6 +23,10 @@ class PembeliController
                  'tanggal_lahir_pembeli' => 'required|date',
                  'foto_pembeli' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048'
             ]);
+            
+
+
+
 
             $foto_pembeli_path = 'blank-profile-picture.jpg';
      

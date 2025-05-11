@@ -42,6 +42,7 @@
 }
 
 .search-bar-hstry {
+    width: 100%;
     display: flex;
     align-items: center;
     border: 1px solid #ccc;

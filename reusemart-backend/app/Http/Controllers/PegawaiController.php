@@ -14,7 +14,7 @@ class PegawaiController
         try {
             $request->validate([
                 'id_jabatan' => 'required|integer|max:5',
-                'email_pegawai' => 'required|email|unique:pegawai,email_pegawai',
+                'email_pegawai' => 'required|email|unique:pegawai,email_pegawai|unique:penitip,email_penitip|unique:organisasi,email_organisasi|unique:hunter,email_hunter|unique:pembeli,email_pembeli',
                 'password_pegawai' => 'required|min:8',
                 'nama_pegawai' => 'required|string|max:255',
                 'tanggal_lahir' => 'required|date',

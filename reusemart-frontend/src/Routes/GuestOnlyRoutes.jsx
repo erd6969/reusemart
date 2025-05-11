@@ -7,7 +7,7 @@ const GuestOnlyRoute = ({ children }) => {
     const navigate = useNavigate();
 
     useEffect(() => {
-        if (token !== null) {
+        if (!token) {
             if (role === "pembeli") {
                 navigate("/pembeli/home");
             } else if (role === "penitip") {
@@ -20,9 +20,9 @@ const GuestOnlyRoute = ({ children }) => {
                 navigate("/pegawai-gudang");
             } else if (role === "cs"){
                 navigate("/customerservice/penitip-management");
+            } else if (role === "organisasi"){
+                navigate("/organisasi/request-donasi");
             }
-        }else{
-            navigate("/auth/login");
         }
     }, [token, navigate]);
 

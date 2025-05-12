@@ -265,6 +265,8 @@ function CategorySection({ categoryNameSelect }) {
                 height: "100vh",
                 width: "300px",
                 overflowX: "hidden",
+                position: "sticky",
+                top: 0,
             }}
         >
 

@@ -1,4 +1,4 @@
-import './AdminMasterOrganisasiPage.css';
+import './AdminMasterPegawaiPage.css';
 import InputColumn from '../../Components/InputColumn';
 import { Container, Button, Spinner } from 'react-bootstrap';
 import { useEffect, useState } from 'react';
@@ -136,40 +136,13 @@ const AdminMasterOrganisasiPage = () => {
                                         <td>{org.nomor_telepon_organisasi}</td>
                                         <td>{org.email_organisasi}</td>
                                         <td className="actionButtons">
-                                        <Button
-                                            variant="warning"
-                                            onClick={() => handleEdit(org)}
-                                            style={{
-                                                height: '35px',
-                                                width: '60px',
-                                                fontSize: '14px',
-                                                fontWeight: 600,
-                                                display: 'flex',
-                                                alignItems: 'center',
-                                                justifyContent: 'center',
-                                                padding: 0,
-                                            }}
-                                        >
+                                        <Button variant="warning" onClick={() => handleEdit(org)}>
                                             Edit
                                         </Button>
 
-                                        <Button
-                                            variant="danger"
-                                            onClick={() => handleDelete(org.id_organisasi)}
-                                            style={{
-                                                height: '35px',
-                                                width: '65px',
-                                                fontSize: '14px',
-                                                fontWeight: 600,
-                                                display: 'flex',
-                                                alignItems: 'center',
-                                                justifyContent: 'center',
-                                                padding: 0,
-                                            }}
-                                        >
+                                        <Button variant="danger" onClick={() => handleDelete(org.id_organisasi)}>
                                             Delete
                                         </Button>
-
                                         </td>
                                     </tr>
                                 ))

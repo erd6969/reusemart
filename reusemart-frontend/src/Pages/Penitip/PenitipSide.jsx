@@ -33,7 +33,7 @@ const PenitipSide = () => {
                 <img src={getThumbnailPenitip(penitip.foto_penitip)} alt="Profile" />
                 <div>
                     <b style={{marginRight:"5px"}}>{penitip.nama_penitip}</b>  
-                    {penitip.badge === 0 && <FaMedal color="#facc15" />}
+                    {penitip.badge === 1 && <FaMedal color="#facc15" />}
                 </div>
             </div>
             <hr />

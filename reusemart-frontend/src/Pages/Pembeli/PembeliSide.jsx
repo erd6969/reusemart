@@ -6,7 +6,7 @@ import { GetProfile} from "../../api/apiPembeli";
 import { useEffect, useState } from "react";
 import { useNavigate } from 'react-router-dom';
 
-import { getThumbnail } from "../../api/index";
+import { getThumbnailPembeli } from "../../api/index";
 
 const PembeliSide = () => {
     const [pembeli, setPembeli] = useState(null);
@@ -30,7 +30,7 @@ const PembeliSide = () => {
     return (
         <div className="pembeli-side-container">
             <div className='pembeli-profile-container'>
-                <img src={getThumbnail(pembeli.foto_pembeli)} alt="Profile" />
+                <img src={getThumbnailPembeli(pembeli.foto_pembeli)} alt="Profile" />
                 <div>
                     <b style={{marginRight:"5px"}}>{pembeli.nama_pembeli}</b>  
                 </div>

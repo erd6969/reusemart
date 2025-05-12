@@ -187,7 +187,7 @@ class OrganisasiController
 
             if ($request->hasFile('foto_organisasi')) {
                 $image = $request->file('foto_organisasi');
-                $uploadFolder = 'img';
+                $uploadFolder = 'img/Organisasi';
                 $image_uploaded_path = $image->store($uploadFolder, 'public');
                 $uploadedImageResponse = basename($image_uploaded_path);
 

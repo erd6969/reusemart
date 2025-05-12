@@ -175,27 +175,33 @@ class AlamatController
             $user = Auth::user();
             if (!$user) {
                 return response()->json([
-                    'message' => 'User not authenticated or invalid token',
+                    'message' => 'User Tidak Terautentikasi atau Token Tidak Valid',
                 ], 401);
             }
 
             $alamat = Alamat::find($id_alamat);
             if (!$alamat) {
                 return response()->json([
-                    'message' => 'Address not found',
+                    'message' => 'Alamat tidak ditemukan',
                 ], 404);
             }
 
             if ($alamat->id_pembeli !== $user->id_pembeli) {
                 return response()->json([
-                    'message' => 'You are not authorized to delete this address.',
+                    'message' => 'Anda tidak berwenang untuk menghapus alamat ini.',
                 ], 403);
-            } 
+            }
+
+            if ($alamat->alamat_utama == 1) {
+                return response()->json([
+                    'message' => 'Tidak dapat menghapus alamat utama.',
+                ], 403);
+            }
 
             $alamat->delete();
 
             return response()->json([
-                'message' => 'Address deleted successfully',
+                'message' => 'Alamat berhasil dihapus',
             ], 200);
 
         } catch (\Exception $e) {

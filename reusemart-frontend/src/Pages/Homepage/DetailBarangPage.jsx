@@ -1,7 +1,5 @@
 import { Container, Row, Col, Form, Button, FloatingLabel, Spinner } from "react-bootstrap";
-import gambarToko from "../../assets/images/BurniceKicil.jpg";
-import profileImage from "../../assets/images/Pembeli/Yuki.jpeg";
-import csProfileImage from "../../assets/images/blank-profile-picture.jpg";
+import profileImage from "../../assets/images/blank-pembeli-profile-picture.png";
 import "./DetailBarangPage.css";
 import { FaStar } from "react-icons/fa";
 import { useNavigate, useParams } from "react-router-dom";
@@ -225,7 +223,11 @@ const Diskusi = () => {
             <Form onSubmit={handleSubmit}>
                 <div className="d-flex align-items-center">
                     <img
-                        src={getThumbnailPembeli(profile.foto_pembeli)}
+                        src={
+                            profile.foto_pembeli
+                            ? getThumbnailPembeli(profile.foto_pembeli)
+                            : profileImage
+                        }
                         alt="User Avatar"
                         className="rounded-circle me-2"
                         style={{ width: 40, height: 40 }}

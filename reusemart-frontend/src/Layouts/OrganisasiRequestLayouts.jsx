@@ -3,6 +3,7 @@ import { Container } from "react-bootstrap";
 
 import SideOrganisasi from "../Pages/Organisasi/OrganisasiSide";
 import TopNavbar from "../Components/Organisasi/NavbarOrganisasi.jsx";
+import Footer from "../Components/Footer.jsx";
 
 const MainLayout = () => {
     return (
@@ -17,6 +18,7 @@ const MainLayout = () => {
                     </div>
                 </div>
             </Container>
+            <Footer />
         </div>
     );
 }

@@ -8,7 +8,7 @@ import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 
 import { ShowHistoryPurchase } from "../../api/apiPembeli";
-import { getThumbnail } from "../../api/index";
+import { getThumbnailBarang } from "../../api/index";
 
 const PurchasePembeliPage = () => {
     const [historyPurchase, setHistoryPurchase] = useState([]);
@@ -148,7 +148,7 @@ const PurchasePembeliPage = () => {
                                         return (
                                             <tr key={index} style={{ cursor: 'pointer' }}>
                                                 <td className="product-info">
-                                                    <img src={getThumbnail(history.foto_barang) || defaultImage} alt={history.nama_barang} />
+                                                    <img src={getThumbnailBarang(history.foto_barang) || defaultImage} alt={history.nama_barang} />
                                                     <b>{history.nama_barang}</b>
                                                 </td>
                                                 <td>Rp{history.harga_barang?.toLocaleString('id-ID') || '-'}</td>
@@ -203,7 +203,7 @@ function MyVerticallyCenteredModal({ show, onHide, product }) {
             <Modal.Body>
                 <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', gap: '20px' }}>
                     <img
-                        src={getThumbnail(product.foto_barang) || defaultImage}
+                        src={getThumbnailBarang(product.foto_barang) || defaultImage}
                         alt={product.nama_barang}
                         style={{ maxWidth: "30%" }}
                     />

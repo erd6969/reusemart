@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Container, Spinner } from "react-bootstrap";
 import "./FotoPembeli.css";
+import profileImage from "../../assets/images/blank-pembeli-profile-picture.png";
 
 const FotoPembeli = ({ Foto, SubProp }) => {
   const [imagePreview, setImagePreview] = useState(Foto);

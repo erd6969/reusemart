@@ -9,7 +9,6 @@ import { UpdateRequestDanTransaksiDonasi } from "../../../api/apiRequestDonasi";
 import { data, useNavigate } from "react-router-dom";
 import { Form } from "react-bootstrap";
 
-import { getThumbnailOrganisasi } from "../../../api/index";
 
 const ModalEditTransaksiDonasi = ({ show, handleClose, dataDetail, onSuccess }) => {
     const [formData, setFormData] = useState({

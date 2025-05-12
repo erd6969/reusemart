@@ -8,8 +8,6 @@ import { RejectRequestDonasi, ShowRequestDonasiByIdBarang } from "../../../api/a
 import ModalFormTransaksiDonasi from './ModalFormTransaksiDonasi';
 import { data, useNavigate } from "react-router-dom";
 
-import { getThumbnailOrganisasi } from "../../../api/index";
-
 const ModalDetailRequestDonasi = ({ show, handleClose, dataDetail,  onSuccess, onAccept }) => {
     const [formData, setFormData] = useState({
         id_request_donasi: 0,

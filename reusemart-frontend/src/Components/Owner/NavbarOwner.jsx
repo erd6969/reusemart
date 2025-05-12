@@ -1,6 +1,5 @@
 import { data, useNavigate } from "react-router-dom";
 import React, { useState, useRef, useEffect } from "react";
-import { getThumbnailPegawai } from "../../api";
 import { Navbar, Container, Nav, Spinner } from "react-bootstrap";
 import "../pembeli/NavbarPembeli.css";
 import "./NavbarOwner.css";
@@ -9,8 +8,6 @@ import logoReuseMart from "../../assets/images/logo-reusemart.png";
 import coin from "../../assets/images/coin-icon.png";
 import { FaShoppingCart, FaChevronDown, FaBars, FaTimes } from "react-icons/fa";
 import { Logout } from "../../api/apiAuth";
-import { GetProfile } from "../../api/apiPegawai";
-
 import { GetProfile } from "../../api/apiPegawai";
 import { getThumbnailPegawai } from "../../api/index";
 

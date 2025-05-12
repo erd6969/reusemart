@@ -19,12 +19,31 @@ import benefit1 from "../../assets/images/onkle.png";
 import yuki from "../../assets/images/Pembeli/Yuki.jpeg";
 import test from "../../assets/images/testcarousel.jpg";
 
-import dhiaz from "../../assets/images/Orang Palu.png";
+import Gudang from "../../assets/images/pegawai gudang.jpeg";
+import kurir from "../../assets/images/kurir.webp";
+import deal from "../../assets/images/deal.png";
+import barangBekas from "../../assets/images/barangbekas.jpg";
+import ambilbarang from "../../assets/images/ambilbarang.png";
+
 const gambar = [
-    chen,
-    test,
-    yuki,
+    {
+        image: barangBekas,
+        caption: "Leave your used goods, let us sell them!",
+    },
+    {
+        image: deal,
+        caption: "Profit when you sell, save when you buy!",
+    },
+    {
+        image: Gudang,
+        caption: "We check every item before selling!",
+    },
+    {
+        image: kurir,
+        caption: "Our courier is ready to deliver goods to your location!",
+    }
 ]
+
 
 const Home = () => {
     const [count, setCount] = useState(0);
@@ -33,64 +52,7 @@ const Home = () => {
     const navigate = useNavigate();
     return (
         <>
-            <div
-                className="search-container"
-                style={{
-                    position: "absolute",
-                    top: "30%",
-                    left: "23.5%",
-                    zIndex: 1,
-                }}
-            >
-                <Card className="bg-dark text-white" >
-                    <Card.Img src={image3} alt="Card image" style={{
-                        height: "35vh",
-                        width: "55vw",
-                        objectFit: "cover"
-                    }} />
-                    <Card.ImgOverlay
-                        style={{
-                            display: "flex",
-                            flexDirection: "column",
-                            justifyContent: "flex-end",
-                            alignItems: "start",
-                            paddingBottom: "1vh",
-                            paddingLeft: "2vw",
-                            width: "100%",
-                        }}
-                    >
-                        <div className="search-container"
-                            style={{
-                                marginBottom: "3vh",
-                                display: "flex",
-                                alignItems: "center",
-                                backgroundColor: "white",
-                                padding: "2vh 1vw",
-                                borderRadius: "30vw",
-                                width: "30vw",
-                                height: "5vh",
-                                boxShadow: "0 4px 6px rgba(0,0,0,0.1)"
-                            }}>
-                            <FaSearch style={{ color: "#777", marginRight: "1vw", fontSize: "10vh" }} />
-                            <input
-                                type="text"
-                                placeholder="Search for an item"
-                                style={{
-                                    width: "100vw",
-                                    height: "20vh",
-                                    border: "none",
-                                    outline: "none",
-                                    fontSize: "2vh",
-                                    backgroundColor: "transparent",
-                                }}
-                                value={searchQuery}
-                                onChange={(e) => setSearchQuery(e.target.value)}
-                            />
-                        </div>
-                    </Card.ImgOverlay>
-
-                </Card>
-            </div>
+            
             {/* Carousel */}
             <CarouselHome className="w-full" gambar={gambar} />
 
@@ -139,7 +101,7 @@ const Home = () => {
             <div style={{marginBottom: "30vh"}}>
 
                 <Swiper
-                    spaceBetween={50}
+                    spaceBetween={0}
                     slidesPerView={2}
                     loop={true}
                     onSlideChange={() => console.log('slide change')}
@@ -148,7 +110,7 @@ const Home = () => {
                 >
                     <SwiperSlide className="swiper-slide"><img src={benefit1} className="img-swiper" /></SwiperSlide>
                     <SwiperSlide className="swiper-slide"><img src={benefit2} className="img-swiper" /></SwiperSlide>
-                    <SwiperSlide className="swiper-slide"><img src={chen} className="img-swiper" /></SwiperSlide>
+                    <SwiperSlide className="swiper-slide"><img src={ambilbarang} className="img-swiper" /></SwiperSlide>
                 </Swiper>
             </div>
 

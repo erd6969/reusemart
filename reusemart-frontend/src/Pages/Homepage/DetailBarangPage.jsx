@@ -21,6 +21,8 @@ const DetailBarang = ({ detailBarang, gambar }) => {
     const token = sessionStorage.getItem("token");
     const navigate = useNavigate();
     const { refreshCartCount } = useCart() || {};
+    const today = new Date();
+    const formatted = today.toISOString().split('T')[0];
 
     const gambarBarang = [
         detailBarang.foto_barang,
@@ -68,6 +70,14 @@ const DetailBarang = ({ detailBarang, gambar }) => {
                         <div className="colon">:</div>
                         <div className="isi-kondisi">
                             <p>{detailBarang.kondisi_barang}</p>
+                        </div>
+                    </div>
+
+                    <div className="label-colon-align">
+                        <div className="label">Garansi</div>
+                        <div className="colon">:</div>
+                        <div className="isi-kondisi">
+                            <p>{detailBarang.tanggal_garansi ? (formatted > detailBarang.tanggal_garansi ? 'Tanggal Garansi Sudah Lewat yaitu ' + detailBarang.tanggal_garansi : detailBarang.tanggal_garansi) : 'Tidak Punya Garansi'}</p>
                         </div>
                     </div>
 
@@ -325,6 +335,7 @@ const DetailBarangPage = () => {
         try {
             const detailBarang = await GetDetailBarang(id);
             setDetailBarang(detailBarang.barang);
+            console.log("Detail Barang:", detailBarang);
             setPenitip(detailBarang.penitip);
             const thumbnails = [
                 detailBarang.barang.foto_barang1,

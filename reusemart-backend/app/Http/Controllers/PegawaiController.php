@@ -6,6 +6,8 @@ use App\Models\Pegawai;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\ValidationException;
 
 class PegawaiController
@@ -18,10 +20,19 @@ class PegawaiController
                 'password_pegawai' => 'required|min:8',
                 'nama_pegawai' => 'required|string|max:255',
                 'tanggal_lahir' => 'required|date',
-                'foto_pegawai' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048'
+                'foto_pegawai' => 'nullable|image|mimes:jpeg,png,jpg,gif'
             ]);
 
             $foto_pegawai_path = 'blank-pegawai-profile-pict.png';
+
+            if ($request->hasFile('foto_pegawai')) {
+                $file = $request->file('foto_pegawai');
+                $filename = uniqid() . '.' . $file->getClientOriginalExtension();
+                $file->storeAs('img/Pegawai', $filename, 'public');
+                $foto_pegawai = $filename; 
+            } else {
+                $foto_pegawai = $foto_pegawai_path;
+            }
     
             $pegawai = pegawai::create([
                 'id_jabatan' => $request->id_jabatan,
@@ -29,7 +40,7 @@ class PegawaiController
                 'password_pegawai' => Hash::make($request->password_pegawai),
                 'nama_pegawai' => $request->nama_pegawai,
                 'tanggal_lahir' => $request->tanggal_lahir,
-                'foto_pegawai' => $foto_pegawai_path,
+                'foto_pegawai' => $foto_pegawai,
             ]);
     
             return response()->json([
@@ -144,22 +155,22 @@ class PegawaiController
                 'nama_pegawai' => 'required|string|max:255',
                 'tanggal_lahir' => 'required|string|max:15',
                 'id_jabatan' => 'required|integer|max:5',
-                'password_pegawai' => 'nullable|min:8',
-                'foto_pegawai' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048'
+                'foto_pegawai' => 'nullable|image|mimes:jpeg,png,jpg,gif'
             ]);
-            Log::info($request->all());
-    
+
+            
             $updateData = [
                 'email_pegawai' => $validatedData['email_pegawai'],
                 'nama_pegawai' => $validatedData['nama_pegawai'],
                 'tanggal_lahir' => $validatedData['tanggal_lahir'],
                 'id_jabatan' => $validatedData['id_jabatan'],
-                'password_pegawai' => $validatedData['password_pegawai'] ? Hash::make($validatedData['password_pegawai']) : $pegawai->password_pegawai,
             ];
-    
+            
+            Log::info($request->all());
+
             if ($request->hasFile('foto_pegawai')) {
                 $image = $request->file('foto_pegawai');
-                $uploadFolder = 'img';
+                $uploadFolder = 'img/Pegawai';
                 $image_uploaded_path = $image->store($uploadFolder, 'public');
                 $uploadedImageResponse = basename($image_uploaded_path);
     

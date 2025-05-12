@@ -128,22 +128,14 @@ const ModalCreatePegawai = ({ show, handleClose, onSuccess }) => {
                 <Container className="modal-body">
                     <form onSubmit={handleSubmit}>
                         <div className="image-container text-center">
-                            {formData.foto_pegawai && !selectedImage && (
-                                <div className="existing-image">
-                                    <img
-                                        src={getThumbnail(formData.foto_pegawai)}
-                                        alt="Existing Pegawai Foto"
-                                        className="img-thumbnail"
-                                    />
-                                </div>
-                            )}
-
+                            
                             {selectedImage && (
                                 <div className="image-preview">
                                     <img
                                         src={selectedImage}
                                         alt="Selected"
                                         className="img-thumbnail"
+                                        style={{ width: "200px", height: "200px" }}
                                     />
                                 </div>
                             )}
@@ -177,7 +169,7 @@ const ModalCreatePegawai = ({ show, handleClose, onSuccess }) => {
                         <InputColumn
                             nameLabel="tanggal_lahir"
                             contentLabel="Tanggal Lahir"
-                            typeInput="text"
+                            typeInput="date"
                             idInput="tanggal_lahir"
                             placeholderInput="Masukkan Alamat Pegawai..."
                             value={formData.tanggal_lahir}

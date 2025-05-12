@@ -8,6 +8,7 @@ import { Spinner } from "react-bootstrap";
 import { ShowAllJabatan } from "../../../api/apiJabatan";
 import Dropdown from 'react-bootstrap/Dropdown';
 import DropdownButton from 'react-bootstrap/DropdownButton';
+import { getThumbnailPegawai } from "../../../api/index";
 
 const ModalEditPegawai = ({ show, handleClose, dataEdit, onSuccess }) => {
     const [formData, setFormData] = useState({
@@ -143,8 +144,9 @@ const ModalEditPegawai = ({ show, handleClose, dataEdit, onSuccess }) => {
                             {formData.foto_pegawai && !selectedImage && (
                                 <div className="existing-image">
                                     <img
-                                        src={getThumbnail(formData.foto_pegawai)}
+                                        src={getThumbnailPegawai(formData.foto_pegawai)}
                                         alt="Existing Pegawai Foto"
+                                        style={{ width: "200px", height: "200px" }}
                                         className="img-thumbnail"
                                     />
                                 </div>
@@ -156,6 +158,7 @@ const ModalEditPegawai = ({ show, handleClose, dataEdit, onSuccess }) => {
                                         src={selectedImage}
                                         alt="Selected"
                                         className="img-thumbnail"
+                                        style={{ width: "200px", height: "200px" }}
                                     />
                                 </div>
                             )}

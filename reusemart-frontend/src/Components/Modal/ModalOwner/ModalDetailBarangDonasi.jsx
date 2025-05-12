@@ -1,4 +1,4 @@
-import { getThumbnail } from "../../../api/index";
+import { getThumbnailBarang } from "../../../api/index";
 import { Modal, Container, Button } from "react-bootstrap";
 import { useState, useEffect } from 'react';
 import ShowColumn from "../../ShowColumn";
@@ -108,8 +108,9 @@ const ModalDetailBarangDonasi = ({ show, handleClose, dataBarang,  onSuccess, da
                             {formData.foto_barang && (
                                 <div className="existing-image">
                                     <img
-                                        src={getThumbnail(formData.foto_barang)}
+                                        src={getThumbnailBarang(formData.foto_barang)}
                                         alt="Gambar belum hehe"
+                                        style={{ width: "200px", height: "200px" }}
                                         className="img-thumbnail" />
                                 </div>
                             )}

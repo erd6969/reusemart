@@ -8,6 +8,8 @@ use App\Models\Barang;
 use App\Models\Organisasi;
 use App\Models\TransaksiDonasi;
 use App\Models\DetailTransaksiPenitipan;
+use App\Models\Penitip;
+use App\Models\TransaksiPenitipan;
 use Illuminate\Support\Facades\DB;
 
 
@@ -158,6 +160,15 @@ class RequestDonasiController
             $detail_transaksi_penitipan = DetailTransaksiPenitipan::findOrFail($transaksi_donasi->id_barang);
             $detail_transaksi_penitipan->status_penitipan = "Didonasikan";
             $detail_transaksi_penitipan->save();
+
+            $barang = Barang::findOrFail($detail_transaksi_penitipan->id_barang);
+            $harga_barang = $barang->harga_barang;
+
+            $transaksi_penitipan = TransaksiPenitipan::findOrFail($detail_transaksi_penitipan->id_transaksi_penitipan);
+
+            $penitip = Penitip::findOrFail($transaksi_penitipan->id_penitip);
+            $penitip->poin_loyalitas = $penitip->poin_loyalitas + $harga_barang/10000;
+            $penitip->save(); 
 
             return response()->json([
                 'message' => 'Request Donasi accepted and Transaksi Donasi created',

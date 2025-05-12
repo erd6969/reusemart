@@ -6,9 +6,9 @@ function Laporan() {
     const navigate = useNavigate();
     return (
         <Card style={{marginRight:'10vw'}}>
-            <Card.Header as="h5">babi</Card.Header>
+            <Card.Header as="h5">laporan</Card.Header>
             <Card.Body>
-                namaku babi suka babi
+                ajikijai
                 <inputCol/>
             </Card.Body>
         </Card>

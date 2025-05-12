@@ -1,4 +1,4 @@
-import { getThumbnail } from "../../../api/index";
+import { getThumbnailOrganisasi } from "../../../api/index";
 import { Modal, Container, Button } from "react-bootstrap";
 import { useState, useEffect } from 'react';
 import ShowColumn from "../../ShowColumn";
@@ -122,8 +122,9 @@ const ModalDetailRequestDonasi = ({ show, handleClose, dataDetail,  onSuccess, o
                             {formData.foto_organisasi && (
                                 <div className="existing-image">
                                     <img
-                                        src={getThumbnail(formData.foto_organisasi)}
+                                        src={getThumbnailOrganisasi(formData.foto_organisasi)}
                                         alt="Gambar belum hehe"
+                                        style={{ width: "200px", height: "200px"}}
                                         className="img-thumbnail" />
                                 </div>
                             )}

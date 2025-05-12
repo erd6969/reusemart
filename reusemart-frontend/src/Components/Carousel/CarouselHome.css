@@ -12,3 +12,11 @@
   width: 100vw;
   height: 80vh;
 }
+
+.carousel-caption {
+  transform: translateY(-8vh);
+  text-align: center;
+  background: rgba(0, 0, 0, 0.4); /* Opsional: latar belakang transparan */
+  padding: 1rem;
+  border-radius: 10px;
+}

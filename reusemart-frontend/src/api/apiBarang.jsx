@@ -48,8 +48,8 @@ export const GetAllBarangByCategory = async (kategori) => {
         });
         console.log("Barang by kategori response:", response);
         return response.data;
-    } catch (error) {
-        console.error("Error fetching Barang by kategori:", error);
+    } catch (response) {
+        console.error("Error fetching Barang by kategori:", response.message);
         throw error?.response?.data || error;
     }
 }

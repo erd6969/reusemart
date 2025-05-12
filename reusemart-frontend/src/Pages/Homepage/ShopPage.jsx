@@ -4,7 +4,7 @@ import { useState } from 'react';
 import {
     FaMobile, FaTshirt, FaChair, FaBook, FaGamepad,
     FaBaby, FaCar, FaTree, FaBriefcase, FaSmile,
-    FaChevronDown, FaChevronRight, FaSearch
+    FaChevronDown, FaChevronRight, FaSearch, FaBoxOpen
 } from 'react-icons/fa';
 import { data, useNavigate } from "react-router-dom";
 import image3 from "../../assets/images/Search.png";
@@ -362,13 +362,19 @@ const ShopPage = () => {
 
         try {
             const data = await GetAllBarangByCategory(kategori);
+            console.log("Data barang by category:", data);
             setBarang(data);
+            setIsLoading(false);
         } catch (error) {
             console.error("Error fetching barang by category:", error);
-        } finally {
-            setIsLoading(false);
+            setIsLoading(true);
         }
     }
+
+    const refreshPage = () => {
+        fetchBarang();
+        setSearchQuery("");
+    };
 
     useEffect(() => {
         fetchBarang();
@@ -403,12 +409,12 @@ const ShopPage = () => {
             <div className="item-section"
                 style={{
                     display: "flex",
-                    overflowY: "auto",
+                    overflowY: barang.length > 0 ? "auto" : "hidden",
                     height: "100vh",
                     justifyContent: "center"
                 }}
             >
-                <div style={{ display: "flex", flexDirection: "column", overflowX: "hidden" }}>
+                <div style={{ display: "flex", flexDirection: "column", overflowX: "hidden", overflowY: barang.length > 0 ? "auto" : "hidden", }}>
                     <div
                         className="search-container"
                         style={{
@@ -496,13 +502,14 @@ const ShopPage = () => {
                             </div>
                         </div>
                     ) : (
-                        <div style={{ display: "flex", flexDirection: "row", width: "100%"}}>
+                        <div style={{ display: "flex", flexDirection: "row", width: "100%" }}>
 
 
                             {/* tampilan barang  */}
 
                             {barang.length > 0 ? (
-                                <><CategorySection categoryNameSelect={fetchBarangByCategory} />
+                                <>
+                                    <CategorySection categoryNameSelect={fetchBarangByCategory} />
                                     <div
                                         className="item-list"
                                         style={{
@@ -522,10 +529,43 @@ const ShopPage = () => {
                                         ))}
                                         {/* pemberi jarak dibawah */}
                                         <div></div>
-                                    </div></>
+                                    </div>
+                                </>
                             ) : (
-                                <div style={{ textAlign: "center", marginTop: "20px", justifyContent: "center" }}>
-                                    <h6 className="mt-2 mb-0">Tidak ada barang</h6>
+                                <div
+                                    style={{
+                                        flex: 1,
+                                        display: "flex",
+                                        justifyContent: "center",
+                                        alignItems: "center",
+                                        height: "60vh",
+                                        flexDirection: "column",
+                                        marginLeft: "auto",
+                                        marginRight: "auto"
+                                    }}
+                                >
+                                    <FaBoxOpen size={80} color="#000" style={{ marginBottom: "10px" }} />
+                                    <h4 style={{ color: "#000", fontWeight: "normal" }}>
+                                        Barang tidak ditemukan
+                                    </h4>
+                                    <p style={{ color: "#000", fontSize: "14px" }}>
+                                        Silakan coba kata kunci lain atau pilih kategori berbeda.
+                                    </p>
+                                    <button
+                                        onClick={refreshPage}
+                                        style={{
+                                            padding: "10px 20px",
+                                            backgroundColor: "#316910",
+                                            color: "white",
+                                            border: "none",
+                                            borderRadius: "5px",
+                                            cursor: "pointer",
+                                            fontSize: "16px",
+                                            boxShadow: "0px 2px 4px rgba(0, 0, 0, 0.2)"
+                                        }}
+                                    >
+                                        Refresh
+                                    </button>
                                 </div>
                             )
                             }

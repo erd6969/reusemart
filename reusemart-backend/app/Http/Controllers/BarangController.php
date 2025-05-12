@@ -53,21 +53,27 @@ class BarangController
     public function showByCategory($namacategory)
     {
         try {
-            $category = Kategori::where('nama_kategori', $namacategory)->firstOrFail();
+            $category = Kategori::where('nama_kategori', $namacategory)
+            ->firstOrFail();
             if (!$category) {
                 return response()->json(['message' => 'Kategori tidak ditemukan.'], 404);
             }
             
             // dd($category->id_kategori);
             $id_kategori = $category->id_kategori;
-            $Barang = Barang::where('id_kategori', $id_kategori)->get();
-            if ($Barang->isEmpty()) {
+            $Barang = Barang::join('detail_transaksi_penitipan', 'barang.id_barang', '=', 'detail_transaksi_penitipan.id_barang')
+                    ->where('detail_transaksi_penitipan.status_penitipan', '=', 'ready jual')
+                    ->where('id_kategori', $id_kategori)
+                    ->get();
+
+            
+            if (!$Barang) {
                 return response()->json(['message' => 'Data Barang dengan tidak ditemukan.'], 404);
             }
+
             return response()->json($Barang, 200);
             
         } catch (Exception $e) {
-            dd($e);
             return response()->json(['message' => 'Data Barangasdasd tidak ditemukan.'], 404);
         }
     }

@@ -12,7 +12,7 @@ import "swiper/css";
 
 import logo from "../../assets/images/logohomehd.png";
 import burnice from "../../assets/images/BurniceKicil.jpg";
-import benefit2 from "../../assets/images/benefit2.png";
+import benefit2 from "../../assets/images/kasiduit.png";
 import chen from "../../assets/images/chen-quotes.jpeg";
 import benefit1 from "../../assets/images/onkle.png";
 

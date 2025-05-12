@@ -16,8 +16,6 @@ import { getThumbnailPegawai } from "../../api/index";
 
 const TopNavbar = () => {
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-    const [profile, setProfile] = useState([]);
-    const [isLoading, setIsLoading] = useState(true);
     const navigate = useNavigate();
     const dropdownRef = useRef(null);
     const [profile, setProfile] = useState([]);
@@ -47,18 +45,6 @@ const TopNavbar = () => {
             console.error("Logout error:", err);
         } finally {
             navigate("/auth/login");
-        }
-    };
-
-        const showProfile = async () => {
-        try {
-            setIsLoading(true);
-            const data = await GetProfile();
-            setProfile(data);
-        } catch (error) {
-            console.error("Error fetching profile", error);
-        } finally {
-            setIsLoading(false);
         }
     };
 

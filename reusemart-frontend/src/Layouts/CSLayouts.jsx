@@ -2,6 +2,7 @@ import { Outlet } from "react-router-dom";
 
 import TopNavbar from "../Components/CustomerService/NavbarCS.jsx";
 import SideBarCS from "../Components/CustomerService/SideBarCS.jsx";
+import Footer from "../Components/Footer.jsx";
 
 const CSLayout = () => {
     return (

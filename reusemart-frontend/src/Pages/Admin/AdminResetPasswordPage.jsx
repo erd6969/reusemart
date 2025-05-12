@@ -12,8 +12,8 @@ const SearchComponent = ({ onSearch }) => {
             <div className="searchContainer">
                 <InputColumn 
                     typeInput="text"
-                    idInput="nama_organisasi"
-                    placeholderInput="Masukkan Nama Organisasi..."
+                    idInput="nama_pegawai"
+                    placeholderInput="Masukkan Nama Pegawai..."
                     onChange={(e) => onSearch(e.target.value)}
                 />
             </div>
@@ -145,7 +145,7 @@ const AdminMasterResetPage = () => {
                                                     toast.error("Gagal mereset password.");
                                                 }
                                             }}
-                                            style={{ width: "60%", margin: "0 auto" }}
+                                            style={{ width: "100%", margin: "0 auto", maxWidth: "150px" }}
                                         >
                                             Reset Password
                                         </Button>

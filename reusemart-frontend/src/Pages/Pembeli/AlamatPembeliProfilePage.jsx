@@ -9,6 +9,7 @@ import ModalEditAlamat from "../../Components/Modal/ModalAlamat/ModalEditAlamat"
 
 import { GetAllAlamat, ChangeMainAlamat, SearchAlamat, DeleteAlamat } from "../../api/apiAlamat";
 import { GetProfile } from "../../api/apiPembeli";
+import { toast } from "react-toastify";
 
 import { getThumbnailPembeli } from "../../api/index";
 
@@ -87,8 +88,10 @@ const AlamatPembeliPage = () => {
     try {
       await ChangeMainAlamat(id);
       fetchAlamat();
+      toast.success("Alamat utama berhasil diubah");
     } catch (error) {
       console.error("Gagal mengubah alamat utama:", error);
+      toast.error("Gagal mengubah alamat utama");
     }
   };
 
@@ -119,8 +122,9 @@ const AlamatPembeliPage = () => {
       try {
         await DeleteAlamat(id);
         fetchAlamat();
+        toast.success("Alamat berhasil dihapus");
       } catch (error) {
-        console.error("Gagal menghapus alamat:", error);
+        toast.error(error.message || "Gagal menghapus alamat");
       }
     }
   };

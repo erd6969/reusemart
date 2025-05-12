@@ -9,7 +9,7 @@
     font-size: 28px;
     font-weight: bold;
     margin-bottom: 25px;
-    color: #333;
+    color: #333!important;
 }
 
 .searchComponent {

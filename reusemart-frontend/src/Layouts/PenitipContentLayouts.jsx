@@ -2,6 +2,7 @@ import { Outlet } from "react-router-dom";
 import { Container } from "react-bootstrap";
 
 import SidePenitip from "../Pages/Penitip/PenitipSide";
+import Footer from "../Components/Footer.jsx";
 
 const MainLayout = () => {
     return (

@@ -73,7 +73,8 @@
 
 .forpas {
     font-size: 0.8rem;
-    color: gray;
+    color: blue!important;
+    text-decoration: underline;
     margin-top: -10px;
     margin-bottom: 1rem;
     text-align: right;

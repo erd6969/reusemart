@@ -15,13 +15,12 @@ class Barang extends Model
         'id_hunter',
         'nama_barang',
         'deskripsi_barang',
-        'garansi',
         'kondisi_barang',
         'harga_barang',
         'foto_barang',
         'foto_barang2',
         'foto_barang3',
-        
+        'rating',
     ];
 
     public function pegawai()

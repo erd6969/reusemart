@@ -6,7 +6,7 @@ import SearchIcon from "../../assets/images/search-icon.png";
 import defaultImage from "../../assets/images/Pembeli/Yuki.jpeg";
 
 import { ShowSoldProducts } from "../../api/apiPenitip";
-import { getThumbnail } from "../../api/index";
+import { getThumbnailBarang } from "../../api/index";
 
 import ModalDetailPenjualan from "../../Components/Modal/ModalPenitip/ModalDetailPenjualan";
 
@@ -70,23 +70,32 @@ const SoldProductPage = () => {
                                     <th>Rating</th>
                                 </tr>
                             </thead>
-                            <tbody>
+                           <tbody>
                                 {soldProducts.map((product, index) => (
-                                    <tr key={index} style={{ cursor: 'pointer' }} onClick={() => handleOpenModal(product.id_barang)}>
-                                        <td className="product-info">
-                                            <img src={getThumbnail(product.foto_barang) || defaultImage} alt={product.nama_barang} />
-                                            <b>{product.nama_barang}</b>
-                                        </td>
-                                        <td>Rp{product.harga_barang?.toLocaleString('id-ID') || '-'}</td>
-                                        <td>{product.tanggal_pembelian?.substring(0, 10)}</td>
-                                        <td>
-                                            {[1, 2, 3, 4, 5].map((i) => (
-                                                <FaStar
-                                                    key={i}
-                                                    color={i <= 0 ? "#facc15" : "#e5e7eb"}
-                                                />
-                                            ))}
-                                        </td>
+                                    <tr
+                                    key={index}
+                                    style={{ cursor: "pointer" }}
+                                    onClick={() => handleOpenModal(product.id_barang)}
+                                    >
+                                    <td className="product-info">
+                                        <img
+                                        src={getThumbnailBarang(product.foto_barang) || defaultImage}
+                                        alt={product.nama_barang}
+                                        />
+                                        <b>{product.nama_barang}</b>
+                                    </td>
+                                    <td>
+                                        Rp{product.harga_barang?.toLocaleString("id-ID") || "-"}
+                                    </td>
+                                    <td>{product.tanggal_pembelian?.substring(0, 10)}</td>
+                                    <td>
+                                        {[1, 2, 3, 4, 5].map((i) => (
+                                        <FaStar
+                                            key={i}
+                                            color={i <= product.rating ? "#facc15" : "#e5e7eb"}
+                                        />
+                                        ))}
+                                    </td>
                                     </tr>
                                 ))}
                             </tbody>

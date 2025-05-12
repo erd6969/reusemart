@@ -2,12 +2,13 @@ import { getThumbnailOrganisasi } from "../../../api/index";
 import { Modal, Container, Button } from "react-bootstrap";
 import { useState, useEffect } from 'react';
 import ShowColumn from "../../ShowColumn";
-import { EditPegawai } from '../../../api/apiPegawai';
 import { toast } from 'react-toastify';
 import { Spinner } from "react-bootstrap";
 import { RejectRequestDonasi, ShowRequestDonasiByIdBarang } from "../../../api/apiRequestDonasi";
 import ModalFormTransaksiDonasi from './ModalFormTransaksiDonasi';
 import { data, useNavigate } from "react-router-dom";
+
+import { getThumbnailOrganisasi } from "../../../api/index";
 
 const ModalDetailRequestDonasi = ({ show, handleClose, dataDetail,  onSuccess, onAccept }) => {
     const [formData, setFormData] = useState({
@@ -126,6 +127,7 @@ const ModalDetailRequestDonasi = ({ show, handleClose, dataDetail,  onSuccess, o
                                         alt="Gambar belum hehe"
                                         style={{ width: "200px", height: "200px"}}
                                         className="img-thumbnail" />
+
                                 </div>
                             )}
                             

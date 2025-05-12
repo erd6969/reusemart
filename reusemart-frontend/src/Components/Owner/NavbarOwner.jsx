@@ -11,8 +11,13 @@ import { FaShoppingCart, FaChevronDown, FaBars, FaTimes } from "react-icons/fa";
 import { Logout } from "../../api/apiAuth";
 import { GetProfile } from "../../api/apiPegawai";
 
+import { GetProfile } from "../../api/apiPegawai";
+import { getThumbnailPegawai } from "../../api/index";
+
 const TopNavbar = () => {
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+    const [profile, setProfile] = useState([]);
+    const [isLoading, setIsLoading] = useState(true);
     const navigate = useNavigate();
     const dropdownRef = useRef(null);
     const [profile, setProfile] = useState([]);
@@ -45,6 +50,23 @@ const TopNavbar = () => {
         }
     };
 
+        const showProfile = async () => {
+        try {
+            setIsLoading(true);
+            const data = await GetProfile();
+            setProfile(data);
+        } catch (error) {
+            console.error("Error fetching profile", error);
+        } finally {
+            setIsLoading(false);
+        }
+    };
+
+    useEffect(() => {
+        showProfile();
+    }, []);
+
+
     return (
         <Navbar className="navBar">
             <Container fluid>
@@ -52,7 +74,6 @@ const TopNavbar = () => {
                     <img src={logoReuseMart} alt="logo" className="logoReuseMart" />
                     <Navbar.Brand className="navTitle">ReuseMart</Navbar.Brand>
                 </div>
-
                 {isLoading ? (
                     <div style={{ textAlign: "center" }}>
                         <Spinner
@@ -90,6 +111,7 @@ const TopNavbar = () => {
                         </div>
                     </div>
                 )}
+
             </Container>
         </Navbar>
     );

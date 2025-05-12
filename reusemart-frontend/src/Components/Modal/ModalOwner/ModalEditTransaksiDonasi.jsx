@@ -9,6 +9,8 @@ import { UpdateRequestDanTransaksiDonasi } from "../../../api/apiRequestDonasi";
 import { data, useNavigate } from "react-router-dom";
 import { Form } from "react-bootstrap";
 
+import { getThumbnailOrganisasi } from "../../../api/index";
+
 const ModalEditTransaksiDonasi = ({ show, handleClose, dataDetail, onSuccess }) => {
     const [formData, setFormData] = useState({
         id_request_donasi: 0,
@@ -127,9 +129,11 @@ const ModalEditTransaksiDonasi = ({ show, handleClose, dataDetail, onSuccess }) 
                             {formData.foto_organisasi && (
                                 <div className="existing-image">
                                     <img
-                                        src={getThumbnail(formData.foto_organisasi)}
+                                        src={getThumbnailOrganisasi(formData.foto_organisasi)}
                                         alt="Gambar belum hehe"
-                                        className="img-thumbnail" />
+                                        className="img-thumbnail"
+                                        style={{ width: '250px', height: '250px' }}
+                                         />
                                 </div>
                             )}
 

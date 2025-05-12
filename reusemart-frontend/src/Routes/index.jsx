@@ -73,30 +73,36 @@ const router = createBrowserRouter([
         children: [
             {
                 path: "",
-                element: <GuestOnlyRoute>
+                element: (
+                    <GuestOnlyRoute>
                         <Home />,
-                </GuestOnlyRoute>
+                    </GuestOnlyRoute>
+                ),
             },
             {
                 path: "shop",
 
-                element: <GuestOnlyRoute>
-                    <ShopPage />,
-                </GuestOnlyRoute>
+                element: (
+                    <GuestOnlyRoute>
+                        <ShopPage />,
+                    </GuestOnlyRoute>
+                ),
             },
             {
                 path: "detailBarang/:id_barang",
-                element: <GuestOnlyRoute>
-
-                    <DetailBarangPage />,
-                </GuestOnlyRoute>
+                element: (
+                    <GuestOnlyRoute>
+                        <DetailBarangPage />,
+                    </GuestOnlyRoute>
+                ),
             },
             {
                 path: "list-barang-penitip",
-                element: <GuestOnlyRoute>
-
-                    <ListBarangPenitipPage />,
-                </GuestOnlyRoute>
+                element: (
+                    <GuestOnlyRoute>
+                        <ListBarangPenitipPage />,
+                    </GuestOnlyRoute>
+                ),
             },
             {
                 path: "auth/login",

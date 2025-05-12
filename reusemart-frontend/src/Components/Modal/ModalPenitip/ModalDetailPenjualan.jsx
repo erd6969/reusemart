@@ -9,6 +9,8 @@ import '../../../Pages/Homepage/DetailBarangPage.css';
 
 import gambarBarang from "../../../assets/images/Pembeli/Yuki.jpeg";
 
+import { getThumbnailBarang } from '../../../api/index';
+
 const ModalDetailPenjualan = ({ show, handleClose, id_barang }) => {
     const [detailBarang, setDetailBarang] = useState(null);
     const [pendapatan, setPendapatan] = useState(null);
@@ -59,7 +61,7 @@ const ModalDetailPenjualan = ({ show, handleClose, id_barang }) => {
                             <div className="item-image-container mb-3 text-center">
                                 <img
                                     // src={getThumbnail(detailBarang.foto_barang) || defaultImage}
-                                    src={gambarBarang}
+                                    src={getThumbnailBarang(detailBarang.foto_barang)}
                                     alt={detailBarang.nama_barang}
                                     className="gambar-barang"
                                     style={{ maxWidth: "250px", height: "auto", borderRadius: "8px" }}

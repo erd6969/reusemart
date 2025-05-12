@@ -9,6 +9,8 @@ import { RejectRequestDonasi, ShowRequestDonasiByIdBarang } from "../../../api/a
 import ModalFormTransaksiDonasi from './ModalFormTransaksiDonasi';
 import { data, useNavigate } from "react-router-dom";
 
+import { getThumbnailBarang } from "../../../api/index";
+
 const ModalDetailBarangDonasi = ({ show, handleClose, dataBarang,  onSuccess, dataReqDon, onAccept }) => {
     const [formData, setFormData] = useState({
         nama_barang: '',
@@ -108,9 +110,11 @@ const ModalDetailBarangDonasi = ({ show, handleClose, dataBarang,  onSuccess, da
                             {formData.foto_barang && (
                                 <div className="existing-image">
                                     <img
-                                        src={getThumbnail(formData.foto_barang)}
+                                        src={getThumbnailBarang(formData.foto_barang)}
                                         alt="Gambar belum hehe"
-                                        className="img-thumbnail" />
+                                        className="img-thumbnail"
+                                        style={{ width: '250px', height: '250px' }}
+                                         />
                                 </div>
                             )}
                             

@@ -125,9 +125,8 @@ class DiskusiController
 
     public function showDiskusiByDate(){
         $diskusi = Diskusi::with(['barang', 'pembeli', 'pegawai'])
-            ->whereDate('waktu_diskusi', now())
             ->whereNotNull('id_pembeli')
-            ->orderBy('waktu_diskusi', 'desc')
+            ->orderBy('waktu_diskusi', 'asc')
             ->get();
     
         return response()->json([

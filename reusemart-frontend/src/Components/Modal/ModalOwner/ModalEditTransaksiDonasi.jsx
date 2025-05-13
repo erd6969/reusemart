@@ -24,6 +24,8 @@ const ModalEditTransaksiDonasi = ({ show, handleClose, dataDetail, onSuccess }) 
         nama_penerima: '',
         tanggal_donasi: '',
         status_request: '',
+        id_barang: 0,
+        nama_barang: '',
 
     });
 
@@ -33,18 +35,20 @@ const ModalEditTransaksiDonasi = ({ show, handleClose, dataDetail, onSuccess }) 
     useEffect(() => {
         if (dataDetail) {
             setFormData({
-                id_request_donasi: dataDetail.id_request_donasi || 0,
+                id_request_donasi: dataDetail.request_donasi.id_request_donasi || 0,
                 email_organisasi: dataDetail.organisasi.email_organisasi || '',
                 nama_organisasi: dataDetail.organisasi.nama_organisasi || '',
                 alamat_organisasi: dataDetail.organisasi.alamat_organisasi || '',
                 foto_organisasi: dataDetail.organisasi.foto_organisasi || '',
                 id_organisasi: dataDetail.organisasi.id_organisasi || 0,
-                detail_request: dataDetail.detail_request || '',
+                detail_request: dataDetail.request_donasi.detail_request || '',
                 nomor_telepon_organisasi: dataDetail.organisasi.nomor_telepon_organisasi || '',
-                id_transaksi_donasi: dataDetail.status_request == "Rejected" ? 0 : dataDetail.transaksi_donasi[0].id_transaksi_donasi || 0,
-                nama_penerima: dataDetail.status_request == "Rejected" ? "" : dataDetail.transaksi_donasi[0].nama_penerima || '',
-                tanggal_donasi: dataDetail.status_request == "Rejected" ? "" : dataDetail.transaksi_donasi[0].tanggal_donasi || '',
-                status_request: dataDetail.status_request || '',
+                id_transaksi_donasi: dataDetail.request_donasi.status_request == "Rejected" ? 0 : dataDetail.id_transaksi_donasi || 0,
+                nama_penerima: dataDetail.request_donasi.status_request == "Rejected" ? "" : dataDetail.nama_penerima || '',
+                tanggal_donasi: dataDetail.request_donasi.status_request == "Rejected" ? "" : dataDetail.tanggal_donasi || '',
+                status_request: dataDetail.request_donasi.status_request || '',
+                id_barang: dataDetail.request_donasi.status_request == "Rejected" ? "" : dataDetail.barang.id_barang || 0,
+                nama_barang: dataDetail.request_donasi.status_request == "Rejected" ? "" : dataDetail.barang.nama_barang || '',
             });
         }
     }, [dataDetail]);
@@ -186,6 +190,16 @@ const ModalEditTransaksiDonasi = ({ show, handleClose, dataDetail, onSuccess }) 
                             idInput="Detail Request"
                             placeholderInput={formData.detail_request}
                             value={formData.detail_request}
+                            onChange=""
+                            disabled={true} />
+
+                        <InputColumn
+                            nameLabel="Barang yang didonasi"
+                            contentLabel="Barang yang didonasi"
+                            typeInput="text"
+                            idInput="Barang yang didonasi"
+                            placeholderInput={formData.nama_barang}
+                            value={formData.nama_barang}
                             onChange=""
                             disabled={true} />
 

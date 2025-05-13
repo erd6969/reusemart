@@ -37,7 +37,10 @@ class RequestDonasiController
     public function showAcceptReject()
     {
         try {
-            return response()->json(RequestDonasi::with('organisasi', 'TransaksiDonasi')
+
+
+            return response()->json(TransaksiDonasi::with('organisasi', 'request_donasi', 'barang')
+            ->join('request_donasi', 'transaksi_donasi.id_request_donasi', '=', 'request_donasi.id_request_donasi')
             ->where('status_request', '!=', 'Waiting')
             ->paginate(10), 200);
         } catch (\Exception $e) {

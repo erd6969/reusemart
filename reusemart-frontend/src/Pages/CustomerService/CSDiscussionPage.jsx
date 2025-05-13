@@ -4,11 +4,12 @@ import { Container } from "react-bootstrap";
 import "./CSDiscussionPage.css";
 
 import { ShowDiskusiByDate } from "../../api/apiDiskusi";
-import FotoProfil from "../../../src/assets/images/Pembeli/Yuki.jpeg";
 import ModalDiskusi from "../../Components/Modal/ModalCS/ModalDiskusi";
 
-import { GetProfile } from "../../api/apiPembeli";
 import { getThumbnailPembeli } from "../../api";
+
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
 
 const DiscussionBox = ({ diskusi, onClick }) => {
     return (
@@ -39,6 +40,7 @@ const CSPenitipManagementPage = () => {
     const [loading, setLoading] = useState(true);
     const [showModal, setShowModal] = useState(false);
     const [selectedBarangId, setSelectedBarangId] = useState(null);
+    const [date, setDate] = useState(null);
 
     const openModal = (id) => {
         setSelectedBarangId(id);
@@ -61,28 +63,44 @@ const CSPenitipManagementPage = () => {
         fetchDiskusi();
     }, []);
 
+    const filteredDiskusi = diskusiList.filter((diskusi) => {
+        if(date){
+            console.log("Date Diskusi Awal", date);
+            const nowDate = new Date(diskusi.waktu_diskusi);
+            const nowDateString = nowDate.toISOString().split("T")[0];
+
+            const dateString = date.toLocaleDateString('en-CA');
+            
+            console.log("Date Diskusi", nowDateString);
+            console.log("Date Picker", dateString);
+            return nowDateString == dateString;
+        }
+        return true;
+    }
+    );
+
     return (
         <Container>
             <div className="cs-diskusi-header-container">
-                <h2>
-                    {new Date().toLocaleDateString("id-ID", {
-                        weekday: "long",
-                        year: "numeric",
-                        month: "long",
-                        day: "numeric"
-                    })}
-                </h2>
+                <DatePicker
+                    selected={date}
+                    onChange={(date2) => setDate(date2)}
+                    placeholderText="Masukkan Tanggal"
+                    dateFormat="yyyy-MM-dd"
+                />
             </div>
 
             <div className="cs-diskusi-content-container">
                 {loading ? (
                     <p>Memuat diskusi...</p>
-                ) : diskusiList.length === 0 ? (
-                    <p>Tidak ada diskusi hari ini.</p>
                 ) : (
-                    diskusiList.map((item, idx) => (
-                        <DiscussionBox key={idx} diskusi={item} onClick={openModal} />
-                    ))
+                    filteredDiskusi.length === 0 ? (
+                        <p>Tidak ada diskusi pada tanggal ini.</p>
+                    ) : (
+                        filteredDiskusi.map((item) => (
+                            <DiscussionBox key={item.id_diskusi} diskusi={item} onClick={openModal} />
+                        ))
+                    )
                 )}
             </div>
 

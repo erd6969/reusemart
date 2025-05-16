@@ -115,7 +115,7 @@ const HistoryDonasi = () => {
                                 </tr>
                             ) : request_donasiList.length > 0 ? (
                                 request_donasiList.map((data) => (
-                                    <tr key={data.id_request_donasi}>
+                                    <tr key={data.id_transaksi_donasi}>
                                         <td>RQD.{data.id_request_donasi}</td>
                                         <td>{data.organisasi?.nama_organisasi}</td>
                                         <td>{data.organisasi?.email_organisasi}</td>

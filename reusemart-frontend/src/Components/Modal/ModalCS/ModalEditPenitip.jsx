@@ -4,6 +4,9 @@ import { useState, useEffect } from 'react';
 import { UpdatePenitip } from '../../../api/apiPenitip';
 import { toast } from 'react-toastify';
 
+import { getThumbnailPenitip } from "../../../api/index";
+
+
 const ModalEditPenitip = ({ show, handleClose, dataEdit, onSuccess }) => {
   const [formData, setFormData] = useState({
     email_penitip: '',
@@ -121,6 +124,28 @@ const ModalEditPenitip = ({ show, handleClose, dataEdit, onSuccess }) => {
             placeholderInput=""
             onChange={handleChange}
           />
+
+          {formData.foto_penitip && (
+            <div className="image-preview">
+              <p>Preview Foto:</p>
+              <img
+                src={formData.foto_penitip instanceof File ? URL.createObjectURL(formData.foto_penitip) : formData.foto_penitip}
+                alt="Preview"
+                style={{ maxWidth: '100%', maxHeight: '200px', marginTop: '10px' }}
+              />
+            </div>
+          )}
+
+          {!formData.foto_penitip && dataEdit?.foto_penitip && (
+            <div className="image-preview">
+              <p>Preview Foto: </p>
+              <img
+                src={getThumbnailPenitip(dataEdit.foto_penitip)}
+                alt="Previous"
+                style={{ maxWidth: '100%', maxHeight: '200px', marginTop: '10px' }}
+              />
+            </div>
+          )}
         </Modal.Body>
 
         <Modal.Footer className="modal-footer">

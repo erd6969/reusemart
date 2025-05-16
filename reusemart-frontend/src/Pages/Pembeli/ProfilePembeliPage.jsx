@@ -12,7 +12,7 @@ const Poin = (profile) => {
   return (
     <Container className="poin-container">
       <b>Poin Loyalitas</b>
-      <p>{profile.poin_loyalitas ?? 0} Poin</p>
+      <p>{profile = profile.poin_loyalitas} Poin</p>
     </Container>
   );
 };
@@ -90,6 +90,7 @@ const ProfilePembeli = () => {
     const showProfile = async () => {
       try {
         const data = await GetProfile();
+        console.log('test', data);
         setProfile(data);
       } catch (error) {
         console.error("Error fetching profile", error);
@@ -115,7 +116,10 @@ const ProfilePembeli = () => {
               }
             />
           )}
-          <Poin profile={profile} />
+          <Container className="poin-container">
+            <b>Poin Loyalitas</b>
+            <p>{profile.poin_loyalitas} Poin</p>
+          </Container>
         </div>
         <InputDataPembeli profile={profile} />
       </div>

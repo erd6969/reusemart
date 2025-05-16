@@ -24,8 +24,7 @@ class PenitipController
         try {
             // dd($request);
             $request->validate([
-                'email_penitip' => 'required|email|unique:penitip,email_penitip|unique:pegawai,email_pegawai
-                |unique:organisasi,email_organisasi|unique:hunter,email_hunter|unique:pembeli,email_pembeli',
+                'email_penitip' => 'required|email|unique:penitip,email_penitip|unique:pegawai,email_pegawai|unique:organisasi,email_organisasi|unique:hunter,email_hunter|unique:pembeli,email_pembeli',
                 'password_penitip' => 'required|min:8',
                 'nama_penitip' => 'required|string|max:255',
                 'nomor_telepon_penitip' => 'required|string|max:15',
@@ -38,9 +37,9 @@ class PenitipController
             ]);
 
 
-            $fotoKTPPath = $request->file('foto_ktp')->store('ktp', 'public');
+            $fotoKTPPath = $request->file('foto_ktp')->store('img/Penitip/ktp', 'public');
             if ($request->hasFile('foto_penitip')) {
-                $foto_penitip_path = $request->file('foto_penitip')->store('penitip', 'public');
+                $foto_penitip_path = $request->file('foto_penitip')->store('img/Penitip', 'public');
             } else {
                 $foto_penitip_path = 'img/blank-profile-picture.jpg';
             }
@@ -182,19 +181,18 @@ class PenitipController
 
             if ($request->hasFile('foto_penitip')) {
                 $image = $request->file('foto_penitip');
-                $uploadFolder = 'penitip';
+                // $uploadFolder = 'Penitip';
+                $uploadPath = 'img/Penitip';
+                $image_uploaded_path = $image->store($uploadPath, 'public');
+                $uploadedImageResponse = basename($image_uploaded_path);
 
-                if ($penitip->foto_penitip && Storage::disk('public')->exists($uploadFolder . '/' . $penitip->foto_penitip)) {
-                    Storage::disk('public')->delete($uploadFolder . '/' . $penitip->foto_penitip);
+                if ($penitip->foto_penitip && Storage::disk('public')->exists($uploadPath . '/' . $penitip->foto_penitip)) {
+                    Storage::disk('public')->delete($uploadPath . '/'. $penitip->foto_penitip);
                 }
 
-                $foto_penitip_path = $request->file('foto_penitip')->store('penitip', 'public');
-
-
-                $updateData['foto_penitip'] = $foto_penitip_path;
+                $updateData['foto_penitip'] = $uploadedImageResponse;
             }
 
-            // Update data penitip
             $penitip->update($updateData);
 
             return response()->json([

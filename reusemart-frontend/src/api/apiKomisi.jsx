@@ -20,18 +20,18 @@ export const CreateKomisi = async (id_barang, payload) => {
   }
 };
 
-export const GetKomponenKomisi = async (id_barang) => {
-  try {
-    const response = await useAxios.get(`/pembeli/get-komponen-komisi/${id_barang}`, {
-        headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${getToken()}`,
-        },
-    });
+// export const GetKomponenKomisi = async (id_barang) => {
+//   try {
+//     const response = await useAxios.get(`/pembeli/get-komponen-komisi/${id_barang}`, {
+//         headers: {
+//             "Content-Type": "application/json",
+//             Authorization: `Bearer ${getToken()}`,
+//         },
+//     });
 
-    return response.data; // objek { komisi_hunter, komisi_reusemart, bonus_penitip }
-  } catch (error) {
-    console.error('Gagal mengambil komponen komisi:', error);
-    throw error;
-  }
-};
+//     return response.data; // objek { komisi_hunter, komisi_reusemart, bonus_penitip }
+//   } catch (error) {
+//     console.error('Gagal mengambil komponen komisi:', error);
+//     throw error;
+//   }
+// };

@@ -135,7 +135,7 @@ class TransaksiPembelianController
             // Update status_penitipan jadi "ready jual"
             DetailTransaksiPenitipan::whereIn('id_barang', $idBarangs)
                 ->update([
-                    'status_penitipan' => 'masa verifikasi',
+                    'status_penitipan' => 'terjual',
                 ]);
 
             return response()->json([

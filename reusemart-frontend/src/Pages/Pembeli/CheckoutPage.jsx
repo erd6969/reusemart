@@ -1,4 +1,5 @@
 import './CheckoutPage.css';
+import { useLocation } from "react-router-dom";
 import { Container, Spinner } from 'react-bootstrap';
 import { useState, useEffect } from 'react';
 import { FaMapMarkerAlt } from 'react-icons/fa';
@@ -6,7 +7,7 @@ import { useNavigate } from "react-router-dom";
 import ModalListAlamat from '../../Components/Modal/ModalAlamat/ModalListAlamat';
 import ModalPoint from '../../Components/Modal/ModalTransaksi/ModalPoint';
 
-import { ShowCart } from '../../api/apiKeranjang';
+import { ShowCart, CheckCart } from '../../api/apiKeranjang';
 import { getThumbnailBarang, getThumbnailPenitip } from "../../api";
 
 import { GetAlamatUtama, GetAlamatById } from '../../api/apiAlamat';
@@ -133,6 +134,35 @@ const PaymentDetail = ({ cartItems, alamatUtama, shippingOption }) => {
         if (cartItems.length === 0) return;
 
         try {
+            const cartResponse = await CheckCart();
+
+            if (cartResponse.status === "success") {
+                if (cartResponse.message.toLowerCase().includes("terjual")) {
+                    toast.error("Ada Barang yang sudah tidak tersedia");
+                    setTimeout(() => {
+                        navigate("/pembeli/cart");
+                    }, 1500);
+                    return;
+                }
+            } else {
+                toast.error("Gagal melakukan checkout");
+            }
+
+            const transaksiData = {
+                id_alamat: shippingOption === 'courier' ? alamatUtama.id_alamat : null,
+                pengiriman: shippingOption,
+                penggunaan_poin: selectedPoints,
+                tambahan_poin: poinDapat,
+                total_pembayaran: totalBayar,
+            };
+            const transaksiResponse = await CreateTransaksiPembelian(transaksiData);
+            const idTransaksi = transaksiResponse.transaksi.id_transaksi_pembelian;
+
+            if (!transaksiResponse) {
+                toast.error("Gagal melakukan transaksi");
+                return;
+            }
+
             const promises = cartItems.flatMap(barang =>
                 barang.barang.map(item => GetKomponenKomisi(item.id_barang))
             );
@@ -144,6 +174,7 @@ const PaymentDetail = ({ cartItems, alamatUtama, shippingOption }) => {
                 barang.barang.forEach(item => {
                     const komisiData = results.shift();
                     const payload = {
+                        id_transaksi_pembelian: idTransaksi,
                         total_harga_kotor: item.harga_barang + ongkir - potonganPoin,
                         total_harga_bersih: item.harga_barang + komisiData.bonus_penitip - (
                             komisiData.komisi_hunter +
@@ -159,20 +190,6 @@ const PaymentDetail = ({ cartItems, alamatUtama, shippingOption }) => {
             await Promise.all(createPromises);
             await ReducePoint(selectedPoints);
             refreshCartCount();
-            const transaksiData = {
-                id_alamat: shippingOption === 'courier' ? alamatUtama.id_alamat : null,
-                pengiriman: shippingOption,
-                penggunaan_poin: selectedPoints,
-                tambahan_poin: poinDapat,
-                total_pembayaran: totalBayar,
-            };
-
-            const transaksiResponse = await CreateTransaksiPembelian(transaksiData);
-
-            if (!transaksiResponse) {
-                toast.error("Gagal melakukan transaksi");
-                return;
-            }
         } catch (error) {
             console.error("Error saat proses bayar:", error);
         } finally {
@@ -193,8 +210,9 @@ const PaymentDetail = ({ cartItems, alamatUtama, shippingOption }) => {
                 <p><span>Total Harga</span><span>Rp{totalHarga.toLocaleString('id-ID')}</span></p>
                 <p><span>Biaya Pengiriman</span><span>Rp{ongkir.toLocaleString('id-ID')}</span></p>
                 <p><span>Diskon Poin</span><span className="discount">- Rp{potonganPoin.toLocaleString('id-ID')}</span></p>
+                <p style={{fontSize: '12px', marginTop: '-10px', color: '#888'}}>({selectedPoints} Poin Digunakan)</p>
                 <p style={{ fontSize: '12px', textAlign: 'right', marginTop: '10px', color: '#888', float: 'right', marginBottom: '-10px' }}>
-                    {profile.poin_loyalitas} Poin Tersisa
+                    {profile.poin_loyalitas - selectedPoints} Poin Tersisa
                 </p>
                 <button className="loyalty-button" onClick={() => setShowModal(true)}>Gunakan Poin</button>
             </div>
@@ -227,12 +245,18 @@ const CheckoutPage = () => {
     const [showModalAlamat, setShowModalAlamat] = useState(false);
     const [isLoading, setIsLoading] = useState(true);
     const navigate = useNavigate();
+    const location = useLocation();
+
+    const directBuyItem = location.state?.directBuyItem;
+    const directBuyItemPenitip = location.state?.directBuyItemPenitip;
 
     const fetchCartData = async () => {
         setIsLoading(true);
         try {
             const response = await ShowCart();
-            setCartItems(response);
+            if(response !== null) {
+                setCartItems(response);
+            }
         } catch (error) {
             console.error("Error fetching cart data:", error);
         } finally {
@@ -259,16 +283,33 @@ const CheckoutPage = () => {
     };
 
     useEffect(() => {
-        fetchCartData();
+        if (directBuyItem) {
+            setCartItems([{
+                barang: [directBuyItem],
+                quantity: 1,
+                id_penitip: directBuyItemPenitip.id_penitip,
+                nama_penitip: directBuyItemPenitip.nama_penitip,
+                foto_penitip: directBuyItemPenitip.foto_penitip,
+            }]);
+            setIsLoading(false);
+        } else {
+            fetchCartData();
+        }
         fetchAlamatUtama();
     }, []);
 
+
+    console.log("item", directBuyItem);
+    console.log("item penitip", directBuyItemPenitip);
+    console.log("cartItems", cartItems);
+    
+
     useEffect(() => {
-        if (!isLoading && cartItems.length === 0) {
-            toast.warning("Terjadi kesalahan, tidak ada barang yang hendak dicheckout");
+        if (!isLoading && !directBuyItem && cartItems.length === 0) {
+            toast.warning("Keranjang kosong, tidak bisa checkout.");
             navigate("/pembeli/shop");
         }
-    }, [isLoading, cartItems, navigate]);
+    }, [isLoading, cartItems, directBuyItem, navigate]);
 
     return isLoading ? (
         <Container className="d-flex justify-content-center align-items-center" style={{ height: '80vh' }}>
@@ -307,7 +348,7 @@ const CheckoutPage = () => {
             />
         </>
     );
-
 };
+
 
 export default CheckoutPage;

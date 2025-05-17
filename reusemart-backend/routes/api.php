@@ -107,6 +107,8 @@ Route::middleware('auth:pembeli')->group(function () {
 
     Route::post('/pembeli/create-transaksi-pembelian', [TransaksiPembelianController::class, 'createTransaksiPembelian']);
     Route::get('/pembeli/show-transaksi-pembelian', [TransaksiPembelianController::class, 'showTransaksiPembelian']);
+    Route::post('/pembeli/cancel-transaksi-pembelian', [TransaksiPembelianController::class, 'cancelTransaksiPembelian']);
+    Route::post('/pembeli/finalize-transaksi-pembelian', [TransaksiPembelianController::class, 'finalizeTransaksiPembelian']);
 });
 #endregion
 

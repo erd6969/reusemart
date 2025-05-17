@@ -15,7 +15,7 @@ import { toast } from "react-toastify";
 
 import { getThumbnailPembeli, getThumbnailPegawai, getThumbnailPenitip } from "../../api";
 
-const DetailBarang = ({ detailBarang, gambar }) => {
+const DetailBarang = ({ detailBarang, gambar, penitip }) => {
     const token = sessionStorage.getItem("token");
     const navigate = useNavigate();
     const { refreshCartCount } = useCart() || {};
@@ -35,7 +35,7 @@ const DetailBarang = ({ detailBarang, gambar }) => {
             refreshCartCount();
         } catch (error) {
             console.error("Gagal tambah ke keranjang:", error);
-            toast.error("Gagal menambahkan ke keranjang.");
+            toast.error("Barang sudah ada di keranjang!");
         }
     };
 
@@ -91,7 +91,16 @@ const DetailBarang = ({ detailBarang, gambar }) => {
                         </button>
                         <button
                             className="buy-button"
-                            onClick={() => navigate("/pembeli/checkout")}
+                            onClick={() => {
+                                console.log("penitip saat klik beli langsung:", penitip);
+                                if (token) {
+                                    navigate("/pembeli/checkout", {
+                                        state: { directBuyItem: detailBarang, directBuyItemPenitip: penitip }
+                                    });
+                                } else {
+                                    navigate("/auth/login");
+                                }
+                            }}
                         >
                             <b>Beli Langsung</b>
                         </button>
@@ -382,7 +391,7 @@ const DetailBarangPage = () => {
                 </div>
             ) : (
                 <div>
-                    <DetailBarang detailBarang={detailBarang} gambar={thumbnailGambar} />
+                    <DetailBarang detailBarang={detailBarang} gambar={thumbnailGambar} penitip={penitip} />
                     <hr />
                     <Toko penitip={penitip} />
                     <hr />

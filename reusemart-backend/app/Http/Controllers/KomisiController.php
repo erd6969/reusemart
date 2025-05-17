@@ -15,6 +15,7 @@ class KomisiController
     public function createKomisi($id_barang, Request $request)
     {
         $komisi = Komisi::create([
+            'id_transaksi_pembelian' => $request->id_transaksi_pembelian,
             'id_barang' => $id_barang,
             'total_harga_kotor' => $request->total_harga_kotor,
             'total_harga_bersih' => $request->total_harga_bersih,

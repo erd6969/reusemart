@@ -47,11 +47,14 @@ const PurchasePembeliPage = () => {
 
     const filteredPurchase = historyPurchase
         .filter(history => {
-            if (statusFilter.toLowerCase() === 'sudah diterima') {
-                return ['sudah diambil', 'sudah sampai'].includes(history.status_pengiriman.toLowerCase());
+            const status = history.status_pengiriman?.toLowerCase() || '';
+            const filter = statusFilter.toLowerCase();
+
+            if (filter === 'sudah diterima') {
+                return ['sudah diambil', 'sudah sampai'].includes(status);
             }
-            if (statusFilter.toLowerCase() !== 'all') {
-                return history.status_pengiriman.toLowerCase() === statusFilter.toLowerCase();
+            if (filter !== 'all') {
+                return status === filter;
             }
             return true;
         })
@@ -64,7 +67,7 @@ const PurchasePembeliPage = () => {
         })
         .filter(history => {
             if (searchQuery.trim() !== '') {
-                return history.nama_barang.toLowerCase().includes(searchQuery.toLowerCase());
+                return history.nama_barang?.toLowerCase().includes(searchQuery.toLowerCase());
             }
             return true;
         });
@@ -134,9 +137,10 @@ const PurchasePembeliPage = () => {
                                 {filteredPurchase
                                     .sort((a, b) => new Date(b.tanggal_pembelian) - new Date(a.tanggal_pembelian))
                                     .map((history, index) => {
-                                        const status = ['sudah diambil', 'sudah sampai'].includes(history.status_pengiriman)
+                                        const rawStatus = history.status_pengiriman || '';
+                                        const status = ['sudah diambil', 'sudah sampai'].includes(rawStatus.toLowerCase())
                                             ? 'sudah diterima'
-                                            : history.status_pengiriman;
+                                            : rawStatus;
 
                                         const badgeColor =
                                             status.toLowerCase() === 'sudah diterima' ? 'success'

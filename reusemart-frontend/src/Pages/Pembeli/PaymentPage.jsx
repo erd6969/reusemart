@@ -7,11 +7,12 @@ import './PaymentPage.css';
 import { FaRegCopy } from 'react-icons/fa';
 import { toast } from 'react-toastify';
 
-import { getTransaksiPembelian } from '../../api/apiTransaksiPembelian';
+import { getTransaksiPembelian, CancelTransaksi, FinalizeTransaksi } from '../../api/apiTransaksiPembelian';
 
 const PaymentPage = () => {
     const [previewImage, setPreviewImage] = useState(null);
     const [transaksiPembelian, setTransaksiPembelian] = useState({});
+    const [buktiBayarFile, setBuktiBayarFile] = useState(null);
     const [loading, setLoading] = useState(true);
     const [countdown, setCountdown] = useState('00:00:00');
     const navigate = useNavigate();
@@ -31,26 +32,40 @@ const PaymentPage = () => {
         fetchTransaksiPembelian();
     }, []);
 
-    // Countdown timer
+    // Countdown timer with auto-cancel on timeout
     useEffect(() => {
         if (!transaksiPembelian.batas_pembayaran) return;
 
         const targetTime = new Date(transaksiPembelian.batas_pembayaran).getTime();
 
-        const interval = setInterval(() => {
+        const interval = setInterval(async () => {
             const now = Date.now();
             const distance = targetTime - now;
 
-            if (distance <= 0) { // Nek wis sampun waktune
+            if (distance <= 0) {
                 setCountdown('00:00:00');
                 clearInterval(interval);
-                toast.error("Waktu pembayaran telah habis. Silakan lakukan pemesanan ulang.");
+
+                toast.error("Waktu pembayaran telah habis. Transaksi akan dibatalkan.");
+
+                // Cancel transaksi otomatis
+                try {
+                    await CancelTransaksi({
+                        id_transaksi_pembelian: transaksiPembelian.id_transaksi_pembelian
+                    });
+                    toast.warning("Transaksi Telah Dibatalkan Karena Waktu Pembayaran Habis.");
+                } catch (error) {
+                    toast.error("Gagal membatalkan transaksi.");
+                    console.error("Error cancelling transaksi:", error);
+                }
+
+                // Redirect setelah delay
                 setTimeout(() => {
                     navigate("/");
                 }, 2000);
+
                 return;
             }
-
 
             const hours = Math.floor((distance / (1000 * 60 * 60)) % 24);
             const minutes = Math.floor((distance / (1000 * 60)) % 60);
@@ -62,8 +77,7 @@ const PaymentPage = () => {
         }, 1000);
 
         return () => clearInterval(interval);
-    }, [transaksiPembelian.batas_pembayaran, navigate]);
-
+    }, [transaksiPembelian, navigate]);
 
     function formatNomorTransaksi(transaksi) {
         if (!transaksi || !transaksi.tanggal_pembelian || !transaksi.id_transaksi_pembelian) return '';
@@ -76,12 +90,34 @@ const PaymentPage = () => {
         return `${year}.${month}.${id}`;
     }
 
+    const handleKonfirmasiPembayaran = async () => {
+        if (!buktiBayarFile) {
+            toast.error("Silakan upload bukti pembayaran terlebih dahulu.");
+            return;
+        }
+
+        const formData = new FormData();
+        formData.append("id_transaksi_pembelian", transaksiPembelian.id_transaksi_pembelian);
+        formData.append("bukti_pembayaran", buktiBayarFile);
+
+        try {
+            await FinalizeTransaksi(formData);
+            toast.success("Pembayaran berhasil dikonfirmasi!");
+            navigate("/pembeli/list-transaksi");
+        } catch (error) {
+            toast.error("Gagal konfirmasi pembayaran.");
+            console.error(error);
+        }
+    };
+
     const handleImageUpload = (e) => {
         const file = e.target.files[0];
         if (file) {
             setPreviewImage(URL.createObjectURL(file));
+            setBuktiBayarFile(file);
         }
     };
+
 
     return (
         <>
@@ -153,7 +189,7 @@ const PaymentPage = () => {
                 </div>
 
                 <div className="footer-payment">
-                    <button className="confirm-btn" onClick={() => navigate("/pembeli/list-transaksi")}>
+                    <button className="confirm-btn" onClick={handleKonfirmasiPembayaran}>
                         Konfirmasi Pembayaran
                     </button>
                 </div>

@@ -163,26 +163,26 @@ const PaymentDetail = ({ cartItems, alamatUtama, shippingOption }) => {
                 return;
             }
 
-            const promises = cartItems.flatMap(barang =>
-                barang.barang.map(item => GetKomponenKomisi(item.id_barang))
-            );
-            const results = await Promise.all(promises);
-            setKomisi(results);
+            // const promises = cartItems.flatMap(barang =>
+            //     barang.barang.map(item => GetKomponenKomisi(item.id_barang))
+            // );
+            // const results = await Promise.all(promises);
+            // setKomisi(results);
 
             const createPromises = [];
             cartItems.forEach(barang => {
                 barang.barang.forEach(item => {
-                    const komisiData = results.shift();
+                    // const komisiData = results.shift();
                     const payload = {
                         id_transaksi_pembelian: idTransaksi,
-                        total_harga_kotor: item.harga_barang + ongkir - potonganPoin,
-                        total_harga_bersih: item.harga_barang + komisiData.bonus_penitip - (
-                            komisiData.komisi_hunter +
-                            komisiData.komisi_reusemart
-                        ),
-                        komisi_hunter: komisiData.komisi_hunter,
-                        komisi_reusemart: komisiData.komisi_reusemart,
-                        bonus_penitip: komisiData.bonus_penitip,
+                        // total_harga_kotor: item.harga_barang + ongkir - potonganPoin,
+                        // total_harga_bersih: item.harga_barang + komisiData.bonus_penitip - (
+                        //     komisiData.komisi_hunter +
+                        //     komisiData.komisi_reusemart
+                        // ),
+                        // komisi_hunter: komisiData.komisi_hunter,
+                        // komisi_reusemart: komisiData.komisi_reusemart,
+                        // bonus_penitip: komisiData.bonus_penitip,
                     };
                     createPromises.push(CreateKomisi(item.id_barang, payload));
                 });

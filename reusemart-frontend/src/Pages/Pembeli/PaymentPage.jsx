@@ -8,6 +8,7 @@ import { FaRegCopy } from 'react-icons/fa';
 import { toast } from 'react-toastify';
 
 import { getTransaksiPembelian, CancelTransaksi, FinalizeTransaksi } from '../../api/apiTransaksiPembelian';
+import { AddPoint } from '../../api/apiPembeli';
 
 const PaymentPage = () => {
     const [previewImage, setPreviewImage] = useState(null);
@@ -53,6 +54,9 @@ const PaymentPage = () => {
                     await CancelTransaksi({
                         id_transaksi_pembelian: transaksiPembelian.id_transaksi_pembelian
                     });
+
+                    await AddPoint(transaksiPembelian.penggunaan_poin);
+
                     toast.warning("Transaksi Telah Dibatalkan Karena Waktu Pembayaran Habis.");
                 } catch (error) {
                     toast.error("Gagal membatalkan transaksi.");

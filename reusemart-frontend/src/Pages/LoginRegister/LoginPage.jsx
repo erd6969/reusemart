@@ -29,7 +29,7 @@ function LoginPage() {
             } else if (role === "owner") {
                 navigate("/owner/req-donasi");
             } else if (role === "gudang") {
-                navigate("/pegawai-gudang");
+                navigate("/pegawai-gudang/penitipan-barang");
             } else if (role === "admin") {
                 navigate("/admin/admin-organisasi-master");
             } else if (role === "cs") {

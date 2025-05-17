@@ -17,7 +17,7 @@ const GuestOnlyRoute = ({ children }) => {
             } else if (role === "admin"){
                 navigate("/admin/admin-organisasi-master");
             } else if (role === "gudang"){
-                navigate("/pegawai-gudang");
+                navigate("/pegawai-gudang/penitipan-barang");
             } else if (role === "cs"){
                 navigate("/customerservice/penitip-management");
             } else if (role === "organisasi"){

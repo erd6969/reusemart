@@ -23,12 +23,20 @@ class DetailTransaksiPenitipanController
         //
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(DetailTransaksiPenitipan $detailTransaksiPenitipan)
+    public function show($id)
     {
-        //
+        $detailTransaksiPenitipan = DetailTransaksiPenitipan::with(['barang'])->where('id_transaksi_penitipan', $id)->paginate(10);
+        if($detailTransaksiPenitipan->isEmpty()) {
+            return response()->json([
+                'status' => 'success',
+                'message' => 'Data not found',
+                'data' => null,
+            ], 404);
+        }
+        return response()->json([
+            'status' => 'success',
+            'data' => $detailTransaksiPenitipan,
+        ]);
     }
 
     /**

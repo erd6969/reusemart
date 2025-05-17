@@ -17,9 +17,10 @@ use App\Http\Controllers\HunterController;
 use App\Http\Controllers\KeranjangController;
 use App\Http\Controllers\RequestDonasiController;
 use App\Http\Controllers\NotificationController;
+use App\Http\Controllers\DetailTransaksiPenitipanController;
+
 use App\Http\Controllers\KomisiController;
 use App\Http\Controllers\TransaksiPembelianController;
-
 
 Route::post('/send-konfirmasi-email', [EmailController::class, 'sendKonfirmasiEmail']);
 Route::post('/reset-password', [LoginController::class, 'resetPassword']);
@@ -132,7 +133,12 @@ Route::middleware('auth:owner')->group(function () {
 
 });
 Route::middleware('auth:gudang')->group(function () {
-
+    Route::post('/transaksi_penitipan/create', [TransaksiPenitipanController::class, 'create']);
+    Route::get('/transaksi_penitipan/show-all', [TransaksiPenitipanController::class, 'show']);
+    Route::get('/transaksi_penitipan/search/{search_data}', [TransaksiPenitipanController::class, 'search']);
+    Route::get('/detail_transaksi_penitipan/showByIdTP/{id}', [DetailTransaksiPenitipanController::class, 'show']);
+    Route::get('/penitip/searchByEmail/{search_penitip}', [PenitipController::class, 'searchByEmail']);
+    Route::post('/transaksi_penitipan/update/{id}', [TransaksiPenitipanController::class, 'update']);
 });
 
 Route::middleware('auth:cs')->group(function () {

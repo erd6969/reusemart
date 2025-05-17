@@ -14,7 +14,7 @@ import RegisterBuyerPage from "../Pages/LoginRegister/RegisterBuyerPage";
 import RegisterOption from "../Pages/LoginRegister/RegisterOption";
 import HistoryDonasiPage from "../Pages/Owner/HistoryDonasi";
 import LaporanPage from "../Pages/Owner/Laporan";
-import PegawaiGudangPage from "../Pages/PegawaiGudang/PegawaiGudangPage";
+import PenitipanBarangPage from "../Pages/PegawaiGudang/PenitipanBarangPage";
 import ReqDonasi from "../Pages/Owner/ReqDonasi";
 
 //Pembeli
@@ -65,6 +65,7 @@ import CSPenitipManagementPage from "../Pages/CustomerService/CSPenitipManagemen
 // Owner
 import OwnerLayouts from "../Layouts/OwnerLayouts";
 import ReqDonasiShowBarang from "../Pages/Owner/ReqDonasiShowBarang";
+import PegawaiGudangLayout from "../Layouts/PegawaiGudangLayouts";
 
 const router = createBrowserRouter([
     {
@@ -210,9 +211,15 @@ const router = createBrowserRouter([
         path: "/pegawai-gudang",
         element: (
             <ProtectedRoutes allowedRoles={["gudang"]}>
-                <PegawaiGudangPage />
+                <PegawaiGudangLayout />
             </ProtectedRoutes>
         ),
+        children: [
+            {
+                path: "penitipan-barang",
+                element: <PenitipanBarangPage />,
+            },
+        ],
     },
 
     {

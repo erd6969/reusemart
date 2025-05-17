@@ -18,6 +18,8 @@ class RequestDonasi extends Model
         'status_request',
     ];
 
+    public $timestamps = false;
+
     public function organisasi()
     {
         return $this->belongsTo(Organisasi::class, 'id_organisasi', 'id_organisasi');

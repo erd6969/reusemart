@@ -284,4 +284,56 @@ class AlamatController
             ], 500);
         }
     }
+
+    public function getAlamatUtama()
+    {
+        try {
+            $user = Auth::user();
+            if (!$user) {
+                return response()->json([
+                    'message' => 'User not authenticated or invalid token',
+                ], 401);
+            }
+
+            $alamat = Alamat::where('id_pembeli', $user->id_pembeli)->where('alamat_utama', 1)->first();
+            if (!$alamat) {
+                return response()->json([
+                    'message' => 'No main address found for this user',
+                ], 404);
+            }
+
+            return response()->json($alamat, 200);
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'Failed to retrieve main address',
+                'error' => $e->getMessage(),
+            ], 500);
+        }
+    }
+
+    public function getAlamatById($id_alamat)
+    {
+        try {
+            $user = Auth::user();
+            if (!$user) {
+                return response()->json([
+                    'message' => 'User not authenticated or invalid token',
+                ], 401);
+            }
+
+            $alamat = Alamat::where('id_pembeli', $user->id_pembeli)->where('id_alamat', $id_alamat)->first();
+            if (!$alamat) {
+                return response()->json([
+                    'message' => 'No address found for this user',
+                ], 404);
+            }
+
+            return response()->json($alamat, 200);
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'Failed to retrieve address',
+                'error' => $e->getMessage(),
+            ], 500);
+        }
+    }
 }

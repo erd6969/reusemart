@@ -1,13 +1,14 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { Container, Row, Col, Button } from "react-bootstrap";
+import { Container, Row, Col, Button, Spinner } from "react-bootstrap";
 import { FaTrash } from "react-icons/fa";
 import gambarBarang from "../../assets/images/CinaBekas2.jpg";
-import gambarToko from "../../assets/images/BurniceKicil.jpg";
 import "./CartPage.css";
 
 import { ShowCart, DeleteCartItem, CheckCart, DeleteAllCart } from "../../api/apiKeranjang";
 import { useCart } from "../../Components/Context/CartContext";
+import { getThumbnailBarang, getThumbnailPenitip } from "../../api";
+import { toast } from "react-toastify";
 
 const CartPage = () => {
     const [isLoading, setIsLoading] = useState(true);
@@ -78,16 +79,22 @@ const CartPage = () => {
 
     const handleCheckout = async () => {
         try {
-            const response = await CheckCart();
 
-            if (response.status === "success") {
-                if (response.message.toLowerCase().includes("terjual")) {
-                    alert(response.message);
-                }else{
-                    navigate("/pembeli/checkout");
+            if(cartItems.length === 0){
+                toast.warning("Keranjang Masih Kosong");
+                return;
+            }else{
+                const response = await CheckCart();
+
+                if (response.status === "success") {
+                    if (response.message.toLowerCase().includes("terjual")) {
+                        toast.warning("Barang sudah terjual, silahkan pilih barang lain");
+                    }else{
+                        navigate("/pembeli/checkout");
+                    }
+                } else {
+                    toast.error("Gagal melakukan checkout");
                 }
-            } else {
-                alert("Terjadi kesalahan saat memeriksa keranjang.");
             }
         } catch (error) {
             alert("Terjadi kesalahan saat memeriksa keranjang.");
@@ -107,49 +114,30 @@ const CartPage = () => {
                         <Col md={2} className="text-center">Action</Col>
                     </Row>
 
-                    {cartItems.map((toko, tokoIndex) => (
-                        <div key={toko.id_penitip}>
-                            <Row className="toko-header">
-                                <Col xs={12} className="d-flex align-items-center">
-                                    <img src={gambarToko} alt="Toko" className="toko-icon" />
-                                    <b>{toko.nama_penitip}</b>
-                                </Col>
-                            </Row>
+                    {cartItems.length === 0 ? (
+                        <div className="text-center my-5">
+                            <h5>Tidak Ada Barang di dalam Keranjang</h5>
+                        </div>
+                    ) : (
+                        cartItems.map((toko, tokoIndex) => (
+                            <div key={toko.id_penitip}>
+                                <Row className="toko-header">
+                                    <Col xs={12} className="d-flex align-items-center">
+                                        <img src={getThumbnailPenitip(toko.foto_penitip)} alt="Toko" className="toko-icon" />
+                                        <b>{toko.nama_penitip}</b>
+                                    </Col>
+                                </Row>
 
-                            {toko.barang.map((item, itemIndex) => (
-                                <div key={item.id_barang}>
-                                    <Row className="table-row align-items-center d-none d-md-flex">
-                                        <Col md={6} className="product-info d-flex align-items-center">
-                                            <img src={item.gambar_barang || gambarBarang} alt={item.nama_barang} className="product-img" />
-                                            <span className="product-name">{item.nama_barang}</span>
-                                        </Col>
-                                        <Col md={2} className="text-center">Rp{item.harga_barang?.toLocaleString('id-ID')}</Col>
-                                        <Col md={2} className="text-center">{item.quantity || 1}</Col>
-                                        <Col md={2} className="text-center">
-                                            <Button
-                                                variant="link"
-                                                className="delete-btn"
-                                                onClick={() => handleDeleteItem(item.id_keranjang)}
-                                            >
-                                                <FaTrash style={{ color: "red" }} />
-                                            </Button>
-                                        </Col>
-                                    </Row>
-
-                                    {/* Mobile view */}
-                                    <Row className="table-row align-items-center d-flex d-md-none">
-                                        <Col xs={12} className="product-info-mobile">
-                                            <div className="d-flex align-items-center mb-2">
-                                                <img src={item.gambar_barang || gambarBarang} alt={item.nama_barang} className="product-img" />
-                                                <div className="ms-3">
-                                                    <div className="product-name">{item.nama_barang}</div>
-                                                    <div className="d-flex justify-content-between mt-2">
-                                                        <div>Rp{item.harga_barang?.toLocaleString('id-ID')}</div>
-                                                        <div style={{ marginLeft: "10px" }}>Qty: {item.quantity || 1}</div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div className="text-end">
+                                {toko.barang.map((item, itemIndex) => (
+                                    <div key={item.id_barang}>
+                                        <Row className="table-row align-items-center d-none d-md-flex">
+                                            <Col md={6} className="product-info d-flex align-items-center">
+                                                <img src={getThumbnailBarang(item.foto_barang)} alt={item.nama_barang} className="product-img" />
+                                                <span className="product-name">{item.nama_barang}</span>
+                                            </Col>
+                                            <Col md={2} className="text-center">Rp{item.harga_barang?.toLocaleString('id-ID')}</Col>
+                                            <Col md={2} className="text-center">{item.quantity || 1}</Col>
+                                            <Col md={2} className="text-center">
                                                 <Button
                                                     variant="link"
                                                     className="delete-btn"
@@ -157,23 +145,50 @@ const CartPage = () => {
                                                 >
                                                     <FaTrash style={{ color: "red" }} />
                                                 </Button>
-                                            </div>
-                                        </Col>
-                                    </Row>
-                                </div>
-                            ))}
-                        </div>
-                    ))}
+                                            </Col>
+                                        </Row>
 
-                    {/* Total & actions */}
-                    <Row className="total-bill-row">
-                        <Col xs={12} className="total-bill">
-                            <p>
-                                Total Bill : <span className="points">(+{calculatePoints()} Points)</span>{" "}
-                                <b>Rp{calculateTotal().toLocaleString('id-ID')}</b>
-                            </p>
-                        </Col>
-                    </Row>
+                                        {/* Mobile view */}
+                                        <Row className="table-row align-items-center d-flex d-md-none">
+                                            <Col xs={12} className="product-info-mobile">
+                                                <div className="d-flex align-items-center mb-2">
+                                                    <img src={item.gambar_barang || gambarBarang} alt={item.nama_barang} className="product-img" />
+                                                    <div className="ms-3">
+                                                        <div className="product-name">{item.nama_barang}</div>
+                                                        <div className="d-flex justify-content-between mt-2">
+                                                            <div>Rp{item.harga_barang?.toLocaleString('id-ID')}</div>
+                                                            <div style={{ marginLeft: "10px" }}>Qty: {item.quantity || 1}</div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div className="text-end">
+                                                    <Button
+                                                        variant="link"
+                                                        className="delete-btn"
+                                                        onClick={() => handleDeleteItem(item.id_keranjang)}
+                                                    >
+                                                        <FaTrash style={{ color: "red" }} />
+                                                    </Button>
+                                                </div>
+                                            </Col>
+                                        </Row>
+                                    </div>
+                                ))}
+                            </div>
+                        ))
+                    )}
+
+                    {cartItems.length > 0 && (
+                        <Row className="total-bill-row">
+                            <Col xs={12} className="total-bill">
+                                <p>
+                                    Total Bill : <span className="points">(+{calculatePoints()} Points)</span>{" "}
+                                    <b>Rp{calculateTotal().toLocaleString('id-ID')}</b>
+                                </p>
+                            </Col>
+                        </Row>
+                    )}
+
 
                     <div className="cart-actions-container">
                         <Row className="cart-actions">

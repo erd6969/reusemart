@@ -10,6 +10,11 @@
     margin-top: 20px;
 }
 
+.modal-alamat-list-item:hover {
+    cursor: pointer;
+    background-color: #f0f0f0;
+}
+
 .modal-alamat-list-item {
     border: 1px solid #B7B7B7;
     border-radius: 5px;

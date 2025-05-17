@@ -119,20 +119,10 @@ class _MainAppState extends State<MainApp> {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return const MaterialApp(
       home: Scaffold(
-        body: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            const Expanded(child: Center(child: LoginPage())),
-            Padding(
-              padding: const EdgeInsets.all(12.0),
-              child: Text(
-                _fcmReady ? '✅ FCM Ready' : '⏳ Menunggu FCM siap...',
-                style: const TextStyle(fontSize: 16),
-              ),
-            ),
-          ],
+        body: Center(
+          child: LoginPage(),
         ),
       ),
     );

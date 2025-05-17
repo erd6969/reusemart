@@ -19,7 +19,6 @@ class NotificationController
 
         $notification = Notification::create($title, $body);
 
-        // Tambahkan data juga agar bisa ditangkap manual oleh Flutter
         $data = [
             'click_action' => 'FLUTTER_NOTIFICATION_CLICK',
             'title' => $title,

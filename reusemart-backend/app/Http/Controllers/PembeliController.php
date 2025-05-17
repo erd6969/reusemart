@@ -24,10 +24,6 @@ class PembeliController
                  'foto_pembeli' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048'
             ]);
             
-
-
-
-
             $foto_pembeli_path = 'blank-pembeli-profile-picture.png';
      
              $pembeli = Pembeli::create([
@@ -59,47 +55,12 @@ class PembeliController
         }
     }
 
-    /**
-     * Display a listing of the resource.
-     */
-    public function index()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
-    {
-        //
-    }
-
-    /**
-     * Display the specified resource.
-     */
     public function show()
     {
         $userProf = Auth()->user();
         return response()->json(
             $userProf
         , 200);
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, pembeli $pembeli)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(pembeli $pembeli)
-    {
-        //
     }
 
     public function showHistoryPurchase(){
@@ -121,6 +82,44 @@ class PembeliController
             return response()->json([
                 'message' => 'Success',
                 'data' => $products
+            ], 200);
+
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'Pembeli not found',
+                'error' => $e->getMessage(),
+            ], 404);
+        }
+    }
+
+    public function reducePoint($point){
+        try{
+            $pembeli = auth('pembeli')->user();
+            $pembeli->poin_loyalitas -= $point;
+            $pembeli->save();
+
+            return response()->json([
+                'message' => 'Success',
+                'data' => $pembeli
+            ], 200);
+
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'Pembeli not found',
+                'error' => $e->getMessage(),
+            ], 404);
+        }
+    }
+
+    public function addPoint($point){
+        try{
+            $pembeli = auth('pembeli')->user();
+            $pembeli->poin_loyalitas += $point;
+            $pembeli->save();
+
+            return response()->json([
+                'message' => 'Success',
+                'data' => $pembeli
             ], 200);
 
         } catch (\Exception $e) {

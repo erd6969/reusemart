@@ -1,21 +1,43 @@
 import './ModalPoint.css';
 import { Modal, Button } from "react-bootstrap";
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { toast } from 'react-toastify';
 
-const ModalPoint = ({ show, handleClose, availablePoints = 1000, onConfirm }) => {
+import { GetProfile } from '../../../api/apiPembeli';
+
+const ModalPoint = ({ show, handleClose, onConfirm }) => {
+    const [profile, setProfile] = useState({});
     const [points, setPoints] = useState('');
+
+    const fetchProfile = async () => {
+        try {
+            const response = await GetProfile();
+            setProfile(response);
+        } catch (error) {
+            console.error("Error fetching profile:", error);
+        }
+    };
+
+      useEffect(() => {
+        fetchProfile();
+    }, []);
   
     const handleConfirm = () => {
-      onConfirm(points);
-      setPoints('');
-      handleClose();
+      if (Number(points) > profile.poin_loyalitas) {
+          toast.warning("Poin yang dimasukkan melebihi poin yang tersedia");
+          return;
+      }else{
+        onConfirm(points);
+        setPoints('');
+        handleClose();
+      }   
     };
   
     return (
       <Modal show={show} onHide={handleClose} centered>
         <Modal.Body className="loyalty-modal-body">
           <h4 className="loyalty-title">Poin Loyalitas</h4>
-          <small className="points-available"><b>{availablePoints} Poin Tersedia</b></small>
+          <small className="points-available"><b>{profile.poin_loyalitas} Poin Tersedia</b></small>
           <div className="loyalty-input-container">
             <input
               type="number"

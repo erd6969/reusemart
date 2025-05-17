@@ -74,3 +74,68 @@ export const ShowHistoryPurchase = async () => {
         };
     }
 }
+
+export const AddPoint = async (data) => {
+    try {
+        const token = sessionStorage.getItem("token");
+        
+        const response = await useAxios.post(
+            `/pembeli/add-point/${data}`,
+            {},
+            {
+                headers: {
+                    "Content-Type": "application/json",
+                    "Accept": "application/json",
+                    "Authorization": `Bearer ${token}`,
+                },
+            });
+        return response.data;
+    } catch (error) {
+        const status = error.response?.status;
+
+        if (status === 422 && error.response?.data?.errors) {
+            throw {
+                type: "validation",
+                errors: error.response.data.errors,
+            };
+        }
+
+        throw {
+            type: "general",
+            message: error.response?.data?.message || "Terjadi kesalahan saat mengupdate point.",
+        };
+    }
+}
+
+export const ReducePoint = async (data) => {
+    try {
+        const token = sessionStorage.getItem("token");
+
+        const response = await useAxios.post(
+            `/pembeli/reduce-point/${data}`,
+            {},
+            {
+                headers: {
+                    "Content-Type": "application/json",
+                    "Accept": "application/json",
+                    "Authorization": `Bearer ${token}`,
+                },
+            }
+        );
+        return response.data;
+    } catch (error) {
+        const status = error.response?.status;
+
+        if (status === 422 && error.response?.data?.errors) {
+            throw {
+                type: "validation",
+                errors: error.response.data.errors,
+            };
+        }
+
+        throw {
+            type: "general",
+            message: error.response?.data?.message || "Terjadi kesalahan saat mengupdate point.",
+        };
+    }
+};

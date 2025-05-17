@@ -4,46 +4,68 @@ namespace App\Http\Controllers;
 
 use App\Models\TransaksiPembelian;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class TransaksiPembelianController
 {
-    /**
-     * Display a listing of the resource.
-     */
-    public function index()
+    public function createTransaksiPembelian(Request $request)
     {
-        //
+        try{
+            $pembeli = Auth::user();
+            if (!$pembeli) {
+                return response()->json([
+                    'message' => 'Unauthorized',
+                ], 401);
+            }
+
+            $transaksi = TransaksiPembelian::create([
+                'id_pembeli' => $pembeli->id_pembeli,
+                'id_alamat' => $request->id_alamat,
+                'tanggal_pembelian' => now(),
+                'batas_pembayaran' => now()->addMinutes(15),
+                'pengiriman' => $request->pengiriman,
+                'penggunaan_poin' => $request->penggunaan_poin,
+                'tambahan_poin' => $request->tambahan_poin,
+                'total_pembayaran' => $request->total_pembayaran,
+                'status_pembayaran' => 0,
+                'verifikasi_bukti' => 'belum diverifikasi',
+            ]);
+
+            return response()->json([
+                'message' => 'Transaksi Pembelian created successfully',
+                'transaksi' => $transaksi,
+            ], 201);
+        }catch (\Exception $e) {
+            return response()->json([
+                'message' => 'Failed to create Transaksi Pembelian',
+                'error' => $e->getMessage(),
+            ], 500);
+        }
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
+    public function showTransaksiPembelian()
     {
-        //
-    }
+        try {
+            $pembeli = Auth::user();
+            if (!$pembeli) {
+                return response()->json([
+                    'message' => 'Unauthorized',
+                ], 401);
+            }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(transaksi_pembelian $transaksi_pembelian)
-    {
-        //
-    }
+            $transaksi = TransaksiPembelian::where('id_pembeli', $pembeli->id_pembeli)
+                        ->orderBy('id_transaksi_pembelian', 'desc')
+                        ->first();
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, transaksi_pembelian $transaksi_pembelian)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(transaksi_pembelian $transaksi_pembelian)
-    {
-        //
+            return response()->json([
+                'message' => 'Daftar Transaksi Pembelian retrieved successfully',
+                'transaksi' => $transaksi,
+            ], 200);
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'Failed to retrieve Transaksi Pembelian',
+                'error' => $e->getMessage(),
+            ], 500);
+        }
     }
 }

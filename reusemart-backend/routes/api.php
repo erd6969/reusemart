@@ -17,6 +17,9 @@ use App\Http\Controllers\HunterController;
 use App\Http\Controllers\KeranjangController;
 use App\Http\Controllers\RequestDonasiController;
 use App\Http\Controllers\NotificationController;
+use App\Http\Controllers\KomisiController;
+use App\Http\Controllers\TransaksiPembelianController;
+
 
 Route::post('/send-konfirmasi-email', [EmailController::class, 'sendKonfirmasiEmail']);
 Route::post('/reset-password', [LoginController::class, 'resetPassword']);
@@ -91,6 +94,18 @@ Route::middleware('auth:pembeli')->group(function () {
     Route::get('/pembeli/check-cart', [KeranjangController::class, 'checkCart']);
     Route::get('pembeli/count-cart', [KeranjangController::class, 'countCart']);
     Route::delete('/pembeli/delete-all-cart', [KeranjangController::class, 'deleteAll']);
+
+    Route::get('/pembeli/get-alamat-utama', [AlamatController::class, 'getAlamatUtama']);
+    Route::get('/pembeli/get-alamat-by-id/{id}', [AlamatController::class, 'getAlamatById']);
+
+    Route::post('/pembeli/add-point/{poin}', [PembeliController::class, 'addPoint']);
+    Route::post('/pembeli/reduce-point/{poin}', [PembeliController::class, 'reducePoint']);
+
+    Route::post('/pembeli/create-komisi/{id_barang}', [KomisiController::class, 'createKomisi']);
+    Route::get('/pembeli/get-komponen-komisi/{id_barang}', [KomisiController::class, 'getKomponenKomisi']);
+
+    Route::post('/pembeli/create-transaksi-pembelian', [TransaksiPembelianController::class, 'createTransaksiPembelian']);
+    Route::get('/pembeli/show-transaksi-pembelian', [TransaksiPembelianController::class, 'showTransaksiPembelian']);
 });
 #endregion
 

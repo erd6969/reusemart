@@ -1,63 +1,51 @@
 import './ModalListAlamat.css';
-import { Modal, Container } from "react-bootstrap";
-import { useState } from 'react';
+import { Modal, Container, Spinner  } from "react-bootstrap";
+import { useEffect, useState } from 'react';
 import SearchIcon from "../../../assets/images/search-icon.png";
 
-const AlamatDetail = ({
-  namaAlamat,
-  alamat,
-  keterangan,
-  kecamatan,
-  kabupaten,
-  kelurahan,
-  kodePos,
-  main
-}) => {
+import { GetAllAlamat } from "../../../api/apiAlamat";
+
+const AlamatDetail = ({ alamat, main, onSelect }) => {
   return (
-    <Container className="modal-alamat-list-item">
+    <Container
+      className="modal-alamat-list-item"
+      onClick={() => onSelect(alamat.id_alamat)}
+      style={{ cursor: 'pointer' }}
+    >
       <div className="modal-nama-alamat-container">
-        <b className="modal-nama-alamat">{namaAlamat}</b>
-        {main && <span className="modal-main-address">Alamat Utama</span>}
+        <b className="modal-nama-alamat">{alamat.nama_alamat}</b>
+        {main && (
+          <span className="modal-main-address">Alamat Utama</span>
+        )}
       </div>
       <p>
-        {alamat} ({keterangan}), {kelurahan}, Kecamatan {kecamatan}, Kabupaten {kabupaten}, {kodePos}
+        {alamat.alamat} ({alamat.keterangan}), {alamat.kelurahan}, {alamat.kecamatan}, Kabupaten {alamat.kabupaten}, {alamat.kode_pos}
       </p>
     </Container>
   );
 };
 
-const ModalListAlamat = ({ show, handleClose }) => {
+const ModalListAlamat = ({ show, handleClose, onSelect }) => {
+  const [addresses, setAddresses] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
   const [mainIndex, setMainIndex] = useState(0);
 
-  const addresses = [
-    {
-      namaAlamat: "Rumah",
-      alamat: "Jalan Putanginamo Talaga Gago No. 69",
-      keterangan: "Depan SilitWangi",
-      kecamatan: "Caturtunggal",
-      kabupaten: "Depok",
-      kelurahan: "Sleman",
-      kodePos: "40115",
-    },
-    {
-      namaAlamat: "Kantor",
-      alamat: "Jalan Putanginamo Talaga Gago No. 69",
-      keterangan: "Depan SilitWangi",
-      kecamatan: "Caturtunggal",
-      kabupaten: "Depok",
-      kelurahan: "Sleman",
-      kodePos: "40115",
-    },
-    {
-      namaAlamat: "Sex Chamber",
-      alamat: "Jalan Putanginamo Talaga Gago No. 69",
-      keterangan: "Depan SilitWangi",
-      kecamatan: "Caturtunggal",
-      kabupaten: "Depok",
-      kelurahan: "Sleman",
-      kodePos: "40115",
-    }
-  ];
+  const fetchAlamat = () => {
+    setIsLoading(true);
+    GetAllAlamat()
+      .then((data) => {
+        setAddresses(data);
+        setIsLoading(false);
+      })
+      .catch((error) => {
+        console.error("Error fetching address:", error);
+        setIsLoading(false);
+      });
+  };
+
+  useEffect(() => {
+    fetchAlamat();
+  }, []);
 
   return (
     <Modal show={show} onHide={handleClose} centered size="lg">
@@ -71,18 +59,30 @@ const ModalListAlamat = ({ show, handleClose }) => {
             <input type="text" placeholder="Masukkan Alamat" className="modal-search-input" />
           </div>
           <div className="modal-alamat-list">
-            {addresses.map((address, index) => (
-              <AlamatDetail
-                key={index}
-                {...address}
-                main={mainIndex === index}
-              />
-            ))}
+            {isLoading ? (
+              <div className="loading-container">
+                <Spinner animation="border" variant="primary" />
+                <span className="ms-3">Loading...</span>
+              </div>
+            ) : (
+              addresses.map((alamat, index) => (
+                <AlamatDetail
+                  key={index}
+                  alamat={alamat}
+                  main={mainIndex === index}
+                  onSelect={(id) => {
+                    onSelect(id); // kirim ID ke parent
+                    handleClose(); // tutup modal
+                  }}
+                />
+              ))
+            )}
           </div>
         </div>
       </Modal.Body>
     </Modal>
   );
 };
+
 
 export default ModalListAlamat;

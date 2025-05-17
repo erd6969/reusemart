@@ -99,3 +99,33 @@ export const DeleteAlamat = async (id) => {
     throw error?.response?.data || error;
   }
 };
+
+export const GetAlamatUtama = async () => {
+  try {
+    const response = await useAxios.get("/pembeli/get-alamat-utama", {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${getToken()}`,
+      },
+    });
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching main address:", error);
+    throw error?.response?.data || error;
+  }
+}
+
+export const GetAlamatById = async (id) => {
+  try {
+    const response = await useAxios.get(`/pembeli/get-alamat-by-id/${id}`, {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${getToken()}`,
+      },
+    });
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching address by ID:", error);
+    throw error?.response?.data || error;
+  }
+}

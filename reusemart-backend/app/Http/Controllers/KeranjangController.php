@@ -87,6 +87,7 @@ class KeranjangController
                     'keranjang.*',
                     'barang.*',
                     'penitip.id_penitip',
+                    'penitip.foto_penitip',
                     'penitip.nama_penitip'
                 )
                 ->get();
@@ -96,12 +97,14 @@ class KeranjangController
                 return [
                     'id_penitip' => $group[0]->id_penitip,
                     'nama_penitip' => $group[0]->nama_penitip,
+                    'foto_penitip' => $group[0]->foto_penitip,
                     'barang' => $group->map(function ($item) {
                         return [
                             'id_keranjang' => $item->id_keranjang,
                             'id_barang' => $item->id_barang,
                             'nama_barang' => $item->nama_barang,
                             'harga_barang' => $item->harga_barang,
+                            'foto_barang' => $item->foto_barang,
                             'jumlah' => $item->jumlah ?? 1,
                         ];
                     })->values()

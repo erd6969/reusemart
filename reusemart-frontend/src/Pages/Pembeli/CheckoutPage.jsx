@@ -12,7 +12,7 @@ import { getThumbnailBarang, getThumbnailPenitip } from "../../api";
 
 import { GetAlamatUtama, GetAlamatById } from '../../api/apiAlamat';
 import { GetProfile, ReducePoint } from '../../api/apiPembeli';
-import { CreateKomisi, GetKomponenKomisi } from '../../api/apiKomisi';
+import { CreateKomisi } from '../../api/apiKomisi';
 import { CreateTransaksiPembelian } from '../../api/apiTransaksiPembelian';
 
 import { useCart } from "../../Components/Context/CartContext";

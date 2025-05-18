@@ -57,10 +57,10 @@ const PenitipSide = () => {
             <div className='penitip-product-section'>
                 <b>Product</b>
                 <ul>
-                    <li onClick={() => navigate('/penitip/on-sale')}>On Sale Products</li>
-                    <li onClick={() => navigate('/penitip/history')}>Sold Products</li>
-                    <li onClick={() => navigate('/penitip/expired')}>Expired Custody Products</li>
-                    <li onClick={() => navigate('/penitip/donated')}>Donated Products</li>
+                    <li onClick={() => navigate('/penitip/on-sale')}>Barang yang sedang dijual</li>
+                    <li onClick={() => navigate('/penitip/sold-product')}>Barang yang terjual</li>
+                    <li onClick={() => navigate('/penitip/extend')}>Perpanjangan Barang</li>
+                    <li onClick={() => navigate('/penitip/donated')}>Donasi Barang</li>
                 </ul>
             </div>
         </div>

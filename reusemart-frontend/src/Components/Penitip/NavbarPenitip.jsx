@@ -90,7 +90,7 @@ const TopNavbar = () => {
                                             </Nav.Link>
                                         </li>
                                         <li>
-                                            <Nav.Link onClick={() => navigate("/penitip/history")}>
+                                            <Nav.Link onClick={() => navigate("/penitip/sold-product")}>
                                                 Daftar Penitipan
                                             </Nav.Link>
                                         </li>

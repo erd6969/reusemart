@@ -1,30 +1,46 @@
 import './SoldProductPage.css';
 import { useState, useEffect } from 'react';
 import SearchIcon from "../../assets/images/search-icon.png";
+import { Button, Badge } from 'react-bootstrap';
+import { FaChevronLeft, FaChevronRight, FaSearch } from "react-icons/fa";
+
 
 import { ShowDonatedProduct } from "../../api/apiPenitip";
-import { getThumbnail } from "../../api/index";
+import { getThumbnailBarang } from "../../api/index";
 
 const DonatedProductPage = () => {
     const [donatedProduct, setDonatedProduct] = useState([]);
     const [loading, setLoading] = useState(true);
+    const [currentPage, setCurrentPage] = useState(1);
+    const [totalPages, setTotalPages] = useState(1);
 
+
+    const fetchDonatedProduct = async (page = 1) => {
+        try {
+            const response = await ShowDonatedProduct(page);
+            setDonatedProduct(response.data);
+            setTotalPages(response.last_page);
+            setCurrentPage(response.current_page);
+            console.log("Fetched doanted products:", response.data);
+
+        } catch (error) {
+            console.error("Error fetching donted products:", error);
+            setDonatedProduct([]);
+        } finally {
+            setLoading(false);
+        }
+    };
     useEffect(() => {
-        const fetchDonatedProduct = async () => {
-            try {
-                const response = await ShowDonatedProduct();
-                setDonatedProduct(response.data);
-                console.log("Fetched on sale products:", response.data);
+        fetchDonatedProduct(currentPage);
+    }, [currentPage]);
 
-            } catch (error) {
-                console.error("Error fetching sold products:", error);
-            } finally {
-                setLoading(false);
-            }
-        };
-
-        fetchDonatedProduct();
-    }, []);
+    const handlePagination = (page) => {
+        if (page >= 1 && page <= totalPages) {
+            setLoading(true);
+            setCurrentPage(page);
+            fetchDonatedProduct(page);
+        }
+    };
 
     return (
         <div className="histori-penitipan-wrapper">
@@ -43,7 +59,7 @@ const DonatedProductPage = () => {
                     {loading ? (
                         <p>Loading...</p>
                     ) : donatedProduct.length === 0 ? (
-                        <p style={{textAlign:"center"}}>Tidak ada produk yang sedang didonasikan.</p>
+                        <p style={{ textAlign: "center" }}>Tidak ada produk yang sedang didonasikan.</p>
                     ) : (
                         <table className="sold-products-table">
                             <thead>
@@ -52,23 +68,57 @@ const DonatedProductPage = () => {
                                     <th>Tanggal Donasi</th>
                                     <th>Organisasi</th>
                                     <th>Nama Penerima</th>
+                                    <th>Status</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                {donatedProduct.map((product, index) => (
-                                    <tr key={index}>
-                                        <td className="product-info">
-                                            <img src={getThumbnail(product.foto_barang) || defaultImage} alt={product.nama_barang} />
-                                            <b>{product.nama_barang}</b>
-                                        </td>
-                                        <td>{product.tanggal_donasi?.substring(0, 10)}</td>
-                                        <td>{product.nama_organisasi}</td>
-                                        <td>{product.nama_penerima}</td>
-                                    </tr>
-                                ))}
+                                {donatedProduct.map((product, index) => {
+                                    const isOpenDonasi = product.status_penitipan === "open donasi";
+                                    return (
+                                        <tr key={index}>
+                                            <td className={"product-info"} style={{ width: '200%' }}>
+                                                <img src={getThumbnailBarang(product.foto_barang) || defaultImage} alt={product.nama_barang} style={{ maxWidth: '5vw' }} />
+                                                <b>{product.nama_barang}</b>
+                                            </td>
+                                            <td>{isOpenDonasi ? "-" : product.tanggal_donasi?.substring(0, 10)}</td>
+                                            <td>{isOpenDonasi ? "-" : product.nama_organisasi}</td>
+                                            <td>{isOpenDonasi ? "-" : product.nama_penerima}</td>
+                                            <td>
+                                                <td>
+                                                    {product.status_penitipan?.toLowerCase() === "open donasi" ? (
+                                                        <Badge bg="success">Open Donasi</Badge>
+                                                    ) : product.status_penitipan?.toLowerCase() === "didonasikan" ? (
+                                                        <Badge bg="secondary">Didonasikan</Badge>
+                                                    ) : (
+                                                        <Badge bg="warning">Status ga ada</Badge>
+                                                    )}
+                                                </td>
+                                            </td>
+                                        </tr>
+                                    );
+                                })}
                             </tbody>
                         </table>
                     )}
+                </div>
+                <div className="pagination d-flex justify-content-center align-items-center mt-4">
+                    <Button
+                        variant="secondary"
+                        disabled={currentPage === 1}
+                        onClick={() => handlePagination(currentPage - 1)}
+                        className="me-2"
+                    >
+                        <FaChevronLeft />
+                    </Button>
+                    <span>Halaman {currentPage} dari {totalPages}</span>
+                    <Button
+                        variant="secondary"
+                        disabled={currentPage === totalPages}
+                        onClick={() => handlePagination(currentPage + 1)}
+                        className="ms-2"
+                    >
+                        <FaChevronRight />
+                    </Button>
                 </div>
             </div>
         </div>

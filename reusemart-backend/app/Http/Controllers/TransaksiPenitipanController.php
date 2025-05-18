@@ -58,6 +58,17 @@ class TransaksiPenitipanController
         );
     }
 
+    public function showById($id)
+    {
+        $TransaksiPenitipan = TransaksiPenitipan::with(['penitip:id_penitip,nama_penitip,email_penitip'])
+        ->where('id_transaksi_penitipan', $id)
+        ->first();
+        // $TransaksiPenitipan = TransaksiPenitipan::with(['penitip', 'detailTransaksiPenitipan.barang'])->get();
+        return response()->json(
+            $TransaksiPenitipan
+        );
+    }
+
     public function search($search_data)
     {
         $TransaksiPenitipan = TransaksiPenitipan::with(['penitip'])

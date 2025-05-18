@@ -56,7 +56,7 @@ import PenitipProductLayout from "../Layouts/PenitipContentLayouts";
 import ProfilPenitip from "../Pages/Penitip/ProfilePenitipPage";
 import SoldProductPage from "../Pages/Penitip/SoldProductPage";
 import OnSaleProductPage from "../Pages/Penitip/OnSaleProductPage";
-import ExpiredProductPage from "../Pages/Penitip/ExpiredProductPage";
+import ExtendProductPage from "../Pages/Penitip/ExtendProductPage";
 import DonatedProductPage from "../Pages/Penitip/DonatedProductPage";
 
 //CS
@@ -69,6 +69,7 @@ import CSVerifikasiBuktiPage from "../Pages/CustomerService/CSVerifikasiBuktiPag
 import OwnerLayouts from "../Layouts/OwnerLayouts";
 import ReqDonasiShowBarang from "../Pages/Owner/ReqDonasiShowBarang";
 import PegawaiGudangLayout from "../Layouts/PegawaiGudangLayouts";
+import DetailTransaksiPenitipanPage from "../Pages/PegawaiGudang/DetailTransaksiPenitipanPage";
 
 const router = createBrowserRouter([
     {
@@ -222,6 +223,10 @@ const router = createBrowserRouter([
                 path: "penitipan-barang",
                 element: <PenitipanBarangPage />,
             },
+            {
+                path: "detail-transaksi-penitipan/:id_transaksi_penitipan",
+                element: <DetailTransaksiPenitipanPage />,
+            }
         ],
     },
 
@@ -354,9 +359,9 @@ const router = createBrowserRouter([
                 path: "",
                 element: <PenitipProductLayout />,
                 children: [
-                    { path: "history", element: <SoldProductPage /> },
                     { path: "on-sale", element: <OnSaleProductPage /> },
-                    { path: "expired", element: <ExpiredProductPage /> },
+                    { path: "sold-product", element: <SoldProductPage /> },
+                    { path: "extend", element: <ExtendProductPage /> },
                     { path: "donated", element: <DonatedProductPage /> },
                 ],
             },

@@ -36,6 +36,7 @@ const PenitipanBarangPage = () => {
     const [showModal, setShowModal] = useState(false);
     const [showModalCreate, setShowModalCreate] = useState(false);
     const [selectedTransaksi, setSelectedTransaksi] = useState(null);
+    const navigate = useNavigate();
 
     // Pagination states
     const [currentPage, setCurrentPage] = useState(1);
@@ -95,6 +96,10 @@ const PenitipanBarangPage = () => {
             }
         }
     };
+
+    const handleBarangPage = (id) => {
+        navigate(`/pegawai-gudang/detail-transaksi-penitipan/${id}`);
+    }
 
     const handleEdit = (tp) => {
         setSelectedTransaksi(tp);
@@ -160,7 +165,7 @@ const PenitipanBarangPage = () => {
                                         <td>{tp.penitip.email_penitip}</td>
                                         <td className="actionButtons">
                                             <Button variant="warning" onClick={() => handleEdit(tp)}>Edit</Button>
-                                            <Button variant="success" onClick={() => handleDelete(tp.id_pegawai)}>Barang</Button>
+                                            <Button variant="success" onClick={() => handleBarangPage(tp.id_transaksi_penitipan)}>Barang</Button>
                                         </td>
                                     </tr>
                                 ))

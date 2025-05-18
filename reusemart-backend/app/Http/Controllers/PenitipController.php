@@ -7,7 +7,10 @@ use App\Models\Barang;
 use App\Models\DetailTransaksiPenitipan;
 use App\Models\TransaksiPenitipan;
 use App\Models\Komisi;
+
 use Illuminate\Http\Request;
+use Carbon\Carbon;
+
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\ValidationException;
@@ -32,7 +35,7 @@ class PenitipController
                 'NIK' => 'required|string|max:16|unique:penitip,NIK',
                 'foto_ktp' => 'required|image|mimes:jpeg,png,jpg,gif',
                 'foto_penitip' => 'nullable|image|mimes:jpeg,png,jpg,gif'
-            ],[
+            ], [
                 'NIK.unique' => 'NIK sudah terdaftar',
             ]);
 
@@ -187,7 +190,7 @@ class PenitipController
                 $uploadedImageResponse = basename($image_uploaded_path);
 
                 if ($penitip->foto_penitip && Storage::disk('public')->exists($uploadPath . '/' . $penitip->foto_penitip)) {
-                    Storage::disk('public')->delete($uploadPath . '/'. $penitip->foto_penitip);
+                    Storage::disk('public')->delete($uploadPath . '/' . $penitip->foto_penitip);
                 }
 
                 $updateData['foto_penitip'] = $uploadedImageResponse;
@@ -259,7 +262,7 @@ class PenitipController
                 ->join('komisi', 'komisi.id_barang', '=', 'barang.id_barang')
                 ->join('transaksi_pembelian', 'transaksi_pembelian.id_transaksi_pembelian', '=', 'komisi.id_transaksi_pembelian')
                 ->where('transaksi_penitipan.id_penitip', $penitip->id_penitip)
-                ->where('detail_transaksi_penitipan.status_penitipan', 'terjual')
+                ->whereIn('detail_transaksi_penitipan.status_penitipan', ['terjual', 'proses pembayaran'])
                 ->select(
                     'barang.*',
                     'transaksi_pembelian.tanggal_pembelian'
@@ -279,6 +282,79 @@ class PenitipController
         }
     }
 
+    public function showOnSaleProducts()
+    {
+        try {
+            $penitip = auth('penitip')->user();
+
+            $products = DB::table('transaksi_penitipan')
+                ->join('detail_transaksi_penitipan', 'transaksi_penitipan.id_transaksi_penitipan', '=', 'detail_transaksi_penitipan.id_transaksi_penitipan')
+                ->join('barang', 'detail_transaksi_penitipan.id_barang', '=', 'barang.id_barang')
+                ->leftJoin('komisi', 'komisi.id_barang', '=', 'barang.id_barang')
+                ->leftJoin('transaksi_pembelian', 'transaksi_pembelian.id_transaksi_pembelian', '=', 'komisi.id_transaksi_pembelian')
+                ->where('transaksi_penitipan.id_penitip', $penitip->id_penitip)
+                ->where('detail_transaksi_penitipan.status_penitipan', 'ready jual')
+                ->select('barang.*', 'detail_transaksi_penitipan.tanggal_berakhir')
+                ->distinct()
+                ->get();
+
+
+            return response()->json([
+                'message' => 'Success',
+                'data' => $products
+            ], 200);
+
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'Penitip not found',
+                'error' => $e->getMessage(),
+            ], 404);
+        }
+    }
+
+    public function showExtendProducts()
+{
+    try {
+        $penitip = auth('penitip')->user();
+        $today = Carbon::now()->toDateString();
+
+       
+        DetailTransaksiPenitipan::whereIn('status_penitipan', ['ready jual', 'masa pengambilan'])
+            ->whereDate('tanggal_berakhir', '<', $today)
+            ->update(['status_penitipan' => 'open donasi']);
+
+    
+        $products = DB::table('transaksi_penitipan')
+            ->join('detail_transaksi_penitipan', 'transaksi_penitipan.id_transaksi_penitipan', '=', 'detail_transaksi_penitipan.id_transaksi_penitipan')
+            ->join('barang', 'detail_transaksi_penitipan.id_barang', '=', 'barang.id_barang')
+            ->leftJoin('komisi', 'komisi.id_barang', '=', 'barang.id_barang')
+            ->leftJoin('transaksi_pembelian', 'transaksi_pembelian.id_transaksi_pembelian', '=', 'komisi.id_transaksi_pembelian')
+            ->where('transaksi_penitipan.id_penitip', $penitip->id_penitip)
+            ->whereIn('detail_transaksi_penitipan.status_penitipan', ['ready jual', 'masa pengambilan'])
+            ->whereDate('detail_transaksi_penitipan.tanggal_berakhir', '>=', $today)
+            ->select(
+                'barang.*',
+                'detail_transaksi_penitipan.status_penitipan',
+                'detail_transaksi_penitipan.tanggal_berakhir',
+                'detail_transaksi_penitipan.tanggal_batas_pengambilan',
+                'detail_transaksi_penitipan.id_detail_transaksi_penitipan',
+                'detail_transaksi_penitipan.status_perpanjangan',
+            )
+            ->distinct()
+            ->get();
+
+        return response()->json([
+            'message' => 'Success',
+            'data' => $products
+        ], 200);
+
+    } catch (\Exception $e) {
+        return response()->json([
+            'message' => 'Penitip not found',
+            'error' => $e->getMessage(),
+        ], 404);
+    }
+}
     public function showDonatedProducts()
     {
         try {
@@ -287,24 +363,23 @@ class PenitipController
             $products = DB::table('transaksi_penitipan')
                 ->join('detail_transaksi_penitipan', 'transaksi_penitipan.id_transaksi_penitipan', '=', 'detail_transaksi_penitipan.id_transaksi_penitipan')
                 ->join('barang', 'detail_transaksi_penitipan.id_barang', '=', 'barang.id_barang')
-                ->join('request_donasi', 'request_donasi.id_barang', '=', 'barang.id_barang')
-                ->join('transaksi_donasi', 'transaksi_donasi.id_request_donasi', '=', 'request_donasi.id_request_donasi')
-                ->join('organisasi', 'transaksi_donasi.id_organisasi', '=', 'organisasi.id_organisasi')
+                ->leftJoin('transaksi_donasi', 'transaksi_donasi.id_barang', '=', 'barang.id_barang')
+                ->leftJoin('organisasi', 'transaksi_donasi.id_organisasi', '=', 'organisasi.id_organisasi')
                 ->where('transaksi_penitipan.id_penitip', $penitip->id_penitip)
-                ->whereIn('detail_transaksi_penitipan.status_penitipan', ['sudah didonasikan'])
+                ->whereIn('detail_transaksi_penitipan.status_penitipan', ['didonasikan', 'open donasi'])
                 ->select(
                     'barang.*',
                     'transaksi_donasi.tanggal_donasi',
                     'transaksi_donasi.nama_penerima',
+                    'detail_transaksi_penitipan.status_penitipan',
                     'organisasi.nama_organisasi'
-                )
-                ->get();
-
-            return response()->json([
-                'message' => 'Success',
-                'data' => $products
-            ], 200);
-
+                    )
+                    ->orderByRaw("FIELD(detail_transaksi_penitipan.status_penitipan, 'open donasi', 'didonasikan')")
+                    ->paginate(5);
+                
+                
+                
+                return response()->json($products, 200);
         } catch (\Exception $e) {
             return response()->json([
                 'message' => 'Penitip not found',
@@ -335,6 +410,56 @@ class PenitipController
                 'error' => $e->getMessage(),
             ], 404);
         }
+    }
+
+    public function extendBarangPenitip(Request $request){
+        $detailTransaksi = DetailTransaksiPenitipan::where('id_detail_transaksi_penitipan', $request->id_detail_transaksi_penitipan)->first();
+
+        if (!$detailTransaksi) {
+            return response()->json([
+                'message' => 'Detail Transaksi not found',
+            ], 404);
+        }
+
+        if($detailTransaksi->tanggal_berakhir <= Carbon::now()){
+            return response()->json([
+                'message' => 'Barang sudah kadaluarsa',
+            ], 400);
+        }
+
+
+        $tanggalBerakhirBaru = $detailTransaksi->tanggal_berakhir->addDays(30);
+        $batasPengambilanBaru = $tanggalBerakhirBaru->copy()->addDays(7);
+
+        $detailTransaksi->update([
+            'tanggal_berakhir' => $tanggalBerakhirBaru,
+            'tanggal_batas_pengambilan' => $batasPengambilanBaru,
+            'status_perpanjangan' => 1,
+        ]);
+
+
+        return response()->json([
+            'message' => 'Perpanjangan berhasil',
+        ], 200);
+    }
+
+
+    public function pengambilanBarang(Request $request){
+        $detailTransaksi = DetailTransaksiPenitipan::where('id_barang', $request->id_barang)->first();
+
+        if (!$detailTransaksi) {
+            return response()->json([
+                'message' => 'Barang not found',
+            ], 404);
+        }
+
+        $detailTransaksi->update([
+            'status_penitipan' => 'masa pengambilan',
+        ]);
+
+        return response()->json([
+            'message' => 'Barang berhasil diambil',
+        ], 200);
     }
 
     public function searchByEmail($email_penitip)

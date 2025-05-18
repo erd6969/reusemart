@@ -5,12 +5,47 @@ const getToken = () => {
 };
 
 
+export const CreateBarang = async (formData) => {
+    try {
+        const response = await useAxios.post("/barang/create", formData, {
+            headers: {
+                "Content-Type": "multipart/form-data",
+                "Accept": "application/json",
+                Authorization: `Bearer ${getToken()}`
+            },
+        });
+        console.log("Create Barang response:", response);
+        return response.data;
+    } catch (error) {
+        console.error("Error creating Barangssss:", error.response.data);
+        throw error?.response?.data || error;
+    }
+}
+
+export const EditBarang = async (formData) => {
+    try {
+        const response = await useAxios.post("/barang/update", formData, {
+            headers: {
+                "Content-Type": "multipart/form-data",
+                "Accept": "application/json",
+                Authorization: `Bearer ${getToken()}`
+            },
+        });
+        console.log("Edit Barang response:", response);
+        return response.data;
+    } catch (error) {
+        console.error("Error editing Barang:", error.response.data);
+        throw error?.response?.data || error;
+    }
+}
+
+
 export const GetAllBarang = async () => {
     try {
         const response = await useAxios.get("/shop-page", {
             headers: {
                 "Content-Type": "application/json",
-                Authorization: `Bearer 6|BNr8C7LePAA4aPzDEyc15MPFcuSBNMicT3k8JWHra16c5ea6`
+                Authorization: `Bearer ${getToken()}`
             },
         });
         console.log("Barang response:", response);
@@ -43,7 +78,7 @@ export const GetAllBarangByCategory = async (kategori) => {
         const response = await useAxios.get(`/shop-page/${kategori}`, {
             headers: {
                 "Content-Type": "application/json",
-                Authorization: `Bearer 6|BNr8C7LePAA4aPzDEyc15MPFcuSBNMicT3k8JWHra16c5ea6`
+                Authorization: `Bearer ${getToken()}`
             },
         });
         console.log("Barang by kategori response:", response);
@@ -59,7 +94,7 @@ export const GetDetailBarang = async (id_barang) => {
         const response = await useAxios.get(`/detail-barang/${id_barang}`, {
             headers: {
                 "Content-Type": "application/json",
-                Authorization: `Bearer 6|BNr8C7LePAA4aPzDEyc15MPFcuSBNMicT3k8JWHra16c5ea6`
+                Authorization: `Bearer ${getToken()}`
             },
         });
         console.log("Detail Barang response:", response);
@@ -76,7 +111,7 @@ export const SearchBarang = async (search_barang) => {
       const response = await useAxios.get(`/shop-page/search-barang/${search_barang}`, {
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer 6|BNr8C7LePAA4aPzDEyc15MPFcuSBNMicT3k8JWHra16c5ea6`
+          Authorization: `Bearer ${getToken()}`
         },
       });
       return response.data;

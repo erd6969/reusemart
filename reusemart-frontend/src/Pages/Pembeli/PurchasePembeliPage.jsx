@@ -105,7 +105,7 @@ const PurchasePembeliPage = () => {
                         <Button variant={statusFilter.toLowerCase() === "sedang disiapkan" ? "warning" : "outline-warning"} className="me-2" onClick={() => setStatusFilter('sedang disiapkan')}>Sedang Disiapkan</Button>
                         <Button variant={statusFilter.toLowerCase() === "sedang diantar" ? "warning" : "outline-warning"} className="me-2" onClick={() => setStatusFilter('sedang diantar')}>Sedang Diantar</Button>
                         <Button variant={statusFilter.toLowerCase() === "siap diambil" ? "warning" : "outline-warning"} className="me-2" onClick={() => setStatusFilter('siap diambil')}>Siap diambil</Button>
-                        <Button variant={statusFilter.toLowerCase() === "sudah sampai" ? "warning" : "outline-warning"} className="me-2" onClick={() => setStatusFilter('sudah sampai')}>Sudah sampai</Button>
+                        <Button variant={statusFilter.toLowerCase() === "sudah sampai" ? "warning" : "outline-warning"} className="me-2" onClick={() => setStatusFilter('sudah diterima')}>Sudah diterima</Button>
                     </div>
 
                     <div className="mb-3 d-flex gap-2 align-items-center">

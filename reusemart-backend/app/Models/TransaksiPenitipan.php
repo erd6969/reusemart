@@ -8,24 +8,16 @@ class TransaksiPenitipan extends Model
 {
     protected $table = 'transaksi_penitipan';
     protected $primaryKey = 'id_transaksi_penitipan';
+    public $timestamps = false;
     protected $fillable = [
         'id_transaksi_penitipan',
         'id_penitip',
         'tanggal_penitipan',
-        'status_penitipan',
-        'tanggal_berakhir',
-        'tanggal_batas_pengambilan',
-        'status_perpanjangan'
     ];
-    public $timestamps = true;
 
     public function penitip()
     {
         return $this->belongsTo(Penitip::class, 'id_penitip', 'id_penitip');
-    }
-    public function barang()
-    {
-        return $this->hasMany(Barang::class, 'id_barang', 'id_barang');
     }
 
     public function detailTransaksiPenitipan()

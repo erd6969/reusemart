@@ -6,7 +6,7 @@ import "./main.css";
 import "react-toastify/dist/ReactToastify.css";
 
 createRoot(document.getElementById('root')).render(
-  <StrictMode>
+  // <StrictMode>
     <AppRouter />
-  </StrictMode>,
+  /* </StrictMode>, */
 )

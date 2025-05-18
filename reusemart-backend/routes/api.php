@@ -17,9 +17,11 @@ use App\Http\Controllers\HunterController;
 use App\Http\Controllers\KeranjangController;
 use App\Http\Controllers\RequestDonasiController;
 use App\Http\Controllers\NotificationController;
+use App\Http\Controllers\DetailTransaksiPenitipanController;
+use App\Http\Controllers\KategoriController;
+
 use App\Http\Controllers\KomisiController;
 use App\Http\Controllers\TransaksiPembelianController;
-
 
 Route::post('/send-konfirmasi-email', [EmailController::class, 'sendKonfirmasiEmail']);
 Route::post('/reset-password', [LoginController::class, 'resetPassword']);
@@ -106,10 +108,12 @@ Route::middleware('auth:pembeli')->group(function () {
     Route::post('/pembeli/reduce-point/{poin}', [PembeliController::class, 'reducePoint']);
 
     Route::post('/pembeli/create-komisi/{id_barang}', [KomisiController::class, 'createKomisi']);
-    Route::get('/pembeli/get-komponen-komisi/{id_barang}', [KomisiController::class, 'getKomponenKomisi']);
+    // Route::get('/pembeli/get-komponen-komisi/{id_barang}', [KomisiController::class, 'getKomponenKomisi']);
 
     Route::post('/pembeli/create-transaksi-pembelian', [TransaksiPembelianController::class, 'createTransaksiPembelian']);
     Route::get('/pembeli/show-transaksi-pembelian', [TransaksiPembelianController::class, 'showTransaksiPembelian']);
+    Route::post('/pembeli/cancel-transaksi-pembelian', [TransaksiPembelianController::class, 'cancelTransaksiPembelian']);
+    Route::post('/pembeli/finalize-transaksi-pembelian', [TransaksiPembelianController::class, 'finalizeTransaksiPembelian']);
 });
 #endregion
 
@@ -136,7 +140,20 @@ Route::middleware('auth:owner')->group(function () {
 
 });
 Route::middleware('auth:gudang')->group(function () {
-
+    Route::post('/transaksi_penitipan/create', [TransaksiPenitipanController::class, 'create']);
+    Route::get('/transaksi_penitipan/show-all', [TransaksiPenitipanController::class, 'show']);
+    Route::get('/transaksi_penitipan/show-by-id/{id}', [TransaksiPenitipanController::class, 'showById']);
+    Route::get('/transaksi_penitipan/search/{search_data}', [TransaksiPenitipanController::class, 'search']);
+    Route::get('/detail_transaksi_penitipan/showByIdTP/{id}', [DetailTransaksiPenitipanController::class, 'show']);
+    Route::delete('/detail_transaksi_penitipan/deleteWithBarang/{id}', [DetailTransaksiPenitipanController::class, 'deleteWithBarang']);
+    Route::get('/penitip/searchByEmail/{search_penitip}', [PenitipController::class, 'searchByEmail']);
+    Route::post('/transaksi_penitipan/update/{id}', [TransaksiPenitipanController::class, 'update']);
+    Route::post('/barang/create', [BarangController::class, 'create']);
+    Route::post('/barang/update', [BarangController::class, 'update']);
+    Route::get('/kategori/search/{nama_kategori}', [KategoriController::class, 'searchByName']);
+    Route::get('pegawai-gudang/searchPegawai/{search_pegawai}', [PegawaiController::class, 'searchBynama']);
+    
+    Route::get('/hunter/search/{search_hunter}', [HunterController::class, 'searchHunter']);
 });
 
 Route::middleware('auth:cs')->group(function () {

@@ -15,12 +15,8 @@ class KomisiController
     public function createKomisi($id_barang, Request $request)
     {
         $komisi = Komisi::create([
+            'id_transaksi_pembelian' => $request->id_transaksi_pembelian,
             'id_barang' => $id_barang,
-            'total_harga_kotor' => $request->total_harga_kotor,
-            'total_harga_bersih' => $request->total_harga_bersih,
-            'komisi_hunter' => $request->komisi_hunter,
-            'komisi_reusemart' => $request->komisi_reusemart,
-            'bonus_penitip' => $request->bonus_penitip,
         ]);
 
         // Update the status of the item in the cart
@@ -41,51 +37,51 @@ class KomisiController
         ], 201);
     }
 
-    public function getKomponenKomisi($id_barang)
-    {
-        $barang = Barang::find($id_barang);
-        if (!$barang) {
-            return response()->json([
-                'message' => 'Barang not found',
-            ], 404);
-        }
+    // public function getKomponenKomisi($id_barang)
+    // {
+    //     $barang = Barang::find($id_barang);
+    //     if (!$barang) {
+    //         return response()->json([
+    //             'message' => 'Barang not found',
+    //         ], 404);
+    //     }
 
-        // Komisi Hunter
-        $komisi_hunter = 0;
-        if ($barang->id_hunter != null) {
-            $komisi_hunter = $barang->harga_barang * 0.05;
-        }
+    //     // Komisi Hunter
+    //     $komisi_hunter = 0;
+    //     if ($barang->id_hunter != null) {
+    //         $komisi_hunter = $barang->harga_barang * 0.05;
+    //     }
 
-        // Status Perpanjangan & Tanggal Penitipan
-        $detail = Barang::where('barang.id_barang', $id_barang)
-            ->join('detail_transaksi_penitipan', 'detail_transaksi_penitipan.id_barang', '=', 'barang.id_barang')
-            ->join('transaksi_penitipan', 'transaksi_penitipan.id_transaksi_penitipan', '=', 'detail_transaksi_penitipan.id_transaksi_penitipan')
-            ->select('detail_transaksi_penitipan.status_perpanjangan', 'transaksi_penitipan.tanggal_penitipan')
-            ->first();
+    //     // Status Perpanjangan & Tanggal Penitipan
+    //     $detail = Barang::where('barang.id_barang', $id_barang)
+    //         ->join('detail_transaksi_penitipan', 'detail_transaksi_penitipan.id_barang', '=', 'barang.id_barang')
+    //         ->join('transaksi_penitipan', 'transaksi_penitipan.id_transaksi_penitipan', '=', 'detail_transaksi_penitipan.id_transaksi_penitipan')
+    //         ->select('detail_transaksi_penitipan.status_perpanjangan', 'transaksi_penitipan.tanggal_penitipan')
+    //         ->first();
 
-        Log::info('Detail Transaksi Penitipan:', [
-            'status_perpanjangan' => $detail->status_perpanjangan,
-            'tanggal_penitipan' => $detail->tanggal_penitipan,
-        ]);
+    //     Log::info('Detail Transaksi Penitipan:', [
+    //         'status_perpanjangan' => $detail->status_perpanjangan,
+    //         'tanggal_penitipan' => $detail->tanggal_penitipan,
+    //     ]);
 
-        // Komisi Reusemart
-        $komisi_reusemart = $detail->status_perpanjangan == 0
-            ? $barang->harga_barang * 0.15
-            : $barang->harga_barang * 0.25;
+    //     // Komisi Reusemart
+    //     $komisi_reusemart = $detail->status_perpanjangan == 0
+    //         ? $barang->harga_barang * 0.15
+    //         : $barang->harga_barang * 0.25;
 
-        // Bonus Penitip (20% dari komisi reusemart jika < 7 hari)
-        $bonus_penitip = 0;
-        if ($detail->tanggal_penitipan >= now()->subDays(7)) {
-            $bonus_penitip = $komisi_reusemart * 0.2;
-        }
+    //     // Bonus Penitip (20% dari komisi reusemart jika < 7 hari)
+    //     $bonus_penitip = 0;
+    //     if ($detail->tanggal_penitipan >= now()->subDays(7)) {
+    //         $bonus_penitip = $komisi_reusemart * 0.2;
+    //     }
 
-        return response()->json([
-            'id_barang' => $id_barang,
-            'komisi_hunter' => $komisi_hunter,
-            'komisi_reusemart' => $komisi_reusemart,
-            'bonus_penitip' => $bonus_penitip,
-        ]);
-    }
+    //     return response()->json([
+    //         'id_barang' => $id_barang,
+    //         'komisi_hunter' => $komisi_hunter,
+    //         'komisi_reusemart' => $komisi_reusemart,
+    //         'bonus_penitip' => $bonus_penitip,
+    //     ]);
+    // }
 
 
 }

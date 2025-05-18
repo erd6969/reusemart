@@ -8,7 +8,9 @@ const InputColumn = ({
   placeholderInput,
   value,
   disabled = false,
-  onChange
+  onChange,
+  onFocus,
+  onBlur,
 }) => {
   const handleChange = (e) => {
     onChange(e); 
@@ -25,6 +27,8 @@ const InputColumn = ({
         value={value}
         disabled={disabled}
         onChange={handleChange}
+        onFocus={onFocus}
+        onBlur={onBlur}
       />
     </div>
   );

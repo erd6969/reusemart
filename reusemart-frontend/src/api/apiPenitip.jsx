@@ -329,3 +329,22 @@ export const ShowDetailPendapatan = async (id) => {
         };
     }
 }
+
+export const SearchByEmail = async (search_penitip) => {
+    try {
+        const token = sessionStorage.getItem("token");
+
+        const response = await useAxios.get(`/penitip/searchByEmail/${search_penitip}`, {
+            headers: {
+                "Content-Type": "application/json",
+                "Accept": "application/json",
+                "Authorization": `Bearer ${token}`,
+            },
+        });
+        console.log("Search Penitip response:", response.data);
+        return response.data;
+    } catch (error) {
+        console.error("Error searching penitip:", error);
+        throw error;
+    }
+}

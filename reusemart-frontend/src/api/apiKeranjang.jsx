@@ -33,7 +33,6 @@ export const ShowCart = async () => {
         },
         });
 
-        // Validasi jika response.data.data adalah array
         const groupedCart = response.data?.data || [];
 
         return groupedCart;

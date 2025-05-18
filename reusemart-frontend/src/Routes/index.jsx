@@ -14,7 +14,7 @@ import RegisterBuyerPage from "../Pages/LoginRegister/RegisterBuyerPage";
 import RegisterOption from "../Pages/LoginRegister/RegisterOption";
 import HistoryDonasiPage from "../Pages/Owner/HistoryDonasi";
 import LaporanPage from "../Pages/Owner/Laporan";
-import PegawaiGudangPage from "../Pages/PegawaiGudang/PegawaiGudangPage";
+import PenitipanBarangPage from "../Pages/PegawaiGudang/PenitipanBarangPage";
 import ReqDonasi from "../Pages/Owner/ReqDonasi";
 
 //Pembeli
@@ -65,6 +65,8 @@ import CSPenitipManagementPage from "../Pages/CustomerService/CSPenitipManagemen
 // Owner
 import OwnerLayouts from "../Layouts/OwnerLayouts";
 import ReqDonasiShowBarang from "../Pages/Owner/ReqDonasiShowBarang";
+import PegawaiGudangLayout from "../Layouts/PegawaiGudangLayouts";
+import DetailTransaksiPenitipanPage from "../Pages/PegawaiGudang/DetailTransaksiPenitipanPage";
 
 const router = createBrowserRouter([
     {
@@ -210,9 +212,19 @@ const router = createBrowserRouter([
         path: "/pegawai-gudang",
         element: (
             <ProtectedRoutes allowedRoles={["gudang"]}>
-                <PegawaiGudangPage />
+                <PegawaiGudangLayout />
             </ProtectedRoutes>
         ),
+        children: [
+            {
+                path: "penitipan-barang",
+                element: <PenitipanBarangPage />,
+            },
+            {
+                path: "detail-transaksi-penitipan/:id_transaksi_penitipan",
+                element: <DetailTransaksiPenitipanPage />,
+            }
+        ],
     },
 
     {
@@ -256,63 +268,68 @@ const router = createBrowserRouter([
             },
         ],
     },
-
-
     {
         path: "/pembeli",
         element: (
             <ProtectedRoutes allowedRoles={["pembeli"]}>
-                <PembeliLayout />
+            <PembeliLayout /> {/* Navbar + Footer */}
             </ProtectedRoutes>
         ),
         children: [
+            // Halaman umum pembeli (tanpa sidebar)
             {
-                path: "home",
-                element: <Home />,
+            path: "home",
+            element: <Home />,
             },
             {
-                path: "profile",
-                element: <ProfilePembeliPage />,
+            path: "profile",
+            element: <ProfilePembeliPage />,
             },
             {
-                path: "alamat",
-                element: <AlamatPembeliPage />,
+            path: "alamat",
+            element: <AlamatPembeliPage />,
+            },
+            {
+            path: "shop",
+            element: <ShopPage />,
+            },
+            {
+            path: "detailBarang/:id_barang",
+            element: <DetailBarangPage />,
+            },
+            {
+            path: "list-barang-penitip",
+            element: <ListBarangPenitipPage />,
+            },
+            {
+            path: "cart",
+            element: <CartPage />,
+            },
+            {
+            path: "checkout",
+            element: <CheckoutPage />,
+            },
+            {
+            path: "pembayaran",
+            element: <PaymentPage />,
             },
 
+            // Halaman pembeli yang pakai sidebar (produk, histori, transaksi, dll)
             {
-                path: "shop",
-                element: <ShopPage />,
-            },
-            {
-                path: "detailBarang/:id_barang",
-                element: <DetailBarangPage />,
-            },
-            {
-                path: "list-barang-penitip",
-                element: <ListBarangPenitipPage />,
-            },
-            {
-                path: "cart",
-                element: <CartPage />,
-            },
-            {
-                path: "checkout",
-                element: <CheckoutPage />,
-            },
-            {
-                path: "pembayaran",
-                element: <PaymentPage />,
-            },
-            {
+            path: "",
+            element: <PembeliProductLayout />,
+            children: [
+                {
+                path: "purchase",
+                element: <PurchasePembeliPage />,
+                },
+                {
                 path: "list-transaksi",
                 element: <ListTransaksi />,
-            },
-            {
-                path: "",
-                element: <PembeliProductLayout />,
-                children: [
-                    { path: "purchase", element: <PurchasePembeliPage /> },
-                ],
+                },
+                // Tambahkan halaman lain di sini kalau perlu pakai sidebar
+                // { path: "riwayat", element: <RiwayatPage /> },
+            ],
             },
         ],
     },

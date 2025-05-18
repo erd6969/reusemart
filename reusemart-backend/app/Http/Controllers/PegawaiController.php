@@ -218,4 +218,22 @@ class PegawaiController
             ], 500);
         }
     }
+
+    public function searchByNama($nama_pegawai)
+    {
+        $pegawai = Pegawai::where('nama_pegawai', 'like', '%' . $nama_pegawai . '%')
+            ->join('jabatan', 'pegawai.id_jabatan', '=', 'jabatan.id_jabatan')
+            ->where('pegawai.id_jabatan', '=', 3) // iki tanda nya pegawai gudang
+            ->select('pegawai.id_pegawai', 'pegawai.nama_pegawai', 'jabatan.nama_jabatan')
+            ->get();
+
+        if ($pegawai->isEmpty()) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Pegawai not found',
+            ], 404);
+        }
+
+        return response()->json($pegawai);
+    }
 }

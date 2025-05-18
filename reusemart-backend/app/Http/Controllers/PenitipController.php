@@ -460,8 +460,26 @@ class PenitipController
         return response()->json([
             'message' => 'Barang berhasil diambil',
         ], 200);
+    }
 
+    public function searchByEmail($email_penitip)
+    {
+        try {
+            $penitip = Penitip::where('email_penitip', 'LIKE', '%' . $email_penitip . '%')->get();
 
+            if ($penitip->isEmpty()) {
+                return response()->json([
+                    'message' => 'Penitip not found',
+                ], 404);
+            }
+
+            return response()->json($penitip, 200);
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'Error occurred',
+                'error' => $e->getMessage(),
+            ], 500);
+        }
     }
 
 }

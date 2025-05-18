@@ -36,3 +36,35 @@ export const getTransaksiPembelian = async () => {
         throw error?.response?.data || error;
     }
 }
+
+export const CancelTransaksi = async (data) => {
+    try {
+        const response = await useAxios.post("/pembeli/cancel-transaksi-pembelian", data, {
+            headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${getToken()}`,
+            },
+        });
+        return response.data;
+    } catch (error) {
+        console.error("Error cancelling transaksi pembelian:", error);
+        throw error?.response?.data || error;
+    }
+};
+
+export const FinalizeTransaksi = async (data) => {
+    try {
+        const response = await useAxios.post("/pembeli/finalize-transaksi-pembelian", data, {
+            headers: {
+                "Content-Type": "multipart/form-data",
+                Authorization: `Bearer ${getToken()}`,
+            },
+        });
+        return response.data;
+    } catch (error) {
+        console.error("Error finalizing transaksi pembelian:", error);
+        throw error?.response?.data || error;
+    }
+};
+
+

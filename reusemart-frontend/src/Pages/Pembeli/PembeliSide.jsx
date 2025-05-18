@@ -50,9 +50,8 @@ const PembeliSide = () => {
                 <b>Product</b>
                 <ul>
                     <li onClick={() => navigate('/pembeli/purchase')}>Purchase List</li>
-                    {/* <li onClick={() => navigate('/pembeli/history')}>Sold Products</li>
-                    <li onClick={() => navigate('/pembeli/expired')}>Expired Custody Products</li>
-                    <li onClick={() => navigate('/pembeli/donated')}>Donated Products</li> */}
+                    <li onClick={() => navigate('/pembeli/purchase')}>Unpaid Purchase</li>
+                    <li onClick={() => navigate('/pembeli/purchase')}>Payment Verification</li>
                 </ul>
             </div>
         </div>

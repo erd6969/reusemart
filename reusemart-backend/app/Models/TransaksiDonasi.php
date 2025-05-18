@@ -16,6 +16,8 @@ class TransaksiDonasi extends Model
         'nama_penerima',
     ];
 
+    public $timestamps = false;
+
     public function barang()
     {
         return $this->belongsTo(Barang::class, 'id_barang', 'id_barang');

@@ -8,12 +8,19 @@ function CarouselDetail({ gambar }) {
   return (
     <div className="carousel-detail">
       <Carousel>
-        {gambar.map((item, index) => (
-          console.log(getThumbnailBarang(item)),
-          <Carousel.Item key={index}>
-            <img src={getThumbnailBarang(item)} alt={`gambar-${index}`} className='carousel-image' />
-          </Carousel.Item>
-        ))}
+        {gambar.map((item, index) => {
+          if (!item) return null; // skip jika item null/undefined
+
+          return (
+            <Carousel.Item key={index}>
+              <img
+                src={getThumbnailBarang(item)}
+                alt={`gambar-${index}`}
+                className="carousel-image"
+              />
+            </Carousel.Item>
+          );
+        })}
       </Carousel>
     </div>
   );

@@ -1,46 +1,38 @@
 import './PurchasePembeliPage.css';
 import { useState, useEffect } from 'react';
-import { FaStar, FaSearch, FaChevronLeft, FaChevronRight } from 'react-icons/fa';
+import { FaSearch, FaChevronLeft, FaChevronRight } from 'react-icons/fa';
 import { Container, Badge, Button, Modal, InputGroup, Form } from 'react-bootstrap';
-import SearchIcon from "../../assets/images/search-icon.png";
 import defaultImage from "../../assets/images/Pembeli/Yuki.jpeg";
-import DatePicker from "react-datepicker";
-import "react-datepicker/dist/react-datepicker.css";
 
-import { ShowHistoryPurchase } from "../../api/apiPembeli";
+import { ShowVerificationPurchase } from "../../api/apiPembeli";
 import { getThumbnailBarang } from "../../api/index";
 
-const PurchasePembeliPage = () => {
-    const [historyPurchase, setHistoryPurchase] = useState([]);
+const PurchaseVerificationPage = () => {
+    const [data, setData] = useState([]);
     const [loading, setLoading] = useState(true);
     const [modalShow, setModalShow] = useState(false);
     const [selectedProduct, setSelectedProduct] = useState(null);
     const [statusFilter, setStatusFilter] = useState('all');
-
-    const [startDate, setStartDate] = useState(null);
-    const [endDate, setEndDate] = useState(null);
     const [searchQuery, setSearchQuery] = useState("");
     const [searchValue, setSearchValue] = useState("");
-
     const [currentPage, setCurrentPage] = useState(1);
     const [totalPages, setTotalPages] = useState(1);
 
-
     useEffect(() => {
-        const fetchPurchaseHistory = async () => {
+        const fetchData = async () => {
+            setLoading(true);
             try {
-                const response = await ShowHistoryPurchase(currentPage);
-                setHistoryPurchase(response.data.data);
+                const response = await ShowVerificationPurchase(currentPage);
+                setData(response.data.data);
                 setTotalPages(response.data.last_page);
             } catch (error) {
-                console.error("Error fetching history purchase:", error);
+                console.error("Error fetching data:", error);
             } finally {
                 setLoading(false);
             }
         };
-        fetchPurchaseHistory();
+        fetchData();
     }, [currentPage]);
-
 
     const handleOpenModal = (product) => {
         setSelectedProduct(product);
@@ -51,77 +43,62 @@ const PurchasePembeliPage = () => {
         setSearchQuery(searchValue);
     };
 
-    const filteredPurchase = historyPurchase
-        .filter(history => {
-            const status = history.status_pengiriman?.toLowerCase() || '';
-            const filter = statusFilter.toLowerCase();
+    // Mapping status codes ke label dan warna badge hanya dua status
+    const statusLabels = {
+        "belum diverifikasi": "Menunggu Verifikasi",
+        "transaksi ditolak": "Verifikasi Ditolak",
+    };
 
-            if (filter === 'sudah diterima') {
-                return ['sudah diambil', 'sudah sampai'].includes(status);
+    const statusBadgeColors = {
+        "belum diverifikasi": "warning",
+        "transaksi ditolak": "danger",
+    };
+
+    // Filter data sesuai statusFilter dan searchQuery
+    const filteredPurchase = data
+        .filter(item => {
+            if (statusFilter === 'all') return true;
+
+            // Tentukan label status item sesuai verifikasi_bukti
+            let itemStatusLabel = "";
+            if (item.verifikasi_bukti === "belum diverifikasi") {
+                itemStatusLabel = "menunggu verifikasi";
+            } else if (item.verifikasi_bukti === "transaksi ditolak") {
+                itemStatusLabel = "verifikasi ditolak";
+            } else {
+                return false;
             }
-            if (filter !== 'all') {
-                return status === filter;
-            }
-            return true;
+            return itemStatusLabel === statusFilter.toLowerCase();
         })
-        .filter(history => {
-            if (startDate && endDate) {
-                const purchaseDate = new Date(history.tanggal_pembelian);
-                return purchaseDate >= startDate && purchaseDate <= endDate;
-            }
-            return true;
-        })
-        .filter(history => {
-            if (searchQuery.trim() !== '') {
-                return history.nama_barang?.toLowerCase().includes(searchQuery.toLowerCase());
-            }
-            return true;
+        .filter(item => {
+            if (searchQuery.trim() === '') return true;
+            return item.nama_barang?.toLowerCase().includes(searchQuery.toLowerCase());
         });
 
     return (
         <Container className="purchase-wrapper">
             <div className="purchase-container">
-                <h2><b>Produk Terjual</b></h2>
+                <h2><b>Verifikasi Pembayaran</b></h2>
                 <div className="purchase-content-container">
                     <div className="searchComponent1">
-                        <div className="searchContainer1">
-                            <InputGroup className="mb-3">
-                                <Form.Control
-                                    type="text"
-                                    placeholder="Masukkan Nama Barang..."
-                                    className="searchInput"
-                                    value={searchValue}
-                                    onChange={(e) => setSearchValue(e.target.value)}
-                                />
-                                <Button variant="secondary" onClick={handleSearch}>
-                                    <FaSearch />
-                                </Button>
-                            </InputGroup>
-                        </div>
+                        <InputGroup className="mb-3">
+                            <Form.Control
+                                type="text"
+                                placeholder="Masukkan Nama Barang..."
+                                className="searchInput"
+                                value={searchValue}
+                                onChange={(e) => setSearchValue(e.target.value)}
+                            />
+                            <Button variant="secondary" onClick={handleSearch}>
+                                <FaSearch />
+                            </Button>
+                        </InputGroup>
                     </div>
 
                     <div className="mb-3">
-                        <Button variant={statusFilter.toLowerCase() === "all" ? "warning" : "outline-warning"} className="me-2" onClick={() => setStatusFilter('all')}>Semua</Button>
-                        <Button variant={statusFilter.toLowerCase() === "sedang disiapkan" ? "warning" : "outline-warning"} className="me-2" onClick={() => setStatusFilter('sedang disiapkan')}>Sedang Disiapkan</Button>
-                        <Button variant={statusFilter.toLowerCase() === "sedang diantar" ? "warning" : "outline-warning"} className="me-2" onClick={() => setStatusFilter('sedang diantar')}>Sedang Diantar</Button>
-                        <Button variant={statusFilter.toLowerCase() === "siap diambil" ? "warning" : "outline-warning"} className="me-2" onClick={() => setStatusFilter('siap diambil')}>Siap diambil</Button>
-                        <Button variant={statusFilter.toLowerCase() === "sudah sampai" ? "warning" : "outline-warning"} className="me-2" onClick={() => setStatusFilter('sudah sampai')}>Sudah sampai</Button>
-                    </div>
-
-                    <div className="mb-3 d-flex gap-2 align-items-center">
-                        <span>Pilih tanggal: </span>
-                        <DatePicker
-                            selected={startDate}
-                            onChange={(date) => setStartDate(date)}
-                            placeholderText="Dari Tanggal"
-                            dateFormat="yyyy-MM-dd"
-                        />
-                        <DatePicker
-                            selected={endDate}
-                            onChange={(date) => setEndDate(date)}
-                            placeholderText="Sampai Tanggal"
-                            dateFormat="yyyy-MM-dd"
-                        />
+                        <Button variant={statusFilter === "all" ? "warning" : "outline-warning"} className="me-2" onClick={() => setStatusFilter('all')}>Semua</Button>
+                        <Button variant={statusFilter === "menunggu verifikasi" ? "warning" : "outline-warning"} className="me-2" onClick={() => setStatusFilter('menunggu verifikasi')}>Menunggu Verifikasi</Button>
+                        <Button variant={statusFilter === "verifikasi ditolak" ? "warning" : "outline-warning"} onClick={() => setStatusFilter('verifikasi ditolak')}>Verifikasi Ditolak</Button>
                     </div>
 
                     {loading ? (
@@ -135,7 +112,7 @@ const PurchasePembeliPage = () => {
                                     <th>Info Produk</th>
                                     <th>Harga Barang</th>
                                     <th>Tanggal Pembelian</th>
-                                    <th>Status Pengiriman</th>
+                                    <th>Status Verifikasi</th>
                                     <th>Detail</th>
                                 </tr>
                             </thead>
@@ -143,22 +120,17 @@ const PurchasePembeliPage = () => {
                                 {filteredPurchase
                                     .sort((a, b) => new Date(b.tanggal_pembelian) - new Date(a.tanggal_pembelian))
                                     .map((history, index) => {
-                                        const rawStatus = history.status_pengiriman || '';
-                                        const status = ['sudah diambil', 'sudah sampai'].includes(rawStatus.toLowerCase())
-                                            ? 'sudah diterima'
-                                            : rawStatus;
-
-                                        const badgeColor =
-                                            status.toLowerCase() === 'sudah diterima' ? 'success'
-                                                : status.toLowerCase() === 'sedang disiapkan' ? 'secondary'
-                                                    : status.toLowerCase() === 'sedang diantar' ? 'warning'
-                                                        : status.toLowerCase() === 'siap diambil' ? 'info'
-                                                            : 'dark';
+                                        const statusKey = history.verifikasi_bukti || "0";
+                                        const statusLabel = statusLabels[statusKey] || "Menunggu Verifikasi";
+                                        const badgeColor = statusBadgeColors[statusKey] || "warning";
 
                                         return (
                                             <tr key={index} style={{ cursor: 'pointer' }}>
                                                 <td className="product-info">
-                                                    <img src={getThumbnailBarang(history.foto_barang) || defaultImage} alt={history.nama_barang} />
+                                                    <img
+                                                        src={getThumbnailBarang(history.foto_barang) || defaultImage}
+                                                        alt={history.nama_barang}
+                                                    />
                                                     <b>{history.nama_barang}</b>
                                                 </td>
                                                 <td>Rp{history.harga_barang?.toLocaleString('id-ID') || '-'}</td>
@@ -167,14 +139,14 @@ const PurchasePembeliPage = () => {
                                                     <Badge
                                                         bg={badgeColor}
                                                         style={{
-                                                            width: '10vw',
+                                                            width: '100%',
                                                             height: '4vh',
                                                             textAlign: 'center',
                                                             fontSize: '1vw',
                                                             fontWeight: 'bold'
                                                         }}
                                                     >
-                                                        {status}
+                                                        {statusLabel}
                                                     </Badge>
                                                 </td>
                                                 <td>
@@ -188,7 +160,7 @@ const PurchasePembeliPage = () => {
                             </tbody>
                         </table>
                     )}
-                    {/* Pagination */}
+
                     <div className="pagination d-flex justify-content-center align-items-center mt-4">
                         <Button 
                             variant="secondary" 
@@ -222,7 +194,7 @@ const PurchasePembeliPage = () => {
     );
 }
 
-export default PurchasePembeliPage;
+export default PurchaseVerificationPage;
 
 function MyVerticallyCenteredModal({ show, onHide, product }) {
     if (!product) return null;
@@ -243,7 +215,7 @@ function MyVerticallyCenteredModal({ show, onHide, product }) {
                         <h3 style={{ fontWeight: "bold" }}>{product.nama_barang}</h3>
                         <p><strong>Harga:</strong> Rp{product.harga_barang?.toLocaleString('id-ID') || '-'}</p>
                         <p><strong>Tanggal Pembelian:</strong> {product.tanggal_pembelian?.substring(0, 10)}</p>
-                        <p><strong>Status Pengiriman:</strong> {product.status_pengiriman}</p>
+                        <p><strong>Status Pengiriman:</strong> {product.status_pengiriman || '-'}</p>
                         <p><strong>Deskripsi Barang :</strong> {product.deskripsi_barang}</p>
                         <p><strong>Kondisi Barang :</strong> {product.kondisi_barang}</p>
                     </div>

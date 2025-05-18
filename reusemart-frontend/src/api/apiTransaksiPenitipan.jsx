@@ -91,3 +91,59 @@ export const UpdateTransaksiPenitipan = async (formData, id) => {
         throw error;
     }
 }
+
+export const ShowDataModal = async (id) => {
+    try {
+        const token = sessionStorage.getItem("token");
+        const response = await useAxios.get(`/barang/show-detail-modal/${id}`, {
+            headers: {
+                "Content-Type": "application/json",
+                "Accept": "application/json",
+                "Authorization": `Bearer ${token}`,
+            },
+        });
+        console.log("Show Data Modal response:", response.data);
+        return response.data;
+    } catch (error) {
+        console.error("Error fetching data for modal:", error);
+        throw error;
+    }
+}
+
+export const VerifikasiTransaksiPenitipan = async (id) => {
+    try {
+        const token = sessionStorage.getItem("token");
+        const response = await useAxios.post(`/transaksi-pembelian/verify-transaksi-pembelian`, {
+            id_transaksi_pembelian: id
+        }, {
+            headers: {
+                "Content-Type": "application/json",
+                "Accept": "application/json",
+                "Authorization": `Bearer ${token}`,
+            },
+        });
+        return response.data;
+    } catch (error) {
+        throw error;
+    }
+}
+
+
+export const TolakTransaksiPenitipan = async (id) => {
+    try {
+        const token = sessionStorage.getItem("token");
+        const response = await useAxios.post(`/transaksi-pembelian/reject-transaksi-pembelian`, {
+            id_transaksi_pembelian: id
+        }, {
+            headers: {
+                "Content-Type": "application/json",
+                "Accept": "application/json",
+                "Authorization": `Bearer ${token}`,
+            },
+        });
+        return response.data;
+    } catch (error) {
+        throw error;
+    }
+}
+

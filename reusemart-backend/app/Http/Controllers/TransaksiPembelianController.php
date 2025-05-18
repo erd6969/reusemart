@@ -6,6 +6,7 @@ use App\Models\TransaksiPembelian;
 use App\Models\DetailTransaksiPenitipan;
 use App\Models\Komisi;
 use App\Models\Barang;
+use App\Models\Pembeli;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -90,7 +91,7 @@ class TransaksiPembelianController
             // Update transaksi menjadi dibatalkan
             TransaksiPembelian::where('id_transaksi_pembelian', $id_transaksi_pembelian)
                 ->update([
-                    'verifikasi_bukti' => 'Transaksi dibatalkan',
+                    'verifikasi_bukti' => 'transaksi dibatalkan',
                 ]);
 
             return response()->json([
@@ -151,6 +152,101 @@ class TransaksiPembelianController
         }
     }
 
+    public function showUnverifiedTransaksiPembelian()
+    {
+        try {
+            $transaksi = TransaksiPembelian::join('pembeli', 'transaksi_pembelian.id_pembeli', '=', 'pembeli.id_pembeli')
+                ->join('komisi', 'transaksi_pembelian.id_transaksi_pembelian', '=', 'komisi.id_transaksi_pembelian')
+                ->join('barang', 'komisi.id_barang', '=', 'barang.id_barang')
+                ->where('verifikasi_bukti', 'belum diverifikasi')
+                ->orderBy('transaksi_pembelian.id_transaksi_pembelian', 'asc')
+                ->select(
+                    'transaksi_pembelian.*',
+                    'pembeli.nama_pembeli',
+                    'komisi.id_barang',
+                    'barang.nama_barang',
+                    'barang.harga_barang'
+                )
+                ->paginate(10);
 
+            return response()->json([
+                'message' => 'Daftar Unverified Transaksi Pembelian retrieved successfully',
+                'transaksi' => $transaksi,
+            ], 200);
 
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'Failed to retrieve Unverified Transaksi Pembelian',
+                'error' => $e->getMessage(),
+            ], 500);
+        }
+    }
+
+    public function showDataModal($id_transaksi_pembelian)
+    {
+        try {
+            $transaksi = TransaksiPembelian::where('id_transaksi_pembelian', $id_transaksi_pembelian)
+                ->join('pembeli', 'transaksi_pembelian.id_pembeli', '=', 'pembeli.id_pembeli')
+                ->join('komisi', 'transaksi_pembelian.id_transaksi_pembelian', '=', 'komisi.id_transaksi_pembelian')
+                ->join('barang', 'komisi.id_barang', '=', 'barang.id_barang')
+                ->select(
+                    'transaksi_pembelian.*',
+                    'komisi.*',
+                    'barang.*',
+                    'pembeli.nama_pembeli'
+                )
+                ->first();
+
+            return response()->json([
+                'message' => 'Data Modal retrieved successfully',
+                'transaksi' => $transaksi,
+            ], 200);
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'Failed to retrieve Data Modal',
+                'error' => $e->getMessage(),
+            ], 500);
+        }
+    }
+
+    public function verifyTransaksiPembelian(Request $request)
+    {
+        try {
+            $transaksi = TransaksiPembelian::where('id_transaksi_pembelian', $request->id_transaksi_pembelian)
+                ->update([
+                    'verifikasi_bukti' => 'transaksi diverifikasi',
+                    'status_pengiriman' => 'sedang disiapkan'
+                ]);
+
+            return response()->json([
+                'message' => 'Transaksi Pembelian verified successfully',
+                'transaksi' => $transaksi,
+            ], 200);
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'Failed to verify Transaksi Pembelian',
+                'error' => $e->getMessage(),
+            ], 500);
+        }
+    }
+
+    public function rejectTransaksiPembelian(Request $request)
+    {
+        try {
+            $transaksi = TransaksiPembelian::where('id_transaksi_pembelian', $request->id_transaksi_pembelian)
+                ->update([
+                    'verifikasi_bukti' => 'transaksi ditolak',
+                ]);
+
+            return response()->json([
+                'message' => 'Transaksi Pembelian rejected successfully',
+                'transaksi' => $transaksi,
+            ], 200);
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'Failed to reject Transaksi Pembelian',
+                'error' => $e->getMessage(),
+            ], 500);
+        }
+    }
 }

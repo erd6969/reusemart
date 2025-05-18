@@ -114,6 +114,9 @@ Route::middleware('auth:pembeli')->group(function () {
     Route::get('/pembeli/show-transaksi-pembelian', [TransaksiPembelianController::class, 'showTransaksiPembelian']);
     Route::post('/pembeli/cancel-transaksi-pembelian', [TransaksiPembelianController::class, 'cancelTransaksiPembelian']);
     Route::post('/pembeli/finalize-transaksi-pembelian', [TransaksiPembelianController::class, 'finalizeTransaksiPembelian']);
+
+    Route::get('/pembeli/show-unpaid-purchase', [PembeliController::class, 'showUnpaidPurchase']);
+    Route::get('/pembeli/show-verification-purchase', [PembeliController::class, 'showVerificationPurchase']);
 });
 #endregion
 
@@ -166,6 +169,11 @@ Route::middleware('auth:cs')->group(function () {
     Route::get('/penitip/show-diskusi-by-date', [DiskusiController::class, 'showDiskusiByDate']);
 
     Route::get('/pegawai/show-profile', [PegawaiController::class, 'showProfile']);
+
+    Route::get('/barang/show-unverified-barang', [TransaksiPembelianController::class, 'showUnverifiedTransaksiPembelian']);
+    Route::get('/barang/show-detail-modal/{id_barang}', [TransaksiPembelianController::class, 'showDataModal']);
+    Route::post('/transaksi-pembelian/verify-transaksi-pembelian', [TransaksiPembelianController::class, 'verifyTransaksiPembelian']);
+    Route::post('/transaksi-pembelian/reject-transaksi-pembelian', [TransaksiPembelianController::class, 'rejectTransaksiPembelian']);
 });
 
 Route::middleware('auth:admin')->group(function () {

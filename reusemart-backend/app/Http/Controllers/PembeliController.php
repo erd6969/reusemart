@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Pembeli;
+use App\Models\TransaksiPembelian;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
@@ -72,12 +73,18 @@ class PembeliController
             ->join('barang', 'komisi.id_barang', '=', 'barang.id_barang')
             ->where('transaksi_pembelian.id_pembeli', $pembeli->id_pembeli)
             ->where('transaksi_pembelian.status_pembayaran', '1')
+            ->whereIn('transaksi_pembelian.status_pengiriman', [
+                'sedang disiapkan',
+                'sedang diantar',
+                'siap diambil',
+                'sudah diterima'
+            ])
             ->select(
                 'barang.*',
                 'transaksi_pembelian.tanggal_pembelian',
                 'transaksi_pembelian.status_pengiriman',
             )
-            ->get();
+            ->paginate(5);
 
             return response()->json([
                 'message' => 'Success',
@@ -130,4 +137,59 @@ class PembeliController
         }
     }
 
+    public function showUnpaidPurchase(){
+        try {
+            $pembeli = auth('pembeli')->user();
+
+            $products = TransaksiPembelian::where('id_pembeli', $pembeli->id_pembeli)
+            ->join('komisi', 'transaksi_pembelian.id_transaksi_pembelian', '=', 'komisi.id_transaksi_pembelian')
+            ->join('barang', 'komisi.id_barang', '=', 'barang.id_barang')
+            ->where('transaksi_pembelian.status_pembayaran', '0')
+            ->Where('transaksi_pembelian.verifikasi_bukti', 'belum diverifikasi')
+            ->select(
+                'barang.*',
+                'transaksi_pembelian.*',
+            )
+            ->paginate(5);
+            return response()->json([
+                'message' => 'Success',
+                'data' => $products
+            ], 200);
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'Pembeli not found',
+                'error' => $e->getMessage(),
+            ], 404);
+        }
+    }
+
+    public function showVerificationPurchase(){
+        try {
+            $pembeli = auth('pembeli')->user();
+
+            $products = DB::table('transaksi_pembelian')
+                ->join('komisi', 'transaksi_pembelian.id_transaksi_pembelian', '=', 'komisi.id_transaksi_pembelian')
+                ->join('barang', 'komisi.id_barang', '=', 'barang.id_barang')
+                ->where('transaksi_pembelian.id_pembeli', $pembeli->id_pembeli)
+                ->where('transaksi_pembelian.status_pembayaran', '1')
+                ->whereIn('transaksi_pembelian.verifikasi_bukti', [
+                    'belum diverifikasi',
+                    'transaksi ditolak'
+                ])
+                ->select(
+                    'barang.*',
+                    'transaksi_pembelian.*',
+                )
+                ->paginate(5);
+            return response()->json([
+                'message' => 'Success',
+                'data' => $products
+            ], 200);
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'Pembeli not found',
+                'error' => $e->getMessage(),
+            ], 404);
+        }
+    }
 }

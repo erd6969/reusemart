@@ -1,7 +1,5 @@
 import './PembeliSide.css';
-import profileImage from "../../assets/images/Pembeli/Yuki.jpeg";
-import { FaMedal } from "react-icons/fa";
-import { GiMoneyStack, GiReceiveMoney } from "react-icons/gi";
+import { GiMoneyStack } from "react-icons/gi";
 import { GetProfile} from "../../api/apiPembeli";
 import { useEffect, useState } from "react";
 import { useNavigate } from 'react-router-dom';
@@ -50,8 +48,8 @@ const PembeliSide = () => {
                 <b>Product</b>
                 <ul>
                     <li onClick={() => navigate('/pembeli/purchase')}>Purchase List</li>
-                    <li onClick={() => navigate('/pembeli/purchase')}>Unpaid Purchase</li>
-                    <li onClick={() => navigate('/pembeli/purchase')}>Payment Verification</li>
+                    <li onClick={() => navigate('/pembeli/unpaid-purchase')}>Unpaid Purchase</li>
+                    <li onClick={() => navigate('/pembeli/purchase-verification')}>Payment Verification</li>
                 </ul>
             </div>
         </div>

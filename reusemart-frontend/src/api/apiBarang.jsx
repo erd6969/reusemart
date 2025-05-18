@@ -84,5 +84,21 @@ export const SearchBarang = async (search_barang) => {
       console.error("Error searching Barang:", error);
       throw error?.response?.data || error;
     }
-  };
+};
+
+export const ShowUnverifiedBarang = async () => {
+    try {
+        const response = await useAxios.get("/barang/show-unverified-barang", {
+            headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${getToken()}`
+            },
+        });
+        console.log("Unverified Barang response:", response);
+        return response.data;
+    } catch (error) {
+        console.error("Error fetching Unverified Barang:", error);
+        throw error?.response?.data || error;
+    }
+}
 

@@ -30,6 +30,8 @@ import CartPage from "../Pages/Pembeli/CartPage";
 import CheckoutPage from "../Pages/Pembeli/CheckoutPage";
 import PaymentPage from "../Pages/Pembeli/PaymentPage";
 import ListTransaksi from "../Pages/Pembeli/PurchasePembeliPage";
+import PurchaseVerificationPage from "../Pages/Pembeli/PurchaseVerificationPage";
+import UnpaidPurchasePage from "../Pages/Pembeli/UnpaidPurchasePage";
 
 //Forgot Password
 import ForgotPassword from "../Pages/LoginRegister/VerifyEmailPage";
@@ -61,6 +63,7 @@ import DonatedProductPage from "../Pages/Penitip/DonatedProductPage";
 import CSLayout from "../Layouts/CSLayouts";
 import CSDiscussionPage from "../Pages/CustomerService/CSDiscussionPage";
 import CSPenitipManagementPage from "../Pages/CustomerService/CSPenitipManagementPage";
+import CSVerifikasiBuktiPage from "../Pages/CustomerService/CSVerifikasiBuktiPage";
 
 // Owner
 import OwnerLayouts from "../Layouts/OwnerLayouts";
@@ -261,69 +264,76 @@ const router = createBrowserRouter([
                 path: "discussion",
                 element: <CSDiscussionPage />,
             },
+            {
+                path: "verifikasi-bukti",
+                element: <CSVerifikasiBuktiPage />,
+            }
         ],
     },
     {
         path: "/pembeli",
         element: (
             <ProtectedRoutes allowedRoles={["pembeli"]}>
-            <PembeliLayout /> {/* Navbar + Footer */}
+            <PembeliLayout />
             </ProtectedRoutes>
         ),
         children: [
-            // Halaman umum pembeli (tanpa sidebar)
             {
             path: "home",
             element: <Home />,
             },
             {
-            path: "profile",
-            element: <ProfilePembeliPage />,
+                path: "profile",
+                element: <ProfilePembeliPage />,
             },
             {
-            path: "alamat",
-            element: <AlamatPembeliPage />,
+                path: "alamat",
+                element: <AlamatPembeliPage />,
             },
             {
-            path: "shop",
-            element: <ShopPage />,
+                path: "shop",
+                element: <ShopPage />,
             },
             {
-            path: "detailBarang/:id_barang",
-            element: <DetailBarangPage />,
+                path: "detailBarang/:id_barang",
+                element: <DetailBarangPage />,
             },
             {
-            path: "list-barang-penitip",
-            element: <ListBarangPenitipPage />,
+                path: "list-barang-penitip",
+                element: <ListBarangPenitipPage />,
             },
             {
-            path: "cart",
-            element: <CartPage />,
+                path: "cart",
+                element: <CartPage />,
             },
             {
-            path: "checkout",
-            element: <CheckoutPage />,
+                path: "checkout",
+                element: <CheckoutPage />,
             },
             {
-            path: "pembayaran",
-            element: <PaymentPage />,
+                path: "pembayaran",
+                element: <PaymentPage />,
             },
-
-            // Halaman pembeli yang pakai sidebar (produk, histori, transaksi, dll)
             {
             path: "",
             element: <PembeliProductLayout />,
             children: [
                 {
-                path: "purchase",
-                element: <PurchasePembeliPage />,
+                    path: "purchase",
+                    element: <PurchasePembeliPage />,
                 },
                 {
-                path: "list-transaksi",
-                element: <ListTransaksi />,
+                    path: "list-transaksi",
+                    element: <ListTransaksi />,
                 },
-                // Tambahkan halaman lain di sini kalau perlu pakai sidebar
-                // { path: "riwayat", element: <RiwayatPage /> },
+                {
+                    path: "unpaid-purchase",
+                    element: <UnpaidPurchasePage />,
+                },
+                {
+                    path: "purchase-verification",
+                    element: <PurchaseVerificationPage />,
+                }
             ],
             },
         ],

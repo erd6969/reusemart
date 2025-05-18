@@ -12,7 +12,7 @@ const SideBarCS = () => {
                     <li className="sidebarItemCS" onClick={() => navigate("/customerservice/penitip-management")}>
                         <FaUsersCog className="sidebarIcon" /> Penitip Management
                     </li>
-                    <li className="sidebarItemCS" onClick={() => navigate("/customerservice/payment-verification")}>
+                    <li className="sidebarItemCS" onClick={() => navigate("/customerservice/verifikasi-bukti")}>
                         <FaUserCog className="sidebarIcon" /> Payment Verification
                     </li>
                     <li className="sidebarItemCS" onClick={() => navigate("/customerservice/merchandise")}>

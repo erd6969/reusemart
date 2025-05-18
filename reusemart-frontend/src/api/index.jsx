@@ -30,6 +30,10 @@ export const getThumbnailMerchandise = (thumbnail) => {
     return `${BASE_URL}/storage/img/Merchandise/${thumbnail}`;
 }
 
+export const getThumbnailBuktiPembayaran = (thumbnail) => {
+    return `${BASE_URL}/storage/img/BuktiBayar/${thumbnail}`;
+}
+
 export const getThumbnailComponents = (thumbnail) => {
     return `${BASE_URL}/storage/img/Components/${thumbnail}`;
 }

@@ -70,32 +70,44 @@ const SoldProductPage = () => {
                                     <th>Rating</th>
                                 </tr>
                             </thead>
-                           <tbody>
+                            <tbody>
                                 {soldProducts.map((product, index) => (
                                     <tr
-                                    key={index}
-                                    style={{ cursor: "pointer" }}
-                                    onClick={() => handleOpenModal(product.id_barang)}
+                                        key={index}
+                                        style={{ cursor: "pointer" }}
+                                        onClick={() => handleOpenModal(product.id_barang)}
                                     >
-                                    <td className="product-info">
-                                        <img
-                                        src={getThumbnailBarang(product.foto_barang) || defaultImage}
-                                        alt={product.nama_barang}
-                                        />
-                                        <b>{product.nama_barang}</b>
-                                    </td>
-                                    <td>
-                                        Rp{product.harga_barang?.toLocaleString("id-ID") || "-"}
-                                    </td>
-                                    <td>{product.tanggal_pembelian?.substring(0, 10)}</td>
-                                    <td>
-                                        {[1, 2, 3, 4, 5].map((i) => (
-                                        <FaStar
-                                            key={i}
-                                            color={i <= product.rating ? "#facc15" : "#e5e7eb"}
-                                        />
-                                        ))}
-                                    </td>
+                                        <td className="product-info">
+                                            <img
+                                                src={getThumbnailBarang(product.foto_barang) || defaultImage}
+                                                alt={product.nama_barang}
+                                            />
+                                            <b>{product.nama_barang}</b>
+                                        </td>
+                                        <td>
+                                            Rp{product.harga_barang?.toLocaleString("id-ID") || "-"}
+                                        </td>
+                                        <td>{product.tanggal_pembelian?.substring(0, 10)}</td>
+                                        <td>
+                                            {product.rating === null || product.rating === undefined ? (
+                                                <span className="badge badge-warning" style={{
+                                                    backgroundColor: "#facc15",
+                                                    color: "#fff",
+                                                    padding: "1 4px",
+                                                    borderRadius: "8px",
+                                                    fontSize: "1em"
+                                                }}>
+                                                    Proses Pembayaran
+                                                </span>
+                                            ) : (
+                                                [1, 2, 3, 4, 5].map((i) => (
+                                                    <FaStar
+                                                        key={i}
+                                                        color={i <= product.rating ? "#facc15" : "#e5e7eb"}
+                                                    />
+                                                ))
+                                            )}
+                                        </td>
                                     </tr>
                                 ))}
                             </tbody>

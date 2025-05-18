@@ -8,8 +8,6 @@ import SearchIcon from "../../assets/images/search-icon.png";
 
 import { ShowHistoryRequestById, SearchRequestHistory } from "../../api/apiOrganisasi";
 
-import { getThumbnail } from "../../api/index";
-
 const HistoryDonasiPage = () => {
     const [historyDonasi, setHistoryDonasi] = useState([]);
     const [loading, setLoading] = useState(true);

@@ -51,8 +51,12 @@ Route::middleware('auth:sanctum')->post('/create-diskusi', [DiskusiController::c
 Route::middleware('auth:penitip')->group(function () {
     Route::get('/penitip/profile', [PenitipController::class, 'showProfile']);
     Route::get('/penitip/show-sold-product', [PenitipController::class, 'showSoldProducts']);
+    Route::get('/penitip/show-on-sale', [PenitipController::class, 'showOnSaleProducts']);
     Route::get('/penitip/show-donated-product', [PenitipController::class, 'showDonatedProducts']);
-
+    Route::get('/penitip/show-extend-product', [PenitipController::class, 'showExtendProducts']);
+    Route::post('/penitip/extend-barang', [PenitipController::class, 'extendBarangPenitip']);
+    Route::post('/penitip/ambil-barang', [PenitipController::class, 'pengambilanBarang']);
+    
     Route::get('/penitip/show-detail-pendapatan/{id_barang}', [PenitipController::class, 'showDetailPendapatan']);
 });
  #endregion

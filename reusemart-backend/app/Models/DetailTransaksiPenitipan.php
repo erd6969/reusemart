@@ -20,6 +20,11 @@ class DetailTransaksiPenitipan extends Model
         'status_penitipan',
         'status_perpanjangan',
     ];
+
+    protected $casts = [
+        'tanggal_berakhir' => 'datetime',
+        'tanggal_batas_pengambilan' => 'datetime',
+    ];
     
     public function transaksiPenitipan()
     {

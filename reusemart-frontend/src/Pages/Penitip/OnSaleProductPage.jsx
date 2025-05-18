@@ -1,107 +1,97 @@
-import './SoldProductPage.css';
+import './OnSaleProductPage.css';
 import { FaStar } from 'react-icons/fa';
-import { Container } from 'react-bootstrap';
+import { Container, Spinner } from 'react-bootstrap';
 import SearchIcon from "../../assets/images/search-icon.png";
+import { use, useEffect, useState } from 'react';
+import { toast } from 'react-toastify';
+import { ShowOnSaleProducts } from '../../api/apiPenitip';
+import { getThumbnailBarang } from "../../api/index";
 
-import rajangImage from "../../assets/images/Pembeli/Yuki.jpeg";
-import kucingImage from "../../assets/images/BurniceKicil.jpg";
 
 const DonatedProductPage = () => {
-  return (
-    <div className="histori-penitipan-wrapper">
-        <div className="sold-products-container">
-            <h2><b>Produk Sedang Dijual</b></h2>
-            <div className="sold-products-content-container">
-                <div className="search-bar">
-                    <img src={SearchIcon} alt="Search Icon" className="search-icon-inside" />
-                    <input
-                        type="text"
-                        placeholder="Masukkan Nama Produk..."
-                        className="search-input"
-                    />
-                </div>
+    const [onSaleProducts, setOnSaleProducts] = useState([]);
+    const [isLoading, setIsLoading] = useState(false);
+    const [isFirstLoad, setIsFirstLoad] = useState(true);
 
-                <table className="sold-products-table">
-                    <thead>
-                        <tr>
-                            <th>Info Product</th>
-                            <th>Price</th>
-                            <th>Sold Date</th>
-                            <th>Rating</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td className="product-info">
-                                <img src={rajangImage} alt="Rajang Bekas" />
-                                <b>Rajang Bekas</b>
-                            </td>
-                            <td>Rp100.000</td>
-                            <td>23/10/2025</td>
-                            <td>
-                                {[1, 2, 3, 4, 5].map((i) => (
-                                    <FaStar key={i} color={i === 1 ? "#e5e7eb" : "#facc15"} />
-                                ))}
-                            </td>
-                        </tr>
-                        <tr>
-                            <td className="product-info">
-                                <img src={kucingImage} alt="Kucing Bekas" />
-                                <b>Kucing Bekas</b>
-                            </td>
-                            <td>Rp12.000</td>
-                            <td>24/10/2025</td>
-                            <td>
-                                {[1, 2, 3, 4, 5].map((i) => (
-                                    <FaStar key={i} color={i === 5 ? "#e5e7eb" : "#facc15"} />
-                                ))}
-                            </td>
-                        </tr>
-                        <tr>
-                            <td className="product-info">
-                                <img src={rajangImage} alt="Rajang Bekas" />
-                                <b>Rajang Bekas</b>
-                            </td>
-                            <td>Rp100.000</td>
-                            <td>23/10/2025</td>
-                            <td>
-                                {[1, 2, 3, 4, 5].map((i) => (
-                                    <FaStar key={i} color={i === 1 ? "#e5e7eb" : "#facc15"} />
-                                ))}
-                            </td>
-                        </tr>
-                        <tr>
-                            <td className="product-info">
-                                <img src={kucingImage} alt="Kucing Bekas" />
-                                <b>Kucing Bekas</b>
-                            </td>
-                            <td>Rp12.000</td>
-                            <td>24/10/2025</td>
-                            <td>
-                                {[1, 2, 3, 4, 5].map((i) => (
-                                    <FaStar key={i} color={i === 5 ? "#e5e7eb" : "#facc15"} />
-                                ))}
-                            </td>
-                        </tr>
-                        <tr>
-                            <td className="product-info">
-                                <img src={kucingImage} alt="Kucing Bekas" />
-                                <b>Kucing Bekas</b>
-                            </td>
-                            <td>Rp12.000</td>
-                            <td>24/10/2025</td>
-                            <td>
-                                {[1, 2, 3, 4, 5].map((i) => (
-                                    <FaStar key={i} color={i === 5 ? "#e5e7eb" : "#facc15"} />
-                                ))}
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
+    const fetchOnSaleProducts = async () => {
+        setIsLoading(true);
+        try {
+            const response = await ShowOnSaleProducts();
+            setOnSaleProducts(response.data);
+        } catch (error) {
+            console.error("Error fetching on sale products:", error);
+            toast.error("Failed to fetch on sale products");
+            setOnSaleProducts([]);
+        } finally {
+            setIsLoading(false);
+            setIsFirstLoad(false);
+        }
+    }
+
+    useEffect(() => {
+        fetchOnSaleProducts();
+    }, []);
+    return (
+        <div className="onsale-penitipan-wrapper">
+            <div className="onsale-products-container">
+                <h2><b>Produk Sedang Dijual</b></h2>
+                <div className="onsale-products-content-container">
+                    <div className="search-bar-onsale">
+                        <img src={SearchIcon} alt="Search Icon" className="search-icon-inside" />
+                        <input
+                            type="text"
+                            placeholder="Masukkan Nama Produk..."
+                            className="search-input"
+                        />
+                    </div>
+
+                    <table className="onsale-products-table">
+                        <thead>
+                            <tr>
+                                <td><b>Info Produk</b></td>
+                                <td><b>Deskripsi dan Kondisi</b></td>
+                                <td><b>Harga Jual</b></td>
+                                <td><b>Tanggal Exp</b></td>
+
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {isLoading || isFirstLoad ? (
+                                <tr>
+                                    <td colSpan="6" className="text-center">
+                                        <Spinner animation="border" variant="primary" />
+                                        <div>Loading...</div>
+                                    </td>
+                                </tr>
+                            ) : onSaleProducts.length > 0 ? (
+                                onSaleProducts.map((product, index) => (
+                                    <tr key={index} style={{ fontSize: '15px' }}>
+                                        <td style={{ width: '5%' }}>
+                                            <img src={getThumbnailBarang(product.foto_barang) || defaultImage} alt={product.nama_barang} style={{ maxWidth: '6vw' }} />
+                                            <b>{product.nama_barang}</b>
+                                        </td>
+                                        <td style={{ width: '42%' }}>
+                                            <><strong>Deskripsi Barang :</strong><br />{product.deskripsi_barang}<br /></>
+                                            <><strong>Kondisi Barang : </strong><br />{product.kondisi_barang}</>
+                                        </td>
+                                        <td>Rp {product.harga_barang?.toLocaleString('id-ID') || '-'} </td>
+                                        <td>{product.tanggal_berakhir}</td>
+                                    </tr>
+                                ))
+                            ) : (
+                                <tr>
+                                    <td colSpan="6" className="text-center">
+                                        Tidak ada data penitip yang ditemukan.
+                                    </td>
+                                </tr>
+                            )}
+                        </tbody>
+
+                    </table>
+                </div>
             </div>
         </div>
-    </div>
-  );
+    );
 };
 
 export default DonatedProductPage;

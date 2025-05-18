@@ -54,7 +54,7 @@ import PenitipProductLayout from "../Layouts/PenitipContentLayouts";
 import ProfilPenitip from "../Pages/Penitip/ProfilePenitipPage";
 import SoldProductPage from "../Pages/Penitip/SoldProductPage";
 import OnSaleProductPage from "../Pages/Penitip/OnSaleProductPage";
-import ExpiredProductPage from "../Pages/Penitip/ExpiredProductPage";
+import ExtendProductPage from "../Pages/Penitip/ExtendProductPage";
 import DonatedProductPage from "../Pages/Penitip/DonatedProductPage";
 
 //CS
@@ -332,9 +332,9 @@ const router = createBrowserRouter([
                 path: "",
                 element: <PenitipProductLayout />,
                 children: [
-                    { path: "history", element: <SoldProductPage /> },
                     { path: "on-sale", element: <OnSaleProductPage /> },
-                    { path: "expired", element: <ExpiredProductPage /> },
+                    { path: "sold-product", element: <SoldProductPage /> },
+                    { path: "extend", element: <ExtendProductPage /> },
                     { path: "donated", element: <DonatedProductPage /> },
                 ],
             },

@@ -104,7 +104,7 @@ Route::middleware('auth:pembeli')->group(function () {
     Route::post('/pembeli/reduce-point/{poin}', [PembeliController::class, 'reducePoint']);
 
     Route::post('/pembeli/create-komisi/{id_barang}', [KomisiController::class, 'createKomisi']);
-    Route::get('/pembeli/get-komponen-komisi/{id_barang}', [KomisiController::class, 'getKomponenKomisi']);
+    // Route::get('/pembeli/get-komponen-komisi/{id_barang}', [KomisiController::class, 'getKomponenKomisi']);
 
     Route::post('/pembeli/create-transaksi-pembelian', [TransaksiPembelianController::class, 'createTransaksiPembelian']);
     Route::get('/pembeli/show-transaksi-pembelian', [TransaksiPembelianController::class, 'showTransaksiPembelian']);

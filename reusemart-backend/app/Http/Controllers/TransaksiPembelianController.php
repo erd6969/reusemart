@@ -111,7 +111,7 @@ class TransaksiPembelianController
             // Validasi bukti pembayaran
             $request->validate([
                 'id_transaksi_pembelian' => 'required|exists:transaksi_pembelian,id_transaksi_pembelian',
-                'bukti_pembayaran' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
+                'bukti_pembayaran' => 'required|image|mimes:jpeg,png,jpg,gif',
             ]);
 
             // Upload file terlebih dahulu
@@ -137,6 +137,11 @@ class TransaksiPembelianController
             DetailTransaksiPenitipan::whereIn('id_barang', $idBarangs)
                 ->update([
                     'status_penitipan' => 'terjual',
+                ]);
+
+            TransaksiPembelian::where('id_transaksi_pembelian', $request->id_transaksi_pembelian)
+                ->update([
+                    'status_pengiriman' => 'sedang disiapkan'
                 ]);
 
             return response()->json([

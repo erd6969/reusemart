@@ -19,6 +19,25 @@ export const ShowTransaksiPenitipan = async () => {
     }
 }
 
+export const ShowTransaksiPenitipanById = async (id) => {
+    try {
+        const token = sessionStorage.getItem("token");
+        const response = await useAxios.get(`/transaksi_penitipan/show-by-id/${id}`, {
+            headers: {
+                "Content-Type": "application/json",
+                "Accept": "application/json",
+                "Authorization": `Bearer ${token}`,
+            },
+        });
+        console.log("Show Transaksi Penitipan By Id response:", response.data);
+        return response.data;
+    }
+    catch (error) {
+        console.error("Error fetching By ID transaksi penitipan :", error);
+        throw error;
+    }
+}
+
 export const SearchByPenitip = async (search_penitip) => {
     try {
         const token = sessionStorage.getItem("token");

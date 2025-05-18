@@ -78,12 +78,12 @@ const ModalDetailRequestDonasi = ({ show, handleClose, dataDetail,  onSuccess, o
     const handleAccept = () => {
         setSelectedIdRequestDonasi(dataDetail.id_request_donasi);
         setShowForm(true);
-        handleClose(); // Menutup modal sekarang
+        handleClose();
     };
     
     const handleShowBarang = () => {
         navigate(`/owner/req-donasi-show-barang/${dataOrganisasi.nama_organisasi}/${formData.id_request_donasi}`);
-        handleClose(); // Menutup modal sekarang
+        handleClose();
     }
 
 

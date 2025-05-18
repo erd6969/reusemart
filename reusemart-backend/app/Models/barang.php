@@ -17,6 +17,8 @@ class Barang extends Model
         'deskripsi_barang',
         'kondisi_barang',
         'harga_barang',
+        'tanggal_garansi',
+        'berat_barang',
         'foto_barang',
         'foto_barang2',
         'foto_barang3',
@@ -30,7 +32,7 @@ class Barang extends Model
 
     public function kategori()
     {
-        return $this->belongsTo(Kategori::class, 'id_kategori');
+        return $this->belongsTo(Kategori::class, 'id_kategori', 'id_kategori');
     }
 
     public function hunter()

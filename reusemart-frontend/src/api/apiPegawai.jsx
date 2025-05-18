@@ -117,3 +117,19 @@ export const GetProfile = async () => {
         throw error?.response?.data || error;
       }
 };
+
+export const SearchPegawaiByNama = async (search_pegawai) => {
+    try {
+        const response = await useAxios.get(`/pegawai-gudang/searchPegawai/${search_pegawai}`, {
+            headers: {
+                "Content-Type": "application/json",
+                "Accept": "application/json",
+                Authorization: `Bearer ${getToken()}`,
+            },
+        });
+        return response.data;
+    } catch (error) {
+        console.error("Error searching pegawai:", error);
+        throw error?.response?.data || error;
+    }
+}

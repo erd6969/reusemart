@@ -7,7 +7,7 @@ import { toast } from 'react-toastify';
 import { ShowAllJabatan } from "../../../api/apiJabatan";
 import Dropdown from 'react-bootstrap/Dropdown';
 import { Spinner } from "react-bootstrap";
-import { SearchByEmail } from "../../../api/apiPenitip"; // You'll need to create this API function
+import { SearchByEmail } from "../../../api/apiPenitip";
 
 const ModalCreateTransaksiPenitipan = ({ show, handleClose, onSuccess }) => {
     const [formData, setFormData] = useState({
@@ -17,26 +17,32 @@ const ModalCreateTransaksiPenitipan = ({ show, handleClose, onSuccess }) => {
     const [isLoading, setIsLoading] = useState(false);
     const [emailSuggestions, setEmailSuggestions] = useState([]);
     const [showSuggestions, setShowSuggestions] = useState(false);
+    const [skipEmail, setSkipEmail] = useState(true);
 
-    // Fetch email suggestions when email input changes
     useEffect(() => {
-        const fetchEmailSuggestions = async () => {
-            if (formData.email_penitip.length > 2) {
-                try {
-                    const response = await SearchByEmail(formData.email_penitip);
-                    console.log("Email Suggestions:", response);
-                    setEmailSuggestions(response);
-                    setShowSuggestions(true);
-                } catch (error) {
-                    setEmailSuggestions([]);
-                }
-            } else {
-                setEmailSuggestions([]);
-                setShowSuggestions(false);
-            }
-        };
+        let debounceTimer = null;
+        if(!skipEmail){
 
-        const debounceTimer = setTimeout(fetchEmailSuggestions, 300); // Debounce to avoid too many requests
+            const fetchEmailSuggestions = async () => {
+                if (formData.email_penitip.length > 2) {
+                    try {
+                        const response = await SearchByEmail(formData.email_penitip);
+                        console.log("Email Suggestions:", response);
+                        setEmailSuggestions(response);
+                        setShowSuggestions(true);
+                    } catch (error) {
+                        setEmailSuggestions([]);
+                    }
+                } else {
+                    setEmailSuggestions([]);
+                    setShowSuggestions(false);
+                }
+            };
+            debounceTimer = setTimeout(fetchEmailSuggestions, 300);
+        }else{
+            return;
+        }
+
         return () => clearTimeout(debounceTimer);
     }, [formData.email_penitip]);
 
@@ -48,7 +54,13 @@ const ModalCreateTransaksiPenitipan = ({ show, handleClose, onSuccess }) => {
         }));
     };
 
-    const handleSuggestionClick = (email) => {
+    const handleSuggestionClick = (email, e) => {
+        if(e){
+            e.stopPropagation();
+            e.preventDefault();
+        }
+
+        setSkipEmail(true);
         setFormData(prev => ({
             ...prev,
             email_penitip: email
@@ -103,6 +115,15 @@ const ModalCreateTransaksiPenitipan = ({ show, handleClose, onSuccess }) => {
                                 onChange={handleChange}
                                 name="email_penitip"
                                 autoComplete="off"
+                                onFocus={() => {
+                                    setSkipEmail(false);
+                                    setShowSuggestions(true);
+                                }}
+                                onBlur={() => {
+                                    setSkipEmail(true);
+                                    setShowSuggestions(false);
+                                }}
+
                             />
                             {showSuggestions && emailSuggestions.length > 0 && (
                                 <div style={{
@@ -124,7 +145,7 @@ const ModalCreateTransaksiPenitipan = ({ show, handleClose, onSuccess }) => {
                                                 cursor: 'pointer',
                                                 borderBottom: '1px solid #eee'
                                             }}
-                                            onClick={() => handleSuggestionClick(penitip.email_penitip)}
+                                            onMouseDown={(e) => handleSuggestionClick(penitip.email_penitip,e)}
                                             onMouseEnter={e => e.currentTarget.style.backgroundColor = '#f5f5f5'}
                                             onMouseLeave={e => e.currentTarget.style.backgroundColor = 'white'}
                                         >

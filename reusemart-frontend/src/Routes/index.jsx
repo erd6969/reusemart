@@ -66,6 +66,7 @@ import CSPenitipManagementPage from "../Pages/CustomerService/CSPenitipManagemen
 import OwnerLayouts from "../Layouts/OwnerLayouts";
 import ReqDonasiShowBarang from "../Pages/Owner/ReqDonasiShowBarang";
 import PegawaiGudangLayout from "../Layouts/PegawaiGudangLayouts";
+import DetailTransaksiPenitipanPage from "../Pages/PegawaiGudang/DetailTransaksiPenitipanPage";
 
 const router = createBrowserRouter([
     {
@@ -219,6 +220,10 @@ const router = createBrowserRouter([
                 path: "penitipan-barang",
                 element: <PenitipanBarangPage />,
             },
+            {
+                path: "detail-transaksi-penitipan/:id_transaksi_penitipan",
+                element: <DetailTransaksiPenitipanPage />,
+            }
         ],
     },
 

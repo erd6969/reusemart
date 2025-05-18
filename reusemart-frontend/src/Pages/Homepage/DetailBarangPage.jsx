@@ -25,7 +25,7 @@ const DetailBarang = ({ detailBarang, gambar, penitip }) => {
     const gambarBarang = [
         detailBarang.foto_barang,
         detailBarang.foto_barang2,
-        detailBarang.foto_barang3
+        detailBarang.foto_barang3 ?? null
     ];
 
     const handleAddToCart = async () => {

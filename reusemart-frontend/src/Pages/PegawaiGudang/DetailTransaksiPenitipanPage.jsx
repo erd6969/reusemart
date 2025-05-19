@@ -65,8 +65,8 @@ const DetailTransaksiPenitipanPage = () => {
     const handleDelete = (id) => {
         if (window.confirm("Apakah Anda yakin ingin menghapus data ini?")) {
             DeleteWithBarang(id).then(() => {
-                fetchDetailTransaksiPenitipan();
                 toast.success("Data Barang Berhasil Dihapus.");
+                fetchDetailTransaksiPenitipan();
             })
             .catch((error) => {
                 console.error("Error deleting barang:", error);

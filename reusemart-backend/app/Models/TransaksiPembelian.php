@@ -13,6 +13,7 @@ class TransaksiPembelian extends Model
     protected $fillable = [
         'id_pembeli',
         'id_alamat',
+        'id_pegawai',
         'tanggal_pembelian',
         'tanggal_pengiriman',
         'tanggal_pembayaran',
@@ -40,5 +41,10 @@ class TransaksiPembelian extends Model
     public function komisi()
     {
         return $this->hasMany(Komisi::class, 'id_transaksi_pembelian', 'id_transaksi_pembelian');
+    }
+
+    public function pegawai()
+    {
+        return $this->belongsTo(Pegawai::class, 'id_pegawai', 'id_pegawai');
     }
 }

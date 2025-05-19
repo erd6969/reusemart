@@ -78,7 +78,8 @@ class PembeliController
                 'sedang disiapkan',
                 'sedang diantar',
                 'siap diambil',
-                'sudah diterima'
+                'sudah sampai',
+                'sudah diambil',
             ])
             ->select(
                 'barang.*',

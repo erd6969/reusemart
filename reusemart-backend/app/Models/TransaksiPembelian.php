@@ -14,6 +14,7 @@ class TransaksiPembelian extends Model
         'id_pembeli',
         'id_pegawai',
         'id_alamat',
+        'id_pegawai',
         'tanggal_pembelian',
         'tanggal_pengiriman',
         'tanggal_pembayaran',

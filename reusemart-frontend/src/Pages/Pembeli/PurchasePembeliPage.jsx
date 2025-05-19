@@ -9,6 +9,10 @@ import "react-datepicker/dist/react-datepicker.css";
 
 import { ShowHistoryPurchase } from "../../api/apiPembeli";
 import { getThumbnailBarang } from "../../api/index";
+import StarRating from "../../Components/Pembeli/StarRating";
+import { Star } from 'lucide-react';
+import { TambahRating } from '../../api/apiBarang';
+import { toast } from 'react-toastify';
 
 const PurchasePembeliPage = () => {
     const [historyPurchase, setHistoryPurchase] = useState([]);
@@ -26,21 +30,22 @@ const PurchasePembeliPage = () => {
     const [totalPages, setTotalPages] = useState(1);
 
 
+    const fetchPurchaseHistory = async () => {
+        try {
+            const response = await ShowHistoryPurchase(currentPage);
+            console.log(response.data.data);
+            setHistoryPurchase(response.data.data);
+            setTotalPages(response.data.last_page);
+        } catch (error) {
+            console.error("Error fetching history purchase:", error);
+        } finally {
+            setLoading(false);
+        }
+    };
+    
     useEffect(() => {
-        const fetchPurchaseHistory = async () => {
-            try {
-                const response = await ShowHistoryPurchase(currentPage);
-                setHistoryPurchase(response.data.data);
-                setTotalPages(response.data.last_page);
-            } catch (error) {
-                console.error("Error fetching history purchase:", error);
-            } finally {
-                setLoading(false);
-            }
-        };
         fetchPurchaseHistory();
     }, [currentPage]);
-
 
     const handleOpenModal = (product) => {
         setSelectedProduct(product);
@@ -50,6 +55,7 @@ const PurchasePembeliPage = () => {
     const handleSearch = () => {
         setSearchQuery(searchValue);
     };
+    
 
     const filteredPurchase = historyPurchase
         .filter(history => {
@@ -105,7 +111,7 @@ const PurchasePembeliPage = () => {
                         <Button variant={statusFilter.toLowerCase() === "sedang disiapkan" ? "warning" : "outline-warning"} className="me-2" onClick={() => setStatusFilter('sedang disiapkan')}>Sedang Disiapkan</Button>
                         <Button variant={statusFilter.toLowerCase() === "sedang diantar" ? "warning" : "outline-warning"} className="me-2" onClick={() => setStatusFilter('sedang diantar')}>Sedang Diantar</Button>
                         <Button variant={statusFilter.toLowerCase() === "siap diambil" ? "warning" : "outline-warning"} className="me-2" onClick={() => setStatusFilter('siap diambil')}>Siap diambil</Button>
-                        <Button variant={statusFilter.toLowerCase() === "sudah sampai" ? "warning" : "outline-warning"} className="me-2" onClick={() => setStatusFilter('sudah sampai')}>Sudah sampai</Button>
+                        <Button variant={statusFilter.toLowerCase() === "sudah sampai" ? "warning" : "outline-warning"} className="me-2" onClick={() => setStatusFilter('sudah diterima')}>Sudah diterima</Button>
                     </div>
 
                     <div className="mb-3 d-flex gap-2 align-items-center">
@@ -217,6 +223,7 @@ const PurchasePembeliPage = () => {
                 show={modalShow}
                 onHide={() => setModalShow(false)}
                 product={selectedProduct}
+                onRated= {fetchPurchaseHistory}
             />
         </Container>
     );
@@ -224,8 +231,39 @@ const PurchasePembeliPage = () => {
 
 export default PurchasePembeliPage;
 
-function MyVerticallyCenteredModal({ show, onHide, product }) {
+function MyVerticallyCenteredModal({ show, onHide, product, onRated }) {
     if (!product) return null;
+    const [rating, setRating] = useState(0);
+    const formDataToSend = new FormData();
+
+    const handleRating = async () => {
+        formDataToSend.append("id_barang", product.id_barang);
+        formDataToSend.append("rating", rating);
+
+        try {
+            const response = await TambahRating(formDataToSend);
+            toast.success("Rating berhasil diberikan");
+            onHide();
+            onRated();
+        } catch (error) {
+            console.error("Error giving rating:", error);
+            toast.error("Gagal memberikan rating");
+        }
+    };
+
+    // Fungsi untuk render bintang statis
+    const renderStaticStars = (value) => {
+        const stars = [];
+        for (let i = 1; i <= 5; i++) {
+            stars.push(
+                <FaStar key={i} color={i <= value ? "#ffc107" : "#e4e5e9"} size={24} />
+            );
+        }
+        return <div className="d-flex gap-1">{stars}</div>;
+    };
+
+    const isAlreadyRated = product.rating && product.rating > 0;
+    const isReceivedStatus = ["sudah diambil", "sudah sampai"].includes(product.status_pengiriman?.toLowerCase());
 
     return (
         <Modal show={show} onHide={onHide} size="lg" centered>
@@ -246,10 +284,26 @@ function MyVerticallyCenteredModal({ show, onHide, product }) {
                         <p><strong>Status Pengiriman:</strong> {product.status_pengiriman}</p>
                         <p><strong>Deskripsi Barang :</strong> {product.deskripsi_barang}</p>
                         <p><strong>Kondisi Barang :</strong> {product.kondisi_barang}</p>
+
+                        {isReceivedStatus && (
+                            <>
+                                <p><strong>Rating:</strong></p>
+                                {isAlreadyRated ? (
+                                    renderStaticStars(product.rating)
+                                ) : (
+                                    <StarRating onRate={(value) => setRating(value)} />
+                                )}
+                            </>
+                        )}
                     </div>
                 </div>
             </Modal.Body>
             <Modal.Footer>
+                {isReceivedStatus && !isAlreadyRated && (
+                    <Button variant="primary" onClick={handleRating}>
+                        Berikan rating
+                    </Button>
+                )}
                 <Button variant="danger" onClick={onHide}>Tutup</Button>
             </Modal.Footer>
         </Modal>

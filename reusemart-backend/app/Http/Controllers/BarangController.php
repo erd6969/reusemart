@@ -380,4 +380,30 @@ class BarangController
             ], 404);
         }
     }
+
+    public function tambahRating(){
+        try {
+            $validatedData = request()->validate([
+                'id_barang' => 'required|integer',
+                'rating' => 'required|integer|min:1|max:5',
+            ]);
+
+            $barang = Barang::find($validatedData['id_barang']);
+            if (!$barang) {
+                return response()->json([
+                    'message' => 'Barang not found',
+                ], 404);
+            }
+
+            $barang->rating = $validatedData['rating'];
+            $barang->save();
+
+            return response()->json($barang, 200);
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'Failed to update rating',
+                'error' => $e->getMessage(),
+            ], 500);
+        }
+    }
 }

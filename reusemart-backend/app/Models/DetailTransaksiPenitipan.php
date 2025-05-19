@@ -17,6 +17,7 @@ class DetailTransaksiPenitipan extends Model
         'id_barang',
         'tanggal_berakhir',
         'tanggal_batas_pengambilan',
+        'tanggal_pengambilan',
         'status_penitipan',
         'status_perpanjangan',
     ];

@@ -28,6 +28,7 @@ Route::post('/reset-password', [LoginController::class, 'resetPassword']);
 
 Route::post('/login', [LoginController::class, 'login']);
 Route::middleware('auth:sanctum')->post('/logout', [LoginController::class, 'logout']);
+Route::middleware('auth:sanctum')->post('/logout-mobile', [LoginController::class, 'logoutMobile']);
 Route::post ('/pembeli/register', [PembeliController::class, 'register'])->name('pembeli.register');
 Route::post ('/organisasi/register', [OrganisasiController::class, 'register'])->name('organisasi.register');
 

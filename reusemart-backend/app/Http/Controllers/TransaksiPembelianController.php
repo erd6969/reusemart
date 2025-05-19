@@ -9,6 +9,7 @@ use App\Models\Barang;
 use App\Models\Pembeli;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use App\Models\Penitip;
 
 use App\Http\Controllers\NotificationController;
 
@@ -232,18 +233,16 @@ class TransaksiPembelianController
                 'verifikasi_bukti' => 'transaksi diverifikasi',
                 'status_pengiriman' => 'sedang disiapkan'
             ]);
-
+            
             // Ambil penitip pertama yang ditemukan
-            $penitip = null;
-            foreach ($transaksi->komisi as $komisi) {
-                $barang = $komisi->barang;
-                if (!$barang) continue;
-
-                foreach ($barang->detailTransaksiPenitipan as $detail) {
-                    $penitip = $detail->transaksiPenitipan->penitip ?? null;
-                    if ($penitip) break 2;
-                }
-            }
+            $penitip = Penitip::join('transaksi_penitipan', 'transaksi_penitipan.id_penitip', '=', 'penitip.id_penitip')
+                    ->join('detail_transaksi_penitipan', 'detail_transaksi_penitipan.id_transaksi_penitipan', '=', 'transaksi_penitipan.id_transaksi_penitipan')
+                    ->join('barang', 'barang.id_barang', '=', 'detail_transaksi_penitipan.id_barang')
+                    ->join('komisi', 'komisi.id_barang', '=', 'barang.id_barang')
+                    ->join('transaksi_pembelian', 'transaksi_pembelian.id_transaksi_pembelian', '=', 'komisi.id_transaksi_pembelian')
+                    ->where('transaksi_pembelian.id_transaksi_pembelian', $request->id_transaksi_pembelian)
+                    ->select('penitip.*')
+                    ->first();
 
             // Kirim notifikasi
             if ($penitip && $penitip->fcm_token) {

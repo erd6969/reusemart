@@ -51,7 +51,6 @@ const UnpaidPurchasePage = () => {
         setSearchQuery(searchValue);
     };
 
-    // Optional search (client-side filter)
     const filteredPurchase = unpaidPurchase.filter((item) =>
         item.nama_barang?.toLowerCase().includes(searchQuery.toLowerCase())
     );

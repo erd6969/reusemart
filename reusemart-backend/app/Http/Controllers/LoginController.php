@@ -158,12 +158,20 @@ class LoginController
     {
         $credentials = $request->validate([
             'email' => 'required|email',
-            'password' => 'required'
+            'password' => 'required',
+            'fcm_token' => 'nullable|string',  // token FCM opsional
         ]);
+
+        $fcmToken = $credentials['fcm_token'] ?? null;
 
         // Cek Pembeli
         $pembeli = Pembeli::where('email_pembeli', $credentials['email'])->first();
         if ($pembeli && Hash::check($credentials['password'], $pembeli->password_pembeli)) {
+            if ($fcmToken) {
+                $pembeli->fcm_token = $fcmToken;
+                $pembeli->save();
+            }
+
             $token = $pembeli->createToken('auth_token', ['pembeli'])->plainTextToken;
             return response()->json([
                 'message' => 'Login successful',
@@ -176,6 +184,11 @@ class LoginController
         // Cek Penitip
         $penitip = Penitip::where('email_penitip', $credentials['email'])->first();
         if ($penitip && Hash::check($credentials['password'], $penitip->password_penitip)) {
+            if ($fcmToken) {
+                $penitip->fcm_token = $fcmToken;
+                $penitip->save();
+            }
+
             $token = $penitip->createToken('auth_token', ['penitip'])->plainTextToken;
             return response()->json([
                 'message' => 'Login successful',
@@ -188,6 +201,11 @@ class LoginController
         // Cek Hunter
         $hunter = Hunter::where('email_hunter', $credentials['email'])->first();
         if ($hunter && Hash::check($credentials['password'], $hunter->password_hunter)) {
+            if ($fcmToken) {
+                $hunter->fcm_token = $fcmToken;
+                $hunter->save();
+            }
+
             $token = $hunter->createToken('auth_token', ['hunter'])->plainTextToken;
             return response()->json([
                 'message' => 'Login successful',
@@ -201,6 +219,11 @@ class LoginController
         $pegawai = Pegawai::where('email_pegawai', $credentials['email'])->first();
         if ($pegawai && Hash::check($credentials['password'], $pegawai->password_pegawai)) {
             if ($pegawai->jabatan->id_jabatan == 4) {
+                if ($fcmToken) {
+                    $pegawai->fcm_token = $fcmToken;
+                    $pegawai->save();
+                }
+
                 $token = $pegawai->createToken('auth_token', ['kurir'])->plainTextToken;
                 return response()->json([
                     'message' => 'Login successful',
@@ -215,5 +238,4 @@ class LoginController
             'message' => 'Email atau password salah, atau role tidak diizinkan di mobile.'
         ], 401);
     }
-
 }

@@ -23,6 +23,7 @@ class Organisasi extends Model
         'alamat_organisasi',
         'nomor_telepon_organisasi',
         'foto_organisasi',
+        'fcm_token',
     ];
 
     public function requestDonasi()

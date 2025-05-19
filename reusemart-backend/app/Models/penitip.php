@@ -26,7 +26,8 @@ class Penitip extends Model
         'foto_penitip',
         'foto_ktp',
         'komisi_penitip',
-        'rerata_rating'
+        'rerata_rating',
+        'fcm_token',
     ];
     public $timestamps = false;
 

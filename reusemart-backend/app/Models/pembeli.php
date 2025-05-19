@@ -24,6 +24,7 @@ class Pembeli extends Model
         'tanggal_lahir_pembeli',
         'poin_loyalitas',
         'foto_pembeli',
+        'fcm_token',
     ];
 
     public function alamat()

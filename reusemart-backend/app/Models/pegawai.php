@@ -22,6 +22,7 @@ class Pegawai extends Model
         'nama_pegawai',
         'tanggal_lahir',
         'foto_pegawai',
+        'fcm_token',
     ];
 
     public function jabatan()

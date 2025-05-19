@@ -43,7 +43,6 @@ const PurchaseVerificationPage = () => {
         setSearchQuery(searchValue);
     };
 
-    // Mapping status codes ke label dan warna badge hanya dua status
     const statusLabels = {
         "belum diverifikasi": "Menunggu Verifikasi",
         "transaksi ditolak": "Verifikasi Ditolak",
@@ -54,12 +53,10 @@ const PurchaseVerificationPage = () => {
         "transaksi ditolak": "danger",
     };
 
-    // Filter data sesuai statusFilter dan searchQuery
     const filteredPurchase = data
         .filter(item => {
             if (statusFilter === 'all') return true;
 
-            // Tentukan label status item sesuai verifikasi_bukti
             let itemStatusLabel = "";
             if (item.verifikasi_bukti === "belum diverifikasi") {
                 itemStatusLabel = "menunggu verifikasi";

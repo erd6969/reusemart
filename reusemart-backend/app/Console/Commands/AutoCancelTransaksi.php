@@ -22,6 +22,7 @@ class AutoCancelTransaksi extends Command
 
         $transaksis = TransaksiPembelian::where('status_pembayaran', '0')
             ->where('batas_pembayaran', '<=', $now)
+            ->where('verifikasi_bukti', '!=', 'transaksi dibatalkan')
             ->get();
 
         if ($transaksis->isEmpty()) {

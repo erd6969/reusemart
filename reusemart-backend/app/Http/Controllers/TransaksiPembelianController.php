@@ -10,6 +10,9 @@ use App\Models\Pembeli;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
+use App\Http\Controllers\NotificationController;
+
+
 class TransaksiPembelianController
 {
     public function createTransaksiPembelian(Request $request)
@@ -217,23 +220,52 @@ class TransaksiPembelianController
     public function verifyTransaksiPembelian(Request $request)
     {
         try {
-            $transaksi = TransaksiPembelian::where('id_transaksi_pembelian', $request->id_transaksi_pembelian)
-                ->update([
-                    'verifikasi_bukti' => 'transaksi diverifikasi',
-                    'status_pengiriman' => 'sedang disiapkan'
+            $transaksi = TransaksiPembelian::with('komisi.barang.detailTransaksiPenitipan.transaksiPenitipan.penitip')
+                ->where('id_transaksi_pembelian', $request->id_transaksi_pembelian)
+                ->first();
+
+            if (!$transaksi) {
+                return response()->json(['message' => 'Transaksi tidak ditemukan'], 404);
+            }
+
+            $transaksi->update([
+                'verifikasi_bukti' => 'transaksi diverifikasi',
+                'status_pengiriman' => 'sedang disiapkan'
+            ]);
+
+            // Ambil penitip pertama yang ditemukan
+            $penitip = null;
+            foreach ($transaksi->komisi as $komisi) {
+                $barang = $komisi->barang;
+                if (!$barang) continue;
+
+                foreach ($barang->detailTransaksiPenitipan as $detail) {
+                    $penitip = $detail->transaksiPenitipan->penitip ?? null;
+                    if ($penitip) break 2;
+                }
+            }
+
+            // Kirim notifikasi
+            if ($penitip && $penitip->fcm_token) {
+                $notifRequest = new Request([
+                    'token' => $penitip->fcm_token,
+                    'title' => 'Barang Terjual',
+                    'body' => 'Barang Anda Telah Terjual dan Sedang Disiapkan untuk Pengiriman',
                 ]);
 
-            return response()->json([
-                'message' => 'Transaksi Pembelian verified successfully',
-                'transaksi' => $transaksi,
-            ], 200);
+                (new NotificationController())->sendNotification($notifRequest);
+            }
+
+            return response()->json(['message' => 'Transaksi diverifikasi dan notifikasi dikirim'], 200);
+
         } catch (\Exception $e) {
             return response()->json([
-                'message' => 'Failed to verify Transaksi Pembelian',
-                'error' => $e->getMessage(),
+                'message' => 'Gagal memverifikasi transaksi',
+                'error' => $e->getMessage()
             ], 500);
         }
     }
+
 
     public function rejectTransaksiPembelian(Request $request)
     {

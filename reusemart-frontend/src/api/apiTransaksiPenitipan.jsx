@@ -1,9 +1,9 @@
 import useAxios from ".";
 
-export const ShowTransaksiPenitipan = async () => {
+export const ShowTransaksiPenitipan = async (page = 1) => {
     try {
         const token = sessionStorage.getItem("token");
-        const response = await useAxios.get("/transaksi_penitipan/show-all", {
+        const response = await useAxios.get(`/transaksi_penitipan/show-all?page=${page}`, {
             headers: {
                 "Content-Type": "application/json",
                 "Accept": "application/json",

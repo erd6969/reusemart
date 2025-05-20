@@ -441,6 +441,30 @@ class BarangController
             $barang->rating = $validatedData['rating'];
             $barang->save();
 
+            $detail = DetailTransaksiPenitipan::where('id_barang', $barang->id_barang)->first();
+
+            if ($detail) {
+                $transaksi = TransaksiPenitipan::find($detail->id_transaksi_penitipan);
+                $penitip = Penitip::find($transaksi->id_penitip);
+            }
+
+            $barangIds = $penitip->transaksiPenitipan()
+                ->with('detailTransaksiPenitipan.barang')
+                ->get()
+                ->pluck('detailTransaksiPenitipan')  // ambil semua detail
+                ->flatten()                 // satukan jadi 1 list
+                ->pluck('barang.id_barang') // ambil ID barang dari masing2 detail
+                ->unique()                  // buang ID yang duplikat
+                ->filter();                 // buang null
+
+            log::info('ID BARANG :' . $barangIds);
+
+            $ratarata = Barang::whereIn('id_barang', $barangIds)
+                ->avg('rating');
+
+            $penitip->rerata_rating = $ratarata;
+            $penitip->save();
+
             return response()->json($barang, 200);
         } catch (\Exception $e) {
             return response()->json([

@@ -13,7 +13,7 @@ function CarouselDetail({ gambar }) {
 
           return (
             <Carousel.Item key={index}>
-              <img
+              <img 
                 src={getThumbnailBarang(item)}
                 alt={`gambar-${index}`}
                 className="carousel-image"

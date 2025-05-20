@@ -8,6 +8,8 @@ import { toast } from 'react-toastify';
 import { ShowExtendProducts, extendBarang, ambilBarang, SearchBarangExtend } from '../../api/apiPenitip';
 import { getThumbnailBarang } from "../../api/index";
 
+import ModalDetailPenjualan from "../../Components/Modal/ModalPenitip/ModalDetailBarang";
+
 
 const ExtendProductPage = () => {
     const [extendProducts, setExtendProducts] = useState([]);
@@ -16,6 +18,9 @@ const ExtendProductPage = () => {
     const [searchQuery, setSearchQuery] = useState("");
     const [isFirstLoad, setIsFirstLoad] = useState(true);
     const [totalPages, setTotalPages] = useState(1);
+    const [showModal, setShowModal] = useState(false);
+    const [selectedProductId, setSelectedProductId] = useState(null);
+
 
     const fetchExtendProducts = async () => {
         setIsLoading(true);
@@ -37,6 +42,16 @@ const ExtendProductPage = () => {
     useEffect(() => {
         fetchExtendProducts();
     }, []);
+
+    const handleOpenModal = (id_barang) => {
+        setSelectedProductId(id_barang);
+        setShowModal(true);
+    };
+
+    const handleCloseModal = () => {
+        setShowModal(false);
+        setSelectedProductId(null);
+    };
 
     useEffect(() => {
         const delayDebounce = setTimeout(() => {
@@ -138,7 +153,7 @@ const ExtendProductPage = () => {
                                 </tr>
                             ) : extendProducts.length > 0 ? (
                                 extendProducts.map((product, index) => (
-                                    <tr key={index} style={{ fontSize: '15px' }}>
+                                    <tr key={index} onClick={() => handleOpenModal(product.id_barang)} style={{ fontSize: '15px', cursor: "pointer" }}>
                                         <td className='product-info'>
                                             <img src={getThumbnailBarang(product.foto_barang) || defaultImage} alt={product.nama_barang} style={{ maxWidth: '8vw' }} />
                                             <b>{product.nama_barang}</b>
@@ -203,6 +218,13 @@ const ExtendProductPage = () => {
                     </Button>
                 </div>
             </div>
+            {selectedProductId && (
+                <ModalDetailPenjualan
+                    show={showModal}
+                    handleClose={handleCloseModal}
+                    id_barang={selectedProductId}
+                />
+            )}
         </div>
     );
 };

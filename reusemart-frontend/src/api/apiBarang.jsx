@@ -105,6 +105,22 @@ export const GetDetailBarang = async (id_barang) => {
     }
 }
 
+export const GetDetailDonasi = async (id_barang) => {
+    try {
+        const response = await useAxios.get(`/detail-donasi/${id_barang}`, {
+            headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${getToken()}`
+            },
+        });
+        console.log("Detail Barang response:", response);
+        return response.data;
+    } catch (error) {
+        console.error("Error fetching Detail Barang:", error);
+        throw error?.response?.data || error;
+    }
+}
+
 // Cari barang
 export const SearchBarang = async (search_barang) => {
     try {

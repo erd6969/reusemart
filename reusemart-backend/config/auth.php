@@ -71,7 +71,11 @@ return [
         'owner' => [
             'driver' => 'sanctum',
             'provider' => 'pegawai',
-        ]
+        ],
+        'kurir' => [
+            'driver' => 'sanctum',
+            'provider' => 'pegawai',
+        ],
     ],
 
 

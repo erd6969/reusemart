@@ -198,5 +198,10 @@ Route::middleware('auth:admin')->group(function () {
 
     Route::get('/pegawai/show-profile', [PegawaiController::class, 'showProfile']);
 });
+
+Route::middleware('auth:kurir')->group(function () {
+    Route::get('/pegawai/show-profile', [PegawaiController::class, 'showProfile']);
+    Route::get('/kurir/count-pengiriman', [PegawaiController::class, 'getJumlahPengantaranKurir']);
+});
 #endregion
 

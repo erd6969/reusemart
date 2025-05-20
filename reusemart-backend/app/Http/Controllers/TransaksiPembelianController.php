@@ -30,7 +30,7 @@ class TransaksiPembelianController
                 'id_pembeli' => $pembeli->id_pembeli,
                 'id_alamat' => $request->id_alamat,
                 'tanggal_pembelian' => now(),
-                'batas_pembayaran' => now()->addMinutes(15),
+                'batas_pembayaran' => now()->addMinutes(1),
                 'pengiriman' => $request->pengiriman,
                 'penggunaan_poin' => $request->penggunaan_poin,
                 'tambahan_poin' => $request->tambahan_poin,
@@ -281,6 +281,32 @@ class TransaksiPembelianController
         } catch (\Exception $e) {
             return response()->json([
                 'message' => 'Failed to reject Transaksi Pembelian',
+                'error' => $e->getMessage(),
+            ], 500);
+        }
+    }
+
+    public function getJumlahPengantaranKurir()
+    {
+        try {
+            $kurir = Auth::user();
+            if (!$kurir) {
+                return response()->json([
+                    'message' => 'Unauthorized',
+                ], 401);
+            }
+
+            $jumlahPengantaran = TransaksiPembelian::where('id_pegawai', $kurir->id_pegawai)
+                ->where('status_pengiriman', 'sudah diterima')
+                ->count();
+
+            return response()->json([
+                'message' => 'Jumlah Pengantaran retrieved successfully',
+                'jumlah_pengantaran' => $jumlahPengantaran,
+            ], 200);
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'Failed to retrieve Jumlah Pengantaran',
                 'error' => $e->getMessage(),
             ], 500);
         }

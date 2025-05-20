@@ -58,7 +58,10 @@ Route::middleware('auth:penitip')->group(function () {
     Route::get('/penitip/show-extend-product', [PenitipController::class, 'showExtendProducts']);
     Route::post('/penitip/extend-barang', [PenitipController::class, 'extendBarangPenitip']);
     Route::post('/penitip/ambil-barang', [PenitipController::class, 'pengambilanBarang']);
-    
+    Route::get('/penitip/search-donasi/{search_barang}', [BarangController::class, 'searchBarangDonasi']);
+    Route::get('/penitip/search-extend/{search_barang}', [BarangController::class, 'searchBarangExtend']);
+    Route::get('/penitip/search-jual/{search_barang}', [BarangController::class, 'searchBarangJual']);
+    Route::get('/penitip/search-terjual/{search_barang}', [BarangController::class, 'searchBarangTerjual']);
     Route::get('/penitip/show-detail-pendapatan/{id_barang}', [PenitipController::class, 'showDetailPendapatan']);
 });
  #endregion
@@ -145,6 +148,8 @@ Route::middleware('auth:owner')->group(function () {
 Route::middleware('auth:gudang')->group(function () {
     Route::post('/transaksi_penitipan/create', [TransaksiPenitipanController::class, 'create']);
     Route::get('/transaksi_penitipan/show-all', [TransaksiPenitipanController::class, 'show']);
+    Route::get('/pegawai-gudang/show-ambil', [BarangController::class, 'showAmbilProducts']);
+    Route::get('/pegawai-gudang/show-pengiriman', [BarangController::class, 'showPengirimanProducts']);
     Route::get('/transaksi_penitipan/show-by-id/{id}', [TransaksiPenitipanController::class, 'showById']);
     Route::get('/transaksi_penitipan/search/{search_data}', [TransaksiPenitipanController::class, 'search']);
     Route::get('/detail_transaksi_penitipan/showByIdTP/{id}', [DetailTransaksiPenitipanController::class, 'show']);
@@ -154,8 +159,9 @@ Route::middleware('auth:gudang')->group(function () {
     Route::post('/barang/create', [BarangController::class, 'create']);
     Route::post('/barang/update', [BarangController::class, 'update']);
     Route::get('/kategori/search/{nama_kategori}', [KategoriController::class, 'searchByName']);
-    Route::get('pegawai-gudang/searchPegawai/{search_pegawai}', [PegawaiController::class, 'searchBynama']);
-    
+    Route::get('/pegawai-gudang/searchPegawai/{search_pegawai}', [PegawaiController::class, 'searchBynama']);
+    Route::post('/pegawai-gudang/verif-ambil', [BarangController::class, 'VerifyAmbilBarangPenitip']);
+    Route::get('/pegawai-gudang/search-verif/{search_barang}', [BarangController::class, 'SearchAmbilProducts']);
     Route::get('/hunter/search/{search_hunter}', [HunterController::class, 'searchHunter']);
 });
 

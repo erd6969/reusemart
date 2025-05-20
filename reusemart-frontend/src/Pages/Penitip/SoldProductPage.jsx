@@ -5,7 +5,7 @@ import { Container } from 'react-bootstrap';
 import SearchIcon from "../../assets/images/search-icon.png";
 import defaultImage from "../../assets/images/Pembeli/Yuki.jpeg";
 
-import { ShowSoldProducts } from "../../api/apiPenitip";
+import { ShowSoldProducts, SearchBarangTerjual } from "../../api/apiPenitip";
 import { getThumbnailBarang } from "../../api/index";
 
 import ModalDetailPenjualan from "../../Components/Modal/ModalPenitip/ModalDetailPenjualan";
@@ -14,6 +14,7 @@ const SoldProductPage = () => {
     const [soldProducts, setSoldProducts] = useState([]);
     const [loading, setLoading] = useState(true);
     const [showModal, setShowModal] = useState(false);
+    const [searchQuery, setSearchQuery] = useState("");
     const [selectedProductId, setSelectedProductId] = useState(null);
 
     useEffect(() => {
@@ -42,6 +43,30 @@ const SoldProductPage = () => {
         setSelectedProductId(null);
     };
 
+    useEffect(() => {
+        const delayDebounce = setTimeout(() => {
+            if (searchQuery.trim().length >= 3) {
+                setLoading(true);
+                SearchBarangTerjual(searchQuery.trim())
+                    .then((data) => {
+                        const hasil = Array.isArray(data) ? data : [data];
+                        setSoldProducts(hasil);
+                        console.log("Hasil pencarian:", hasil);
+                    })
+                    .catch((error) => {
+                        console.error("Error searching req:", error);
+                        setSoldProducts([]);
+                    })
+                    .finally(() => setLoading(false));
+            } else {
+                fetchSoldProducts();
+            }
+        }, 500);
+
+        return () => clearTimeout(delayDebounce);
+    }, [searchQuery]);
+
+
     return (
         <Container className="histori-penitipan-wrapper">
             <div className="sold-products-container">
@@ -51,8 +76,10 @@ const SoldProductPage = () => {
                         <img src={SearchIcon} alt="Search Icon" className="search-icon-inside" />
                         <input
                             type="text"
-                            placeholder="Masukkan Nama Produk..."
+                            placeholder="Masukkan Nama Barang..."
                             className="search-input"
+                            value={searchQuery}
+                            onChange={(e) => setSearchQuery(e.target.value)}
                         />
                     </div>
 

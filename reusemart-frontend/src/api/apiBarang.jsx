@@ -137,3 +137,81 @@ export const ShowUnverifiedBarang = async () => {
     }
 }
 
+
+export const ShowAmbilBarang = async (page = 1) => {
+    try {
+        const response = await useAxios.get(`/pegawai-gudang/show-ambil?page=${page}`, {
+            headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${getToken()}`
+            },
+        });
+        console.log("Unverified Barang response:", response);
+        return response.data;
+    } catch (error) {
+        console.error("Error fetching Unverified Barang:", error);
+        throw error?.response?.data || error;
+    }
+}
+export const ShowPengirimanBarang = async (page = 1) => {
+    try {
+        const response = await useAxios.get(`/pegawai-gudang/show-pengiriman?page=${page}`, {
+            headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${getToken()}`
+            },
+        });
+        console.log("Unverified Barang response:", response);
+        return response.data;
+    } catch (error) {
+        console.error("Error fetching Unverified Barang:", error);
+        throw error?.response?.data || error;
+    }
+}
+
+export const VerifAmbil = async (id_detail_transaksi_penitipan) => {
+    try {
+        const token = sessionStorage.getItem("token");
+        
+        const response = await useAxios.post(`/pegawai-gudang/verif-ambil`, {id_detail_transaksi_penitipan}, {
+            headers: {
+                "Content-Type": "application/json",
+                "Accept": "application/json",
+                "Authorization": `Bearer ${token}`,
+            },
+        });
+        return response.data;
+    } catch (error) {
+        const status = error.response?.status;
+
+        if (status === 422 && error.response?.data?.errors) {
+            throw {
+                type: "validation",
+                errors: error.response.data.errors,
+            };
+        }
+
+        throw {
+            type: "general",
+            message: error.response?.data?.message || "Terjadi kesalahan saat mengambil data.",
+        };
+    }
+}
+
+export const SearchBarangVerif = async (search_barang) => {
+    try {
+      const response = await useAxios.get(`/pegawai-gudang/search-verif/${search_barang}`, {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${getToken()}`
+        },
+      });
+      return response.data;
+    } catch (error) {
+      console.error("Error searching Barang:", error);
+      throw error?.response?.data || error;
+    }
+};
+
+
+

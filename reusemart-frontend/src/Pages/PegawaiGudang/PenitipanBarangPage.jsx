@@ -78,7 +78,7 @@ const PenitipanBarangPage = () => {
                     })
                     .finally(() => setIsLoading(false));
             } else {
-                fetchTransaksiPenitipan(currentPage); // Aktifkan pagination saat tidak mencari
+                fetchTransaksiPenitipan(currentPage); 
             }
         }, 50);
 

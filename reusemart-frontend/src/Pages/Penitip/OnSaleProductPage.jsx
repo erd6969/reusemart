@@ -1,23 +1,29 @@
 import './OnSaleProductPage.css';
-import { FaStar } from 'react-icons/fa';
-import { Container, Spinner } from 'react-bootstrap';
+import { Container, Spinner, Button } from 'react-bootstrap';
 import SearchIcon from "../../assets/images/search-icon.png";
 import { use, useEffect, useState } from 'react';
+import { FaChevronLeft, FaChevronRight, FaSearch } from "react-icons/fa";
 import { toast } from 'react-toastify';
-import { ShowOnSaleProducts } from '../../api/apiPenitip';
+import { ShowOnSaleProducts, SearchBarangJual } from '../../api/apiPenitip';
 import { getThumbnailBarang } from "../../api/index";
 
 
-const DonatedProductPage = () => {
+const OnSaleProductPage = () => {
     const [onSaleProducts, setOnSaleProducts] = useState([]);
     const [isLoading, setIsLoading] = useState(false);
+    const [searchQuery, setSearchQuery] = useState("");
     const [isFirstLoad, setIsFirstLoad] = useState(true);
+    const [currentPage, setCurrentPage] = useState(1);
+    const [totalPages, setTotalPages] = useState(1);
+
 
     const fetchOnSaleProducts = async () => {
         setIsLoading(true);
         try {
             const response = await ShowOnSaleProducts();
             setOnSaleProducts(response.data);
+            setTotalPages(response.last_page);
+            setCurrentPage(response.current_page);
         } catch (error) {
             console.error("Error fetching on sale products:", error);
             toast.error("Failed to fetch on sale products");
@@ -30,7 +36,40 @@ const DonatedProductPage = () => {
 
     useEffect(() => {
         fetchOnSaleProducts();
-    }, []);
+    }, [currentPage]);
+
+    const handlePagination = (page) => {
+        if (page >= 1 && page <= totalPages) {
+            setIsLoading(true);
+            setCurrentPage(page);
+            fetchOnSaleProducts(page);
+        }
+    };
+
+    useEffect(() => {
+        const delayDebounce = setTimeout(() => {
+            if (searchQuery.trim().length >= 3) {
+                setIsLoading(true);
+                SearchBarangJual(searchQuery.trim())
+                    .then((data) => {
+                        const hasil = Array.isArray(data) ? data : [data];
+                        setOnSaleProducts(hasil);
+                        setTotalPages(1);
+                        setCurrentPage(1);
+                        console.log("Hasil pencarian:", hasil);
+                    })
+                    .catch((error) => {
+                        console.error("Error searching req:", error);
+                        setOnSaleProducts([]);
+                    })
+                    .finally(() => setIsLoading(false));
+            } else {
+                fetchOnSaleProducts(currentPage);
+            }
+        }, 500);
+
+        return () => clearTimeout(delayDebounce);
+    }, [searchQuery, currentPage]);
     return (
         <div className="onsale-penitipan-wrapper">
             <div className="onsale-products-container">
@@ -40,8 +79,10 @@ const DonatedProductPage = () => {
                         <img src={SearchIcon} alt="Search Icon" className="search-icon-inside" />
                         <input
                             type="text"
-                            placeholder="Masukkan Nama Produk..."
+                            placeholder="Masukkan Nama Barang..."
                             className="search-input"
+                            value={searchQuery}
+                            onChange={(e) => setSearchQuery(e.target.value)}
                         />
                     </div>
 
@@ -87,11 +128,32 @@ const DonatedProductPage = () => {
                             )}
                         </tbody>
 
+
                     </table>
                 </div>
+                    <div className="pagination d-flex justify-content-center align-items-center mt-4">
+                        <Button
+                            variant="secondary"
+                            disabled={currentPage === 1}
+                            onClick={() => handlePagination(currentPage - 1)}
+                            className="me-2"
+                        >
+                            <FaChevronLeft />
+                        </Button>
+                        <span>Halaman {currentPage} dari {totalPages}</span>
+                        <Button
+                            variant="secondary"
+                            disabled={currentPage === totalPages}
+                            onClick={() => handlePagination(currentPage + 1)}
+                            className="ms-2"
+                        >
+                            <FaChevronRight />
+                        </Button>
+                    </div>
             </div>
+
         </div>
     );
 };
 
-export default DonatedProductPage;
+export default OnSaleProductPage;

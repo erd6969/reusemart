@@ -1,47 +1,61 @@
-import './SoldProductPage.css';
+// import './SoldProductPage.css';
 import { useState, useEffect } from 'react';
 import SearchIcon from "../../assets/images/search-icon.png";
 import { Button, Badge } from 'react-bootstrap';
 import { FaChevronLeft, FaChevronRight, FaSearch } from "react-icons/fa";
+import { toast } from 'react-toastify';
 
-
-import { ShowDonatedProduct, SearchBarangDonasi} from "../../api/apiPenitip";
+import { ShowPengirimanBarang, VerifAmbil, SearchBarangVerif } from "../../api/apiBarang";
 import { getThumbnailBarang } from "../../api/index";
 
-const DonatedProductPage = () => {
-    const [donatedProduct, setDonatedProduct] = useState([]);
+const TransaksiPengirimanPage = () => {
+    const [pengirimanBarang, setPengirimanBarang] = useState([]);
     const [loading, setLoading] = useState(true);
     const [currentPage, setCurrentPage] = useState(1);
     const [searchQuery, setSearchQuery] = useState("");
     const [totalPages, setTotalPages] = useState(1);
 
 
-    const fetchDonatedProduct = async (page = 1) => {
+    const fetchPengirimanBarang = async (page = 1) => {
         try {
-            const response = await ShowDonatedProduct(page);
-            setDonatedProduct(response.data);
+            const response = await ShowPengirimanBarang(page);
+            setPengirimanBarang(response.data);
             setTotalPages(response.last_page);
             setCurrentPage(response.current_page);
-            console.log("Fetched doanted products:", response.data);
+            console.log("Fetched barang pengiriman products:", response);
 
         } catch (error) {
-            console.error("Error fetching donted products:", error);
-            setDonatedProduct([]);
+            console.error("Error fetching barang pengiriman products:", error);
+            setPengirimanBarang([]);
         } finally {
             setLoading(false);
         }
     };
     useEffect(() => {
-        fetchDonatedProduct(currentPage);
+        fetchPengirimanBarang(currentPage);
     }, [currentPage]);
 
+    const handleVerifikasi = async (id_detail_transaksi_penitipan) => {
+        setLoading(true);
+        try {
+            const response = await VerifAmbil(id_detail_transaksi_penitipan);
+            console.log("Extend response:", response);
+            toast.success("Berhasil verif");
+            fetchPengirimanBarang();
+        } catch (error) {
+            console.error("Error extending product:", error);
+            toast.error("Gagal verif");
+        } finally {
+            setLoading(false);
+        }
+    }
 
 
     const handlePagination = (page) => {
         if (page >= 1 && page <= totalPages) {
             setLoading(true);
             setCurrentPage(page);
-            fetchDonatedProduct(page);
+            fetchPengirimanBarang(page);
         }
     };
 
@@ -49,21 +63,21 @@ const DonatedProductPage = () => {
         const delayDebounce = setTimeout(() => {
             if (searchQuery.trim().length >= 3) {
                 setLoading(true);
-                SearchBarangDonasi(searchQuery.trim())
+                SearchBarangVerif(searchQuery.trim())
                     .then((data) => {
                         const hasil = Array.isArray(data) ? data : [data];
-                        setDonatedProduct(hasil);
+                        setPengirimanBarang(hasil);
                         setTotalPages(1);
                         setCurrentPage(1);
                         console.log("Hasil pencarian:", hasil);
                     })
                     .catch((error) => {
                         console.error("Error searching req:", error);
-                        setDonatedProduct([]);
+                        setPengirimanBarang([]);
                     })
                     .finally(() => setLoading(false));
             } else {
-                fetchDonatedProduct(currentPage);
+                fetchPengirimanBarang(currentPage);
             }
         }, 500);
 
@@ -73,7 +87,7 @@ const DonatedProductPage = () => {
     return (
         <div className="histori-penitipan-wrapper">
             <div className="sold-products-container">
-                <h2><b>Produk Didonasikan</b></h2>
+                <h2><b>Transaksi Pengiriman</b></h2>
                 <div className="sold-products-content-container">
                     <div className="search-bar">
                         <img src={SearchIcon} alt="Search Icon" className="search-icon-inside" />
@@ -88,41 +102,51 @@ const DonatedProductPage = () => {
 
                     {loading ? (
                         <p>Loading...</p>
-                    ) : donatedProduct.length === 0 ? (
+                    ) : pengirimanBarang.length === 0 ? (
                         <p style={{ textAlign: "center" }}>Tidak ada produk yang sedang didonasikan.</p>
                     ) : (
                         <table className="sold-products-table">
                             <thead>
                                 <tr>
-                                    <th>Informasi Produk</th>
-                                    <th>Tanggal Donasi</th>
-                                    <th>Organisasi</th>
-                                    <th>Nama Penerima</th>
-                                    <th>Status</th>
+                                    <th>Transaksi Pembelian ID</th>
+                                    <th>Nama Barang</th>
+                                    <th>Pengiriman</th>
+                                    <th>Status Pengiriman</th>
+                                    <th>Action</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                {donatedProduct.map((product, index) => {
-                                    const isOpenDonasi = product.status_penitipan === "open donasi";
+                                {pengirimanBarang.map((product, index) => {
                                     return (
                                         <tr key={index}>
-                                            <td className={"product-info"} style={{ width: '200%' }}>
-                                                <img src={getThumbnailBarang(product.foto_barang) || defaultImage} alt={product.nama_barang} style={{ maxWidth: '5vw' }} />
-                                                <b>{product.nama_barang}</b>
+                                            <td style={{ width: '10%' }}>
+                                                <b>TP.{product.id_transaksi_pembelian}</b>
                                             </td>
-                                            <td>{isOpenDonasi ? "-" : product.tanggal_donasi?.substring(0, 10)}</td>
-                                            <td>{isOpenDonasi ? "-" : product.nama_organisasi}</td>
-                                            <td>{isOpenDonasi ? "-" : product.nama_penerima}</td>
-                                            <td>
-                                                
-                                                    {product.status_penitipan?.toLowerCase() === "open donasi" ? (
-                                                        <Badge style={{fontSize:'15px',width:'10vw',padding:'17px', alignItems:'center'}} bg="success">Open Donasi</Badge>
-                                                    ) : product.status_penitipan?.toLowerCase() === "didonasikan" ? (
-                                                        <Badge style={{fontSize:'15px',width:'10vw',padding:'17px', alignItems:'center'}} bg="secondary">Didonasikan</Badge>
-                                                    ) : (
-                                                        <Badge style={{fontSize:'15px',width:'10vw',padding:'17px', alignItems:'center'}} bg="warning">Status ga ada</Badge>
-                                                    )}
-                                                
+                                            <td style={{ width: '35%' }}>
+                                                {product.nama_barang}
+                                            </td>
+                                            <td style={{ width: '20%' }}>
+                                                <h5>
+                                                    <Badge bg='warning' style={{ width: '100%', padding: '10px' }}>
+                                                        {product.pengiriman}
+                                                    </Badge>
+                                                </h5>
+                                            </td>
+                                            <td style={{ width: '20%' }}>
+                                                <h5>
+
+                                                    <Badge bg='secondary' style={{ width: '100%', padding: '10px' }}>
+                                                        {product.status_pengiriman}
+                                                    </Badge>
+                                                </h5>
+                                            </td>
+                                            <td className='actionButtons'>
+
+
+                                                <Button>assad</Button>
+
+                                                <Button>assad</Button>
+
                                             </td>
                                         </tr>
                                     );
@@ -155,4 +179,4 @@ const DonatedProductPage = () => {
     );
 };
 
-export default DonatedProductPage;
+export default TransaksiPengirimanPage;

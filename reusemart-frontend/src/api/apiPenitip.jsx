@@ -126,11 +126,11 @@ export const UpdatePenitip = async (id, data) => {
     }
 };
 
-export const ShowSoldProducts = async () => {
+export const ShowSoldProducts = async (page = 1) => {
     try {
         const token = sessionStorage.getItem("token");
         
-        const response = await useAxios.get("/penitip/show-sold-product", {
+        const response = await useAxios.get(`/penitip/show-sold-product?page=${page}`, {
             headers: {
                 "Content-Type": "application/json",
                 "Accept": "application/json",
@@ -154,11 +154,11 @@ export const ShowSoldProducts = async () => {
         };
     }
 }
-export const ShowOnSaleProducts = async () => {
+export const ShowOnSaleProducts = async (page = 1) => {
     try {
         const token = sessionStorage.getItem("token");
         
-        const response = await useAxios.get("/penitip/show-on-sale", {
+        const response = await useAxios.get(`/penitip/show-on-sale?page=${page}`, {
             headers: {
                 "Content-Type": "application/json",
                 "Accept": "application/json",
@@ -241,11 +241,11 @@ export const ambilBarang = async (id_barang) => {
     }
 }
 
-export const ShowExtendProducts = async () => {
+export const ShowExtendProducts = async (page = 1) => {
     try {
         const token = sessionStorage.getItem("token");
         
-        const response = await useAxios.get("/penitip/show-extend-product", {
+        const response = await useAxios.get(`/penitip/show-extend-product?page=${page}`, {
             headers: {
                 "Content-Type": "application/json",
                 "Accept": "application/json",
@@ -270,6 +270,64 @@ export const ShowExtendProducts = async () => {
         };
     }
 }
+export const SearchBarangTerjual = async (search_barang) => {
+    try {
+      const response = await useAxios.get(`/penitip/search-terjual/${search_barang}`, {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${getToken()}`
+        },
+      });
+      return response.data;
+    } catch (error) {
+      console.error("Error searching Barang:", error);
+      throw error?.response?.data || error;
+    }
+};
+export const SearchBarangJual = async (search_barang) => {
+    try {
+      const response = await useAxios.get(`/penitip/search-jual/${search_barang}`, {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${getToken()}`
+        },
+      });
+      return response.data;
+    } catch (error) {
+      console.error("Error searching Barang:", error);
+      throw error?.response?.data || error;
+    }
+};
+
+export const SearchBarangExtend = async (search_barang) => {
+    try {
+      const response = await useAxios.get(`/penitip/search-extend/${search_barang}`, {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${getToken()}`
+        },
+      });
+      return response.data;
+    } catch (error) {
+      console.error("Error searching Barang:", error);
+      throw error?.response?.data || error;
+    }
+};
+
+export const SearchBarangDonasi = async (search_barang) => {
+    try {
+      const response = await useAxios.get(`/penitip/search-donasi/${search_barang}`, {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${getToken()}`
+        },
+      });
+      return response.data;
+    } catch (error) {
+      console.error("Error searching Barang:", error);
+      throw error?.response?.data || error;
+    }
+};
 
 export const ShowDonatedProduct = async (page = 1) => {
     try {

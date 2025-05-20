@@ -17,6 +17,7 @@ class DetailTransaksiPenitipan extends Model
         'id_barang',
         'tanggal_berakhir',
         'tanggal_batas_pengambilan',
+        'tanggal_pengambilan',
         'status_penitipan',
         'status_perpanjangan',
     ];
@@ -24,6 +25,7 @@ class DetailTransaksiPenitipan extends Model
     protected $casts = [
         'tanggal_berakhir' => 'datetime',
         'tanggal_batas_pengambilan' => 'datetime',
+        'tanggal_pengambilan' => 'datetime',
     ];
     
     public function transaksiPenitipan()

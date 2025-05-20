@@ -4,7 +4,7 @@ import { FaChevronLeft, FaChevronRight } from 'react-icons/fa';
 import { useNavigate, useParams } from 'react-router-dom';
 import './DetailTransaksiPenitipanPage.css';
 import InputColumn from '../../Components/InputColumn';
-import { ShowTransaksiPenitipanById, SearchByPenitip } from '../../api/apiTransaksiPenitipan';
+import { ShowTransaksiPenitipanById, SearchByPenitip, PreviewPdf } from '../../api/apiTransaksiPenitipan';
 import ModalEditTransaksiPenitipan from '../../Components/Modal/ModalPegawaiGudang/ModalEditTransaksiPenitipan';
 import { toast } from 'react-toastify';
 import ModalCreateBarang from '../../Components/Modal/ModalPegawaiGudang/ModalCreateBarang';
@@ -106,6 +106,10 @@ const DetailTransaksiPenitipanPage = () => {
         toast.success("Data Pegawai Berhasil Diperbarui.");
     };
 
+    const handleNota = () => {
+        PreviewPdf(id_transaksi_penitipan);
+    };
+
     return (
         <Container>
             
@@ -137,6 +141,7 @@ const DetailTransaksiPenitipanPage = () => {
                             <h1 className="pageTitle">Transaksi Penitipan milik: {transaksiPenitipanList?.penitip.nama_penitip}</h1>
                             <h1 className='pageTitle'>Tanggal Penitipan : {transaksiPenitipanList?.tanggal_penitipan}</h1>
                             <div style={{display: "flex", justifyContent: "end", paddingInlineEnd: "20px"}}>
+                                <Button variant="secondary" onClick={() => handleNota()} className="me-2"> Cetak Nota </Button>
                                 <Button variant="primary" onClick={() => handleCreate()}>Create Barang</Button>
                             </div>
                             <div className="tableContainer">

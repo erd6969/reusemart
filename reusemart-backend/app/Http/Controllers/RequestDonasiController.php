@@ -11,6 +11,8 @@ use App\Models\DetailTransaksiPenitipan;
 use App\Models\Penitip;
 use App\Models\TransaksiPenitipan;
 use Illuminate\Support\Facades\DB;
+use App\Http\Controllers\NotificationController;
+use Illuminate\Support\Facades\Log;
 
 
 class RequestDonasiController
@@ -230,12 +232,32 @@ class RequestDonasiController
             reject  waiting = ga ada yg diupdate, cuma status
             reject  reject = ga ada yg diupdate
             */
+
             
             if($request->status_request == "Accepted" && $reqdon->status_request == "Accepted"){
                 $transaksi_donasi = TransaksiDonasi::findOrFail($request->id_transaksi_donasi);
+                $detail_transaksi_penitipan = DetailTransaksiPenitipan::findOrFail($transaksi_donasi->id_barang);
+                $transaksi_penitipan = TransaksiPenitipan::findOrFail($detail_transaksi_penitipan->id_transaksi_penitipan);
+                $penitip = Penitip::findOrFail($transaksi_penitipan->id_penitip);
+
+                if($penitip && $penitip->fcm_token){
+                    $notifRequest = new Request([
+                        'token' => $penitip->fcm_token,
+                        'title' => 'Update REQUEST DONASI',
+                        'body' => 'Terdapat Update dari Barang yang ingin anda donasikan ',
+                    ]);
+                }else{
+                    return response()->json([
+                        'message' => 'Penitip not found or FCM token not available',
+                    ], 404);
+                }
+
                 $transaksi_donasi->nama_penerima = $request->nama_penerima;
                 $transaksi_donasi->tanggal_donasi = $request->tanggal_donasi;
                 $transaksi_donasi->save();
+
+                (new NotificationController())->sendNotification($notifRequest);
+
                 return response()->json([
                     'message' => 'Transaksi Donasi updated from accepted to accepted',
                     'data' => $transaksi_donasi

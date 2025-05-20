@@ -137,7 +137,6 @@ export const ShowUnverifiedBarang = async () => {
     }
 }
 
-
 export const ShowAmbilBarang = async (page = 1) => {
     try {
         const response = await useAxios.get(`/pegawai-gudang/show-ambil?page=${page}`, {
@@ -214,4 +213,19 @@ export const SearchBarangVerif = async (search_barang) => {
 };
 
 
-
+export const TambahRating = async (formData) => {
+    try {
+        const response = await useAxios.post("/pembeli/tambah-rating", formData, {
+            headers: {
+                "Content-Type": "multipart/form-data",
+                "Accept": "application/json",
+                Authorization: `Bearer ${getToken()}`
+            },
+        });
+        console.log("Tambah Rating response:", response);
+        return response.data;
+    } catch (error) {
+        console.error("Error adding rating:", error);
+        throw error?.response?.data || error;
+    }
+}

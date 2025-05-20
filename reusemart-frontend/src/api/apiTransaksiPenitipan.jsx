@@ -147,3 +147,25 @@ export const TolakTransaksiPenitipan = async (id) => {
     }
 }
 
+export const PreviewPdf = async (id_transaksi_penitipan) => {
+  try {
+    const token = sessionStorage.getItem("token");
+    const response = await useAxios.get(`/transaksi-penitipan-pdf/${id_transaksi_penitipan}`, {
+      responseType: 'blob',
+      headers: {
+        'Content-Type': 'application/pdf',
+        'Accept': 'application/pdf',
+        'Authorization': `Bearer ${token}`,
+      },
+    });
+
+    const fileURL = window.URL.createObjectURL(new Blob([response.data], { type: 'application/pdf' }));
+    window.open(fileURL, '_blank'); // open PDF preview in new tab
+
+  } catch (error) {
+    console.error('Gagal menampilkan PDF:', error);
+  }
+};
+
+
+

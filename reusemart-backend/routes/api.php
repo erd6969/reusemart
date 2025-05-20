@@ -22,6 +22,7 @@ use App\Http\Controllers\KategoriController;
 
 use App\Http\Controllers\KomisiController;
 use App\Http\Controllers\TransaksiPembelianController;
+use App\Http\Controllers\PdfController;
 
 Route::post('/send-konfirmasi-email', [EmailController::class, 'sendKonfirmasiEmail']);
 Route::post('/reset-password', [LoginController::class, 'resetPassword']);
@@ -147,6 +148,7 @@ Route::middleware('auth:owner')->group(function () {
 
 });
 Route::middleware('auth:gudang')->group(function () {
+    Route::get('/transaksi-penitipan-pdf/{id_transaksi_penitipan}', [PdfController::class, 'generateTransaksiPenitipan']);
     Route::post('/transaksi_penitipan/create', [TransaksiPenitipanController::class, 'create']);
     Route::get('/transaksi_penitipan/show-all', [TransaksiPenitipanController::class, 'show']);
     Route::get('/pegawai-gudang/show-ambil', [BarangController::class, 'showAmbilProducts']);

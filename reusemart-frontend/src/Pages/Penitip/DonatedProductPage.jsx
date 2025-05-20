@@ -3,17 +3,22 @@ import { useState, useEffect } from 'react';
 import SearchIcon from "../../assets/images/search-icon.png";
 import { Button, Badge } from 'react-bootstrap';
 import { FaChevronLeft, FaChevronRight, FaSearch } from "react-icons/fa";
-
-
 import { ShowDonatedProduct, SearchBarangDonasi} from "../../api/apiPenitip";
 import { getThumbnailBarang } from "../../api/index";
+
+
+import ModalDetailPenjualan from "../../Components/Modal/ModalPenitip/ModalDetailDonasi";
+
 
 const DonatedProductPage = () => {
     const [donatedProduct, setDonatedProduct] = useState([]);
     const [loading, setLoading] = useState(true);
     const [currentPage, setCurrentPage] = useState(1);
+     const [showModal, setShowModal] = useState(false);
     const [searchQuery, setSearchQuery] = useState("");
     const [totalPages, setTotalPages] = useState(1);
+        const [selectedProductId, setSelectedProductId] = useState(null);
+
 
 
     const fetchDonatedProduct = async (page = 1) => {
@@ -36,6 +41,15 @@ const DonatedProductPage = () => {
     }, [currentPage]);
 
 
+    const handleOpenModal = (id_barang) => {
+        setSelectedProductId(id_barang);
+        setShowModal(true);
+    };
+
+    const handleCloseModal = () => {
+        setShowModal(false);
+        setSelectedProductId(null);
+    };
 
     const handlePagination = (page) => {
         if (page >= 1 && page <= totalPages) {
@@ -105,7 +119,8 @@ const DonatedProductPage = () => {
                                 {donatedProduct.map((product, index) => {
                                     const isOpenDonasi = product.status_penitipan === "open donasi";
                                     return (
-                                        <tr key={index}>
+                                        <tr key={index} style={{ cursor: "pointer" }}
+                                        onClick={() => handleOpenModal(product.id_barang)}>
                                             <td className={"product-info"} style={{ width: '200%' }}>
                                                 <img src={getThumbnailBarang(product.foto_barang) || defaultImage} alt={product.nama_barang} style={{ maxWidth: '5vw' }} />
                                                 <b>{product.nama_barang}</b>
@@ -151,6 +166,13 @@ const DonatedProductPage = () => {
                     </Button>
                 </div>
             </div>
+             {selectedProductId && (
+                <ModalDetailPenjualan
+                    show={showModal}
+                    handleClose={handleCloseModal}
+                    id_barang={selectedProductId}
+                />
+            )}
         </div>
     );
 };

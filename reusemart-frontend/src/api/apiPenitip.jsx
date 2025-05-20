@@ -359,6 +359,8 @@ export const ShowDonatedProduct = async (page = 1) => {
 }
 
 
+
+
 export const ShowDetailPendapatan = async (id) => {
     try {
         const token = sessionStorage.getItem("token");
@@ -404,5 +406,22 @@ export const SearchByEmail = async (search_penitip) => {
     } catch (error) {
         console.error("Error searching penitip:", error);
         throw error;
+    }
+}
+
+
+export const GetDetailDonasiBarang = async (id_barang) => {
+    try {
+        const response = await useAxios.get(`/detail-donasi/${id_barang}`, {
+            headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${getToken()}`
+            },
+        });
+        console.log("Detail Barang response:", response);
+        return response.data;
+    } catch (error) {
+        console.error("Error fetching Detail Barang:", error);
+        throw error?.response?.data || error;
     }
 }

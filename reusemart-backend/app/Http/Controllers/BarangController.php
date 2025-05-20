@@ -406,4 +406,137 @@ class BarangController
             ], 500);
         }
     }
+
+    public function VerifyAmbilBarangPenitip(Request $request)
+    {
+        try {
+            $detailTransaksi = DetailTransaksiPenitipan::where('id_detail_transaksi_penitipan', $request->id_detail_transaksi_penitipan)->first();
+
+            if (!$detailTransaksi) {
+                return response()->json([
+                    'message' => 'Detail Transaksi not found',
+                ], 404);
+            }
+
+
+            $detailTransaksi->update([
+                'status_penitipan' => 'sudah diambil',
+            ]);
+
+            return response()->json([
+                'message' => 'Status penitipan berhasil diperbarui',
+            ], 200);
+        } catch (Exception $e) {
+            return response()->json([
+                'message' => 'Terjadi kesalahan',
+                'error' => $e->getMessage(),
+            ], 500);
+        }
+    }
+
+    public function showAmbilProducts()
+    {
+        try {
+            $products = DB::table('penitip')
+                ->join('transaksi_penitipan', 'penitip.id_penitip', '=', 'transaksi_penitipan.id_penitip')
+                ->join('detail_transaksi_penitipan', 'transaksi_penitipan.id_transaksi_penitipan', '=', 'detail_transaksi_penitipan.id_transaksi_penitipan')
+                ->join('barang', 'detail_transaksi_penitipan.id_barang', '=', 'barang.id_barang')
+                ->leftJoin('komisi', 'komisi.id_barang', '=', 'barang.id_barang')
+                ->leftJoin('transaksi_pembelian', 'transaksi_pembelian.id_transaksi_pembelian', '=', 'komisi.id_transaksi_pembelian')
+                ->whereIn('detail_transaksi_penitipan.status_penitipan', ['masa pengambilan'])
+                ->select(
+                    'penitip.*',
+                    'barang.*',
+                    'detail_transaksi_penitipan.status_penitipan',
+                    'detail_transaksi_penitipan.tanggal_berakhir',
+                    'detail_transaksi_penitipan.tanggal_batas_pengambilan',
+                    'detail_transaksi_penitipan.id_detail_transaksi_penitipan',
+                    'detail_transaksi_penitipan.status_perpanjangan',
+                )
+                ->distinct()
+                ->paginate(5);
+
+            return response()->json($products, 200);
+
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'Penitip not found',
+                'error' => $e->getMessage(),
+            ], 404);
+        }
+    }
+
+    public function searchAmbilProducts($search_barang)
+    {
+        try {
+            $gudang= auth('gudang')->user();
+            $products = DB::table('penitip')
+                ->join('transaksi_penitipan', 'penitip.id_penitip', '=', 'transaksi_penitipan.id_penitip')
+                ->join('detail_transaksi_penitipan', 'transaksi_penitipan.id_transaksi_penitipan', '=', 'detail_transaksi_penitipan.id_transaksi_penitipan')
+                ->join('barang', 'detail_transaksi_penitipan.id_barang', '=', 'barang.id_barang')
+                ->leftJoin('komisi', 'komisi.id_barang', '=', 'barang.id_barang')
+                ->leftJoin('transaksi_pembelian', 'transaksi_pembelian.id_transaksi_pembelian', '=', 'komisi.id_transaksi_pembelian')
+                ->whereIn('detail_transaksi_penitipan.status_penitipan', ['masa pengambilan'])
+                ->where(function ($query) use ($search_barang) {
+                    $query->where('barang.nama_barang', 'LIKE', '%' . $search_barang . '%');
+                })
+                ->select(
+                    'penitip.*',
+                    'barang.*',
+                    'detail_transaksi_penitipan.status_penitipan',
+                    'detail_transaksi_penitipan.tanggal_berakhir',
+                    'detail_transaksi_penitipan.tanggal_batas_pengambilan',
+                    'detail_transaksi_penitipan.id_detail_transaksi_penitipan',
+                    'detail_transaksi_penitipan.status_perpanjangan',
+                )
+                ->distinct()
+                ->get();
+
+            if (!$products) {
+                return response()->json([
+                    'message' => 'Barang not found',
+                ], 404);
+            }
+
+            return response()->json($products, 200);
+
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'Failed to retrieve address',
+                'error' => $e->getMessage(),
+            ], 500);
+        }
+    }
+
+
+    public function showPengirimanProducts()
+    {
+        try {
+            $products = DB::table('penitip')
+                ->join('transaksi_penitipan', 'penitip.id_penitip', '=', 'transaksi_penitipan.id_penitip')
+                ->join('detail_transaksi_penitipan', 'transaksi_penitipan.id_transaksi_penitipan', '=', 'detail_transaksi_penitipan.id_transaksi_penitipan')
+                ->join('barang', 'detail_transaksi_penitipan.id_barang', '=', 'barang.id_barang')
+                ->leftJoin('komisi', 'komisi.id_barang', '=', 'barang.id_barang')
+                ->leftJoin('transaksi_pembelian', 'transaksi_pembelian.id_transaksi_pembelian', '=', 'komisi.id_transaksi_pembelian')
+                ->whereIn('transaksi_pembelian.pengiriman', ['diantar kurir', 'diambil sendiri'])
+                ->select(
+                    'penitip.*',
+                    'barang.*',
+                    'transaksi_pembelian.id_transaksi_pembelian',
+                    'transaksi_pembelian.pengiriman',
+                    'transaksi_pembelian.status_pengiriman',
+                    'detail_transaksi_penitipan.status_penitipan',
+                )
+                ->distinct()
+                ->paginate(5);
+
+            return response()->json($products, 200);
+
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'Barang not found',
+                'error' => $e->getMessage(),
+            ], 404);
+        }
+    }
 }

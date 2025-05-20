@@ -267,12 +267,9 @@ class PenitipController
                     'barang.*',
                     'transaksi_pembelian.tanggal_pembelian'
                 )
-                ->get();
+                ->paginate(5);
 
-            return response()->json([
-                'message' => 'Success',
-                'data' => $products
-            ], 200);
+            return response()->json( $products, 200);
 
         } catch (\Exception $e) {
             return response()->json([
@@ -296,13 +293,10 @@ class PenitipController
                 ->where('detail_transaksi_penitipan.status_penitipan', 'ready jual')
                 ->select('barang.*', 'detail_transaksi_penitipan.tanggal_berakhir')
                 ->distinct()
-                ->get();
+                ->paginate(5);
 
 
-            return response()->json([
-                'message' => 'Success',
-                'data' => $products
-            ], 200);
+            return response()->json( $products, 200);
 
         } catch (\Exception $e) {
             return response()->json([
@@ -341,12 +335,9 @@ class PenitipController
                     'detail_transaksi_penitipan.status_perpanjangan',
                 )
                 ->distinct()
-                ->get();
+                ->paginate(5);
 
-            return response()->json([
-                'message' => 'Success',
-                'data' => $products
-            ], 200);
+            return response()->json( $products, 200);
 
         } catch (\Exception $e) {
             return response()->json([

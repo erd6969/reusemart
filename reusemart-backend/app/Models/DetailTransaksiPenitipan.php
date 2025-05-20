@@ -25,6 +25,7 @@ class DetailTransaksiPenitipan extends Model
     protected $casts = [
         'tanggal_berakhir' => 'datetime',
         'tanggal_batas_pengambilan' => 'datetime',
+        'tanggal_pengambilan' => 'datetime',
     ];
     
     public function transaksiPenitipan()

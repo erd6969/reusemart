@@ -68,9 +68,12 @@ import CSVerifikasiBuktiPage from "../Pages/CustomerService/CSVerifikasiBuktiPag
 // Owner
 import OwnerLayouts from "../Layouts/OwnerLayouts";
 import ReqDonasiShowBarang from "../Pages/Owner/ReqDonasiShowBarang";
+
+//Pegawai Gudang
 import PegawaiGudangLayout from "../Layouts/PegawaiGudangLayouts";
 import DetailTransaksiPenitipanPage from "../Pages/PegawaiGudang/DetailTransaksiPenitipanPage";
-
+import VerifikasiSelesaiPage from "../Pages/PegawaiGudang/VerifikasiSelesaiPage";
+import TransaksiPengirimanPage from "../Pages/PegawaiGudang/TransaksiPengirimanPage";
 const router = createBrowserRouter([
     {
         path: "/",
@@ -226,6 +229,14 @@ const router = createBrowserRouter([
             {
                 path: "detail-transaksi-penitipan/:id_transaksi_penitipan",
                 element: <DetailTransaksiPenitipanPage />,
+            },
+            {
+                path: "ambil-barang",
+                element: <VerifikasiSelesaiPage />,
+            },
+            {
+                path: "transaksi-pengiriman",
+                element: <TransaksiPengirimanPage />,
             }
         ],
     },
@@ -279,13 +290,13 @@ const router = createBrowserRouter([
         path: "/pembeli",
         element: (
             <ProtectedRoutes allowedRoles={["pembeli"]}>
-            <PembeliLayout />
+                <PembeliLayout />
             </ProtectedRoutes>
         ),
         children: [
             {
-            path: "home",
-            element: <Home />,
+                path: "home",
+                element: <Home />,
             },
             {
                 path: "profile",
@@ -320,26 +331,26 @@ const router = createBrowserRouter([
                 element: <PaymentPage />,
             },
             {
-            path: "",
-            element: <PembeliProductLayout />,
-            children: [
-                {
-                    path: "purchase",
-                    element: <PurchasePembeliPage />,
-                },
-                {
-                    path: "list-transaksi",
-                    element: <ListTransaksi />,
-                },
-                {
-                    path: "unpaid-purchase",
-                    element: <UnpaidPurchasePage />,
-                },
-                {
-                    path: "purchase-verification",
-                    element: <PurchaseVerificationPage />,
-                }
-            ],
+                path: "",
+                element: <PembeliProductLayout />,
+                children: [
+                    {
+                        path: "purchase",
+                        element: <PurchasePembeliPage />,
+                    },
+                    {
+                        path: "list-transaksi",
+                        element: <ListTransaksi />,
+                    },
+                    {
+                        path: "unpaid-purchase",
+                        element: <UnpaidPurchasePage />,
+                    },
+                    {
+                        path: "purchase-verification",
+                        element: <PurchaseVerificationPage />,
+                    }
+                ],
             },
         ],
     },

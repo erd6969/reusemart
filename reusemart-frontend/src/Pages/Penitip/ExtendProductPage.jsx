@@ -1,23 +1,34 @@
 import './SoldProductPage.css';
 import { FaStar } from 'react-icons/fa';
-import { Badge, Container, Spinner } from 'react-bootstrap';
+import { Badge, Container, Spinner, Button } from 'react-bootstrap';
 import SearchIcon from "../../assets/images/search-icon.png";
 import { use, useEffect, useState } from 'react';
+import { FaChevronLeft, FaChevronRight, FaSearch } from "react-icons/fa";
 import { toast } from 'react-toastify';
-import { ShowExtendProducts, extendBarang, ambilBarang } from '../../api/apiPenitip';
+import { ShowExtendProducts, extendBarang, ambilBarang, SearchBarangExtend } from '../../api/apiPenitip';
 import { getThumbnailBarang } from "../../api/index";
+
+import ModalDetailPenjualan from "../../Components/Modal/ModalPenitip/ModalDetailBarang";
 
 
 const ExtendProductPage = () => {
     const [extendProducts, setExtendProducts] = useState([]);
     const [isLoading, setIsLoading] = useState(false);
+    const [currentPage, setCurrentPage] = useState(1);
+    const [searchQuery, setSearchQuery] = useState("");
     const [isFirstLoad, setIsFirstLoad] = useState(true);
+    const [totalPages, setTotalPages] = useState(1);
+    const [showModal, setShowModal] = useState(false);
+    const [selectedProductId, setSelectedProductId] = useState(null);
+
 
     const fetchExtendProducts = async () => {
         setIsLoading(true);
         try {
             const response = await ShowExtendProducts();
             setExtendProducts(response.data);
+            setTotalPages(response.last_page);
+            setCurrentPage(response.current_page);
             console.log("Fetched sold products:", response.data);
         } catch (error) {
             console.error("Error fetching extend products:", error);
@@ -28,6 +39,44 @@ const ExtendProductPage = () => {
             setIsFirstLoad(false);
         }
     }
+    useEffect(() => {
+        fetchExtendProducts();
+    }, []);
+
+    const handleOpenModal = (id_barang) => {
+        setSelectedProductId(id_barang);
+        setShowModal(true);
+    };
+
+    const handleCloseModal = () => {
+        setShowModal(false);
+        setSelectedProductId(null);
+    };
+
+    useEffect(() => {
+        const delayDebounce = setTimeout(() => {
+            if (searchQuery.trim().length >= 3) {
+                setIsLoading(true);
+                SearchBarangExtend(searchQuery.trim())
+                    .then((data) => {
+                        const hasil = Array.isArray(data) ? data : [data];
+                        setExtendProducts(hasil);
+                        setTotalPages(1);
+                        setCurrentPage(1);
+                        console.log("Hasil pencarian:", hasil);
+                    })
+                    .catch((error) => {
+                        console.error("Error searching req:", error);
+                        setExtendProducts([]);
+                    })
+                    .finally(() => setIsLoading(false));
+            } else {
+                fetchExtendProducts(currentPage);
+            }
+        }, 500);
+
+        return () => clearTimeout(delayDebounce);
+    }, [searchQuery, currentPage]);
 
     const handleExtend = async (id_detail_transaksi_penitipan) => {
         setIsLoading(true);
@@ -59,9 +108,15 @@ const ExtendProductPage = () => {
         }
     }
 
-    useEffect(() => {
-        fetchExtendProducts();
-    }, []);
+    const handlePagination = (page) => {
+        if (page >= 1 && page <= totalPages) {
+            setIsLoading(true);
+            setCurrentPage(page);
+            fetchExtendProducts(page);
+        }
+    };
+
+
     return (
         <div className="histori-penitipan-wrapper">
             <div className="sold-products-container">
@@ -71,8 +126,10 @@ const ExtendProductPage = () => {
                         <img src={SearchIcon} alt="Search Icon" className="search-icon-inside" />
                         <input
                             type="text"
-                            placeholder="Masukkan Nama Produk..."
+                            placeholder="Masukkan Nama Barang..."
                             className="search-input"
+                            value={searchQuery}
+                            onChange={(e) => setSearchQuery(e.target.value)}
                         />
                     </div>
 
@@ -96,7 +153,7 @@ const ExtendProductPage = () => {
                                 </tr>
                             ) : extendProducts.length > 0 ? (
                                 extendProducts.map((product, index) => (
-                                    <tr key={index} style={{ fontSize: '15px' }}>
+                                    <tr key={index} onClick={() => handleOpenModal(product.id_barang)} style={{ fontSize: '15px', cursor: "pointer" }}>
                                         <td className='product-info'>
                                             <img src={getThumbnailBarang(product.foto_barang) || defaultImage} alt={product.nama_barang} style={{ maxWidth: '8vw' }} />
                                             <b>{product.nama_barang}</b>
@@ -119,7 +176,7 @@ const ExtendProductPage = () => {
                                                             </button>
                                                         </>
                                                     ) : (
-                                                        <button style={{ color: 'white', width:'100%' }} className="btn btn-danger" onClick={() => handleAmbil(product.id_barang)}>
+                                                        <button style={{ color: 'white', width: '100%' }} className="btn btn-danger" onClick={() => handleAmbil(product.id_barang)}>
                                                             Ambil
                                                         </button>)}
                                                 </div>
@@ -141,7 +198,33 @@ const ExtendProductPage = () => {
                         </tbody>
                     </table>
                 </div>
+                <div className="pagination d-flex justify-content-center align-items-center mt-4">
+                    <Button
+                        variant="secondary"
+                        disabled={currentPage === 1}
+                        onClick={() => handlePagination(currentPage - 1)}
+                        className="me-2"
+                    >
+                        <FaChevronLeft />
+                    </Button>
+                    <span>Halaman {currentPage} dari {totalPages}</span>
+                    <Button
+                        variant="secondary"
+                        disabled={currentPage === totalPages}
+                        onClick={() => handlePagination(currentPage + 1)}
+                        className="ms-2"
+                    >
+                        <FaChevronRight />
+                    </Button>
+                </div>
             </div>
+            {selectedProductId && (
+                <ModalDetailPenjualan
+                    show={showModal}
+                    handleClose={handleCloseModal}
+                    id_barang={selectedProductId}
+                />
+            )}
         </div>
     );
 };

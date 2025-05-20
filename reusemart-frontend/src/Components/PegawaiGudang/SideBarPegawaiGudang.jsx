@@ -12,10 +12,16 @@ const SideBarPegawaiGudang = () => {
                     <li className="sidebarItemPegawaiGudang" onClick={() => navigate("/pegawai-gudang/penitipan-barang")}>
                         <FaBoxes className="sidebarIcon" /> Penitipan Barang
                     </li>
-                    <li className="sidebarItemPegawaiGudang" onClick={() => navigate("/PegawaiGudang/history-donasi")}>
+                    <li className="sidebarItemPegawaiGudang" onClick={() => navigate("/pegawai-gudang/ambil-barang")}>
+                        <FaUserCog className="sidebarIcon" /> Verifikasi Barang
+                    </li>
+                    <li className="sidebarItemPegawaiGudang" onClick={() => navigate("/pegawai-gudang/history-donasi")}>
                         <FaUserCog className="sidebarIcon" /> History Donasi
                     </li>
-                    <li className="sidebarItemPegawaiGudang" onClick={() => navigate("/PegawaiGudang/laporan")}>
+                    <li className="sidebarItemPegawaiGudang" onClick={() => navigate("/pegawai-gudang/transaksi-pengiriman")}>
+                        <FaUserCog className="sidebarIcon" /> Transaksi Pengiriman
+                    </li>
+                    <li className="sidebarItemPegawaiGudang" onClick={() => navigate("/pegawai-gudang/laporan")}>
                         <FaBoxOpen className="sidebarIcon" /> Laporan
                     </li>
                 </ul>

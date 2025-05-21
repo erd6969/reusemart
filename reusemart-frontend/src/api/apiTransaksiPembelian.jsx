@@ -67,4 +67,24 @@ export const FinalizeTransaksi = async (data) => {
     }
 };
 
+export const PreviewPdfTransaksiPembelian= async (id_transaksi_pembelian) => {
+  try {
+    const response = await useAxios.get(`/transaksi-pembelian-pdf/${id_transaksi_pembelian}`, {
+      responseType: 'blob',
+      headers: {
+        'Content-Type': 'application/pdf',
+        'Accept': 'application/pdf',
+        'Authorization': `Bearer ${getToken()}`,
+      },
+    });
+
+    const fileURL = window.URL.createObjectURL(new Blob([response.data], { type: 'application/pdf' }));
+    window.open(fileURL, '_blank'); 
+  } catch (error) {
+    console.error('Gagal menampilkan PDF:', error);
+  }
+};
+
+
+
 

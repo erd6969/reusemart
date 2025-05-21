@@ -150,6 +150,7 @@ Route::middleware('auth:owner')->group(function () {
 });
 Route::middleware('auth:gudang')->group(function () {
     Route::get('/transaksi-penitipan-pdf/{id_transaksi_penitipan}', [PdfController::class, 'generateTransaksiPenitipan']);
+    Route::get('/transaksi-pembelian-pdf/{id_transaksi_pembelian}', [PdfController::class, 'generateTransaksiPembelian']);
     Route::post('/transaksi_penitipan/create', [TransaksiPenitipanController::class, 'create']);
     Route::get('/transaksi_penitipan/show-all', [TransaksiPenitipanController::class, 'show']);
     Route::get('/pegawai-gudang/show-ambil', [BarangController::class, 'showAmbilProducts']);
@@ -165,8 +166,12 @@ Route::middleware('auth:gudang')->group(function () {
     Route::get('/kategori/search/{nama_kategori}', [KategoriController::class, 'searchByName']);
     Route::get('/pegawai-gudang/searchPegawai/{search_pegawai}', [PegawaiController::class, 'searchBynama']);
     Route::post('/pegawai-gudang/verif-ambil', [BarangController::class, 'VerifyAmbilBarangPenitip']);
+    Route::post('/pegawai-gudang/verif-kirim-pembeli', [BarangController::class, 'VerifyPengirimanBarangPembeli']);
+    Route::post('/pegawai-gudang/verif-pengambilan-pembeli', [BarangController::class, 'VerifyPengambilanPembeli']);
+    Route::post('/pegawai-gudang/verif-ambil-pembeli/{id}', [BarangController::class, 'VerifyAmbilBarangPembeli']);
     Route::get('/pegawai-gudang/search-verif/{search_barang}', [BarangController::class, 'SearchAmbilProducts']);
     Route::get('/hunter/search/{search_hunter}', [HunterController::class, 'searchHunter']);
+
 });
 
 Route::middleware('auth:cs')->group(function () {

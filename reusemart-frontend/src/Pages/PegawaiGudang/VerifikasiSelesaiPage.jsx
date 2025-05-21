@@ -7,6 +7,7 @@ import { toast } from 'react-toastify';
 
 import { ShowAmbilBarang, VerifAmbil, SearchBarangVerif } from "../../api/apiBarang";
 import { getThumbnailBarang } from "../../api/index";
+import ModalDetailPenjualan from "../../Components/Modal/ModalPenitip/ModalDetailBarang";
 
 const VerifikasiSelesaiPage = () => {
     const [ambilBarang, setAmbilBarang] = useState([]);
@@ -14,6 +15,8 @@ const VerifikasiSelesaiPage = () => {
     const [currentPage, setCurrentPage] = useState(1);
     const [searchQuery, setSearchQuery] = useState("");
     const [totalPages, setTotalPages] = useState(1);
+     const [showModal, setShowModal] = useState(false);
+    const [selectedProductId, setSelectedProductId] = useState(null);
 
 
     const fetchAmbilBarang = async (page = 1) => {
@@ -34,6 +37,16 @@ const VerifikasiSelesaiPage = () => {
     useEffect(() => {
         fetchAmbilBarang(currentPage);
     }, [currentPage]);
+
+     const handleOpenModal = (id_barang) => {
+        setSelectedProductId(id_barang);
+        setShowModal(true);
+    };
+
+    const handleCloseModal = () => {
+        setShowModal(false);
+        setSelectedProductId(null);
+    };
 
     const handleVerifikasi = async (id_detail_transaksi_penitipan) => {
         setLoading(true);
@@ -117,7 +130,8 @@ const VerifikasiSelesaiPage = () => {
                             <tbody>
                                 {ambilBarang.map((product, index) => {
                                     return (
-                                        <tr key={index}>
+                                        <tr key={index} style={{ fontSize: '15px', cursor: "pointer" }}
+                                        onClick={() => handleOpenModal(product.id_barang)}>
                                             <td className={"product-info"} style={{ width: '200%' }}>
                                                 <img src={getThumbnailBarang(product.foto_barang) || defaultImage} alt={product.nama_barang} style={{ maxWidth: '5vw' }} />
                                                 <b>{product.nama_barang}</b>
@@ -129,7 +143,7 @@ const VerifikasiSelesaiPage = () => {
                                                 <Badge style={{padding:'12px'}} bg="secondary">{product.status_penitipan}</Badge>
                                             </td>
                                             <td>
-                                                <Button variant="success" onClick={() => handleVerifikasi(product.id_detail_transaksi_penitipan)}>Verifikasi</Button>
+                                                <Button variant="success" onClick={(e) => {e.stopPropagation(),handleVerifikasi(product.id_detail_transaksi_penitipan)}}>Verifikasi</Button>
                                             </td>
                                         </tr>
                                     );
@@ -138,6 +152,7 @@ const VerifikasiSelesaiPage = () => {
                         </table>
                     )}
                 </div>
+                
                 <div className="pagination d-flex justify-content-center align-items-center mt-4">
                     <Button
                         variant="secondary"
@@ -158,6 +173,13 @@ const VerifikasiSelesaiPage = () => {
                     </Button>
                 </div>
             </div>
+            {selectedProductId && (
+                <ModalDetailPenjualan
+                    show={showModal}
+                    handleClose={handleCloseModal}
+                    id_barang={selectedProductId}
+                />
+            )}
         </div>
     );
 };

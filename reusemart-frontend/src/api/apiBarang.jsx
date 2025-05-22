@@ -213,6 +213,96 @@ export const VerifAmbil = async (id_detail_transaksi_penitipan) => {
     }
 }
 
+export const VerifKirimPembeli = async (id_transaksi_pembelian) => {
+    try {
+        const token = sessionStorage.getItem("token");
+        
+        const response = await useAxios.post(`/pegawai-gudang/verif-kirim-pembeli`, {id_transaksi_pembelian}, {
+            headers: {
+                "Content-Type": "application/json",
+                "Accept": "application/json",
+                "Authorization": `Bearer ${token}`,
+            },
+        });
+        return response.data;
+    } catch (error) {
+        const status = error.response?.status;
+
+        if (status === 422 && error.response?.data?.errors) {
+            throw {
+                type: "validation",
+                errors: error.response.data.errors,
+            };
+        }
+
+        throw {
+            type: "general",
+            message: error.response?.data?.message || "Terjadi kesalahan saat mengambil data.",
+        };
+    }
+}
+
+export const VerifAmbilPembeli = async (formData,id_transaksi_pembelian) => {
+    try {
+        const token = sessionStorage.getItem("token");
+        
+        const response = await useAxios.post(`/pegawai-gudang/verif-ambil-pembeli/${id_transaksi_pembelian}`, formData, {
+            headers: {
+                "Content-Type": "multipart/form-data",
+                "Accept": "application/json",
+                "Authorization": `Bearer ${token}`,
+            },
+        });
+        return response.data;
+    } catch (error) {
+        const status = error.response?.status;
+
+        if (status === 422 && error.response?.data?.errors) {
+            throw {
+                type: "validation",
+                errors: error.response.data.errors,
+            };
+        }
+
+        throw {
+            type: "general",
+            message: error.response?.data?.message || "Terjadi kesalahan saat mengambil data.",
+        };
+    }
+}
+
+export const VerifyPengambilanPembeli = async (id_transaksi_pembelian) => {
+    try {
+        const token = sessionStorage.getItem("token");
+        
+        const response = await useAxios.post(`/pegawai-gudang/verif-pengambilan-pembeli`, {id_transaksi_pembelian}, {
+            headers: {
+                "Content-Type": "application/json",
+                "Accept": "application/json",
+                "Authorization": `Bearer ${token}`,
+            },
+        });
+        return response.data;
+    } catch (error) {
+        const status = error.response?.status;
+
+        if (status === 422 && error.response?.data?.errors) {
+            throw {
+                type: "validation",
+                errors: error.response.data.errors,
+            };
+        }
+
+        throw {
+            type: "general",
+            message: error.response?.data?.message || "Terjadi kesalahan saat mengambil data.",
+        };
+    }
+}
+
+
+
+
 export const SearchBarangVerif = async (search_barang) => {
     try {
       const response = await useAxios.get(`/pegawai-gudang/search-verif/${search_barang}`, {

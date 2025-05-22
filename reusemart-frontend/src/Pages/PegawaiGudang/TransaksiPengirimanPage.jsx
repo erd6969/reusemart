@@ -2,11 +2,14 @@
 import { useState, useEffect } from 'react';
 import SearchIcon from "../../assets/images/search-icon.png";
 import { Button, Badge } from 'react-bootstrap';
-import { FaChevronLeft, FaChevronRight, FaSearch } from "react-icons/fa";
+import { FaChevronLeft, FaChevronRight, FaSearch, FaFile } from "react-icons/fa";
 import { toast } from 'react-toastify';
 
-import { ShowPengirimanBarang, VerifAmbil, SearchBarangVerif } from "../../api/apiBarang";
+import { ShowPengirimanBarang, SearchBarangVerif, VerifKirimPembeli, VerifyPengambilanPembeli } from "../../api/apiBarang";
+import {PreviewPdfTransaksiPembelian} from "../../api/apiTransaksiPembelian";
 import { getThumbnailBarang } from "../../api/index";
+import ModalDetailPenjualan from "../../Components/Modal/ModalPenitip/ModalDetailBarang";
+import ModalUpdateTanggalPengiriman from '../../Components/Modal/ModalPegawaiGudang/ModalUpdateTanggalPengiriman';
 
 const TransaksiPengirimanPage = () => {
     const [pengirimanBarang, setPengirimanBarang] = useState([]);
@@ -14,6 +17,9 @@ const TransaksiPengirimanPage = () => {
     const [currentPage, setCurrentPage] = useState(1);
     const [searchQuery, setSearchQuery] = useState("");
     const [totalPages, setTotalPages] = useState(1);
+    const [showModal, setShowModal] = useState(false);
+    const [selectedProductId, setSelectedProductId] = useState(null);
+    const [selectedTransaksi, setSelectedTransaksi] = useState(null);
 
 
     const fetchPengirimanBarang = async (page = 1) => {
@@ -35,10 +41,24 @@ const TransaksiPengirimanPage = () => {
         fetchPengirimanBarang(currentPage);
     }, [currentPage]);
 
-    const handleVerifikasi = async (id_detail_transaksi_penitipan) => {
+    const handleVerifKirim = async (id_transaksi_pembelian) => {
         setLoading(true);
         try {
-            const response = await VerifAmbil(id_detail_transaksi_penitipan);
+            const response = await VerifKirimPembeli(id_transaksi_pembelian);
+            console.log("Extend response:", response);
+            toast.success("Berhasil verif");
+            fetchPengirimanBarang();
+        } catch (error) {
+            console.error("Error extending product:", error);
+            toast.error("Gagal verif");
+        } finally {
+            setLoading(false);
+        }
+    }
+    const handleVerifPengambilan = async (id_transaksi_pembelian) => {
+        setLoading(true);
+        try {
+            const response = await VerifyPengambilanPembeli(id_transaksi_pembelian);
             console.log("Extend response:", response);
             toast.success("Berhasil verif");
             fetchPengirimanBarang();
@@ -58,6 +78,27 @@ const TransaksiPengirimanPage = () => {
             fetchPengirimanBarang(page);
         }
     };
+
+    const handleOpenModal = (id_barang) => {
+        setSelectedProductId(id_barang);
+        setShowModal(true);
+    };
+
+    const handleCloseModal = () => {
+        setShowModal(false);
+        setSelectedProductId(null);
+        setSelectedTransaksi(null);
+    };
+
+    const handleJadwalkan = async (produk) => {
+        setSelectedTransaksi(produk);
+        setShowModal(true);
+    };
+
+    const handleNota = (id_transaksi_pembelian) => {
+        PreviewPdfTransaksiPembelian(id_transaksi_pembelian);
+    };
+
 
     useEffect(() => {
         const delayDebounce = setTimeout(() => {
@@ -118,7 +159,8 @@ const TransaksiPengirimanPage = () => {
                             <tbody>
                                 {pengirimanBarang.map((product, index) => {
                                     return (
-                                        <tr key={index}>
+                                        <tr key={index} style={{ fontSize: '15px', cursor: "pointer" }}
+                                            onClick={() => handleOpenModal(product.id_barang)}>
                                             <td style={{ width: '10%' }}>
                                                 <b>TP.{product.id_transaksi_pembelian}</b>
                                             </td>
@@ -134,19 +176,22 @@ const TransaksiPengirimanPage = () => {
                                             </td>
                                             <td style={{ width: '20%' }}>
                                                 <h5>
-
                                                     <Badge bg='secondary' style={{ width: '100%', padding: '10px' }}>
                                                         {product.status_pengiriman}
                                                     </Badge>
                                                 </h5>
                                             </td>
                                             <td className='actionButtons'>
-
-
-                                                <Button>assad</Button>
-
-                                                <Button>assad</Button>
-
+                                                <Button variant='dark' onClick={(e) => {e.stopPropagation(),handleNota(product.id_transaksi_pembelian)}}><FaFile /></Button>
+                                                {product.pengiriman === "diantar kurir" ? (
+                                                    <Button variant='success' style={{ width: '100%' }} onClick={(e) => { e.stopPropagation(), handleVerifKirim(product.id_transaksi_pembelian) }}>Kirim</Button>
+                                                ) : product.pengiriman === "diambil sendiri" ? (
+                                                    product.status_pengiriman === "sedang disiapkan" ? (
+                                                        <Button variant='warning' style={{ width: '100%' }} onClick={(e) => { e.stopPropagation(), handleJadwalkan(product) }}>Jadwalkan</Button>
+                                                    ) : (<Button variant='success' style={{ width: '100%' }} onClick={(e) => { e.stopPropagation(), handleVerifPengambilan(product.id_transaksi_pembelian) }}>Confirm</Button>)
+                                                ) : (
+                                                    <Button>gatau</Button>
+                                                )}
                                             </td>
                                         </tr>
                                     );
@@ -175,6 +220,21 @@ const TransaksiPengirimanPage = () => {
                     </Button>
                 </div>
             </div>
+            {selectedProductId && (
+                <ModalDetailPenjualan
+                    show={showModal}
+                    handleClose={handleCloseModal}
+                    id_barang={selectedProductId}
+                />
+            )}
+
+            {selectedTransaksi && (
+                <ModalUpdateTanggalPengiriman
+                    show={showModal}
+                    handleClose={handleCloseModal}
+                    dataEdit={selectedTransaksi}
+                />
+            )}
         </div>
     );
 };

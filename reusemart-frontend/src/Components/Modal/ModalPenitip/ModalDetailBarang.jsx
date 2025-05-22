@@ -81,16 +81,7 @@ const ModalDetailPenjualan = ({ show, handleClose, id_barang }) => {
                                         <strong>Berat:</strong>
                                         <p>{detailBarang.berat_barang} KG</p>
                                     </div>
-                                    <div>
-                                        <strong>Tanggal Berakhir</strong>
-                                        <p>{detailBarang.tanggal_berakhir
-                                            ? new Date(detailBarang.tanggal_berakhir).toLocaleDateString("id-ID", {
-                                                year: "numeric",
-                                                month: "numeric",
-                                                day: "numeric"
-                                            })
-                                            : "-"}</p>
-                                    </div>
+                                    
                                 </div>
                             </Container>
                         </>

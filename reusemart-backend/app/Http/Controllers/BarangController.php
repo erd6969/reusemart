@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Barang;
+use App\Models\TransaksiPembelian;
 use Illuminate\Http\Request;
 use Exception;
 use Illuminate\Support\Facades\File;
@@ -282,7 +283,7 @@ class BarangController
     public function showDetailBarang($id_barang)
     {
         try {
-            
+
             $Barang = Barang::where('id_barang', $id_barang)->firstOrFail();
             if (!$Barang) {
                 return response()->json(['message' => 'Data Barang tidak ditemukan.'], 404);
@@ -294,7 +295,7 @@ class BarangController
             }
 
             $transaksi_penitipan = TransaksiPenitipan::where('id_transaksi_penitipan', $detailpenitipan->id_transaksi_penitipan)->first();
-            
+
             $penitip = Penitip::where('id_penitip', $transaksi_penitipan->id_penitip)->first();
             if (!$penitip) {
                 return response()->json(['message' => 'Data Penitip tidak ditemukan'], 404);
@@ -319,10 +320,10 @@ class BarangController
         try {
             $penitip = auth('penitip')->user();
             $products = DB::table('barang')
-            ->join('detail_transaksi_penitipan', 'detail_transaksi_penitipan.id_barang', '=', 'barang.id_barang')
+                ->join('detail_transaksi_penitipan', 'detail_transaksi_penitipan.id_barang', '=', 'barang.id_barang')
                 ->join('transaksi_penitipan', 'transaksi_penitipan.id_transaksi_penitipan', '=', 'detail_transaksi_penitipan.id_transaksi_penitipan')
                 ->leftJoin('transaksi_donasi', 'transaksi_donasi.id_barang', '=', 'barang.id_barang')
-                ->leftJoin('organisasi', 'transaksi_donasi.id_organisasi', '=', 'organisasi.id_organisasi')                
+                ->leftJoin('organisasi', 'transaksi_donasi.id_organisasi', '=', 'organisasi.id_organisasi')
                 ->where("barang.id_barang", $id_barang)
                 ->select(
                     'barang.*',
@@ -335,7 +336,7 @@ class BarangController
 
 
 
-            return response()->json(['data' =>$products], 200);
+            return response()->json(['data' => $products], 200);
         } catch (\Exception $e) {
             Log::info($e);
             return response()->json([
@@ -374,7 +375,7 @@ class BarangController
 
         } catch (\Exception $e) {
             return response()->json([
-                'message' => 'Failed to retrieve address',
+                'message' => 'Failed to retrieve barang',
                 'error' => $e->getMessage(),
             ], 500);
         }
@@ -400,7 +401,7 @@ class BarangController
 
         } catch (\Exception $e) {
             return response()->json([
-                'message' => 'Failed to retrieve address',
+                'message' => 'Failed to retrieve barang open donasi',
                 'error' => $e->getMessage(),
             ], 500);
         }
@@ -477,6 +478,7 @@ class BarangController
     public function VerifyAmbilBarangPenitip(Request $request)
     {
         try {
+            $today = Carbon::now();
             $detailTransaksi = DetailTransaksiPenitipan::where('id_detail_transaksi_penitipan', $request->id_detail_transaksi_penitipan)->first();
 
             if (!$detailTransaksi) {
@@ -488,6 +490,7 @@ class BarangController
 
             $detailTransaksi->update([
                 'status_penitipan' => 'sudah diambil',
+                'tanggal_pengambilan' => $today,
             ]);
 
             return response()->json([
@@ -500,6 +503,85 @@ class BarangController
             ], 500);
         }
     }
+
+    public function VerifyPengirimanBarangPembeli(Request $request)
+    {
+        try {
+            $today = Carbon::now();
+            $detailTransaksi = TransaksiPembelian::where('id_transaksi_pembelian', $request->id_transaksi_pembelian)->first();
+
+            if (!$detailTransaksi) {
+                return response()->json([
+                    'message' => 'Detail Transaksi not found',
+                ], 404);
+            }
+
+
+            $detailTransaksi->update([
+                'tanggal_pengiriman' => $today,
+                'status_pengiriman' => 'sedang diantar',
+            ]);
+
+            return response()->json([
+                'message' => 'Status penitipan berhasil diperbarui',
+            ], 200);
+        } catch (Exception $e) {
+            return response()->json([
+                'message' => 'Terjadi kesalahan',
+                'error' => $e->getMessage(),
+            ], 500);
+        }
+    }
+
+    public function VerifyPengambilanPembeli(Request $request)
+    {
+        try {
+            $today = Carbon::now();
+            $detailTransaksi = TransaksiPembelian::where('id_transaksi_pembelian', $request->id_transaksi_pembelian)->first();
+
+            if (!$detailTransaksi) {
+                return response()->json([
+                    'message' => 'Detail Transaksi not found',
+                ], 404);
+            }
+
+
+            $detailTransaksi->update([
+                'status_pengiriman' => 'sudah diambil',
+            ]);
+
+            return response()->json([
+                'message' => 'Status penitipan berhasil diperbarui',
+            ], 200);
+        } catch (Exception $e) {
+            return response()->json([
+                'message' => 'Terjadi kesalahan',
+                'error' => $e->getMessage(),
+            ], 500);
+        }
+    }
+
+    public function VerifyAmbilBarangPembeli($id)
+    {
+        $validatedData = request()->validate([
+            'tanggal_pengiriman' => 'required|date',
+        ]);
+
+        $transaksiPembelian = TransaksiPembelian::where('id_transaksi_pembelian', $id)->first();
+        if (!$transaksiPembelian) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'transaksi not found',
+            ], 404);
+        }
+
+        $transaksiPembelian->update($validatedData);
+        return response()->json([
+            'status' => 'success',
+            'data' => $transaksiPembelian,
+        ]);
+    }
+    
 
     public function showAmbilProducts()
     {
@@ -569,7 +651,7 @@ class BarangController
 
         } catch (\Exception $e) {
             return response()->json([
-                'message' => 'Failed to retrieve address',
+                'message' => 'Failed to retrieve ambil barang',
                 'error' => $e->getMessage(),
             ], 500);
         }
@@ -579,21 +661,17 @@ class BarangController
     public function showPengirimanProducts()
     {
         try {
-            $products = DB::table('penitip')
-                ->join('transaksi_penitipan', 'penitip.id_penitip', '=', 'transaksi_penitipan.id_penitip')
-                ->join('detail_transaksi_penitipan', 'transaksi_penitipan.id_transaksi_penitipan', '=', 'detail_transaksi_penitipan.id_transaksi_penitipan')
-                ->join('barang', 'detail_transaksi_penitipan.id_barang', '=', 'barang.id_barang')
-                ->leftJoin('komisi', 'komisi.id_barang', '=', 'barang.id_barang')
-                ->leftJoin('transaksi_pembelian', 'transaksi_pembelian.id_transaksi_pembelian', '=', 'komisi.id_transaksi_pembelian')
-                ->whereIn('transaksi_pembelian.pengiriman', ['diantar kurir', 'diambil sendiri'])
+            $products = DB::table('barang')
+                ->join('komisi', 'komisi.id_barang', '=', 'barang.id_barang')
+                ->join('transaksi_pembelian', 'transaksi_pembelian.id_transaksi_pembelian', '=', 'komisi.id_transaksi_pembelian')
+                ->whereIn('transaksi_pembelian.status_pengiriman', ['sedang disiapkan', 'siap diambil'])
                 ->select(
-                    'penitip.*',
                     'barang.*',
                     'transaksi_pembelian.id_transaksi_pembelian',
                     'transaksi_pembelian.pengiriman',
+                    'transaksi_pembelian.tanggal_pengiriman',
                     'transaksi_pembelian.status_pengiriman',
-                    'detail_transaksi_penitipan.status_penitipan',
-                )
+                    )
                 ->distinct()
                 ->paginate(5);
 

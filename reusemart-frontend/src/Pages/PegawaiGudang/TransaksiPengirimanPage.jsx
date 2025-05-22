@@ -6,10 +6,12 @@ import { FaChevronLeft, FaChevronRight, FaSearch, FaFile } from "react-icons/fa"
 import { toast } from 'react-toastify';
 
 import { ShowPengirimanBarang, SearchBarangVerif, VerifKirimPembeli, VerifyPengambilanPembeli } from "../../api/apiBarang";
-import {PreviewPdfTransaksiPembelian} from "../../api/apiTransaksiPembelian";
+import { PreviewPdfTransaksiPembelian } from "../../api/apiTransaksiPembelian";
 import { getThumbnailBarang } from "../../api/index";
 import ModalDetailPenjualan from "../../Components/Modal/ModalPenitip/ModalDetailBarang";
 import ModalUpdateTanggalPengiriman from '../../Components/Modal/ModalPegawaiGudang/ModalUpdateTanggalPengiriman';
+import ModalPengirimanKurir from '../../Components/Modal/ModalPegawaiGudang/ModalPengirimanKurir';
+
 
 const TransaksiPengirimanPage = () => {
     const [pengirimanBarang, setPengirimanBarang] = useState([]);
@@ -20,6 +22,7 @@ const TransaksiPengirimanPage = () => {
     const [showModal, setShowModal] = useState(false);
     const [selectedProductId, setSelectedProductId] = useState(null);
     const [selectedTransaksi, setSelectedTransaksi] = useState(null);
+    const [selectedPengiriman, setSelectedPengiriman] = useState(null);
 
 
     const fetchPengirimanBarang = async (page = 1) => {
@@ -88,10 +91,16 @@ const TransaksiPengirimanPage = () => {
         setShowModal(false);
         setSelectedProductId(null);
         setSelectedTransaksi(null);
+        setSelectedPengiriman(null);
     };
 
     const handleJadwalkan = async (produk) => {
         setSelectedTransaksi(produk);
+        setShowModal(true);
+    };
+
+    const handlePengiriman = async (produk) => {
+        setSelectedPengiriman(produk);
         setShowModal(true);
     };
 
@@ -182,9 +191,10 @@ const TransaksiPengirimanPage = () => {
                                                 </h5>
                                             </td>
                                             <td className='actionButtons'>
-                                                <Button variant='dark' onClick={(e) => {e.stopPropagation(),handleNota(product.id_transaksi_pembelian)}}><FaFile /></Button>
+
+                                                <Button variant='dark' onClick={(e) => { e.stopPropagation(), handleNota(product.id_transaksi_pembelian) }}><FaFile /></Button>
                                                 {product.pengiriman === "diantar kurir" ? (
-                                                    <Button variant='success' style={{ width: '100%' }} onClick={(e) => { e.stopPropagation(), handleVerifKirim(product.id_transaksi_pembelian) }}>Kirim</Button>
+                                                    <Button variant='success' style={{ width: '100%' }} onClick={(e) => { e.stopPropagation(), handlePengiriman(product) }}>Kirim</Button>
                                                 ) : product.pengiriman === "diambil sendiri" ? (
                                                     product.status_pengiriman === "sedang disiapkan" ? (
                                                         <Button variant='warning' style={{ width: '100%' }} onClick={(e) => { e.stopPropagation(), handleJadwalkan(product) }}>Jadwalkan</Button>
@@ -225,6 +235,7 @@ const TransaksiPengirimanPage = () => {
                     show={showModal}
                     handleClose={handleCloseModal}
                     id_barang={selectedProductId}
+
                 />
             )}
 
@@ -233,6 +244,17 @@ const TransaksiPengirimanPage = () => {
                     show={showModal}
                     handleClose={handleCloseModal}
                     dataEdit={selectedTransaksi}
+                    onSuccess={fetchPengirimanBarang}
+
+                />
+            )}
+
+            {selectedPengiriman && (
+                <ModalPengirimanKurir
+                    show={showModal}
+                    handleClose={handleCloseModal}
+                    dataEdit={selectedPengiriman}
+                    onSuccess={fetchPengirimanBarang}
                 />
             )}
         </div>

@@ -508,27 +508,38 @@ class BarangController
     {
         try {
             $today = Carbon::now();
-            $detailTransaksi = TransaksiPembelian::where('id_transaksi_pembelian', $request->id_transaksi_pembelian)->first();
 
-            if (!$detailTransaksi) {
-                return response()->json([
-                    'message' => 'Detail Transaksi not found',
-                ], 404);
+            if ($today->hour >= 16) {
+            return response()->json([
+                'message' => 'Pengiriman tidak bisa dilakukan di atas jam 4 sore',
+            ], 400);
             }
 
+            $detailTransaksi = TransaksiPembelian::where('id_transaksi_pembelian', $request->id_transaksi_pembelian)->first();
+            $kurir = Pegawai::where('id_pegawai', $request->id_pegawai)
+            ->where('id_jabatan', 3)
+            ->first();
+            if (!$detailTransaksi) {
+            return response()->json([
+                'message' => 'Detail Transaksi not found',
+            ], 404);
+            }
 
             $detailTransaksi->update([
-                'tanggal_pengiriman' => $today,
-                'status_pengiriman' => 'sedang diantar',
+            'id_pegawai' => $kurir->id_pegawai,
+            'tanggal_pengiriman' => $today,
+            'status_pengiriman' => 'sedang diantar',
             ]);
 
             return response()->json([
-                'message' => 'Status penitipan berhasil diperbarui',
+            'message' => 'Status penitipan berhasil diperbarui',
             ], 200);
+
+            
         } catch (Exception $e) {
             return response()->json([
-                'message' => 'Terjadi kesalahan',
-                'error' => $e->getMessage(),
+            'message' => 'Terjadi kesalahan',
+            'error' => $e->getMessage(),
             ], 500);
         }
     }
@@ -581,7 +592,7 @@ class BarangController
             'data' => $transaksiPembelian,
         ]);
     }
-    
+
 
     public function showAmbilProducts()
     {
@@ -671,7 +682,7 @@ class BarangController
                     'transaksi_pembelian.pengiriman',
                     'transaksi_pembelian.tanggal_pengiriman',
                     'transaksi_pembelian.status_pengiriman',
-                    )
+                )
                 ->distinct()
                 ->paginate(5);
 

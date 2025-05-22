@@ -213,11 +213,11 @@ export const VerifAmbil = async (id_detail_transaksi_penitipan) => {
     }
 }
 
-export const VerifKirimPembeli = async (id_transaksi_pembelian) => {
+export const VerifKirimPembeli = async (formData) => {
     try {
         const token = sessionStorage.getItem("token");
         
-        const response = await useAxios.post(`/pegawai-gudang/verif-kirim-pembeli`, {id_transaksi_pembelian}, {
+        const response = await useAxios.post(`/pegawai-gudang/verif-kirim-pembeli`, formData, {
             headers: {
                 "Content-Type": "application/json",
                 "Accept": "application/json",

@@ -9,5 +9,6 @@ Artisan::command('inspire', function () {
 })->purpose('Display an inspiring quote');
 
 Schedule::command('transaksi:auto-cancel')->everyMinute();
+Schedule::command('transaksi:check-batas')->everyMinute();
 Schedule::command('penitipan:three-day-left')->dailyAt('12:00');
 Schedule::command('penitipan:last-day')->dailyAt('12:00');

@@ -17,6 +17,7 @@ class AutoCancelTransaksi extends Command
     public function handle()
     {
         $now = Carbon::now();
+        Log::info("================================================");
 
         Log::info("AutoCancelTransaksi dijalankan pada: {$now}");
 

@@ -12,8 +12,6 @@ import { ShowDTPByIdTransaksiPenitipan } from '../../api/apiDetailTransaksiPenit
 import ModalEditBarang from '../../Components/Modal/ModalPegawaiGudang/ModalEditBarang';
 import { DeleteWithBarang } from '../../api/apiDetailTransaksiPenitipan';
 
-
-
 const DetailTransaksiPenitipanPage = () => {
     const { id_transaksi_penitipan } = useParams();
     const [transaksiPenitipanList, setTransaksiPenitipanList] = useState();

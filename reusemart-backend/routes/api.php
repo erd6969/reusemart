@@ -29,6 +29,7 @@ Route::post('/reset-password', [LoginController::class, 'resetPassword']);
 
 Route::post('/login', [LoginController::class, 'login']);
 Route::middleware('auth:sanctum')->post('/logout', [LoginController::class, 'logout']);
+Route::middleware('auth:sanctum')->post('/logout-mobile', [LoginController::class, 'logoutMobile']);
 Route::post ('/pembeli/register', [PembeliController::class, 'register'])->name('pembeli.register');
 Route::post ('/organisasi/register', [OrganisasiController::class, 'register'])->name('organisasi.register');
 
@@ -147,6 +148,10 @@ Route::middleware('auth:owner')->group(function () {
 
     Route::get('/pegawai/show-profile', [PegawaiController::class, 'showProfile']);
 
+    Route::get('/laporan-donasi/{bulanTahun}', [PdfController::class, 'generateLaporanDonasi']);
+    Route::get('/laporan-request-donasi', [PdfController::class, 'generateLaporanRequestDonasi']);
+    Route::get('/laporan-transaksi-penitip/{id_penitip}/{bulanTahun}', [PdfController::class, 'generateLaporanPenitip']);
+
 });
 Route::middleware('auth:gudang')->group(function () {
     Route::get('/transaksi-penitipan-pdf/{id_transaksi_penitipan}', [PdfController::class, 'generateTransaksiPenitipan']);
@@ -211,6 +216,11 @@ Route::middleware('auth:admin')->group(function () {
     Route::post('/hunter/reset-password/{id}', [HunterController::class, 'resetPassword']);
 
     Route::get('/pegawai/show-profile', [PegawaiController::class, 'showProfile']);
+});
+
+Route::middleware('auth:kurir')->group(function () {
+    Route::get('/pegawai/show-profile', [PegawaiController::class, 'showProfile']);
+    Route::get('/kurir/count-pengiriman', [PegawaiController::class, 'getJumlahPengantaranKurir']);
 });
 #endregion
 

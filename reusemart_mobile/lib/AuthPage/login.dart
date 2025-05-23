@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:reusemart_mobile/client/AuthClient.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:reusemart_mobile/HunterPage/hunter_home.dart';
-import 'package:reusemart_mobile/KurirPage/kurir_home.dart';
+import 'package:reusemart_mobile/KurirPage/kurir_main_page.dart';
 import 'package:reusemart_mobile/PenitipPage/penitip_home.dart';
 import 'package:reusemart_mobile/PembeliPage/pembeli_home.dart';
 
@@ -141,6 +142,12 @@ class _LoginPageState extends State<LoginPage> {
 
                           if (success) {
                             String? role = await AuthClient.getRole();
+                            String? token = await AuthClient.getToken();
+
+                            SharedPreferences prefs =
+                                await SharedPreferences.getInstance();
+                            await prefs.setString('token', token ?? '');
+                            await prefs.setString('role', role ?? '');
 
                             // Redirect langsung ke widget halaman
                             if (role == 'pembeli') {
@@ -159,7 +166,7 @@ class _LoginPageState extends State<LoginPage> {
                               Navigator.pushReplacement(
                                 context,
                                 MaterialPageRoute(
-                                    builder: (context) => KurirHomePage()),
+                                    builder: (context) => KurirMainPage()),
                               );
                             } else if (role == 'hunter') {
                               Navigator.pushReplacement(

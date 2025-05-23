@@ -12,6 +12,7 @@ class TransaksiPembelian extends Model
 
     protected $fillable = [
         'id_pembeli',
+        'id_pegawai',
         'id_alamat',
         'id_pegawai',
         'tanggal_pembelian',

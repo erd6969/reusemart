@@ -14,7 +14,6 @@ class AuthClient {
   static final String apiPath = '/api';
 
   static Future<bool> login(String email, String password) async {
-    // Ambil fcmToken sebelum login
     final fcmToken = await FirebaseMessaging.instance.getToken();
 
     final url = Uri.http(baseUrl, '$apiPath/mobile/login');
@@ -24,7 +23,6 @@ class AuthClient {
       'password': password,
     };
 
-    // Tambahkan fcm_token jika ada
     if (fcmToken != null) {
       body['fcm_token'] = fcmToken;
     }
@@ -37,8 +35,6 @@ class AuthClient {
 
     if (response.statusCode == 200) {
       final data = jsonDecode(response.body);
-
-      // Simpan token dan data user ke SharedPreferences
       final prefs = await SharedPreferences.getInstance();
       await prefs.setString('token', data['token']);
       await prefs.setString('role', data['role']);
@@ -52,14 +48,11 @@ class AuthClient {
   }
 
   static Future<void> logout() async {
-    final url = Uri.http(baseUrl, '$apiPath/logout');
-
-    // Ambil token yang disimpan di SharedPreferences
+    final url = Uri.http(baseUrl, '$apiPath/logout-mobile');
     final prefs = await SharedPreferences.getInstance();
     final token = prefs.getString('token');
 
     if (token != null) {
-      // Kirim token di header untuk otentikasi
       final response = await http.post(
         url,
         headers: {
@@ -69,7 +62,6 @@ class AuthClient {
       );
 
       if (response.statusCode == 200) {
-        // Jika berhasil logout, hapus token dari SharedPreferences
         await prefs.clear();
         print('Logout berhasil!');
       } else {

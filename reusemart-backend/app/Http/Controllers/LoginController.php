@@ -112,6 +112,23 @@ class LoginController
         ]);
     }
 
+    public function logoutMobile(Request $request)
+    {
+        $user = $request->user();
+
+        // Hapus FCM token
+        $user->fcm_token = null;
+        $user->save();
+
+        // Hapus token akses saat ini
+        $user->currentAccessToken()->delete();
+
+        return response()->json([
+            'message' => 'Logout successful'
+        ]);
+    }
+
+
     // Fungsi untuk reset password
     public function resetPassword(Request $request)
     {

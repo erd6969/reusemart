@@ -31,7 +31,7 @@ const ModalVerifikasi = ({ show, handleClose, dataVerifikasi, onSuccess }) => {
             setLoading(true);
             await TolakTransaksiPenitipan(dataVerifikasi.id_transaksi_pembelian);
             toast.success('Transaksi berhasil ditolak');
-            onSuccess();  // Trigger reload or refresh
+            onSuccess();
             handleClose();
         } catch (err) {
             toast.error('Gagal menolak transaksi');
@@ -51,25 +51,56 @@ const ModalVerifikasi = ({ show, handleClose, dataVerifikasi, onSuccess }) => {
         return `${year}.${month}.${id}`;
     }
 
+    function getDiskonPoin(transaksi) {
+        const diskonPoin = transaksi.penggunaan_poin * 100;
+        return diskonPoin;
+    }
+
     return (
-        <Modal show={show} onHide={handleClose} centered>
+        <Modal show={show} onHide={handleClose} centered size="lg">
             <Modal.Header closeButton>
-                <Modal.Title>Detail Verifikasi Transaksi</Modal.Title>
+                <Modal.Title><b>Detail Verifikasi Transaksi</b></Modal.Title>
             </Modal.Header>
             <Modal.Body>
                 {dataVerifikasi ? (
                     <div className="d-flex flex-column gap-2">
                         <div><strong>No Transaksi:</strong> {formatNomorTransaksi(dataVerifikasi)}</div>
                         <div><strong>Nama Pembeli:</strong> {dataVerifikasi.nama_pembeli || '-'}</div>
-                        <div><strong>Nama Barang:</strong> {dataVerifikasi.nama_barang || '-'}</div>
-                        <div><strong>Jumlah:</strong> 1</div>
-                        <div><strong>Total Harga:</strong> Rp {dataVerifikasi.total_pembayaran?.toLocaleString() || '0'}</div>
                         <div><strong>Status:</strong> {dataVerifikasi.verifikasi_bukti}</div>
-                        <div><strong>Bukti Transfer:</strong></div>
+
+                        <h5 className="mb-1 mt-3"><b>Daftar Barang</b></h5>
+                            <table className="table table-bordered">
+                                <thead className="table-light">
+                                    <tr>
+                                        <th>Nama Barang</th>
+                                        <th>Harga</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {dataVerifikasi.barang?.map((item, index) => (
+                                        <tr key={index}>
+                                            <td>{item.nama_barang}</td>
+                                            <td>Rp{item.harga_barang.toLocaleString('id-ID')}</td>
+                                        </tr>
+                                    ))}
+                                    <tr>
+                                        <td colSpan="4" className="text-end fw-bold" style={{ color: 'red' }}>
+                                            Potongan Poin : -Rp{getDiskonPoin(dataVerifikasi)?.toLocaleString('id-ID') || '-'}
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td colSpan="4" className="text-end fw-bold">
+                                            Total Harga : Rp{dataVerifikasi.total_pembayaran?.toLocaleString('id-ID') || '-'}
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+
+                        <div><strong>Bukti Transfer :</strong></div>
                         <img
                             src={getThumbnailBuktiPembayaran(dataVerifikasi.bukti_pembayaran)}
                             alt="Bukti Transfer"
-                            className="img-fluid rounded border"
+                            style={{ maxWidth: '300px', height: 'auto', borderRadius: '8px', }}
                         />
                     </div>
                 ) : (

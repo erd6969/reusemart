@@ -87,6 +87,8 @@ const CSPenitipManagementPage = () => {
                     onChange={(date2) => setDate(date2)}
                     placeholderText="Masukkan Tanggal"
                     dateFormat="yyyy-MM-dd"
+                    className="custom-datepicker-input"
+                    calendarClassName="custom-datepicker-calendar"
                 />
             </div>
 

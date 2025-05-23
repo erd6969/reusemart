@@ -24,6 +24,7 @@ const CSVerifikasiBuktiPage = () => {
             const data = response.transaksi?.data || [];
             setTransaksiList(data);
             setTotalPages(response.transaksi?.last_page || 1);
+            console.log("Data fetched:", data);
         } catch (error) {
             console.error("Error fetching data:", error);
             toast.error("Gagal mengambil data transaksi");
@@ -81,7 +82,7 @@ const CSVerifikasiBuktiPage = () => {
                                 <tr>
                                     <th>Nomor Transaksi</th>
                                     <th>Nama Pembeli</th>
-                                    <th>Nama Barang</th>
+                                    <th>Tanggal Pembayaran</th>
                                     <th>Total Harga</th>
                                     <th>Status</th>
                                 </tr>
@@ -99,7 +100,7 @@ const CSVerifikasiBuktiPage = () => {
                                         <tr key={trx.id_transaksi_pembelian}>
                                             <td>{formatNomorTransaksi(trx)}</td>
                                             <td>{trx.nama_pembeli || "-"}</td>
-                                            <td>{trx.nama_barang || "-"}</td>
+                                            <td>{trx.tanggal_pembayaran || "-"}</td>
                                             <td>Rp{trx.total_pembayaran?.toLocaleString() || "0"}</td>
                                             <td className="text-center">
                                                 <Button

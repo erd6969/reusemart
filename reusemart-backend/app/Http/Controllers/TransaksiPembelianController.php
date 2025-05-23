@@ -10,6 +10,7 @@ use App\Models\Pembeli;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Penitip;
+use Illuminate\Support\Facades\Log;
 
 use App\Http\Controllers\NotificationController;
 
@@ -177,11 +178,44 @@ class TransaksiPembelianController
                     'barang.harga_barang'
                 )
                 ->paginate(10);
+                Log::info($transaksi);
+
+            $groupedTransaksi = $transaksi->groupBy('id_transaksi_pembelian')->map(function($group){
+                return [
+                    'id_transaksi_pembelian' => $group[0]->id_transaksi_pembelian,
+                    'nama_pembeli' => $group[0]->nama_pembeli,
+                    'tanggal_pembelian' => $group[0]->tanggal_pembelian,
+                    'tanggal_pembayaran' => $group[0]->tanggal_pembayaran,
+                    'batas_pembayaran' => $group[0]->batas_pembayaran,
+                    'pengiriman' => $group[0]->pengiriman,
+                    'penggunaan_poin' => $group[0]->penggunaan_poin,
+                    'tambahan_poin' => $group[0]->tambahan_poin,
+                    'total_pembayaran' => $group[0]->total_pembayaran,
+                    'status_pembayaran' => $group[0]->status_pembayaran,
+                    'verifikasi_bukti' => $group[0]->verifikasi_bukti,
+                    'status_pengiriman' => $group[0]->status_pengiriman,
+                    'bukti_pembayaran' => $group[0]->bukti_pembayaran,
+                    'barang' => $group->map(function($item) {
+                        return [
+                            'id_barang' => $item->id_barang,
+                            'nama_barang' => $item->nama_barang,
+                            'harga_barang' => $item->harga_barang,
+                        ];
+                    })->values()
+                ];
+            })->values();
 
             return response()->json([
                 'message' => 'Daftar Unverified Transaksi Pembelian retrieved successfully',
-                'transaksi' => $transaksi,
+                'transaksi' => [
+                    'current_page' => $transaksi->currentPage(),
+                    'last_page' => $transaksi->lastPage(),
+                    'per_page' => $transaksi->perPage(),
+                    'total' => $transaksi->total(),
+                    'data' => $groupedTransaksi
+                ],
             ], 200);
+
 
         } catch (\Exception $e) {
             return response()->json([
@@ -309,6 +343,103 @@ class TransaksiPembelianController
                 'message' => 'Failed to retrieve Jumlah Pengantaran',
                 'error' => $e->getMessage(),
             ], 500);
+        }
+    }
+
+    // ------------------------ Kurir ------------------------
+
+    public function getHistoriPengirimanKurir($tanggal)
+    {
+        try {
+            $kurir = Auth::guard('kurir')->user();
+            if (!$kurir) {
+                return response()->json(['message' => 'Kurir not found'], 404);
+            }
+
+            $historiPengiriman = TransaksiPembelian::where('id_pegawai', $id_kurir)
+                ->where('pengiriman', '=', 'diantar kurir')
+                ->where('status_pengiriman', '=', 'sudah diterima')
+                ->whereDate('tanggal_pengiriman', $tanggal)
+                ->get();
+
+            return response()->json($historiPengiriman, 200);
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'Gagal mengambil histori pengiriman kurir',
+                'error' => $e->getMessage(),
+            ], 500);
+        }
+    }
+
+    public function getPengiriman()
+    {
+        try {
+            $kurir = Auth::guard('kurir')->user();
+            if (!$kurir) {
+                return response()->json(['message' => 'Kurir not found'], 404);
+            }
+
+            $pengiriman = TransaksiPembelian::where('id_pegawai', $kurir->id_pegawai)
+                ->where('pengiriman', '=', 'diantar kurir')
+                ->where('status_pengiriman', '=', 'sedang diantar')
+                ->get();
+
+            return response()->json($pengiriman, 200);
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'Gagal mengambil data pengiriman kurir',
+                'error' => $e->getMessage(),
+            ], 500);
+        }
+    }
+
+    public function changeStatusPengiriman(Request $request)
+    {
+        $transaksi = TransaksiPembelian::with('komisi.barang.detailTransaksiPenitipan.transaksiPenitipan.penitip')
+            ->where('id_transaksi_pembelian', $request->id_transaksi_pembelian)
+            ->first();
+
+        if (!$transaksi) {
+            return response()->json(['message' => 'Transaksi tidak ditemukan'], 404);
+        }
+
+        $transaksi->update([
+            'status_pengiriman' => 'sedang diterima'
+        ]);
+
+        // Ambil penitip pertama yang ditemukan
+        $penitip = Penitip::join('transaksi_penitipan', 'transaksi_penitipan.id_penitip', '=', 'penitip.id_penitip')
+                ->join('detail_transaksi_penitipan', 'detail_transaksi_penitipan.id_transaksi_penitipan', '=', 'transaksi_penitipan.id_transaksi_penitipan')
+                ->join('barang', 'barang.id_barang', '=', 'detail_transaksi_penitipan.id_barang')
+                ->join('komisi', 'komisi.id_barang', '=', 'barang.id_barang')
+                ->join('transaksi_pembelian', 'transaksi_pembelian.id_transaksi_pembelian', '=', 'komisi.id_transaksi_pembelian')
+                ->where('transaksi_pembelian.id_transaksi_pembelian', $request->id_transaksi_pembelian)
+                ->select('penitip.*')
+                ->first();
+
+        // Ambil pembeli pertama yang ditemukan
+        $pembeli = Pembeli::where('id_pembeli', $transaksi->id_pembeli)->first();
+
+        // Kirim notifikasi penitip
+        if ($penitip && $penitip->fcm_token) {
+            $notifRequest = new Request([
+                'token' => $penitip->fcm_token,
+                'title' => 'Transaksi Penjualan Selesai',
+                'body' => 'Transaksi Penjualan Selesai dan Barang Telah Diterima oleh Pembeli dengan Baik Oleh ' . $pembeli->nama_pembeli,
+            ]);
+
+            (new NotificationController())->sendNotification($notifRequest);
+        }
+
+        // Kirim notifikasi pembeli
+        if ($pembeli && $pembeli->fcm_token) {
+            $notifRequest = new Request([
+                'token' => $pembeli->fcm_token,
+                'title' => 'Barang Sudah Sampai !!!',
+                'body' => 'Transaksi Pembelian Selesai dan Barang Telah Diterima dengan Baik Ileh ' . $pembeli->nama_pembeli,
+            ]);
+
+            (new NotificationController())->sendNotification($notifRequest);
         }
     }
 }

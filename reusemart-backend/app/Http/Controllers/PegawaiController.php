@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Pegawai;
+use App\Models\TransaksiPembelian;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
@@ -236,4 +237,27 @@ class PegawaiController
 
         return response()->json($pegawai);
     }
+
+        public function getJumlahPengantaranKurir()
+        {
+            try {
+                $pegawai = Auth::guard()->user();
+                if (!$pegawai) {
+                    return response()->json(['message' => 'Pegawai not found'], 404);
+                }
+
+                $jumlahPengantaran = TransaksiPembelian::where('id_pegawai', $pegawai->id_pegawai)
+                    ->where('status_pengiriman', '=', 'sudah diterima')
+                    ->count();
+
+                return response()->json([
+                    'count' => $jumlahPengantaran,
+                ], 200);
+            } catch (\Exception $e) {
+                return response()->json([
+                    'message' => 'Gagal mengambil jumlah pengantaran',
+                    'error' => $e->getMessage(),
+                ], 500);
+            }
+        }
 }

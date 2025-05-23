@@ -68,11 +68,9 @@ const OnSaleProductPage = () => {
                 setIsLoading(true);
                 SearchBarangJual(searchQuery.trim())
                     .then((data) => {
-                        const hasil = Array.isArray(data) ? data : [data];
-                        setOnSaleProducts(hasil);
-                        setTotalPages(1);
-                        setCurrentPage(1);
-                        console.log("Hasil pencarian:", hasil);
+                        setOnSaleProducts(data.data || []); 
+                        setTotalPages(data.last_page || 1);
+                        setCurrentPage(data.current_page || 1);
                     })
                     .catch((error) => {
                         console.error("Error searching req:", error);

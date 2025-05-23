@@ -1,15 +1,13 @@
 import { useState, useEffect } from 'react';
 import { Modal, Container, Button, Spinner } from "react-bootstrap";
 
-import { getThumbnail } from "../../../api/index";
 import { GetDetailBarang } from "../../../api/apiBarang";
 import { ShowDetailPendapatan } from "../../../api/apiPenitip";
+import CarouselDetail from "../../Carousel/CarouselDetail";
+
 
 import '../../../Pages/Homepage/DetailBarangPage.css';
 
-import gambarBarang from "../../../assets/images/Pembeli/Yuki.jpeg";
-
-import { getThumbnailBarang } from '../../../api/index';
 
 const ModalDetailPenjualan = ({ show, handleClose, id_barang }) => {
     const [detailBarang, setDetailBarang] = useState(null);
@@ -38,7 +36,16 @@ const ModalDetailPenjualan = ({ show, handleClose, id_barang }) => {
             fetchData();
         }
     }, [show, id_barang]);
-    
+
+
+    let gambarBarang = [];
+    if (detailBarang) {
+        gambarBarang = [
+            detailBarang.foto_barang,
+            detailBarang.foto_barang2,
+            detailBarang.foto_barang3
+        ].filter(Boolean);
+    }
 
     return (
         <Modal show={show} onHide={handleClose} size="lg" centered>
@@ -57,33 +64,27 @@ const ModalDetailPenjualan = ({ show, handleClose, id_barang }) => {
                 ) : (
                     detailBarang && pendapatan && (
                         <>
-                        <Container className="detail-barang-container">
-                            <div className="item-image-container mb-3 text-center">
-                                <img
-                                    // src={getThumbnail(detailBarang.foto_barang) || defaultImage}
-                                    src={getThumbnailBarang(detailBarang.foto_barang)}
-                                    alt={detailBarang.nama_barang}
-                                    className="gambar-barang"
-                                    style={{ maxWidth: "250px", height: "auto", borderRadius: "8px" }}
-                                />
-                            </div>
-
-                            <div className="isi-detail-barang-container mb-4">
-                                <h3 className="mb-2"><b>{detailBarang.nama_barang}</b></h3>
-                                <h4 className="mb-3 text-success text-start"><b>Rp {Number(detailBarang.harga_barang).toLocaleString("id-ID")}</b></h4>
-
-                                <div className="mb-2">
-                                    <strong>Deskripsi:</strong>
-                                    <p>{detailBarang.deskripsi_barang}</p>
+                            <Container className="detail-barang-container">
+                                <div className="item-image-container-barang">
+                                    <CarouselDetail gambar={gambarBarang} />
                                 </div>
-                                <div>
-                                    <strong>Kondisi:</strong>
-                                    <p>{detailBarang.kondisi_barang}</p>
+
+                                <div className="isi-detail-barang-container mb-4">
+                                    <h3 className="mb-2"><b>{detailBarang.nama_barang}</b></h3>
+                                    <h4 className="mb-3 text-success text-start"><b>Rp {Number(detailBarang.harga_barang).toLocaleString("id-ID")}</b></h4>
+
+                                    <div className="mb-2">
+                                        <strong>Deskripsi:</strong>
+                                        <p>{detailBarang.deskripsi_barang}</p>
+                                    </div>
+                                    <div>
+                                        <strong>Kondisi:</strong>
+                                        <p>{detailBarang.kondisi_barang}</p>
+                                    </div>
                                 </div>
-                            </div>
-                        </Container>
-                        
-                        <div className="detail-pendapatan">
+                            </Container>
+
+                            <div className="detail-pendapatan">
                                 <h5 className="mb-3">Rincian Pendapatan</h5>
                                 <table className="table table-bordered">
                                     <thead className="table-light">

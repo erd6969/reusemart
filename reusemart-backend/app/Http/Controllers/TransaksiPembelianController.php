@@ -331,7 +331,7 @@ class TransaksiPembelianController
             }
 
             $jumlahPengantaran = TransaksiPembelian::where('id_pegawai', $kurir->id_pegawai)
-                ->where('status_pengiriman', 'sudah diterima')
+                ->where('status_pengiriman', 'sudah sampai')
                 ->count();
 
             return response()->json([
@@ -356,9 +356,9 @@ class TransaksiPembelianController
                 return response()->json(['message' => 'Kurir not found'], 404);
             }
 
-            $historiPengiriman = TransaksiPembelian::where('id_pegawai', $id_kurir)
+            $historiPengiriman = TransaksiPembelian::where('id_pegawai', $kurir->id_pegawai)
                 ->where('pengiriman', '=', 'diantar kurir')
-                ->where('status_pengiriman', '=', 'sudah diterima')
+                ->where('status_pengiriman', '=', 'sudah sampai')
                 ->whereDate('tanggal_pengiriman', $tanggal)
                 ->get();
 

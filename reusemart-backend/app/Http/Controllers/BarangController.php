@@ -559,6 +559,7 @@ class BarangController
 
             $detailTransaksi->update([
                 'status_pengiriman' => 'sudah diambil',
+                'tanggal_pengambilan' => $today,
             ]);
 
             return response()->json([
@@ -586,7 +587,11 @@ class BarangController
             ], 404);
         }
 
-        $transaksiPembelian->update($validatedData);
+        $transaksiPembelian->update([
+            'tanggal_pengiriman' => $validatedData['tanggal_pengiriman'],
+            'status_pengiriman' => 'siap diambil',
+        ]);
+
         return response()->json([
             'status' => 'success',
             'data' => $transaksiPembelian,
@@ -675,7 +680,7 @@ class BarangController
             $products = DB::table('barang')
                 ->join('komisi', 'komisi.id_barang', '=', 'barang.id_barang')
                 ->join('transaksi_pembelian', 'transaksi_pembelian.id_transaksi_pembelian', '=', 'komisi.id_transaksi_pembelian')
-                ->whereIn('transaksi_pembelian.status_pengiriman', ['sedang disiapkan', 'siap diambil'])
+                ->whereIn('transaksi_pembelian.status_pengiriman', ['sedang disiapkan', 'siap diambil', 'sedang diantar', 'sudah diambil'])
                 ->select(
                     'barang.*',
                     'transaksi_pembelian.id_transaksi_pembelian',

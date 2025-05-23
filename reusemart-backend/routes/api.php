@@ -60,10 +60,10 @@ Route::middleware('auth:penitip')->group(function () {
     Route::get('/penitip/show-extend-product', [PenitipController::class, 'showExtendProducts']);
     Route::post('/penitip/extend-barang', [PenitipController::class, 'extendBarangPenitip']);
     Route::post('/penitip/ambil-barang', [PenitipController::class, 'pengambilanBarang']);
-    Route::get('/penitip/search-donasi/{search_barang}', [BarangController::class, 'searchBarangDonasi']);
-    Route::get('/penitip/search-extend/{search_barang}', [BarangController::class, 'searchBarangExtend']);
-    Route::get('/penitip/search-jual/{search_barang}', [BarangController::class, 'searchBarangJual']);
-    Route::get('/penitip/search-terjual/{search_barang}', [BarangController::class, 'searchBarangTerjual']);
+    Route::get('/penitip/search-donasi/{search_barang}', [PenitipController::class, 'searchBarangDonasi']);
+    Route::get('/penitip/search-extend/{search_barang}', [PenitipController::class, 'searchBarangExtend']);
+    Route::get('/penitip/search-jual/{search_barang}', [PenitipController::class, 'searchBarangJual']);
+    Route::get('/penitip/search-terjual/{search_barang}', [PenitipController::class, 'searchBarangTerjual']);
     Route::get('/penitip/show-detail-pendapatan/{id_barang}', [PenitipController::class, 'showDetailPendapatan']);
     Route::get('/detail-donasi/{id_barang}', [BarangController::class, 'showDetailBarangDonasi']);
 });

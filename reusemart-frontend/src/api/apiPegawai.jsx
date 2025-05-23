@@ -133,3 +133,65 @@ export const SearchPegawaiByNama = async (search_pegawai) => {
         throw error?.response?.data || error;
     }
 }
+
+// -------------------------- Laporan Owner  -------------------------- //
+
+export const GetLaporanDonasi = async (bulanTahun) => {
+    try {
+        const token = sessionStorage.getItem("token");
+        const response = await useAxios.get(`/laporan-donasi/${bulanTahun}`, {
+            headers: {
+                "Content-Type": "application/json",
+                "Accept": "application/pdf",
+                "Authorization": `Bearer ${token}`,
+            },
+            responseType: 'blob',
+        });
+
+        const fileURL = window.URL.createObjectURL(new Blob([response.data], { type: 'application/pdf' }));
+        return fileURL;
+    } catch (error) {
+        console.error("Error fetching laporan donasi", error);
+        return null;
+    }
+};
+
+export const GetLaporanRequestDonasi = async () => {
+    try {
+        const token = sessionStorage.getItem("token");
+        const response = await useAxios.get(`/laporan-request-donasi`, {
+            headers: {
+                "Content-Type": "application/json",
+                "Accept": "application/pdf",
+                "Authorization": `Bearer ${token}`,
+            },
+            responseType: 'blob',
+        });
+
+        const fileURL = window.URL.createObjectURL(new Blob([response.data], { type: 'application/pdf' }));
+        return fileURL;
+    } catch (error) {
+        console.error("Error fetching laporan request donasi", error);
+        return null;
+    }
+};
+
+export const GetLaporanTransaksiPenitip = async (id_penitip, bulanTahun) => {
+    try {
+        const token = sessionStorage.getItem("token");
+         const response = await useAxios.get(`/laporan-transaksi-penitip/${id_penitip}/${bulanTahun}`, {
+            headers: {
+                "Content-Type": "application/json",
+                "Accept": "application/pdf",
+                "Authorization": `Bearer ${token}`,
+            },
+            responseType: 'blob',
+        });
+
+        const fileURL = window.URL.createObjectURL(new Blob([response.data], { type: 'application/pdf' }));
+        return fileURL;
+    } catch (error) {
+        console.error("Error fetching laporan transaksi penitip", error);
+        return null;
+    }
+};

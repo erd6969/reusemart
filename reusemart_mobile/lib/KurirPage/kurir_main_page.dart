@@ -22,6 +22,14 @@ class _KurirMainPageState extends State<KurirMainPage> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: const Color(0xFF347928),
+        title: const Text(
+          'Kurir Page ReuseMart',
+          style: TextStyle(
+            fontSize: 24,
+            fontWeight: FontWeight.w600,
+            color: Colors.white,
+          ),
+        ),
       ),
       backgroundColor: Colors.white,
       body: SafeArea(child: _pages[_currentIndex]),

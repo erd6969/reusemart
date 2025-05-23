@@ -31,7 +31,7 @@ const ModalVerifikasi = ({ show, handleClose, dataVerifikasi, onSuccess }) => {
             setLoading(true);
             await TolakTransaksiPenitipan(dataVerifikasi.id_transaksi_pembelian);
             toast.success('Transaksi berhasil ditolak');
-            onSuccess();  // Trigger reload or refresh
+            onSuccess();
             handleClose();
         } catch (err) {
             toast.error('Gagal menolak transaksi');
@@ -49,6 +49,11 @@ const ModalVerifikasi = ({ show, handleClose, dataVerifikasi, onSuccess }) => {
         const id = String(transaksi.id_transaksi_pembelian).padStart(3, '0');
 
         return `${year}.${month}.${id}`;
+    }
+
+    function getDiskonPoin(transaksi) {
+        const diskonPoin = transaksi.penggunaan_poin * 100;
+        return diskonPoin;
     }
 
     return (
@@ -78,6 +83,11 @@ const ModalVerifikasi = ({ show, handleClose, dataVerifikasi, onSuccess }) => {
                                             <td>Rp{item.harga_barang.toLocaleString('id-ID')}</td>
                                         </tr>
                                     ))}
+                                    <tr>
+                                        <td colSpan="4" className="text-end fw-bold" style={{ color: 'red' }}>
+                                            Potongan Poin : -Rp{getDiskonPoin(dataVerifikasi)?.toLocaleString('id-ID') || '-'}
+                                        </td>
+                                    </tr>
                                     <tr>
                                         <td colSpan="4" className="text-end fw-bold">
                                             Total Harga : Rp{dataVerifikasi.total_pembayaran?.toLocaleString('id-ID') || '-'}

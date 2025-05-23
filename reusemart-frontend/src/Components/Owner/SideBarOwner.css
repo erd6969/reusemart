@@ -46,13 +46,51 @@
 }
 
 .sidebarIcon {
-    margin-right: 5px;
+    margin-right: 10px;
     font-size: 18px;
+    width: 20px;
+    height: 20px;
     vertical-align: middle;
-    width: 40px;
-    height: 40px;
+    flex-shrink: 0;
 }
 
+.sidebarItemRow {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.sidebarArrow {
+    transition: transform 0.3s ease;
+    font-size: 14px;
+}
+
+.sidebarArrow.rotate {
+    transform: rotate(90deg);
+}
+
+.sidebarSubMenuOwner {
+    list-style: none;
+    padding-left: 40px;
+    margin: 5px 0;
+}
+
+.sidebarSubItemOwner {
+    cursor: pointer;
+    font-size: 15px;
+    color: #333;
+    transition: background-color 0.2s ease-in-out;
+    border-radius: 0;
+    width: 100%;
+    display: block;
+    box-sizing: border-box;
+    padding: 10px 20px; /* padding penuh, bukan hanya kiri */
+}
+
+
+.sidebarSubItemOwner:hover {
+    background-color: #dcd9ca;
+}
 
 @media (max-width: 768px) {
     .sidebarOwner {
@@ -64,5 +102,9 @@
     .sidebarItemOwner {
         padding: 12px 15px;
         text-align: center;
+    }
+
+    .sidebarSubMenuOwner {
+        padding-left: 20px;
     }
 }

@@ -148,6 +148,10 @@ Route::middleware('auth:owner')->group(function () {
 
     Route::get('/pegawai/show-profile', [PegawaiController::class, 'showProfile']);
 
+    Route::get('/laporan-donasi/{bulanTahun}', [PdfController::class, 'generateLaporanDonasi']);
+    Route::get('/laporan-request-donasi', [PdfController::class, 'generateLaporanRequestDonasi']);
+    Route::get('/laporan-transaksi-penitip/{id_penitip}/{bulanTahun}', [PdfController::class, 'generateLaporanPenitip']);
+
 });
 Route::middleware('auth:gudang')->group(function () {
     Route::get('/transaksi-penitipan-pdf/{id_transaksi_penitipan}', [PdfController::class, 'generateTransaksiPenitipan']);

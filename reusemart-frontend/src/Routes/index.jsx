@@ -68,6 +68,9 @@ import CSVerifikasiBuktiPage from "../Pages/CustomerService/CSVerifikasiBuktiPag
 // Owner
 import OwnerLayouts from "../Layouts/OwnerLayouts";
 import ReqDonasiShowBarang from "../Pages/Owner/ReqDonasiShowBarang";
+import LaporanRequestDonasi from "../Pages/Owner/Laporan/LaporanRequestDonasi";
+import LaporanDonasi from "../Pages/Owner/Laporan/LaporanDonasi";
+import LaporanTransaksiPenitip from "../Pages/Owner/Laporan/LaporanTransaksiPenitip";
 
 //Pegawai Gudang
 import PegawaiGudangLayout from "../Layouts/PegawaiGudangLayouts";
@@ -211,6 +214,18 @@ const router = createBrowserRouter([
             {
                 path: "req-donasi-show-barang/:nama_organisasi/:id_request_donasi",
                 element: <ReqDonasiShowBarang />,
+            },
+            {
+                path: "laporan-transaksi-penitip",
+                element: <LaporanTransaksiPenitip />,
+            },
+            {
+                path: "laporan-request-donasi",
+                element: <LaporanRequestDonasi />,
+            },
+            {
+                path: "laporan-donasi",
+                element: <LaporanDonasi />,
             }
         ],
     },

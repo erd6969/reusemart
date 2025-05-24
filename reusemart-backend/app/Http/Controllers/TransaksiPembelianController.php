@@ -320,6 +320,8 @@ class TransaksiPembelianController
         }
     }
 
+    // ------------------------ Kurir ------------------------
+
     public function getJumlahPengantaranKurir()
     {
         try {
@@ -346,7 +348,6 @@ class TransaksiPembelianController
         }
     }
 
-
     public function getHistoriPengirimanKurir($tanggal)
     {
         try {
@@ -355,13 +356,26 @@ class TransaksiPembelianController
                 return response()->json(['message' => 'Kurir not found'], 404);
             }
 
-            $historiPengiriman = TransaksiPembelian::where('id_pegawai', $kurir->id_pegawai)
+            Log::info($tanggal);
+
+            $historiPengiriman = TransaksiPembelian::where('transaksi_pembelian.id_pegawai', $kurir->id_pegawai)
+                ->join('komisi', 'komisi.id_transaksi_pembelian', '=', 'transaksi_pembelian.id_transaksi_pembelian')
+                ->join('barang', 'barang.id_barang', '=', 'komisi.id_barang')
+                ->join('alamat', 'alamat.id_alamat', '=', 'transaksi_pembelian.id_alamat')
                 ->where('pengiriman', '=', 'diantar kurir')
-                ->where('status_pengiriman', '=', 'sudah sampai')
+                ->where('status_pengiriman', '=', 'sudah diterima')
                 ->whereDate('tanggal_pengiriman', $tanggal)
+                ->select(
+                    'transaksi_pembelian.tanggal_pengiriman',
+                    'alamat.*',
+                    'barang.nama_barang',
+                    'barang.foto_barang'
+                )
                 ->get();
 
-            return response()->json($historiPengiriman, 200);
+            Log::info($historiPengiriman);
+
+            return response()->json(['data' => $historiPengiriman], 200);
         } catch (\Exception $e) {
             return response()->json([
                 'message' => 'Gagal mengambil histori pengiriman kurir',

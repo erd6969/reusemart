@@ -5,9 +5,9 @@ import { Modal, Container, Button, Spinner } from "react-bootstrap";
 import { GetDetailBarang } from "../../../api/apiBarang";
 import CarouselDetail from "../../Carousel/CarouselDetail";
 import '../../../Pages/Homepage/DetailBarangPage.css';
-import { getThumbnailBarang } from '../../../api/index';
 
-const ModalDetailPenjualan = ({ show, handleClose, id_barang }) => {
+
+const ModalDetailBarang = ({ show, handleClose, id_barang }) => {
     const [detailBarang, setDetailBarang] = useState(null);
     const [isLoading, setIsLoading] = useState(true);
 
@@ -60,7 +60,7 @@ const ModalDetailPenjualan = ({ show, handleClose, id_barang }) => {
                 ) : (
                     detailBarang && (
                         <>
-                            <Container className="detail-barang-container">
+                            <Container className="detail-barang-container ">
                                 <div className="item-image-container-barang">
                                     <CarouselDetail gambar={gambarBarang} />
                                 </div>
@@ -81,7 +81,7 @@ const ModalDetailPenjualan = ({ show, handleClose, id_barang }) => {
                                         <strong>Berat:</strong>
                                         <p>{detailBarang.berat_barang} KG</p>
                                     </div>
-                                    
+
                                 </div>
                             </Container>
                         </>
@@ -98,4 +98,4 @@ const ModalDetailPenjualan = ({ show, handleClose, id_barang }) => {
     );
 };
 
-export default ModalDetailPenjualan;
+export default ModalDetailBarang;

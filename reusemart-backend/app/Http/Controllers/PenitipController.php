@@ -269,7 +269,154 @@ class PenitipController
                 )
                 ->paginate(5);
 
-            return response()->json( $products, 200);
+            return response()->json($products, 200);
+
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'Penitip not found',
+                'error' => $e->getMessage(),
+            ], 404);
+        }
+    }
+
+    public function searchBarangDonasi($search_barang)
+    {
+        try {
+            $penitip = auth('penitip')->user();
+
+            $products = DB::table('transaksi_penitipan')
+                ->join('detail_transaksi_penitipan', 'transaksi_penitipan.id_transaksi_penitipan', '=', 'detail_transaksi_penitipan.id_transaksi_penitipan')
+                ->join('barang', 'detail_transaksi_penitipan.id_barang', '=', 'barang.id_barang')
+                ->leftJoin('transaksi_donasi', 'transaksi_donasi.id_barang', '=', 'barang.id_barang')
+                ->leftJoin('organisasi', 'transaksi_donasi.id_organisasi', '=', 'organisasi.id_organisasi')
+                ->where('transaksi_penitipan.id_penitip', $penitip->id_penitip)
+                ->whereIn('detail_transaksi_penitipan.status_penitipan', ['didonasikan', 'open donasi'])
+                ->where(function ($query) use ($search_barang) {
+                    $query->where('barang.nama_barang', 'like', "%{$search_barang}%")
+                        ->orWhere('transaksi_donasi.tanggal_donasi', 'like', "%{$search_barang}%")
+                        ->orWhere('transaksi_donasi.nama_penerima', 'like', "%{$search_barang}%")
+                        ->orWhere('organisasi.nama_organisasi', 'like', "%{$search_barang}%")
+                        ->orWhere('detail_transaksi_penitipan.status_penitipan', 'like', "%{$search_barang}%");
+                })
+                ->select(
+                    'barang.*',
+                    'transaksi_donasi.tanggal_donasi',
+                    'transaksi_donasi.nama_penerima',
+                    'detail_transaksi_penitipan.status_penitipan',
+                    'organisasi.nama_organisasi'
+                )
+                ->orderByRaw("FIELD(detail_transaksi_penitipan.status_penitipan, 'open donasi', 'didonasikan')")
+                ->paginate(5);
+
+            return response()->json($products, 200);
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'Penitip not found',
+                'error' => $e->getMessage(),
+            ], 404);
+        }
+    }
+
+    public function searchBarangExtend($search_barang)
+    {
+        try {
+            $penitip = auth('penitip')->user();
+
+            $products = DB::table('transaksi_penitipan')
+                ->join('detail_transaksi_penitipan', 'transaksi_penitipan.id_transaksi_penitipan', '=', 'detail_transaksi_penitipan.id_transaksi_penitipan')
+                ->join('barang', 'detail_transaksi_penitipan.id_barang', '=', 'barang.id_barang')
+                ->leftJoin('komisi', 'komisi.id_barang', '=', 'barang.id_barang')
+                ->leftJoin('transaksi_pembelian', 'transaksi_pembelian.id_transaksi_pembelian', '=', 'komisi.id_transaksi_pembelian')
+                ->where('transaksi_penitipan.id_penitip', $penitip->id_penitip)
+                ->whereIn('detail_transaksi_penitipan.status_penitipan', ['ready jual', 'masa pengambilan'])
+                ->where(function ($query) use ($search_barang) {
+                    $query->where('barang.nama_barang', 'like', '%' . $search_barang . '%')
+                        ->orWhere('barang.harga_barang', 'like', '%' . $search_barang . '%')
+                        ->orWhere('detail_transaksi_penitipan.tanggal_berakhir', 'like', '%' . $search_barang . '%')
+                        ->orWhere('detail_transaksi_penitipan.tanggal_batas_pengambilan', 'like', '%' . $search_barang . '%');
+                })
+
+                ->select(
+                    'barang.*',
+                    'detail_transaksi_penitipan.status_penitipan',
+                    'detail_transaksi_penitipan.tanggal_berakhir',
+                    'detail_transaksi_penitipan.tanggal_batas_pengambilan',
+                    'detail_transaksi_penitipan.id_detail_transaksi_penitipan',
+                    'detail_transaksi_penitipan.status_perpanjangan',
+                )
+                ->distinct()
+                ->paginate(5);
+
+            return response()->json($products, 200);
+
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'Penitip not found',
+                'error' => $e->getMessage(),
+            ], 404);
+        }
+    }
+
+
+    public function searchBarangJual($search_barang)
+    {
+        try {
+            $penitip = auth('penitip')->user();
+
+            $products = DB::table('transaksi_penitipan')
+                ->join('detail_transaksi_penitipan', 'transaksi_penitipan.id_transaksi_penitipan', '=', 'detail_transaksi_penitipan.id_transaksi_penitipan')
+                ->join('barang', 'detail_transaksi_penitipan.id_barang', '=', 'barang.id_barang')
+                ->leftJoin('komisi', 'komisi.id_barang', '=', 'barang.id_barang')
+                ->leftJoin('transaksi_pembelian', 'transaksi_pembelian.id_transaksi_pembelian', '=', 'komisi.id_transaksi_pembelian')
+                ->where('transaksi_penitipan.id_penitip', $penitip->id_penitip)
+                ->where('detail_transaksi_penitipan.status_penitipan', 'ready jual')
+                ->where(function ($query) use ($search_barang) {
+                    $query->where('barang.nama_barang', 'like', '%' . $search_barang . '%')
+                        ->orWhere('barang.harga_barang', 'like', '%' . $search_barang . '%')
+                        ->orWhere('detail_transaksi_penitipan.tanggal_berakhir', 'like', '%' . $search_barang . '%');
+                })
+                ->select('barang.*', 'detail_transaksi_penitipan.tanggal_berakhir')
+                ->distinct()
+                ->paginate(5);
+
+            return response()->json($products, 200);
+
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'Penitip not found',
+                'error' => $e->getMessage(),
+            ], 404);
+        }
+    }
+
+
+    public function searchBarangTerjual($search_barang)
+    {
+        try {
+            $penitip = auth('penitip')->user();
+
+            $products = DB::table('transaksi_penitipan')
+                ->join('detail_transaksi_penitipan', 'transaksi_penitipan.id_transaksi_penitipan', '=', 'detail_transaksi_penitipan.id_transaksi_penitipan')
+                ->join('barang', 'detail_transaksi_penitipan.id_barang', '=', 'barang.id_barang')
+                ->join('komisi', 'komisi.id_barang', '=', 'barang.id_barang')
+                ->join('transaksi_pembelian', 'transaksi_pembelian.id_transaksi_pembelian', '=', 'komisi.id_transaksi_pembelian')
+                ->where('transaksi_penitipan.id_penitip', $penitip->id_penitip)
+                ->whereIn('detail_transaksi_penitipan.status_penitipan', ['terjual', 'proses pembayaran'])
+                ->where(function ($query) use ($search_barang) {
+                    $query->where('barang.nama_barang', 'like', '%' . $search_barang . '%')
+                        ->orWhere('barang.harga_barang', 'like', '%' . $search_barang . '%')
+                        ->orWhere('detail_transaksi_penitipan.tanggal_berakhir', 'like', '%' . $search_barang . '%')
+                        ->orWhere('detail_transaksi_penitipan.status_penitipan', 'like', '%' . $search_barang . '%');
+                })
+                ->select(
+                    'barang.*',
+                    'transaksi_pembelian.tanggal_pembelian',
+                    'detail_transaksi_penitipan.status_penitipan',
+                    'detail_transaksi_penitipan.tanggal_berakhir'
+                )
+                ->paginate(5);
+
+            return response()->json($products, 200);
 
         } catch (\Exception $e) {
             return response()->json([
@@ -296,7 +443,7 @@ class PenitipController
                 ->paginate(5);
 
 
-            return response()->json( $products, 200);
+            return response()->json($products, 200);
 
         } catch (\Exception $e) {
             return response()->json([
@@ -337,7 +484,7 @@ class PenitipController
                 ->distinct()
                 ->paginate(5);
 
-            return response()->json( $products, 200);
+            return response()->json($products, 200);
 
         } catch (\Exception $e) {
             return response()->json([

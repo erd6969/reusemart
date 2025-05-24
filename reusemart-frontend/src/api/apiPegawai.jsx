@@ -118,6 +118,21 @@ export const GetProfile = async () => {
       }
 };
 
+export const GetListKurir = async () => {
+    try {
+        const response = await useAxios.get("/pegawai-gudang/get-kurir", {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${getToken()}`,
+          },
+        });
+        return response.data;
+      } catch (error) {
+        console.error("Error fetching profile", error);
+        throw error?.response?.data || error;
+      }
+};
+
 export const SearchPegawaiByNama = async (search_pegawai) => {
     try {
         const response = await useAxios.get(`/pegawai-gudang/searchPegawai/${search_pegawai}`, {

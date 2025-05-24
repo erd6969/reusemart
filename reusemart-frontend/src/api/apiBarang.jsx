@@ -213,11 +213,11 @@ export const VerifAmbil = async (id_detail_transaksi_penitipan) => {
     }
 }
 
-export const VerifKirimPembeli = async (id_transaksi_pembelian) => {
+export const VerifKirimPembeli = async (formData) => {
     try {
         const token = sessionStorage.getItem("token");
         
-        const response = await useAxios.post(`/pegawai-gudang/verif-kirim-pembeli`, {id_transaksi_pembelian}, {
+        const response = await useAxios.post(`/pegawai-gudang/verif-kirim-pembeli`, formData, {
             headers: {
                 "Content-Type": "application/json",
                 "Accept": "application/json",
@@ -242,11 +242,11 @@ export const VerifKirimPembeli = async (id_transaksi_pembelian) => {
     }
 }
 
-export const VerifAmbilPembeli = async (formData,id_transaksi_pembelian) => {
+export const VerifAmbilPembeli = async (formData,id_komisi) => {
     try {
         const token = sessionStorage.getItem("token");
         
-        const response = await useAxios.post(`/pegawai-gudang/verif-ambil-pembeli/${id_transaksi_pembelian}`, formData, {
+        const response = await useAxios.post(`/pegawai-gudang/verif-ambil-pembeli/${id_komisi}`, formData, {
             headers: {
                 "Content-Type": "multipart/form-data",
                 "Accept": "application/json",

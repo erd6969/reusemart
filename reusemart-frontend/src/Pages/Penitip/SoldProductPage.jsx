@@ -1,7 +1,7 @@
 import './SoldProductPage.css';
 import { useState, useEffect } from 'react';
-import { FaStar } from 'react-icons/fa';
-import { Container } from 'react-bootstrap';
+import { FaStar, FaChevronLeft, FaChevronRight, } from 'react-icons/fa';
+import { Container, Button } from 'react-bootstrap';
 import SearchIcon from "../../assets/images/search-icon.png";
 import defaultImage from "../../assets/images/Pembeli/Yuki.jpeg";
 
@@ -16,22 +16,27 @@ const SoldProductPage = () => {
     const [showModal, setShowModal] = useState(false);
     const [searchQuery, setSearchQuery] = useState("");
     const [selectedProductId, setSelectedProductId] = useState(null);
+    const [currentPage, setCurrentPage] = useState(1);
+    const [totalPages, setTotalPages] = useState(1);
+
+    const fetchSoldProducts = async (page = 1) => {
+        try {
+            const response = await ShowSoldProducts(page);
+            setSoldProducts(response.data);
+            setTotalPages(response.last_page);
+            setCurrentPage(response.current_page);
+            console.log("Fetched sold products:", response.data);
+        } catch (error) {
+            setSoldProducts([]);
+            console.error("Error fetching sold products:", error);
+        } finally {
+            setLoading(false);
+        }
+    };
 
     useEffect(() => {
-        const fetchSoldProducts = async () => {
-            try {
-                const response = await ShowSoldProducts();
-                setSoldProducts(response.data);
-                console.log("Fetched sold products:", response.data);
-            } catch (error) {
-                console.error("Error fetching sold products:", error);
-            } finally {
-                setLoading(false);
-            }
-        };
-
-        fetchSoldProducts();
-    }, []);
+        fetchSoldProducts(currentPage);
+    }, [currentPage]);
 
     const handleOpenModal = (id_barang) => {
         setSelectedProductId(id_barang);
@@ -43,15 +48,23 @@ const SoldProductPage = () => {
         setSelectedProductId(null);
     };
 
+    const handlePagination = (page) => {
+        if (page >= 1 && page <= totalPages) {
+            setLoading(true);
+            setCurrentPage(page);
+            fetchSoldProducts(page);
+        }
+    };
+
     useEffect(() => {
         const delayDebounce = setTimeout(() => {
             if (searchQuery.trim().length >= 3) {
                 setLoading(true);
                 SearchBarangTerjual(searchQuery.trim())
                     .then((data) => {
-                        const hasil = Array.isArray(data) ? data : [data];
-                        setSoldProducts(hasil);
-                        console.log("Hasil pencarian:", hasil);
+                        setSoldProducts(data.data || []);
+                        setTotalPages(data.last_page || 1);
+                        setCurrentPage(data.current_page || 1);
                     })
                     .catch((error) => {
                         console.error("Error searching req:", error);
@@ -59,7 +72,7 @@ const SoldProductPage = () => {
                     })
                     .finally(() => setLoading(false));
             } else {
-                fetchSoldProducts();
+                fetchSoldProducts(currentPage);
             }
         }, 500);
 
@@ -140,6 +153,25 @@ const SoldProductPage = () => {
                             </tbody>
                         </table>
                     )}
+                </div>
+                <div className="pagination d-flex justify-content-center align-items-center mt-4">
+                    <Button
+                        variant="secondary"
+                        disabled={currentPage === 1}
+                        onClick={() => handlePagination(currentPage - 1)}
+                        className="me-2"
+                    >
+                        <FaChevronLeft />
+                    </Button>
+                    <span>Halaman {currentPage} dari {totalPages}</span>
+                    <Button
+                        variant="secondary"
+                        disabled={currentPage === totalPages}
+                        onClick={() => handlePagination(currentPage + 1)}
+                        className="ms-2"
+                    >
+                        <FaChevronRight />
+                    </Button>
                 </div>
             </div>
 

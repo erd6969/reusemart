@@ -18,6 +18,7 @@ class TransaksiPembelian extends Model
         'tanggal_pembelian',
         'tanggal_pengiriman',
         'tanggal_pembayaran',
+        'tanggal_pengambilan',
         'batas_pembayaran',
         'pengiriman',
         'penggunaan_poin',

@@ -3,21 +3,21 @@ import { useState, useEffect } from 'react';
 import SearchIcon from "../../assets/images/search-icon.png";
 import { Button, Badge } from 'react-bootstrap';
 import { FaChevronLeft, FaChevronRight, FaSearch } from "react-icons/fa";
-import { ShowDonatedProduct, SearchBarangDonasi} from "../../api/apiPenitip";
+import { ShowDonatedProduct, SearchBarangDonasi } from "../../api/apiPenitip";
 import { getThumbnailBarang } from "../../api/index";
 
 
-import ModalDetailPenjualan from "../../Components/Modal/ModalPenitip/ModalDetailDonasi";
+import ModalDetailDonasi from "../../Components/Modal/ModalPenitip/ModalDetailDonasi";
 
 
 const DonatedProductPage = () => {
     const [donatedProduct, setDonatedProduct] = useState([]);
     const [loading, setLoading] = useState(true);
     const [currentPage, setCurrentPage] = useState(1);
-     const [showModal, setShowModal] = useState(false);
+    const [showModal, setShowModal] = useState(false);
     const [searchQuery, setSearchQuery] = useState("");
     const [totalPages, setTotalPages] = useState(1);
-        const [selectedProductId, setSelectedProductId] = useState(null);
+    const [selectedProductId, setSelectedProductId] = useState(null);
 
 
 
@@ -65,11 +65,9 @@ const DonatedProductPage = () => {
                 setLoading(true);
                 SearchBarangDonasi(searchQuery.trim())
                     .then((data) => {
-                        const hasil = Array.isArray(data) ? data : [data];
-                        setDonatedProduct(hasil);
-                        setTotalPages(1);
-                        setCurrentPage(1);
-                        console.log("Hasil pencarian:", hasil);
+                        setDonatedProduct(data.data || []); 
+                        setTotalPages(data.last_page || 1);
+                        setCurrentPage(data.current_page || 1);
                     })
                     .catch((error) => {
                         console.error("Error searching req:", error);
@@ -120,7 +118,7 @@ const DonatedProductPage = () => {
                                     const isOpenDonasi = product.status_penitipan === "open donasi";
                                     return (
                                         <tr key={index} style={{ cursor: "pointer" }}
-                                        onClick={() => handleOpenModal(product.id_barang)}>
+                                            onClick={() => handleOpenModal(product.id_barang)}>
                                             <td className={"product-info"} style={{ width: '200%' }}>
                                                 <img src={getThumbnailBarang(product.foto_barang) || defaultImage} alt={product.nama_barang} style={{ maxWidth: '5vw' }} />
                                                 <b>{product.nama_barang}</b>
@@ -129,15 +127,15 @@ const DonatedProductPage = () => {
                                             <td>{isOpenDonasi ? "-" : product.nama_organisasi}</td>
                                             <td>{isOpenDonasi ? "-" : product.nama_penerima}</td>
                                             <td>
-                                                
-                                                    {product.status_penitipan?.toLowerCase() === "open donasi" ? (
-                                                        <Badge style={{fontSize:'15px',width:'10vw',padding:'17px', alignItems:'center'}} bg="success">Open Donasi</Badge>
-                                                    ) : product.status_penitipan?.toLowerCase() === "didonasikan" ? (
-                                                        <Badge style={{fontSize:'15px',width:'10vw',padding:'17px', alignItems:'center'}} bg="secondary">Didonasikan</Badge>
-                                                    ) : (
-                                                        <Badge style={{fontSize:'15px',width:'10vw',padding:'17px', alignItems:'center'}} bg="warning">Status ga ada</Badge>
-                                                    )}
-                                                
+
+                                                {product.status_penitipan?.toLowerCase() === "open donasi" ? (
+                                                    <Badge style={{ fontSize: '15px', width: '10vw', padding: '17px', alignItems: 'center' }} bg="success">Open Donasi</Badge>
+                                                ) : product.status_penitipan?.toLowerCase() === "didonasikan" ? (
+                                                    <Badge style={{ fontSize: '15px', width: '10vw', padding: '17px', alignItems: 'center' }} bg="secondary">Didonasikan</Badge>
+                                                ) : (
+                                                    <Badge style={{ fontSize: '15px', width: '10vw', padding: '17px', alignItems: 'center' }} bg="warning">Status ga ada</Badge>
+                                                )}
+
                                             </td>
                                         </tr>
                                     );
@@ -166,8 +164,8 @@ const DonatedProductPage = () => {
                     </Button>
                 </div>
             </div>
-             {selectedProductId && (
-                <ModalDetailPenjualan
+            {selectedProductId && (
+                <ModalDetailDonasi
                     show={showModal}
                     handleClose={handleCloseModal}
                     id_barang={selectedProductId}

@@ -15,7 +15,7 @@ const SideBarCS = () => {
                     <li className="sidebarItemCS" onClick={() => navigate("/customerservice/verifikasi-bukti")}>
                         <FaUserCog className="sidebarIcon" /> Payment Verification
                     </li>
-                    <li className="sidebarItemCS" onClick={() => navigate("/customerservice/merchandise")}>
+                    <li className="sidebarItemCS" onClick={() => navigate("/customerservice/klaim-merchandise")}>
                         <FaBoxOpen className="sidebarIcon" /> Merchandise
                     </li>
                     <li className="sidebarItemCS" onClick={() => navigate("/customerservice/discussion")}>

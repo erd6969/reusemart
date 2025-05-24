@@ -220,6 +220,12 @@ class PegawaiController
         }
     }
 
+    public function getListKurir()
+{
+    $kurir = Pegawai::where('id_jabatan', 3)->get(['id_pegawai', 'nama_pegawai']);
+    return response()->json($kurir, 200);
+}
+
     public function searchByNama($nama_pegawai)
     {
         $pegawai = Pegawai::where('nama_pegawai', 'like', '%' . $nama_pegawai . '%')

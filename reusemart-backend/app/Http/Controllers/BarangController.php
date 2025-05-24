@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\File;
 use Illuminate\Http\UploadedFile;
 use App\Models\Pegawai;
 use App\Models\Hunter;
+use App\Models\Komisi;
 use App\Models\Kategori;
 use App\Models\Penitip;
 use App\Models\TransaksiPenitipan;
@@ -508,16 +509,25 @@ class BarangController
     {
         try {
             $today = Carbon::now();
-            $detailTransaksi = TransaksiPembelian::where('id_transaksi_pembelian', $request->id_transaksi_pembelian)->first();
 
+            if ($today->hour >= 16) {
+                return response()->json([
+                    'message' => 'Pengiriman tidak bisa dilakukan di atas jam 4 sore',
+                ], 400);
+            }
+
+            $detailTransaksi = TransaksiPembelian::where('id_transaksi_pembelian', $request->id_transaksi_pembelian)->first();
+            $kurir = Pegawai::where('id_pegawai', $request->id_pegawai)
+                ->where('id_jabatan', 3)
+                ->first();
             if (!$detailTransaksi) {
                 return response()->json([
                     'message' => 'Detail Transaksi not found',
                 ], 404);
             }
 
-
             $detailTransaksi->update([
+                'id_pegawai' => $kurir->id_pegawai,
                 'tanggal_pengiriman' => $today,
                 'status_pengiriman' => 'sedang diantar',
             ]);
@@ -525,6 +535,8 @@ class BarangController
             return response()->json([
                 'message' => 'Status penitipan berhasil diperbarui',
             ], 200);
+
+
         } catch (Exception $e) {
             return response()->json([
                 'message' => 'Terjadi kesalahan',
@@ -537,7 +549,8 @@ class BarangController
     {
         try {
             $today = Carbon::now();
-            $detailTransaksi = TransaksiPembelian::where('id_transaksi_pembelian', $request->id_transaksi_pembelian)->first();
+            $detailTransaksi = TransaksiPembelian::where('id_transaksi_pembelian', $request->id_transaksi_pembelian)
+                ->first();
 
             if (!$detailTransaksi) {
                 return response()->json([
@@ -546,8 +559,11 @@ class BarangController
             }
 
 
+            $this->getKomisiPembelian($detailTransaksi->id_transaksi_pembelian);
+
             $detailTransaksi->update([
                 'status_pengiriman' => 'sudah diambil',
+                'tanggal_pengambilan' => $today,
             ]);
 
             return response()->json([
@@ -560,6 +576,70 @@ class BarangController
             ], 500);
         }
     }
+
+    public function getKomisiPembelian($id_transaksi_pembelian)
+    {
+        $cariKomisi = Komisi::with('barang.detailtransaksipenitipan.transaksiPenitipan.penitip', 'barang.hunter', 'transaksiPembelian.pembeli')->where('id_transaksi_pembelian', $id_transaksi_pembelian)
+            ->get();
+
+        foreach ($cariKomisi as $komisi) {
+            $barang = $komisi->barang;
+            $harga = $barang->harga_barang;
+            $detail = $komisi->barang->detailtransaksipenitipan->first();
+
+            
+            $komisi_hunter = 0;
+            $komisi_reusemart = 0;
+            $komisi_penitip = 0;
+            $bonus_penitip = 0;
+
+            if ($barang->id_hunter) {
+                if ($detail->status_perpanjangan == 0) {
+                    $komisi_penitip = $harga * 0.8;
+                    $komisi_hunter = $harga * 0.05;
+                    $komisi_reusemart = $harga * 0.15;
+                } else {
+                    $komisi_penitip = $harga * 0.7;
+                    $komisi_hunter = $harga * 0.05;
+                    $komisi_reusemart = $harga * 0.25;
+                }
+            } else {
+                if ($detail->status_perpanjangan == 0) {
+                    $komisi_penitip = $harga * 0.8;
+                    $komisi_reusemart = $harga * 0.2;
+                } else {
+                    $komisi_penitip = $harga * 0.7;
+                    $komisi_reusemart = $harga * 0.3;
+                }
+            }
+
+            if ($detail->tanggal_penitipan >= now()->subDays(7)) {
+                $bonus_penitip = $komisi_reusemart * 0.1;
+                $komisi_reusemart = $komisi_reusemart - $bonus_penitip;
+            }
+
+            $komisi->update([
+                'total_harga_bersih' => $komisi_penitip,
+                'komisi_hunter' => $komisi_hunter,
+                'komisi_reusemart' => $komisi_reusemart,
+                'bonus_penitip' => $bonus_penitip,
+            ]);
+
+            if ($detail->transaksiPenitipan->penitip) {
+                $penitip = $detail->transaksiPenitipan->penitip;
+                $penitip->saldo += $komisi_penitip;
+                $penitip->komisi_penitip += $bonus_penitip;
+                $penitip->save();
+            }
+
+
+        }
+
+        return response()->json([
+            'message' => 'Komisi berhasil dihitung',
+        ], 200);
+    }
+
 
     public function VerifyAmbilBarangPembeli($id)
     {
@@ -575,13 +655,17 @@ class BarangController
             ], 404);
         }
 
-        $transaksiPembelian->update($validatedData);
+        $transaksiPembelian->update([
+            'tanggal_pengiriman' => $validatedData['tanggal_pengiriman'],
+            'status_pengiriman' => 'siap diambil',
+        ]);
+
         return response()->json([
             'status' => 'success',
             'data' => $transaksiPembelian,
         ]);
     }
-    
+
 
     public function showAmbilProducts()
     {
@@ -664,14 +748,14 @@ class BarangController
             $products = DB::table('barang')
                 ->join('komisi', 'komisi.id_barang', '=', 'barang.id_barang')
                 ->join('transaksi_pembelian', 'transaksi_pembelian.id_transaksi_pembelian', '=', 'komisi.id_transaksi_pembelian')
-                ->whereIn('transaksi_pembelian.status_pengiriman', ['sedang disiapkan', 'siap diambil'])
+                ->whereIn('transaksi_pembelian.status_pengiriman', ['sedang disiapkan', 'siap diambil', 'sedang diantar', 'sudah diambil'])
                 ->select(
                     'barang.*',
                     'transaksi_pembelian.id_transaksi_pembelian',
                     'transaksi_pembelian.pengiriman',
                     'transaksi_pembelian.tanggal_pengiriman',
                     'transaksi_pembelian.status_pengiriman',
-                    )
+                )
                 ->distinct()
                 ->paginate(5);
 

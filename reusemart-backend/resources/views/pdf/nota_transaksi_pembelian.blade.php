@@ -56,21 +56,28 @@
         <p><span class="bold">No Nota:</span>
             {{ $transaksi->id_transaksi_pembelian . '.' . $transaksi->pembeli->id_pembeli . '.' . \Carbon\Carbon::parse($transaksi->tanggal_Pembelian)->format('d.m.Y')}}
         </p>
-        <p><span class="bold">Tanggal Pembelian:</span>
-            {{ \Carbon\Carbon::parse($transaksi->tanggal_Pembelian)->format('d/m/Y') }}</p>
+        <p><span class="bold">Tanggal Pesan:</span>
+            {{ \Carbon\Carbon::parse($transaksi->tanggal_Pembelian)->format('d/m/Y H:i') }}</p>
+        <p><span class="bold">Lunas Pada:</span>
+            {{ \Carbon\Carbon::parse($transaksi->tanggal_pembayaran)->format('d/m/Y H:i') }}</p>
+        <p><span class="bold">Tanggal Ambil:</span>
+            {{ \Carbon\Carbon::parse($transaksi->tanggal_pengambilan)->format('d/m/Y') }}</p>
     </div>
 
     <div class="section">
-        <p><span class="bold">pembeli:</span>
+        <p><span class="bold">Pembeli:</span>
             {{ 'T' . $transaksi->pembeli->id_pembeli . '/ ' . $transaksi->pembeli->nama_pembeli }}</p>
-        <p>{{ $transaksi->pembeli->alamat_pembeli }}</p>
+        @php
+            $alamat = $transaksi->alamat;
+        @endphp
+        <p>{{ $alamat->nama_alamat }}, {{ $alamat->alamat }}, {{ $alamat->keterangan }}</p>
+        <p>{{ $alamat->kecamatan }}, {{ $alamat->kabupaten }}, {{ $alamat->kelurahan }}, {{ $alamat->kode_pos }}</p>
     </div>
 
     <div class="section">
-        <p><span class="bold">Delivery:</span> Kurir ReUseMart
-            <p>{{ isset($transaksi->pegawai) ? 'P' . $transaksi->pegawai->id_pegawai . ' ' . $transaksi->pegawai->nama_pegawai : 'Pegawai tidak tersedia' }}
-
-
+        <p><span class="bold">Delivery:</span>
+        <p>{{ isset($transaksi->pegawai) ? 'P' . $transaksi->pegawai->id_pegawai . ' ' . $transaksi->pegawai->nama_pegawai : 'Diambil Sendiri' }}
+        </p>
     </div>
 
     <div class="section">
@@ -96,7 +103,7 @@
                                     {{ \Carbon\Carbon::parse($detail->barang->tanggal_garansi)->greaterThan(\Carbon\Carbon::now())
                     ? 'Garansi: ' . \Carbon\Carbon::parse($detail->barang->tanggal_garansi)->format('d/m/Y')
                     : 'Sudah Kadaluarsa / Lewat Garansi' 
-                                    }}
+                                                                                                                                                                                                            }}
                                 </td>
 
                             </tr>
@@ -105,10 +112,49 @@
             </tbody>
         </table>
 
+
     </div>
 
-    <div class="footer">
-        <p>Diterima dan QC oleh:</p>
+    <div class="section">
+        @php
+            $totalBarang = 0;
+            foreach ($transaksi->komisi as $detail) {
+                $totalBarang += $detail->barang->harga_barang;
+            }
+            $ongkir = ($totalBarang > 1500000) ? 0 : 100000;
+            $totalSetelahOngkir = $totalBarang + $ongkir;
+            $poin = $transaksi->penggunaan_poin ?? 0;
+            $potongan = $poin * 1000;
+            $totalHargaPotongan = $totalSetelahOngkir - $potongan;
+            $poinDapat = ($totalBarang - $potongan) / 10000;
+            $poinBonus = $poinDapat * 0.2;
+            $poinTotal = $poinDapat + $poinBonus;
+        @endphp
+
+        <div class="section">
+            <p><span class="bold">Total :</span> Rp. {{ number_format($totalBarang, 0, ',', '.') }}</p>
+            <p><span class="bold">Ongkir :</span> Rp. {{ number_format($ongkir, 0, ',', '.') }}</p>
+            <p><span class="bold">Total Setelah Ongkir :</span> Rp.
+                {{ number_format($totalSetelahOngkir, 0, ',', '.') }}
+            </p>
+            <p><span class="bold">Potongan {{ $poin }} poin :</span> - Rp. {{ number_format($potongan, 0, ',', '.') }}
+            </p>
+            <p><span class="bold">Total Harga Potongan :</span> Rp.
+                {{ number_format($totalHargaPotongan, 0, ',', '.') }}
+            </p>
+        </div>
+
+        <div class="section">
+
+            <p><span class="bold">Poin dari pesanan ini : </span>{{$poinTotal }}
+            </p>
+            <p><span class="bold">Total Poin Customer : </span> {{$poinTotal + $transaksi->pembeli->poin_loyalitas}}
+            </p>
+        </div>
+    </div>
+
+    <div class="section">
+        <p><span class="bold">Diterima dan QC oleh :</span></p>
         <p>
             @php
                 $firstKomisi = $transaksi->komisi->first();
@@ -118,6 +164,22 @@
             {{ $pegawai ? 'P' . $pegawai->id_pegawai . ' ' . $pegawai->nama_pegawai : 'Pegawai tidak tersedia' }}
         </p>
     </div>
+    <br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
+
+    @if($transaksi->pengiriman === 'diantar kurir')
+        <p>Diterima Oleh</p>
+    @elseif($transaksi->pengiriman === 'diambil sendiri')
+        <p>Diambil Oleh</p>
+    @else
+
+    @endif
+    <br>
+    <br>
+    <br>
+    <p>(.....................................)</p>
+    <p>Tanggal (............................)</p>
+
+
 
 </body>
 

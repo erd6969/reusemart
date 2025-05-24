@@ -19,6 +19,7 @@ use App\Http\Controllers\RequestDonasiController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\DetailTransaksiPenitipanController;
 use App\Http\Controllers\KategoriController;
+use App\Http\Controllers\TransaksiMerchandiseController;
 
 use App\Http\Controllers\KomisiController;
 use App\Http\Controllers\TransaksiPembelianController;
@@ -60,10 +61,10 @@ Route::middleware('auth:penitip')->group(function () {
     Route::get('/penitip/show-extend-product', [PenitipController::class, 'showExtendProducts']);
     Route::post('/penitip/extend-barang', [PenitipController::class, 'extendBarangPenitip']);
     Route::post('/penitip/ambil-barang', [PenitipController::class, 'pengambilanBarang']);
-    Route::get('/penitip/search-donasi/{search_barang}', [BarangController::class, 'searchBarangDonasi']);
-    Route::get('/penitip/search-extend/{search_barang}', [BarangController::class, 'searchBarangExtend']);
-    Route::get('/penitip/search-jual/{search_barang}', [BarangController::class, 'searchBarangJual']);
-    Route::get('/penitip/search-terjual/{search_barang}', [BarangController::class, 'searchBarangTerjual']);
+    Route::get('/penitip/search-donasi/{search_barang}', [PenitipController::class, 'searchBarangDonasi']);
+    Route::get('/penitip/search-extend/{search_barang}', [PenitipController::class, 'searchBarangExtend']);
+    Route::get('/penitip/search-jual/{search_barang}', [PenitipController::class, 'searchBarangJual']);
+    Route::get('/penitip/search-terjual/{search_barang}', [PenitipController::class, 'searchBarangTerjual']);
     Route::get('/penitip/show-detail-pendapatan/{id_barang}', [PenitipController::class, 'showDetailPendapatan']);
     Route::get('/detail-donasi/{id_barang}', [BarangController::class, 'showDetailBarangDonasi']);
 });
@@ -156,6 +157,7 @@ Route::middleware('auth:owner')->group(function () {
 Route::middleware('auth:gudang')->group(function () {
     Route::get('/transaksi-penitipan-pdf/{id_transaksi_penitipan}', [PdfController::class, 'generateTransaksiPenitipan']);
     Route::get('/transaksi-pembelian-pdf/{id_transaksi_pembelian}', [PdfController::class, 'generateTransaksiPembelian']);
+    Route::get('/pegawai-gudang/get-kurir', [PegawaiController::class, 'getListKurir']);
     Route::post('/transaksi_penitipan/create', [TransaksiPenitipanController::class, 'create']);
     Route::get('/transaksi_penitipan/show-all', [TransaksiPenitipanController::class, 'show']);
     Route::get('/pegawai-gudang/show-ambil', [BarangController::class, 'showAmbilProducts']);
@@ -176,7 +178,7 @@ Route::middleware('auth:gudang')->group(function () {
     Route::post('/pegawai-gudang/verif-ambil-pembeli/{id}', [BarangController::class, 'VerifyAmbilBarangPembeli']);
     Route::get('/pegawai-gudang/search-verif/{search_barang}', [BarangController::class, 'SearchAmbilProducts']);
     Route::get('/hunter/search/{search_hunter}', [HunterController::class, 'searchHunter']);
-
+    Route::get('/hitung-komisi/{id}', [BarangController::class, 'getKomisiPembelian']);
 });
 
 Route::middleware('auth:cs')->group(function () {
@@ -194,6 +196,9 @@ Route::middleware('auth:cs')->group(function () {
     Route::get('/barang/show-detail-modal/{id_barang}', [TransaksiPembelianController::class, 'showDataModal']);
     Route::post('/transaksi-pembelian/verify-transaksi-pembelian', [TransaksiPembelianController::class, 'verifyTransaksiPembelian']);
     Route::post('/transaksi-pembelian/reject-transaksi-pembelian', [TransaksiPembelianController::class, 'rejectTransaksiPembelian']);
+
+    Route::get('/transaksi-merchandise/show-all', [TransaksiMerchandiseController::class, 'showAll']);
+    Route::post('/transaksi-merchandise/set-transaksi-merchandise', [TransaksiMerchandiseController::class, 'setTransaksiMerchandise']);
 });
 
 Route::middleware('auth:admin')->group(function () {

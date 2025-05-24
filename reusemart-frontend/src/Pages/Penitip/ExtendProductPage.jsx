@@ -8,7 +8,7 @@ import { toast } from 'react-toastify';
 import { ShowExtendProducts, extendBarang, ambilBarang, SearchBarangExtend } from '../../api/apiPenitip';
 import { getThumbnailBarang } from "../../api/index";
 
-import ModalDetailPenjualan from "../../Components/Modal/ModalPenitip/ModalDetailBarang";
+import ModalDetailBarang from "../../Components/Modal/ModalPenitip/ModalDetailBarang";
 
 
 const ExtendProductPage = () => {
@@ -59,11 +59,9 @@ const ExtendProductPage = () => {
                 setIsLoading(true);
                 SearchBarangExtend(searchQuery.trim())
                     .then((data) => {
-                        const hasil = Array.isArray(data) ? data : [data];
-                        setExtendProducts(hasil);
-                        setTotalPages(1);
-                        setCurrentPage(1);
-                        console.log("Hasil pencarian:", hasil);
+                        setExtendProducts(data.data || []); 
+                        setTotalPages(data.last_page || 1);
+                        setCurrentPage(data.current_page || 1);
                     })
                     .catch((error) => {
                         console.error("Error searching req:", error);
@@ -219,7 +217,7 @@ const ExtendProductPage = () => {
                 </div>
             </div>
             {selectedProductId && (
-                <ModalDetailPenjualan
+                <ModalDetailBarang
                     show={showModal}
                     handleClose={handleCloseModal}
                     id_barang={selectedProductId}

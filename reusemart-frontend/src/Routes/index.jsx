@@ -64,6 +64,7 @@ import CSLayout from "../Layouts/CSLayouts";
 import CSDiscussionPage from "../Pages/CustomerService/CSDiscussionPage";
 import CSPenitipManagementPage from "../Pages/CustomerService/CSPenitipManagementPage";
 import CSVerifikasiBuktiPage from "../Pages/CustomerService/CSVerifikasiBuktiPage";
+import KlaimMerchandisePage from "../Pages/CustomerService/KlaimMerchandisePage";
 
 // Owner
 import OwnerLayouts from "../Layouts/OwnerLayouts";
@@ -298,6 +299,10 @@ const router = createBrowserRouter([
             {
                 path: "verifikasi-bukti",
                 element: <CSVerifikasiBuktiPage />,
+            },
+            {
+                path: "klaim-merchandise",
+                element: <KlaimMerchandisePage />,
             }
         ],
     },

@@ -19,6 +19,7 @@ use App\Http\Controllers\RequestDonasiController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\DetailTransaksiPenitipanController;
 use App\Http\Controllers\KategoriController;
+use App\Http\Controllers\TransaksiMerchandiseController;
 
 use App\Http\Controllers\KomisiController;
 use App\Http\Controllers\TransaksiPembelianController;
@@ -195,6 +196,9 @@ Route::middleware('auth:cs')->group(function () {
     Route::get('/barang/show-detail-modal/{id_barang}', [TransaksiPembelianController::class, 'showDataModal']);
     Route::post('/transaksi-pembelian/verify-transaksi-pembelian', [TransaksiPembelianController::class, 'verifyTransaksiPembelian']);
     Route::post('/transaksi-pembelian/reject-transaksi-pembelian', [TransaksiPembelianController::class, 'rejectTransaksiPembelian']);
+
+    Route::get('/transaksi-merchandise/show-all', [TransaksiMerchandiseController::class, 'showAll']);
+    Route::post('/transaksi-merchandise/set-transaksi-merchandise', [TransaksiMerchandiseController::class, 'setTransaksiMerchandise']);
 });
 
 Route::middleware('auth:admin')->group(function () {

@@ -103,7 +103,7 @@
                                     {{ \Carbon\Carbon::parse($detail->barang->tanggal_garansi)->greaterThan(\Carbon\Carbon::now())
                     ? 'Garansi: ' . \Carbon\Carbon::parse($detail->barang->tanggal_garansi)->format('d/m/Y')
                     : 'Sudah Kadaluarsa / Lewat Garansi' 
-                                                                                                                                                                                    }}
+                                                                                                                                                                                                            }}
                                 </td>
 
                             </tr>
@@ -126,6 +126,9 @@
             $poin = $transaksi->penggunaan_poin ?? 0;
             $potongan = $poin * 1000;
             $totalHargaPotongan = $totalSetelahOngkir - $potongan;
+            $poinDapat = ($totalBarang - $potongan) / 10000;
+            $poinBonus = $poinDapat * 0.2;
+            $poinTotal = $poinDapat + $poinBonus;
         @endphp
 
         <div class="section">
@@ -138,6 +141,14 @@
             </p>
             <p><span class="bold">Total Harga Potongan :</span> Rp.
                 {{ number_format($totalHargaPotongan, 0, ',', '.') }}
+            </p>
+        </div>
+
+        <div class="section">
+
+            <p><span class="bold">Poin dari pesanan ini : </span>{{$poinTotal }}
+            </p>
+            <p><span class="bold">Total Poin Customer : </span> {{$poinTotal + $transaksi->pembeli->poin_loyalitas}}
             </p>
         </div>
     </div>

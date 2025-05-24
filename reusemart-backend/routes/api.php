@@ -177,7 +177,7 @@ Route::middleware('auth:gudang')->group(function () {
     Route::post('/pegawai-gudang/verif-ambil-pembeli/{id}', [BarangController::class, 'VerifyAmbilBarangPembeli']);
     Route::get('/pegawai-gudang/search-verif/{search_barang}', [BarangController::class, 'SearchAmbilProducts']);
     Route::get('/hunter/search/{search_hunter}', [HunterController::class, 'searchHunter']);
-
+    Route::get('/hitung-komisi/{id}', [BarangController::class, 'getKomisiPembelian']);
 });
 
 Route::middleware('auth:cs')->group(function () {

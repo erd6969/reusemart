@@ -225,6 +225,9 @@ Route::middleware('auth:admin')->group(function () {
 Route::middleware('auth:kurir')->group(function () {
     Route::get('/pegawai/show-profile', [PegawaiController::class, 'showProfile']);
     Route::get('/kurir/count-pengiriman', [PegawaiController::class, 'getJumlahPengantaranKurir']);
+
+    Route::get('/kurir/histori-pengiriman/{tanggal}', [TransaksiPembelianController::class, 'getHistoriPengirimanKurir']);
+    Route::get('/kurir/pengiriman', [TransaksiPembelianController::class, 'getPengiriman']);
 });
 #endregion
 

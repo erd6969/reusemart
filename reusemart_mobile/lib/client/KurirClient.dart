@@ -49,4 +49,51 @@ class KurirClient {
   static String getFotoKurir(String thumbnail) {
     return "http://$baseUrl/storage/img/Pegawai/$thumbnail";
   }
+
+  static String getFotoBarang(String thumbnail) {
+    return "http://$baseUrl/storage/img/Barang/$thumbnail";
+  }
+
+  static Future<List<String>> getPengiriman(String token) async {
+    final url = Uri.http(baseUrl, '$apiPath/kurir/pengiriman');
+    final response = await http.get(
+      url,
+      headers: {
+        'Authorization': 'Bearer $token',
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+      },
+    );
+
+    if (response.statusCode == 200) {
+      final data = jsonDecode(response.body);
+      return data['data'];
+    } else {
+      return [];
+    }
+  }
+
+  static Future<List<dynamic>> getHistoryPengiriman(
+      String token, String tanggal) async {
+    final url = Uri.http(baseUrl, '$apiPath/kurir/histori-pengiriman/$tanggal');
+
+    final response = await http.get(
+      url,
+      headers: {
+        'Authorization': 'Bearer $token',
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+      },
+    );
+
+    print("tanggal : $tanggal");
+    print('Response History : ${response.body}');
+
+    if (response.statusCode == 200) {
+      final data = jsonDecode(response.body);
+      return data['data'];
+    } else {
+      return [];
+    }
+  }
 }

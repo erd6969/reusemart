@@ -30,6 +30,7 @@ class Penitip extends Model
         'fcm_token',
     ];
     public $timestamps = false;
+    
 
     public function transaksiPenitipan()
     {

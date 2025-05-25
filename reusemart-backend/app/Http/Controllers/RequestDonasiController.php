@@ -9,6 +9,7 @@ use App\Models\Organisasi;
 use App\Models\TransaksiDonasi;
 use App\Models\DetailTransaksiPenitipan;
 use App\Models\Penitip;
+use App\Models\Pembeli;
 use App\Models\TransaksiPenitipan;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\NotificationController;
@@ -149,6 +150,19 @@ class RequestDonasiController
                 'nama_penerima' => 'required|string|max:255',
             ]);
 
+            $detailPenitipan = DetailTransaksiPenitipan::where('id_barang', $request->id_barang)->pluck('id_transaksi_penitipan')->first();
+            $transaksiPenitipan = TransaksiPenitipan::findOrFail($detailPenitipan);
+            $penitip = Penitip::findOrFail($transaksiPenitipan->id_penitip);
+
+            if ($penitip->fcm_token) {
+                $notifRequest = new Request([
+                    'token' => $penitip->fcm_token,
+                    'title' => 'Barang Sudah Didonasikan',
+                    'body' => 'Barang anda sudah didonasikan ke organisasi, terima kasih telah berpartisipasi dalam program donasi kami.',
+                ]);
+
+                (new NotificationController())->sendNotification($notifRequest);
+            }
 
             $request_donasi = RequestDonasi::findOrFail($request->id_request_donasi);
             $request_donasi->status_request = "Accepted";

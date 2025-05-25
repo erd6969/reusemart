@@ -57,7 +57,7 @@
             {{ $transaksi->id_transaksi_pembelian . '.' . $transaksi->pembeli->id_pembeli . '.' . \Carbon\Carbon::parse($transaksi->tanggal_Pembelian)->format('d.m.Y')}}
         </p>
         <p><span class="bold">Tanggal Pesan:</span>
-            {{ \Carbon\Carbon::parse($transaksi->tanggal_Pembelian)->format('d/m/Y H:i') }}</p>
+            {{ \Carbon\Carbon::parse($transaksi->tanggal_pembelian)->format('d/m/Y H:i') }}</p>
         <p><span class="bold">Lunas Pada:</span>
             {{ \Carbon\Carbon::parse($transaksi->tanggal_pembayaran)->format('d/m/Y H:i') }}</p>
         <p><span class="bold">Tanggal Ambil:</span>
@@ -126,9 +126,7 @@
             $poin = $transaksi->penggunaan_poin ?? 0;
             $potongan = $poin * 1000;
             $totalHargaPotongan = $totalSetelahOngkir - $potongan;
-            $poinDapat = ($totalBarang - $potongan) / 10000;
-            $poinBonus = $poinDapat * 0.2;
-            $poinTotal = $poinDapat + $poinBonus;
+            $poinTotal = $transaksi->tambahan_poin ?? 0;
         @endphp
 
         <div class="section">
@@ -146,7 +144,7 @@
 
         <div class="section">
 
-            <p><span class="bold">Poin dari pesanan ini : </span>{{$poinTotal }}
+            <p><span class="bold">Poin dari pesanan ini : </span>{{$poinTotal}}
             </p>
             <p><span class="bold">Total Poin Customer : </span> {{$poinTotal + $transaksi->pembeli->poin_loyalitas}}
             </p>
@@ -164,7 +162,7 @@
             {{ $pegawai ? 'P' . $pegawai->id_pegawai . ' ' . $pegawai->nama_pegawai : 'Pegawai tidak tersedia' }}
         </p>
     </div>
-    <br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
+    <br><br><br><br><br><br><br><br><br><br><br>
 
     @if($transaksi->pengiriman === 'diantar kurir')
         <p>Diterima Oleh</p>

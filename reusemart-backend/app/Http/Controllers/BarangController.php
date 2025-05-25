@@ -13,6 +13,7 @@ use App\Models\Hunter;
 use App\Models\Komisi;
 use App\Models\Kategori;
 use App\Models\Penitip;
+use App\Models\Pembeli;
 use App\Models\TransaksiPenitipan;
 use App\Models\TransaksiDonasi;
 use App\Models\Organisasi;
@@ -555,7 +556,46 @@ class BarangController
             if (!$detailTransaksi) {
                 return response()->json([
                     'message' => 'Detail Transaksi not found',
+                ], status: 404);
+            }
+
+            $pembeli = Pembeli::where('id_pembeli', $detailTransaksi->id_pembeli)->first();
+
+            if ($pembeli->fcm_token) {
+                $notifRequest = new Request([
+                    'token' => $pembeli->fcm_token,
+                    'title' => 'Barang Sudah Diterima',
+                    'body' => 'Barang sudah diambil oleh pembeli. Terima kasih telah belanja barang bekas',
+                ]);
+
+                (new NotificationController())->sendNotification($notifRequest);
+            }
+
+
+            $komisi = Komisi::where('id_transaksi_pembelian', $detailTransaksi->id_transaksi_pembelian)
+                ->pluck('id_barang');
+            $detailPenitipan = DetailTransaksiPenitipan::whereIn('id_barang', $komisi)
+                ->pluck('id_transaksi_penitipan');
+            $transaksiPenitipan = TransaksiPenitipan::whereIn('id_transaksi_penitipan', $detailPenitipan)
+                ->pluck('id_penitip');
+            $penitipList = Penitip::whereIn('id_penitip', $transaksiPenitipan)->get();
+
+            if ($penitipList->isEmpty()) {
+                return response()->json([
+                    'message' => 'Tidak ada penitip ditemukan',
                 ], 404);
+            }
+
+            foreach ($penitipList as $penitip) {
+                if ($penitip->fcm_token) {
+                    $notifRequest = new Request([
+                        'token' => $penitip->fcm_token,
+                        'title' => 'Barang Sudah Diterima',
+                        'body' => 'Barang sudah diterima oleh pembeli. Terima kasih telah menitipkan barang Anda.',
+                    ]);
+
+                    (new NotificationController())->sendNotification($notifRequest);
+                }
             }
 
 
@@ -586,8 +626,10 @@ class BarangController
             $barang = $komisi->barang;
             $harga = $barang->harga_barang;
             $detail = $komisi->barang->detailtransaksipenitipan->first();
+            $pembeli = $komisi->transaksiPembelian->pembeli;
+            $poinDapat = $komisi->transaksiPembelian->tambahan_poin;
 
-            
+
             $komisi_hunter = 0;
             $komisi_reusemart = 0;
             $komisi_penitip = 0;
@@ -632,7 +674,16 @@ class BarangController
                 $penitip->save();
             }
 
+            if ($barang->id_hunter) {
+                $hunter = $barang->hunter;
+                $hunter->total_komisi += $komisi_hunter;
+                $hunter->save();
+            }
 
+            if ($pembeli) {
+                $pembeli->poin_loyalitas += $poinDapat;
+                $pembeli->save();
+            }
         }
 
         return response()->json([

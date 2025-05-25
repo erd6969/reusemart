@@ -5,7 +5,7 @@ import { Button, Badge } from 'react-bootstrap';
 import { FaChevronLeft, FaChevronRight, FaSearch, FaFile } from "react-icons/fa";
 import { toast } from 'react-toastify';
 
-import { ShowPengirimanBarang, SearchBarangVerif, VerifyPengambilanPembeli } from "../../api/apiBarang";
+import { ShowPengirimanBarang, SearchBarangPengiriman, VerifyPengambilanPembeli } from "../../api/apiBarang";
 import { PreviewPdfTransaksiPembelian } from "../../api/apiTransaksiPembelian";
 import { getThumbnailBarang } from "../../api/index";
 import ModalDetailPenjualan from "../../Components/Modal/ModalPenitip/ModalDetailBarang";
@@ -98,13 +98,11 @@ const TransaksiPengirimanPage = () => {
         const delayDebounce = setTimeout(() => {
             if (searchQuery.trim().length >= 3) {
                 setLoading(true);
-                SearchBarangVerif(searchQuery.trim())
+                SearchBarangPengiriman(searchQuery.trim())
                     .then((data) => {
-                        const hasil = Array.isArray(data) ? data : [data];
-                        setPengirimanBarang(hasil);
-                        setTotalPages(1);
-                        setCurrentPage(1);
-                        console.log("Hasil pencarian:", hasil);
+                        setPengirimanBarang(data.data || []);
+                        setTotalPages(data.last_page || 1);
+                        setCurrentPage(data.current_page || 1);
                     })
                     .catch((error) => {
                         console.error("Error searching req:", error);

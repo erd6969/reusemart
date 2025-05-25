@@ -792,6 +792,39 @@ class BarangController
         }
     }
 
+    public function SearchPengirimanProducts($search_barang)
+    {
+        try {
+            $products = DB::table('barang')
+                ->join('komisi', 'komisi.id_barang', '=', 'barang.id_barang')
+                ->join('transaksi_pembelian', 'transaksi_pembelian.id_transaksi_pembelian', '=', 'komisi.id_transaksi_pembelian')
+                ->whereIn('transaksi_pembelian.status_pengiriman', ['sedang disiapkan', 'siap diambil', 'sedang diantar', 'sudah diambil'])
+                ->where(function ($query) use ($search_barang) {
+                    $query->where('transaksi_pembelian.id_transaksi_pembelian', 'like', "%{$search_barang}%")
+                        ->orWhere('barang.nama_barang', 'like', "%{$search_barang}%")
+                        ->orWhere('transaksi_pembelian.pengiriman', 'like', "%{$search_barang}%")
+                        ->orWhere('transaksi_pembelian.status_pengiriman', 'like', "%{$search_barang}%");
+                })
+                ->select(
+                    'barang.*',
+                    'transaksi_pembelian.id_transaksi_pembelian',
+                    'transaksi_pembelian.pengiriman',
+                    'transaksi_pembelian.tanggal_pengiriman',
+                    'transaksi_pembelian.status_pengiriman',
+                )
+                ->distinct()
+                ->paginate(5);
+
+            return response()->json($products, 200);
+
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'Barang not found',
+                'error' => $e->getMessage(),
+            ], 404);
+        }
+    }
+
 
     public function showPengirimanProducts()
     {

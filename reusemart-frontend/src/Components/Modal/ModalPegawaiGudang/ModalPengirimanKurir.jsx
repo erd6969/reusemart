@@ -5,17 +5,21 @@ import { VerifKirimPembeli } from "../../../api/apiBarang";
 import { GetListKurir } from "../../../api/apiPegawai";
 
 const ModalPengirimanKurir = ({ show, handleClose, dataEdit, onSuccess }) => {
-    const [formData, setFormData] = useState({ id_pegawai: "" });
+    const [formData, setFormData] = useState({ id_pegawai: "", tanggal_pengiriman: "",  jam_pengiriman: "" });
     const [isLoading, setIsLoading] = useState(false);
     const [listKurir, setListKurir] = useState([]);
 
     useEffect(() => {
         if (dataEdit) {
+            const [tanggal = "", jam = ""] = (dataEdit.tanggal_pengiriman || "").split("T");
             setFormData({
                 id_pegawai: dataEdit.id_pegawai || "",
+                tanggal_pengiriman: tanggal,
+                jam_pengiriman: jam ? jam.slice(0, 5) : "",
             });
         }
     }, [dataEdit]);
+
 
     useEffect(() => {
         const fetchKurir = async () => {
@@ -44,12 +48,21 @@ const ModalPengirimanKurir = ({ show, handleClose, dataEdit, onSuccess }) => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         if (!formData.id_pegawai) return toast.error("Pilih kurir terlebih dahulu!");
+        if (!formData.tanggal_pengiriman) return toast.error("Pilih tanggal pengiriman!");
+        if (!formData.jam_pengiriman) return toast.error("Pilih jam pengiriman!");
+
+        const [jam, menit] = formData.jam_pengiriman.split(":").map(Number);
+        if (jam > 16 || (jam === 16 && menit > 0)) {
+            return toast.error("Jam pengiriman tidak boleh lebih dari pukul 16:00");
+        }
         console.log("Form Data:", dataEdit.id_transaksi_pembelian);
         try {
             if (dataEdit && dataEdit.id_transaksi_pembelian) {
                 const formDataToSend = new FormData();
+                const datetimePengiriman = `${formData.tanggal_pengiriman} ${formData.jam_pengiriman}:00`;
                 formDataToSend.append("id_pegawai", formData.id_pegawai);
                 formDataToSend.append("id_transaksi_pembelian", dataEdit.id_transaksi_pembelian);
+                formDataToSend.append("tanggal_pengiriman", datetimePengiriman);
 
                 await VerifKirimPembeli(formDataToSend);
                 toast.success("Kurir berhasil diset!");
@@ -94,6 +107,27 @@ const ModalPengirimanKurir = ({ show, handleClose, dataEdit, onSuccess }) => {
 
                             </Form.Select>
                         </Form.Group>
+                        <Form.Group className="mb-3" controlId="tanggal_pengiriman">
+
+                        <Form.Label>Tanggal Pengiriman</Form.Label>
+                            <Form.Control
+                                type="date"
+                                name="tanggal_pengiriman"
+                                value={formData.tanggal_pengiriman}
+                                onChange={handleChange}
+                            />
+                        </Form.Group>
+                        <Form.Group className="mb-3" controlId="jam_pengiriman">
+                        <Form.Label>Jam Pengiriman</Form.Label>
+                            <Form.Control
+                                type="time"
+                                name="jam_pengiriman"
+                                value={formData.jam_pengiriman}
+                                onChange={handleChange}
+                            />
+                        </Form.Group>
+
+
 
                         <div className="d-flex justify-content-end">
                             <Button

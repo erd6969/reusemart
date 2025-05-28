@@ -221,10 +221,10 @@ class PegawaiController
     }
 
     public function getListKurir()
-{
-    $kurir = Pegawai::where('id_jabatan', 3)->get(['id_pegawai', 'nama_pegawai']);
-    return response()->json($kurir, 200);
-}
+    {
+        $kurir = Pegawai::where('id_jabatan', 3)->get(['id_pegawai', 'nama_pegawai']);
+        return response()->json($kurir, 200);
+    }
 
     public function searchByNama($nama_pegawai)
     {
@@ -244,26 +244,26 @@ class PegawaiController
         return response()->json($pegawai);
     }
 
-        public function getJumlahPengantaranKurir()
-        {
-            try {
-                $pegawai = Auth::guard()->user();
-                if (!$pegawai) {
-                    return response()->json(['message' => 'Pegawai not found'], 404);
-                }
-
-                $jumlahPengantaran = TransaksiPembelian::where('id_pegawai', $pegawai->id_pegawai)
-                    ->where('status_pengiriman', '=', 'sudah diterima')
-                    ->count();
-
-                return response()->json([
-                    'count' => $jumlahPengantaran,
-                ], 200);
-            } catch (\Exception $e) {
-                return response()->json([
-                    'message' => 'Gagal mengambil jumlah pengantaran',
-                    'error' => $e->getMessage(),
-                ], 500);
+    public function getJumlahPengantaranKurir()
+    {
+        try {
+            $pegawai = Auth::guard()->user();
+            if (!$pegawai) {
+                return response()->json(['message' => 'Pegawai not found'], 404);
             }
+
+            $jumlahPengantaran = TransaksiPembelian::where('id_pegawai', $pegawai->id_pegawai)
+                ->where('status_pengiriman', '=', 'sudah diterima')
+                ->count();
+
+            return response()->json([
+                'count' => $jumlahPengantaran,
+            ], 200);
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'Gagal mengambil jumlah pengantaran',
+                'error' => $e->getMessage(),
+            ], 500);
         }
+    }
 }

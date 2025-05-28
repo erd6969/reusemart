@@ -507,7 +507,7 @@ class BarangController
         }
     }
 
-    // Memberikan penjawalan pengiriman kurir
+
     public function VerifyPengirimanBarangPembeli(Request $request)
     {
         try {
@@ -523,7 +523,7 @@ class BarangController
                 ], 404);
             }
 
-            //Notif Kurir
+
             if ($kurir && $kurir->fcm_token) {
                 $notifRequest = new Request([
                     'token' => $kurir->fcm_token,
@@ -534,7 +534,6 @@ class BarangController
                 (new NotificationController())->sendNotification($notifRequest);
             }
 
-            //Notif Pembeli
             $pembeli = Pembeli::where('id_pembeli', $detailTransaksi->id_pembeli)->first();
             if ($pembeli->fcm_token) {
                 $notifRequest = new Request([
@@ -546,7 +545,7 @@ class BarangController
                 (new NotificationController())->sendNotification($notifRequest);
             }
 
-            //Notif Penitip
+
             $penitips = Penitip::join('transaksi_penitipan', 'transaksi_penitipan.id_penitip', '=', 'penitip.id_penitip')
                 ->join('detail_transaksi_penitipan', 'detail_transaksi_penitipan.id_transaksi_penitipan', '=', 'transaksi_penitipan.id_transaksi_penitipan')
                 ->join('barang', 'barang.id_barang', '=', 'detail_transaksi_penitipan.id_barang')
@@ -587,7 +586,7 @@ class BarangController
         }
     }
 
-    // Verifikasi pengambilan barang oleh pembeli
+
     public function VerifyPengambilanPembeli(Request $request)
     {
         try {

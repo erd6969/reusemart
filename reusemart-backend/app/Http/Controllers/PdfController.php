@@ -10,6 +10,7 @@ use App\Models\TransaksiPenitipan;
 use App\Models\TransaksiPembelian;
 use App\Models\Barang;
 use App\Models\Penitip;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\DB;
 
@@ -28,7 +29,7 @@ class PdfController
 
     public function generateTransaksiPembelian($id_transaksi_pembelian)
     {
-        $transaksi = TransaksiPembelian::with(['pembeli' ,'alamat', 'pegawai', 'komisi.barang.hunter'])->findOrFail($id_transaksi_pembelian);
+        $transaksi = TransaksiPembelian::with(['pembeli', 'alamat', 'pegawai', 'komisi.barang.hunter'])->findOrFail($id_transaksi_pembelian);
 
         log::info('Transaksi Pembelian: ' . json_encode($transaksi));
 
@@ -82,6 +83,37 @@ class PdfController
 
         Log::info('Laporan Request Donasi: ' . json_encode($requestDonasi));
         $pdf = Pdf::loadView('pdf.laporan_request_donasi', ['requestDonasi' => $requestDonasi]);
+        return response($pdf->output(), 200)
+            ->header('Content-Type', 'application/pdf')
+            ->header('Content-Disposition', 'inline; filename="laporan_request_donasi.pdf"');
+    }
+    public function generateLaporanBarangHabis()
+    {
+        $today = Carbon::now();
+        $barangHabis = DB::table('penitip as p')
+            ->distinct()
+            ->join('transaksi_penitipan as tpen', 'p.id_penitip', '=', 'tpen.id_penitip')
+            ->join('detail_transaksi_penitipan as dtp', 'tpen.id_transaksi_penitipan', '=', 'dtp.id_transaksi_penitipan')
+            ->join('barang as b', 'dtp.id_barang', '=', 'b.id_barang')
+            ->whereMonth('dtp.tanggal_berakhir', $today->month)
+            ->whereYear('dtp.tanggal_berakhir', $today->year)
+            ->whereDate('dtp.tanggal_berakhir', '<=', $today->toDateString())
+            ->select(
+                'b.id_barang',
+                'b.nama_barang',
+                'p.id_penitip',
+                'p.nama_penitip',
+                'tpen.tanggal_penitipan',
+                'dtp.tanggal_berakhir',
+                'dtp.tanggal_batas_pengambilan',
+
+            )
+            ->get();
+
+
+
+        Log::info('Laporan Barang Penitip Habis: ' . json_encode($barangHabis));
+        $pdf = Pdf::loadView('pdf.laporan_barang_habis', ['barangHabis' => $barangHabis]);
         return response($pdf->output(), 200)
             ->header('Content-Type', 'application/pdf')
             ->header('Content-Disposition', 'inline; filename="laporan_request_donasi.pdf"');

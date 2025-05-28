@@ -25,7 +25,7 @@ const ModalPengirimanKurir = ({ show, handleClose, dataEdit, onSuccess }) => {
         const fetchKurir = async () => {
             setIsLoading(true);
             try {
-                const res = await GetListKurir(); // Ambil daftar kurir dari API
+                const res = await GetListKurir();
                 setListKurir(res);
                 console.log("Response GetListKurir:", res);
             } catch (err) {

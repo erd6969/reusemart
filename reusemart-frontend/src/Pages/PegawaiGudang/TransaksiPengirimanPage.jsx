@@ -197,16 +197,37 @@ const TransaksiPengirimanPage = () => {
                                                         <FaFile />
                                                     </Button>
                                                 ) : product.pengiriman === "diantar kurir" ? (
-                                                    <Button
-                                                        variant='success'
-                                                        style={{ width: '100%' }}
-                                                        onClick={(e) => {
-                                                            e.stopPropagation();
-                                                            handlePengiriman(product);
-                                                        }}
-                                                    >
-                                                        Kirim
-                                                    </Button>
+                                                    product.status_pengiriman === "sedang disiapkan" ? (
+                                                        product.tanggal_pengiriman === null ? (
+                                                                <Button
+                                                                    variant='success'
+                                                                    style={{ width: '100%' }}
+                                                                    onClick={(e) => {
+                                                                        e.stopPropagation();
+                                                                        handlePengiriman(product);
+                                                                    }}
+                                                                >
+                                                                    Kirim
+                                                                </Button>
+                                                        ) : (
+                                                            <Badge bg='danger' style={{ width: '95%', padding: '10px' }}>
+                                                               Menunggu
+                                                            </Badge>
+                                                        )
+                                                    ) : (
+                                                        !product.tanggal_pengiriman && (
+                                                            <Button
+                                                                variant='success'
+                                                                style={{ width: '100%' }}
+                                                                onClick={(e) => {
+                                                                    e.stopPropagation();
+                                                                    handlePengiriman(product);
+                                                                }}
+                                                            >
+                                                                Kirim
+                                                            </Button>
+                                                        )
+                                                    )
                                                 ) : product.pengiriman === "diambil sendiri" ? (
                                                     product.status_pengiriman === "sedang disiapkan" ? (
                                                         <Button
@@ -235,6 +256,7 @@ const TransaksiPengirimanPage = () => {
                                                     <Button>gatau</Button>
                                                 )}
                                             </td>
+
                                         </tr>
                                     );
                                 })}

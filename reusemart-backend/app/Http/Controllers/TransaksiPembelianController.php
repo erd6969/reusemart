@@ -267,27 +267,29 @@ class TransaksiPembelianController
                 'verifikasi_bukti' => 'transaksi diverifikasi',
                 'status_pengiriman' => 'sedang disiapkan'
             ]);
-            
-            // Ambil penitip pertama yang ditemukan
-            $penitip = Penitip::join('transaksi_penitipan', 'transaksi_penitipan.id_penitip', '=', 'penitip.id_penitip')
-                    ->join('detail_transaksi_penitipan', 'detail_transaksi_penitipan.id_transaksi_penitipan', '=', 'transaksi_penitipan.id_transaksi_penitipan')
-                    ->join('barang', 'barang.id_barang', '=', 'detail_transaksi_penitipan.id_barang')
-                    ->join('komisi', 'komisi.id_barang', '=', 'barang.id_barang')
-                    ->join('transaksi_pembelian', 'transaksi_pembelian.id_transaksi_pembelian', '=', 'komisi.id_transaksi_pembelian')
-                    ->where('transaksi_pembelian.id_transaksi_pembelian', $request->id_transaksi_pembelian)
-                    ->select('penitip.*')
-                    ->first();
 
-            // Kirim notifikasi
-            if ($penitip && $penitip->fcm_token) {
-                $notifRequest = new Request([
-                    'token' => $penitip->fcm_token,
-                    'title' => 'Barang Terjual',
-                    'body' => 'Barang Anda Telah Terjual dan Sedang Disiapkan untuk Pengiriman',
-                ]);
+            $penitips = Penitip::join('transaksi_penitipan', 'transaksi_penitipan.id_penitip', '=', 'penitip.id_penitip')
+                ->join('detail_transaksi_penitipan', 'detail_transaksi_penitipan.id_transaksi_penitipan', '=', 'transaksi_penitipan.id_transaksi_penitipan')
+                ->join('barang', 'barang.id_barang', '=', 'detail_transaksi_penitipan.id_barang')
+                ->join('komisi', 'komisi.id_barang', '=', 'barang.id_barang')
+                ->join('transaksi_pembelian', 'transaksi_pembelian.id_transaksi_pembelian', '=', 'komisi.id_transaksi_pembelian')
+                ->where('transaksi_pembelian.id_transaksi_pembelian', $request->id_transaksi_pembelian)
+                ->select('penitip.*')
+                ->distinct()
+                ->get();
 
-                (new NotificationController())->sendNotification($notifRequest);
+            foreach ($penitips as $penitip) {
+                if ($penitip->fcm_token) {
+                    $notifRequest = new Request([
+                        'token' => $penitip->fcm_token,
+                        'title' => 'Barang Terjual',
+                        'body' => 'Barang Anda Telah Terjual dan Sedang Disiapkan untuk Pengiriman',
+                    ]);
+
+                    (new NotificationController())->sendNotification($notifRequest);
+                }
             }
+
 
             return response()->json(['message' => 'Transaksi diverifikasi dan notifikasi dikirim'], 200);
 

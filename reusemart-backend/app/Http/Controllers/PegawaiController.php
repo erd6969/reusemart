@@ -222,7 +222,7 @@ class PegawaiController
 
     public function getListKurir()
     {
-        $kurir = Pegawai::where('id_jabatan', 3)->get(['id_pegawai', 'nama_pegawai']);
+        $kurir = Pegawai::where('id_jabatan', 4)->get(['id_pegawai', 'nama_pegawai']);
         return response()->json($kurir, 200);
     }
 
@@ -253,7 +253,7 @@ class PegawaiController
             }
 
             $jumlahPengantaran = TransaksiPembelian::where('id_pegawai', $pegawai->id_pegawai)
-                ->where('status_pengiriman', '=', 'sudah diterima')
+                ->where('status_pengiriman', '=', 'sudah sampai')
                 ->count();
 
             return response()->json([

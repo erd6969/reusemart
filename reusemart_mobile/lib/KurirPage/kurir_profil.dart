@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:reusemart_mobile/client/KurirClient.dart';
 import 'package:reusemart_mobile/entity/Kurir.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:reusemart_mobile/client/AuthClient.dart';
+import 'package:reusemart_mobile/AuthPage/login.dart';
 
 class ProfilKurirView extends StatefulWidget {
   @override
@@ -48,6 +50,16 @@ class _ProfilKurirViewState extends State<ProfilKurirView> {
       });
     }
     return jumlahPengiriman;
+  }
+
+  Future<void> _logout() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.remove('token');
+
+    // Ganti ke halaman login, pastikan route 'login' tersedia
+    if (mounted) {
+      Navigator.of(context).pushReplacementNamed('/login');
+    }
   }
 
   @override
@@ -126,6 +138,27 @@ class _ProfilKurirViewState extends State<ProfilKurirView> {
                   child: Text(
                     '${jumlahPengiriman} Pengiriman',
                     style: const TextStyle(color: Colors.black54),
+                  ),
+                ),
+                const SizedBox(height: 24),
+
+                // Tombol Logout
+                ElevatedButton.icon(
+                  onPressed: () async {
+                    await AuthClient.logout();
+                    Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(builder: (context) => LoginPage()),
+                    );
+                  },
+                  icon: const Icon(Icons.logout),
+                  label: const Text('Logout'),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.red,
+                    foregroundColor: Colors.white,
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 20, vertical: 12),
+                    textStyle: const TextStyle(fontSize: 16),
                   ),
                 ),
               ],

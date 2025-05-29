@@ -12,7 +12,7 @@ class _KurirMainPageState extends State<KurirMainPage> {
   int _currentIndex = 0;
 
   final List<Widget> _pages = [
-    KurirListPengiriman(),
+    KurirListPengirimanView(),
     KurirHistoriView(),
     ProfilKurirView(),
   ];

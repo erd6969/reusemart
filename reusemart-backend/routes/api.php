@@ -228,7 +228,9 @@ Route::middleware('auth:kurir')->group(function () {
     Route::get('/kurir/count-pengiriman', [PegawaiController::class, 'getJumlahPengantaranKurir']);
 
     Route::get('/kurir/histori-pengiriman/{tanggal}', [TransaksiPembelianController::class, 'getHistoriPengirimanKurir']);
-    Route::get('/kurir/pengiriman', [TransaksiPembelianController::class, 'getPengiriman']);
+    Route::get('/kurir/list-pengiriman', [TransaksiPembelianController::class, 'getListPengiriman']);
+
+    Route::post('/kurir/update-status-pengiriman', [TransaksiPembelianController::class, 'changeStatusPengiriman']);
 });
 #endregion
 

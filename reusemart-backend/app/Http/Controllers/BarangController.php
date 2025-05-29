@@ -515,7 +515,7 @@ class BarangController
 
             $detailTransaksi = TransaksiPembelian::where('id_transaksi_pembelian', $request->id_transaksi_pembelian)->first();
             $kurir = Pegawai::where('id_pegawai', $request->id_pegawai)
-                ->where('id_jabatan', 3)
+                ->where('id_jabatan', 4)
                 ->first();
             if (!$detailTransaksi) {
                 return response()->json([

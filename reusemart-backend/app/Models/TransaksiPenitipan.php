@@ -15,6 +15,10 @@ class TransaksiPenitipan extends Model
         'tanggal_penitipan',
     ];
 
+    protected $casts = [
+        'tanggal_penitipan' => 'date',
+    ];
+
     public function penitip()
     {
         return $this->belongsTo(Penitip::class, 'id_penitip', 'id_penitip');

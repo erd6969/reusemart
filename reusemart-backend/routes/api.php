@@ -151,6 +151,7 @@ Route::middleware('auth:owner')->group(function () {
 
     Route::get('/laporan-donasi/{bulanTahun}', [PdfController::class, 'generateLaporanDonasi']);
     Route::get('/laporan-request-donasi', [PdfController::class, 'generateLaporanRequestDonasi']);
+    Route::get('/laporan-barang-habis', [PdfController::class, 'generateLaporanBarangHabis']);
     Route::get('/laporan-transaksi-penitip/{id_penitip}/{bulanTahun}', [PdfController::class, 'generateLaporanPenitip']);
     Route::get('/laporan-penjualan-keseluruhan/{tahun}', [PdfController::class, 'generateLaporanPenjualanKeseluruhan']);
     Route::get('/laporan-komisi-bulanan/{bulanTahun}', [PdfController::class, 'generateLaporanKomisi']);
@@ -180,6 +181,7 @@ Route::middleware('auth:gudang')->group(function () {
     Route::post('/pegawai-gudang/verif-pengambilan-pembeli', [BarangController::class, 'VerifyPengambilanPembeli']);
     Route::post('/pegawai-gudang/verif-ambil-pembeli/{id}', [BarangController::class, 'VerifyAmbilBarangPembeli']);
     Route::get('/pegawai-gudang/search-verif/{search_barang}', [BarangController::class, 'SearchAmbilProducts']);
+    Route::get('/pegawai-gudang/search-pengiriman/{search_barang}', [BarangController::class, 'SearchPengirimanProducts']);
     Route::get('/hunter/search/{search_hunter}', [HunterController::class, 'searchHunter']);
     Route::get('/hitung-komisi/{id}', [BarangController::class, 'getKomisiPembelian']);
 });
@@ -230,7 +232,9 @@ Route::middleware('auth:kurir')->group(function () {
     Route::get('/kurir/count-pengiriman', [PegawaiController::class, 'getJumlahPengantaranKurir']);
 
     Route::get('/kurir/histori-pengiriman/{tanggal}', [TransaksiPembelianController::class, 'getHistoriPengirimanKurir']);
-    Route::get('/kurir/pengiriman', [TransaksiPembelianController::class, 'getPengiriman']);
+    Route::get('/kurir/list-pengiriman', [TransaksiPembelianController::class, 'getListPengiriman']);
+
+    Route::post('/kurir/update-status-pengiriman', [TransaksiPembelianController::class, 'changeStatusPengiriman']);
 });
 #endregion
 

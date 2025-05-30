@@ -81,6 +81,7 @@ import TransaksiPengirimanPage from "../Pages/PegawaiGudang/TransaksiPengirimanP
 import LaporanPenjualanKeseluruhan from "../Pages/Owner/Laporan/LaporanPenjualanKeseluruhan";
 import LaporanKomisiBulanan from "../Pages/Owner/Laporan/LaporanKomisiBulanan";
 import LaporanStokGudang from "../Pages/Owner/Laporan/LaporanStokGudang";
+import LaporanBarangHabis from "../Pages/Owner/Laporan/LaporanBarangHabis";
 const router = createBrowserRouter([
     {
         path: "/",
@@ -238,6 +239,10 @@ const router = createBrowserRouter([
             {
                 path: "laporan-request-donasi",
                 element: <LaporanRequestDonasi />,
+            },
+            {
+                path: "laporan-barang-habis",
+                element: <LaporanBarangHabis />,
             },
             {
                 path: "laporan-donasi",

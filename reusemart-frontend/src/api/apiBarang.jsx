@@ -317,6 +317,20 @@ export const SearchBarangVerif = async (search_barang) => {
       throw error?.response?.data || error;
     }
 };
+export const SearchBarangPengiriman = async (search_barang) => {
+    try {
+      const response = await useAxios.get(`/pegawai-gudang/search-pengiriman/${search_barang}`, {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${getToken()}`
+        },
+      });
+      return response.data;
+    } catch (error) {
+      console.error("Error searching Barang:", error);
+      throw error?.response?.data || error;
+    }
+};
 
 
 export const TambahRating = async (formData) => {

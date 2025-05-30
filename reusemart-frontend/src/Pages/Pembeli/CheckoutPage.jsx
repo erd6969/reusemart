@@ -28,14 +28,14 @@ const AlamatSection = ({ alamatUtama, setShowModal, shippingOption, setShippingO
 
                 <div className="opsi-pengiriman-section">
                     <button
-                        className={`shipping-button ${shippingOption === 'kurir' ? 'active-kurir' : 'inactive'}`}
-                        onClick={() => setShippingOption('kurir')}
+                        className={`shipping-button ${shippingOption === 'diantar kurir' ? 'active-courier' : 'inactive'}`}
+                        onClick={() => setShippingOption('diantar kurir')}
                     >
                         <b>Antar Kurir</b>
                     </button>
                     <button
-                        className={`shipping-button ${shippingOption === 'pickup' ? 'active-pickup' : 'inactive'}`}
-                        onClick={() => setShippingOption('pickup')}
+                        className={`shipping-button ${shippingOption === 'diambil sendiri' ? 'active-pickup' : 'inactive'}`}
+                        onClick={() => setShippingOption('diambil sendiri')}
                     >
                         <b>Ambil di Gudang</b>
                     </button>
@@ -46,18 +46,18 @@ const AlamatSection = ({ alamatUtama, setShowModal, shippingOption, setShippingO
                         <h4>
                             <FaMapMarkerAlt style={{ marginRight: '8px' }} />
                             <b>
-                                {shippingOption === 'kurir'
+                                {shippingOption === 'diantar kurir'
                                     ? alamatUtama?.nama_alamat || 'Loading...'
                                     : 'Gudang ReuseMart Yogyakarta'}
                             </b>
                         </h4>
-                        {shippingOption === 'kurir' && (
+                        {shippingOption === 'diantar kurir' && (
                             <button className="change-button" onClick={() => setShowModal(true)}>Ubah</button>
                         )}
                     </div>
 
                     <div className="alamat-detail-container">
-                        {shippingOption === 'kurir' ? (
+                        {shippingOption === 'diantar kurir' ? (
                             alamatUtama ? (
                                 <p>
                                     {alamatUtama.alamat} ({alamatUtama.keterangan}), {alamatUtama.kelurahan}, {alamatUtama.kecamatan}, Kabupaten {alamatUtama.kabupaten}, {alamatUtama.kode_pos}
@@ -149,7 +149,7 @@ const PaymentDetail = ({ cartItems, alamatUtama, shippingOption }) => {
             }
 
             const transaksiData = {
-                id_alamat: shippingOption === 'kurir' ? alamatUtama.id_alamat : null,
+                id_alamat: shippingOption === 'diantar kurir' ? alamatUtama.id_alamat : null,
                 pengiriman: shippingOption,
                 penggunaan_poin: selectedPoints,
                 tambahan_poin: poinDapat,
@@ -241,7 +241,7 @@ const PaymentDetail = ({ cartItems, alamatUtama, shippingOption }) => {
 const CheckoutPage = () => {
     const [cartItems, setCartItems] = useState([]);
     const [alamatUtama, setAlamatUtama] = useState(null);
-    const [shippingOption, setShippingOption] = useState('kurir');
+    const [shippingOption, setShippingOption] = useState('diantar kurir');
     const [showModalAlamat, setShowModalAlamat] = useState(false);
     const [isLoading, setIsLoading] = useState(true);
     const navigate = useNavigate();

@@ -47,7 +47,7 @@ const SideBarOwner = () => {
                             <li className="sidebarSubItemOwner" onClick={() => navigate("/owner/laporan-penjualan-kategori")}>
                                 Laporan Penjualan per Kategori
                             </li>
-                            <li className="sidebarSubItemOwner" onClick={() => navigate("/owner/laporan-barang")}>
+                            <li className="sidebarSubItemOwner" onClick={() => navigate("/owner/laporan-barang-habis")}>
                                 Laporan Barang yang Masa Penitipan Habis
                             </li>
                             <li className="sidebarSubItemOwner" onClick={() => navigate("/owner/laporan-donasi")}>

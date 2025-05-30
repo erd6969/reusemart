@@ -13,6 +13,7 @@ use App\Models\Hunter;
 use App\Models\Komisi;
 use App\Models\Kategori;
 use App\Models\Penitip;
+use App\Models\Pembeli;
 use App\Models\TransaksiPenitipan;
 use App\Models\TransaksiDonasi;
 use App\Models\Organisasi;
@@ -476,6 +477,7 @@ class BarangController
         }
     }
 
+    // Memverifikasi pengambilan barang penitipan oleh penitip
     public function VerifyAmbilBarangPenitip(Request $request)
     {
         try {
@@ -505,20 +507,15 @@ class BarangController
         }
     }
 
+
     public function VerifyPengirimanBarangPembeli(Request $request)
     {
         try {
-            $today = Carbon::now();
-
-            if ($today->hour >= 16) {
-                return response()->json([
-                    'message' => 'Pengiriman tidak bisa dilakukan di atas jam 4 sore',
-                ], 400);
-            }
+            $sendDate = $request->tanggal_pengiriman;
 
             $detailTransaksi = TransaksiPembelian::where('id_transaksi_pembelian', $request->id_transaksi_pembelian)->first();
             $kurir = Pegawai::where('id_pegawai', $request->id_pegawai)
-                ->where('id_jabatan', 3)
+                ->where('id_jabatan', 4)
                 ->first();
             if (!$detailTransaksi) {
                 return response()->json([
@@ -526,10 +523,54 @@ class BarangController
                 ], 404);
             }
 
+
+            if ($kurir && $kurir->fcm_token) {
+                $notifRequest = new Request([
+                    'token' => $kurir->fcm_token,
+                    'title' => 'Jadwal Pengiriman Baru',
+                    'body' => 'Anda memiliki jadwal pengiriman baru pada tanggal ' . $sendDate . '. Silakan cek aplikasi kurir Anda untuk detail lebih lanjut.',
+                ]);
+
+                (new NotificationController())->sendNotification($notifRequest);
+            }
+
+            $pembeli = Pembeli::where('id_pembeli', $detailTransaksi->id_pembeli)->first();
+            if ($pembeli->fcm_token) {
+                $notifRequest = new Request([
+                    'token' => $pembeli->fcm_token,
+                    'title' => 'Pengiriman Telah Dijadwalkan',
+                    'body' => 'Barang Anda akan dikirim pada tanggal ' . $sendDate . '. Silakan tunggu kurir kami untuk mengantarkan barang Anda.',
+                ]);
+
+                (new NotificationController())->sendNotification($notifRequest);
+            }
+
+
+            $penitips = Penitip::join('transaksi_penitipan', 'transaksi_penitipan.id_penitip', '=', 'penitip.id_penitip')
+                ->join('detail_transaksi_penitipan', 'detail_transaksi_penitipan.id_transaksi_penitipan', '=', 'transaksi_penitipan.id_transaksi_penitipan')
+                ->join('barang', 'barang.id_barang', '=', 'detail_transaksi_penitipan.id_barang')
+                ->join('komisi', 'komisi.id_barang', '=', 'barang.id_barang')
+                ->join('transaksi_pembelian', 'transaksi_pembelian.id_transaksi_pembelian', '=', 'komisi.id_transaksi_pembelian')
+                ->where('transaksi_pembelian.id_transaksi_pembelian', $detailTransaksi->id_transaksi_pembelian)
+                ->select('penitip.*', 'barang.nama_barang')
+                ->distinct()
+                ->get();
+
+            foreach ($penitips as $penitip) {
+                if ($penitip->fcm_token) {
+                    $notifRequest = new Request([
+                        'token' => $penitip->fcm_token,
+                        'title' => 'Pengiriman Barang Penjualan Telah Dijadwalkan',
+                        'body' => 'Barang yang Anda titipkan akan dikirim pada tanggal ' . $sendDate . '. Silakan tunggu kurir kami untuk mengantarkan barang tersebut.',
+                    ]);
+
+                    (new NotificationController())->sendNotification($notifRequest);
+                }
+            }
+
             $detailTransaksi->update([
                 'id_pegawai' => $kurir->id_pegawai,
-                'tanggal_pengiriman' => $today,
-                'status_pengiriman' => 'sedang diantar',
+                'tanggal_pengiriman' => $sendDate,
             ]);
 
             return response()->json([
@@ -545,6 +586,7 @@ class BarangController
         }
     }
 
+
     public function VerifyPengambilanPembeli(Request $request)
     {
         try {
@@ -555,7 +597,46 @@ class BarangController
             if (!$detailTransaksi) {
                 return response()->json([
                     'message' => 'Detail Transaksi not found',
+                ], status: 404);
+            }
+
+            $pembeli = Pembeli::where('id_pembeli', $detailTransaksi->id_pembeli)->first();
+
+            if ($pembeli->fcm_token) {
+                $notifRequest = new Request([
+                    'token' => $pembeli->fcm_token,
+                    'title' => 'Barang Sudah Diterima',
+                    'body' => 'Barang sudah diambil oleh pembeli. Terima kasih telah belanja barang bekas',
+                ]);
+
+                (new NotificationController())->sendNotification($notifRequest);
+            }
+
+
+            $komisi = Komisi::where('id_transaksi_pembelian', $detailTransaksi->id_transaksi_pembelian)
+                ->pluck('id_barang');
+            $detailPenitipan = DetailTransaksiPenitipan::whereIn('id_barang', $komisi)
+                ->pluck('id_transaksi_penitipan');
+            $transaksiPenitipan = TransaksiPenitipan::whereIn('id_transaksi_penitipan', $detailPenitipan)
+                ->pluck('id_penitip');
+            $penitipList = Penitip::whereIn('id_penitip', $transaksiPenitipan)->get();
+
+            if ($penitipList->isEmpty()) {
+                return response()->json([
+                    'message' => 'Tidak ada penitip ditemukan',
                 ], 404);
+            }
+
+            foreach ($penitipList as $penitip) {
+                if ($penitip->fcm_token) {
+                    $notifRequest = new Request([
+                        'token' => $penitip->fcm_token,
+                        'title' => 'Barang Sudah Diterima',
+                        'body' => 'Barang sudah diterima oleh pembeli. Terima kasih telah menitipkan barang Anda.',
+                    ]);
+
+                    (new NotificationController())->sendNotification($notifRequest);
+                }
             }
 
 
@@ -586,8 +667,10 @@ class BarangController
             $barang = $komisi->barang;
             $harga = $barang->harga_barang;
             $detail = $komisi->barang->detailtransaksipenitipan->first();
+            $pembeli = $komisi->transaksiPembelian->pembeli;
+            $poinDapat = $komisi->transaksiPembelian->tambahan_poin;
 
-            
+
             $komisi_hunter = 0;
             $komisi_reusemart = 0;
             $komisi_penitip = 0;
@@ -633,7 +716,16 @@ class BarangController
                 $penitip->save();
             }
 
+            if ($barang->id_hunter) {
+                $hunter = $barang->hunter;
+                $hunter->total_komisi += $komisi_hunter;
+                $hunter->save();
+            }
 
+            if ($pembeli) {
+                $pembeli->poin_loyalitas += $poinDapat;
+                $pembeli->save();
+            }
         }
 
         return response()->json([
@@ -641,7 +733,7 @@ class BarangController
         ], 200);
     }
 
-
+    // Mengubah status transaksi pembelian menjadi 'siap diambil' dan menyimpan tanggal pengiriman
     public function VerifyAmbilBarangPembeli($id)
     {
         $validatedData = request()->validate([
@@ -660,6 +752,46 @@ class BarangController
             'tanggal_pengiriman' => $validatedData['tanggal_pengiriman'],
             'status_pengiriman' => 'siap diambil',
         ]);
+
+        $pembeli = Pembeli::where('id_pembeli', $transaksiPembelian->id_pembeli)->first();
+
+        if ($pembeli->fcm_token) {
+            $notifRequest = new Request([
+                'token' => $pembeli->fcm_token,
+                'title' => 'Segera Ambil Barang Pembelian Anda !!!',
+                'body' => 'Barang Anda sudah siap diambil pada tanggal ' . $validatedData['tanggal_pengiriman'] . '. Silakan ambil di gudang ReuseMart.',
+            ]);
+
+            (new NotificationController())->sendNotification($notifRequest);
+        }
+
+        $komisi = Komisi::where('id_transaksi_pembelian', $transaksiPembelian->id_transaksi_pembelian)
+            ->pluck('id_barang');
+        $detailPenitipan = DetailTransaksiPenitipan::whereIn('id_barang', $komisi)
+            ->pluck('id_transaksi_penitipan');
+        $transaksiPenitipan = TransaksiPenitipan::whereIn('id_transaksi_penitipan', $detailPenitipan)
+            ->pluck('id_penitip');
+        $penitipList = Penitip::whereIn('id_penitip', $transaksiPenitipan)->get();
+
+        if ($penitipList->isEmpty()) {
+            return response()->json([
+                'message' => 'Tidak ada penitip ditemukan',
+            ], 404);
+        }
+
+        foreach ($penitipList as $penitip) {
+            if ($penitip->fcm_token) {
+                $notifRequest = new Request([
+                    'token' => $penitip->fcm_token,
+                    'title' => 'Barang akan segera diambil pembeli',
+                    'body' => 'Barang yang Anda titipkan akan segera diambil oleh pembeli pada tanggal ' . $validatedData['tanggal_pengiriman'] . '. Terima kasih telah menitipkan barang Anda.',
+                ]);
+
+                (new NotificationController())->sendNotification($notifRequest);
+            }
+        }
+
+
 
         return response()->json([
             'status' => 'success',
@@ -739,6 +871,39 @@ class BarangController
                 'message' => 'Failed to retrieve ambil barang',
                 'error' => $e->getMessage(),
             ], 500);
+        }
+    }
+
+    public function SearchPengirimanProducts($search_barang)
+    {
+        try {
+            $products = DB::table('barang')
+                ->join('komisi', 'komisi.id_barang', '=', 'barang.id_barang')
+                ->join('transaksi_pembelian', 'transaksi_pembelian.id_transaksi_pembelian', '=', 'komisi.id_transaksi_pembelian')
+                ->whereIn('transaksi_pembelian.status_pengiriman', ['sedang disiapkan', 'siap diambil', 'sedang diantar', 'sudah diambil'])
+                ->where(function ($query) use ($search_barang) {
+                    $query->where('transaksi_pembelian.id_transaksi_pembelian', 'like', "%{$search_barang}%")
+                        ->orWhere('barang.nama_barang', 'like', "%{$search_barang}%")
+                        ->orWhere('transaksi_pembelian.pengiriman', 'like', "%{$search_barang}%")
+                        ->orWhere('transaksi_pembelian.status_pengiriman', 'like', "%{$search_barang}%");
+                })
+                ->select(
+                    'barang.*',
+                    'transaksi_pembelian.id_transaksi_pembelian',
+                    'transaksi_pembelian.pengiriman',
+                    'transaksi_pembelian.tanggal_pengiriman',
+                    'transaksi_pembelian.status_pengiriman',
+                )
+                ->distinct()
+                ->paginate(5);
+
+            return response()->json($products, 200);
+
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'Barang not found',
+                'error' => $e->getMessage(),
+            ], 404);
         }
     }
 

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'AuthPage/login.dart';
+import 'HomePage/Home.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
@@ -133,7 +134,7 @@ class _MainAppState extends State<MainApp> {
       ],
       home: const Scaffold(
         body: Center(
-          child: LoginPage(),
+          child: HomePage(),
         ),
       ),
     );

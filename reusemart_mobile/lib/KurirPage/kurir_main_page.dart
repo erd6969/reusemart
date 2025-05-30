@@ -11,11 +11,18 @@ class KurirMainPage extends StatefulWidget {
 class _KurirMainPageState extends State<KurirMainPage> {
   int _currentIndex = 0;
 
-  final List<Widget> _pages = [
-    KurirListPengirimanView(),
-    KurirHistoriView(),
-    ProfilKurirView(),
-  ];
+  Widget _getPage(int index) {
+    switch (index) {
+      case 0:
+        return KurirListPengirimanView();
+      case 1:
+        return KurirHistoriView(); // dibuat ulang setiap kali pindah
+      case 2:
+        return ProfilKurirView();
+      default:
+        return KurirListPengirimanView();
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -32,7 +39,7 @@ class _KurirMainPageState extends State<KurirMainPage> {
         ),
       ),
       backgroundColor: Colors.white,
-      body: SafeArea(child: _pages[_currentIndex]),
+      body: SafeArea(child: _getPage(_currentIndex)),
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: _currentIndex,
         selectedItemColor: Color(0xFF347928),

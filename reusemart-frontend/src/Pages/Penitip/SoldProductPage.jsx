@@ -77,7 +77,7 @@ const SoldProductPage = () => {
         }, 500);
 
         return () => clearTimeout(delayDebounce);
-    }, [searchQuery]);
+    }, [searchQuery, currentPage]);
 
 
     return (

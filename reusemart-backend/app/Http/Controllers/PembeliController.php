@@ -73,7 +73,7 @@ class PembeliController
             ->join('barang', 'komisi.id_barang', '=', 'barang.id_barang')
             ->where('transaksi_pembelian.id_pembeli', $pembeli->id_pembeli)
             ->where('transaksi_pembelian.status_pembayaran', '1')
-            ->where('transaksi_pembelian.verifikasi_bukti', 'transaksi diverifikasi')
+            ->where('transaksi_pembelian.verifikasi_bukti', 'transaksi diverifikasi', 'belum diverifikasi')
             ->whereIn('transaksi_pembelian.status_pengiriman', [
                 'sedang disiapkan',
                 'sedang diantar',

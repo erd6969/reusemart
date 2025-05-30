@@ -8,6 +8,7 @@ use App\Models\PdfModel;
 use App\Models\DetailTransaksiPenitipan;
 use App\Models\TransaksiPenitipan;
 use App\Models\TransaksiPembelian;
+use App\Models\Kategori;
 use App\Models\Barang;
 use App\Models\Penitip;
 use Illuminate\Support\Carbon;
@@ -15,7 +16,7 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Http;
-use Carbon\Carbon;
+
 
 class PdfController
 {
@@ -74,6 +75,40 @@ class PdfController
             ->header('Content-Type', 'application/pdf')
             ->header('Content-Disposition', 'inline; filename="laporan_donasi_' . $bulan . '_' . $tahun . '.pdf"');
     }
+
+
+    public function generateLaporanPenjualanKategori($tahun)
+    {
+        $semuaKategori = Kategori::all();
+
+        $penjualan = DetailTransaksiPenitipan::with('barang.kategori')
+            ->whereIn('status_penitipan', ['terjual', 'didonasikan', 'open donasi'])
+            ->whereYear('tanggal_berakhir', $tahun)
+            ->get();
+
+        $kategoriStats = $semuaKategori->map(function ($kategori) use ($penjualan) {
+            $items = $penjualan->filter(function ($item) use ($kategori) {
+                return optional($item->barang->kategori)->id_kategori == $kategori->id_kategori;
+            });
+
+            return [
+                'nama_kategori' => $kategori->nama_kategori,
+                'terjual' => $items->where('status_penitipan', 'terjual')->count() ?: '-',
+                'gagal_terjual' => $items->whereIn('status_penitipan', ['Didonasikan', 'open donasi'])->count() ?: '-',
+            ];
+        });
+
+        $pdf = Pdf::loadView('pdf.laporan_penjualan_kategori', [
+            'kategoriStats' => $kategoriStats,
+            'tahun' => $tahun
+        ]);
+
+        return response($pdf->output(), 200)
+            ->header('Content-Type', 'application/pdf')
+            ->header('Content-Disposition', 'inline; filename="laporan_penjualan_kategori_' . $tahun . '.pdf"');
+    }
+
+
 
     public function generateLaporanRequestDonasi()
     {
@@ -152,7 +187,7 @@ class PdfController
 
         $tanggalFilter = \Carbon\Carbon::createFromDate($tahun, $bulan, 1);
 
-        $pdf = \PDF::loadView('pdf.laporan_penitip', [
+        $pdf = PDF::loadView('pdf.laporan_penitip', [
             'laporan' => $laporan,
             'penitip' => $penitip,
             'bulanFilter' => $tanggalFilter,
@@ -163,7 +198,8 @@ class PdfController
             ->header('Content-Disposition', 'inline; filename="laporan_penitip.pdf"');
     }
 
-    public function generateLaporanPenjualanKeseluruhan($tahun){
+    public function generateLaporanPenjualanKeseluruhan($tahun)
+    {
         $bulan_list = [
             '01' => 'Januari',
             '02' => 'Februari',
@@ -182,16 +218,16 @@ class PdfController
         Log::info("Generating Laporan Penjualan Keseluruhan untuk tahun: $tahun");
 
 
-        $laporan = collect($bulan_list)->map(function ($bulan_nama, $bulan_angka) use ($tahun){
+        $laporan = collect($bulan_list)->map(function ($bulan_nama, $bulan_angka) use ($tahun) {
             $id_transaksi_pembelian = DB::table('transaksi_pembelian')
                 ->whereYear('tanggal_pembelian', $tahun)
                 ->whereMonth('tanggal_pembelian', $bulan_angka)
                 ->pluck('id_transaksi_pembelian');
-            
+
             $jumlah_barang_terjual = DB::table('komisi')
                 ->whereIn('id_transaksi_pembelian', $id_transaksi_pembelian)
                 ->count();
-            
+
             $jumlah_penjualan_kotor = DB::table('transaksi_pembelian')
                 ->whereYear('tanggal_pembelian', $tahun)
                 ->whereMonth('tanggal_pembelian', $bulan_angka)
@@ -210,7 +246,7 @@ class PdfController
             ->whereYear('tanggal_pembelian', $tahun)
             ->join('komisi', 'transaksi_pembelian.id_transaksi_pembelian', '=', 'komisi.id_transaksi_pembelian')
             ->sum('komisi.total_harga_kotor');
-        
+
         // $totalBarangTerjual = DB::table('komisi')
         // ->whereIn('id_transaksi_pembelian', function ($query) {
         //     $query->select('id')
@@ -280,8 +316,8 @@ class PdfController
         ]);
 
         return response($pdf->output(), 200)
-        ->header('Content-Type', 'application/pdf')
-        ->header('Content-Disposition', 'inline; filename="laporan_penjualan_' . $tahun . '.pdf"');
+            ->header('Content-Type', 'application/pdf')
+            ->header('Content-Disposition', 'inline; filename="laporan_penjualan_' . $tahun . '.pdf"');
 
     }
 
@@ -309,7 +345,7 @@ class PdfController
             ->whereYear('tp.tanggal_pembelian', $tahun)
             ->where(function ($query) {
                 $query->where('tp.status_pengiriman', 'sudah sampai')
-                      ->orWhere('tp.status_pengiriman', 'sudah diambil');
+                    ->orWhere('tp.status_pengiriman', 'sudah diambil');
             })
             ->get();
 
@@ -320,7 +356,8 @@ class PdfController
             ->header('Content-Disposition', 'inline; filename="laporan_komisi_' . $bulan . '_' . $tahun . '.pdf"');
     }
 
-    public function generateLaporanStokGudang(){
+    public function generateLaporanStokGudang()
+    {
         $today = Carbon::now();
         $laporan = TransaksiPenitipan::with(['detailTransaksiPenitipan.barang.hunter', 'penitip'])
             ->whereHas('detailTransaksiPenitipan', function ($query) {

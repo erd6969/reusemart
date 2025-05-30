@@ -71,6 +71,7 @@ import OwnerLayouts from "../Layouts/OwnerLayouts";
 import ReqDonasiShowBarang from "../Pages/Owner/ReqDonasiShowBarang";
 import LaporanRequestDonasi from "../Pages/Owner/Laporan/LaporanRequestDonasi";
 import LaporanDonasi from "../Pages/Owner/Laporan/LaporanDonasi";
+import LaporanKategori from "../Pages/Owner/Laporan/LaporanKategori";
 import LaporanTransaksiPenitip from "../Pages/Owner/Laporan/LaporanTransaksiPenitip";
 
 //Pegawai Gudang
@@ -232,7 +233,11 @@ const router = createBrowserRouter([
             {
                 path: "laporan-donasi",
                 element: <LaporanDonasi />,
-            }
+            },
+            {
+                path: "laporan-penjualan-kategori",
+                element: <LaporanKategori />,
+            },
         ],
     },
     {

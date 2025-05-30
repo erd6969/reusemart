@@ -8,6 +8,7 @@ use App\Models\PdfModel;
 use App\Models\DetailTransaksiPenitipan;
 use App\Models\TransaksiPenitipan;
 use App\Models\TransaksiPembelian;
+use App\Models\Kategori;
 use App\Models\Barang;
 use App\Models\Penitip;
 use Illuminate\Support\Carbon;
@@ -71,6 +72,40 @@ class PdfController
             ->header('Content-Type', 'application/pdf')
             ->header('Content-Disposition', 'inline; filename="laporan_donasi_' . $bulan . '_' . $tahun . '.pdf"');
     }
+
+
+    public function generateLaporanPenjualanKategori($tahun)
+{
+    $semuaKategori = Kategori::all();
+
+    $penjualan = DetailTransaksiPenitipan::with('barang.kategori')
+        ->whereIn('status_penitipan', ['terjual', 'didonasikan', 'open donasi'])
+        ->whereYear('tanggal_berakhir', $tahun)
+        ->get();
+
+    $kategoriStats = $semuaKategori->map(function ($kategori) use ($penjualan) {
+        $items = $penjualan->filter(function ($item) use ($kategori) {
+            return optional($item->barang->kategori)->id_kategori == $kategori->id_kategori;
+        });
+
+        return [
+            'nama_kategori' => $kategori->nama_kategori,
+            'terjual' => $items->where('status_penitipan', 'terjual')->count() ?: '-',
+            'gagal_terjual' => $items->whereIn('status_penitipan', ['Didonasikan', 'open donasi'])->count() ?: '-',
+        ];
+    });
+
+    $pdf = Pdf::loadView('pdf.laporan_penjualan_kategori', [
+        'kategoriStats' => $kategoriStats,
+        'tahun' => $tahun
+    ]);
+
+    return response($pdf->output(), 200)
+        ->header('Content-Type', 'application/pdf')
+        ->header('Content-Disposition', 'inline; filename="laporan_penjualan_kategori_' . $tahun . '.pdf"');
+}
+
+
 
     public function generateLaporanRequestDonasi()
     {
@@ -149,7 +184,7 @@ class PdfController
 
         $tanggalFilter = \Carbon\Carbon::createFromDate($tahun, $bulan, 1);
 
-        $pdf = \PDF::loadView('pdf.laporan_penitip', [
+        $pdf = PDF::loadView('pdf.laporan_penitip', [
             'laporan' => $laporan,
             'penitip' => $penitip,
             'bulanFilter' => $tanggalFilter,

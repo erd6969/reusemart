@@ -273,7 +273,7 @@ class PenitipController
 
         } catch (\Exception $e) {
             return response()->json([
-                'message' => 'Penitip not found',
+                'message' => 'Barang Penitip not found',
                 'error' => $e->getMessage(),
             ], 404);
         }

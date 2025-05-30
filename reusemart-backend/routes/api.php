@@ -150,6 +150,7 @@ Route::middleware('auth:owner')->group(function () {
     Route::get('/pegawai/show-profile', [PegawaiController::class, 'showProfile']);
 
     Route::get('/laporan-donasi/{bulanTahun}', [PdfController::class, 'generateLaporanDonasi']);
+    Route::get('/laporan-kategori/{tahun}', [PdfController::class, 'generateLaporanPenjualanKategori']);
     Route::get('/laporan-request-donasi', [PdfController::class, 'generateLaporanRequestDonasi']);
     Route::get('/laporan-barang-habis', [PdfController::class, 'generateLaporanBarangHabis']);
     Route::get('/laporan-transaksi-penitip/{id_penitip}/{bulanTahun}', [PdfController::class, 'generateLaporanPenitip']);

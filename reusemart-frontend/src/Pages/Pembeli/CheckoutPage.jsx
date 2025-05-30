@@ -28,8 +28,8 @@ const AlamatSection = ({ alamatUtama, setShowModal, shippingOption, setShippingO
 
                 <div className="opsi-pengiriman-section">
                     <button
-                        className={`shipping-button ${shippingOption === 'courier' ? 'active-courier' : 'inactive'}`}
-                        onClick={() => setShippingOption('courier')}
+                        className={`shipping-button ${shippingOption === 'kurir' ? 'active-kurir' : 'inactive'}`}
+                        onClick={() => setShippingOption('kurir')}
                     >
                         <b>Antar Kurir</b>
                     </button>
@@ -46,18 +46,18 @@ const AlamatSection = ({ alamatUtama, setShowModal, shippingOption, setShippingO
                         <h4>
                             <FaMapMarkerAlt style={{ marginRight: '8px' }} />
                             <b>
-                                {shippingOption === 'courier'
+                                {shippingOption === 'kurir'
                                     ? alamatUtama?.nama_alamat || 'Loading...'
                                     : 'Gudang ReuseMart Yogyakarta'}
                             </b>
                         </h4>
-                        {shippingOption === 'courier' && (
+                        {shippingOption === 'kurir' && (
                             <button className="change-button" onClick={() => setShowModal(true)}>Ubah</button>
                         )}
                     </div>
 
                     <div className="alamat-detail-container">
-                        {shippingOption === 'courier' ? (
+                        {shippingOption === 'kurir' ? (
                             alamatUtama ? (
                                 <p>
                                     {alamatUtama.alamat} ({alamatUtama.keterangan}), {alamatUtama.kelurahan}, {alamatUtama.kecamatan}, Kabupaten {alamatUtama.kabupaten}, {alamatUtama.kode_pos}
@@ -149,7 +149,7 @@ const PaymentDetail = ({ cartItems, alamatUtama, shippingOption }) => {
             }
 
             const transaksiData = {
-                id_alamat: shippingOption === 'courier' ? alamatUtama.id_alamat : null,
+                id_alamat: shippingOption === 'kurir' ? alamatUtama.id_alamat : null,
                 pengiriman: shippingOption,
                 penggunaan_poin: selectedPoints,
                 tambahan_poin: poinDapat,
@@ -241,7 +241,7 @@ const PaymentDetail = ({ cartItems, alamatUtama, shippingOption }) => {
 const CheckoutPage = () => {
     const [cartItems, setCartItems] = useState([]);
     const [alamatUtama, setAlamatUtama] = useState(null);
-    const [shippingOption, setShippingOption] = useState('courier');
+    const [shippingOption, setShippingOption] = useState('kurir');
     const [showModalAlamat, setShowModalAlamat] = useState(false);
     const [isLoading, setIsLoading] = useState(true);
     const navigate = useNavigate();

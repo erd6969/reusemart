@@ -105,6 +105,7 @@ const TransaksiPengirimanPage = () => {
                         setTotalPages(1);
                         setCurrentPage(1);
                         console.log("Hasil pencarian:", hasil);
+                        console.log("Search query:", searchQuery);
                     })
                     .catch((error) => {
                         console.error("Error searching req:", error);

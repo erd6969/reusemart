@@ -222,7 +222,7 @@ class PegawaiController
 
     public function getListKurir()
 {
-    $kurir = Pegawai::where('id_jabatan', 3)->get(['id_pegawai', 'nama_pegawai']);
+    $kurir = Pegawai::where('id_jabatan', 4)->get(['id_pegawai', 'nama_pegawai']);
     return response()->json($kurir, 200);
 }
 

@@ -619,6 +619,7 @@ class BarangController
             }
 
             $komisi->update([
+                'total_harga_kotor' => $harga,
                 'total_harga_bersih' => $komisi_penitip,
                 'komisi_hunter' => $komisi_hunter,
                 'komisi_reusemart' => $komisi_reusemart,
@@ -757,6 +758,7 @@ class BarangController
                     'transaksi_pembelian.status_pengiriman',
                 )
                 ->distinct()
+                ->orderBy('transaksi_pembelian.tanggal_pengiriman', 'asc')
                 ->paginate(5);
 
             return response()->json($products, 200);

@@ -16,7 +16,9 @@ class _KurirHistoriViewState extends State<KurirHistoriView> {
   @override
   void initState() {
     super.initState();
-    fetchHistori(selectedDate);
+    Future.delayed(Duration(milliseconds: 100), () {
+      fetchHistori(selectedDate);
+    });
   }
 
   Future<void> fetchHistori(DateTime date) async {
@@ -203,6 +205,8 @@ class _KurirHistoriViewState extends State<KurirHistoriView> {
                                     child: Image.network(
                                       KurirClient.getFotoBarang(
                                           barang['foto_barang']),
+                                      key: ValueKey(KurirClient.getFotoBarang(
+                                          barang['foto_barang'])),
                                       width: 60,
                                       height: 60,
                                       fit: BoxFit.cover,

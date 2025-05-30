@@ -226,6 +226,7 @@ class PegawaiController
         return response()->json($kurir, 200);
     }
 
+
     public function searchByNama($nama_pegawai)
     {
         $pegawai = Pegawai::where('nama_pegawai', 'like', '%' . $nama_pegawai . '%')

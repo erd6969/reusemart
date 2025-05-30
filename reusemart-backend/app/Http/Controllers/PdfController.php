@@ -14,6 +14,9 @@ use App\Models\Penitip;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Http;
+use Carbon\Carbon;
 
 class PdfController
 {
@@ -195,6 +198,174 @@ class PdfController
             ->header('Content-Disposition', 'inline; filename="laporan_penitip.pdf"');
     }
 
+    public function generateLaporanPenjualanKeseluruhan($tahun){
+        $bulan_list = [
+            '01' => 'Januari',
+            '02' => 'Februari',
+            '03' => 'Maret',
+            '04' => 'April',
+            '05' => 'Mei',
+            '06' => 'Juni',
+            '07' => 'Juli',
+            '08' => 'Agustus',
+            '09' => 'September',
+            '10' => 'Oktober',
+            '11' => 'November',
+            '12' => 'Desember'
+        ];
 
+        Log::info("Generating Laporan Penjualan Keseluruhan untuk tahun: $tahun");
+
+
+        $laporan = collect($bulan_list)->map(function ($bulan_nama, $bulan_angka) use ($tahun){
+            $id_transaksi_pembelian = DB::table('transaksi_pembelian')
+                ->whereYear('tanggal_pembelian', $tahun)
+                ->whereMonth('tanggal_pembelian', $bulan_angka)
+                ->pluck('id_transaksi_pembelian');
+            
+            $jumlah_barang_terjual = DB::table('komisi')
+                ->whereIn('id_transaksi_pembelian', $id_transaksi_pembelian)
+                ->count();
+            
+            $jumlah_penjualan_kotor = DB::table('transaksi_pembelian')
+                ->whereYear('tanggal_pembelian', $tahun)
+                ->whereMonth('tanggal_pembelian', $bulan_angka)
+                ->join('komisi', 'transaksi_pembelian.id_transaksi_pembelian', '=', 'komisi.id_transaksi_pembelian')
+                ->sum('komisi.total_harga_kotor');
+
+
+            return [
+                'bulan' => $bulan_nama,
+                'jumlah_barang_terjual' => $jumlah_barang_terjual,
+                'jumlah_penjualan_kotor' => $jumlah_penjualan_kotor
+            ];
+        });
+
+        $total_penjualan = DB::table('transaksi_pembelian')
+            ->whereYear('tanggal_pembelian', $tahun)
+            ->join('komisi', 'transaksi_pembelian.id_transaksi_pembelian', '=', 'komisi.id_transaksi_pembelian')
+            ->sum('komisi.total_harga_kotor');
+        
+        // $totalBarangTerjual = DB::table('komisi')
+        // ->whereIn('id_transaksi_pembelian', function ($query) {
+        //     $query->select('id')
+        //         ->from('transaksi_pembelian')
+        //         ->whereYear('tanggal_pembelian', 2024);
+        // })
+        // ->count();
+        // ini untuk total barang terjual
+
+        $chartData = [
+            'labels' => $laporan->pluck('bulan')->toArray(),
+            'datasets' => [
+                [
+                    'label' => 'Penjualan Kotor',
+                    'data' => $laporan->pluck('jumlah_penjualan_kotor')->map(function ($val) {
+                        return is_numeric($val) ? $val : null;
+                    })->toArray(),
+                    'backgroundColor' => 'rgba(75, 192, 192, 0.6)',
+                ]
+            ]
+        ];
+
+        $chartConfig = [
+            'type' => 'bar',
+            'data' => $chartData,
+            'options' => [
+                'plugins' => [
+                    'title' => [
+                        'display' => true,
+                        'text' => 'Grafik Penjualan Kotor Bulanan'
+                    ]
+                ],
+                'scales' => [
+                    'y' => [
+                        'beginAtZero' => true
+                    ]
+                ]
+            ]
+        ];
+
+        $quickChartUrl = 'https://quickchart.io/chart';
+        $encodedConfig = json_encode($chartConfig);
+        $chartImageUrl = "$quickChartUrl?c=" . urlencode($encodedConfig);
+
+        // Ambil isi gambar dari QuickChart
+        $chartImageContent = file_get_contents($chartImageUrl);
+
+        $grafikStoragePath = 'img/grafik/grafik_penjualan.png';
+        Storage::disk('public')->put($grafikStoragePath, $chartImageContent);
+
+        // Ambil base64 untuk dikirim ke view
+        $grafikBase64 = null;
+        if (Storage::disk('public')->exists($grafikStoragePath)) {
+            $grafikBase64 = 'data:image/png;base64,' . base64_encode(Storage::disk('public')->get($grafikStoragePath));
+        }
+
+        $laporan->push([
+            'bulan' => 'Total',
+            'jumlah_barang_terjual' => 'Merge',
+            'jumlah_penjualan_kotor' => $total_penjualan
+        ]);
+
+        $pdf = Pdf::loadView('pdf.laporan_penjualan_keseluruhan', [
+            'laporan' => $laporan,
+            'tahun' => $tahun,
+            'grafik' => $grafikBase64
+        ]);
+
+        return response($pdf->output(), 200)
+        ->header('Content-Type', 'application/pdf')
+        ->header('Content-Disposition', 'inline; filename="laporan_penjualan_' . $tahun . '.pdf"');
+
+    }
+
+
+    public function generateLaporanKomisi($bulanTahun)
+    {
+        [$bulan, $tahun] = explode('-', $bulanTahun);
+
+        $laporan = DB::table('komisi as k')
+            ->select(
+                'k.id_barang',
+                'b.nama_barang',
+                'tp.total_pembayaran',
+                'tpen.tanggal_penitipan',
+                'tp.tanggal_pembelian',
+                'k.komisi_hunter',
+                'k.komisi_reusemart',
+                'k.bonus_penitip',
+            )
+            ->join('barang as b', 'k.id_barang', '=', 'b.id_barang')
+            ->join('transaksi_pembelian as tp', 'k.id_transaksi_pembelian', '=', 'tp.id_transaksi_pembelian')
+            ->join('detail_transaksi_penitipan as dtp', 'b.id_barang', '=', 'dtp.id_barang')
+            ->join('transaksi_penitipan as tpen', 'dtp.id_transaksi_penitipan', '=', 'tpen.id_transaksi_penitipan')
+            ->whereMonth('tp.tanggal_pembelian', $bulan)
+            ->whereYear('tp.tanggal_pembelian', $tahun)
+            ->where(function ($query) {
+                $query->where('tp.status_pengiriman', 'sudah sampai')
+                      ->orWhere('tp.status_pengiriman', 'sudah diambil');
+            })
+            ->get();
+
+        Log::info('Laporan Komisi: ' . json_encode($laporan));
+        $pdf = Pdf::loadView('pdf.laporan_komisi', ['laporan' => $laporan, 'bulan' => $bulan, 'tahun' => $tahun]);
+        return response($pdf->output(), 200)
+            ->header('Content-Type', 'application/pdf')
+            ->header('Content-Disposition', 'inline; filename="laporan_komisi_' . $bulan . '_' . $tahun . '.pdf"');
+    }
+
+    public function generateLaporanStokGudang(){
+        $today = Carbon::now();
+        $laporan = TransaksiPenitipan::with(['detailTransaksiPenitipan.barang.hunter', 'penitip'])
+            ->whereHas('detailTransaksiPenitipan', function ($query) {
+                $query->where('status_penitipan', 'ready jual');
+            })
+            ->get();
+        $pdf = Pdf::loadView('pdf.laporan_stok_gudang', ['laporan' => $laporan]);
+        return response($pdf->output(), 200)
+            ->header('Content-Type', 'application/pdf')
+            ->header('Content-Disposition', 'inline; filename="laporan_stok_gudang_' . $today->format('Y-m-d') . '.pdf"');
+    }
 
 }

@@ -190,7 +190,25 @@ export const GetLaporanRequestDonasi = async () => {
         return null;
     }
 };
+export const GetLaporanBarangHabis = async () => {
+    try {
+        const token = sessionStorage.getItem("token");
+        const response = await useAxios.get(`/laporan-barang-habis`, {
+            headers: {
+                "Content-Type": "application/json",
+                "Accept": "application/pdf",
+                "Authorization": `Bearer ${token}`,
+            },
+            responseType: 'blob',
+        });
 
+        const fileURL = window.URL.createObjectURL(new Blob([response.data], { type: 'application/pdf' }));
+        return fileURL;
+    } catch (error) {
+        console.error("Error fetching laporan barang penitipan habis", error);
+        return null;
+    }
+};
 
 export const GetLaporanTransaksiPenitip = async (id_penitip, bulanTahun) => {
     try {
@@ -212,10 +230,10 @@ export const GetLaporanTransaksiPenitip = async (id_penitip, bulanTahun) => {
     }
 };
 
-export const GetLaporanKategori = async (tahun) => {
+export const GetLaporanPenjualanKeseluruhan = async (tahun) => {
     try {
         const token = sessionStorage.getItem("token");
-        const response = await useAxios.get(`/laporan-kategori/${tahun}`, {
+         const response = await useAxios.get(`/laporan-penjualan-keseluruhan/${tahun}`, {
             headers: {
                 "Content-Type": "application/json",
                 "Accept": "application/pdf",
@@ -227,15 +245,15 @@ export const GetLaporanKategori = async (tahun) => {
         const fileURL = window.URL.createObjectURL(new Blob([response.data], { type: 'application/pdf' }));
         return fileURL;
     } catch (error) {
-        console.error("Error fetching laporan kategori penjualan", error);
+        console.error("Error fetching laporan penjualan keseluruhan", error);
         return null;
     }
 };
 
-export const GetLaporanBarangHabis = async () => {
+export const GetLaporanKomisiBulanan = async (bulanTahun) => {
     try {
         const token = sessionStorage.getItem("token");
-        const response = await useAxios.get(`/laporan-barang-habis`, {
+         const response = await useAxios.get(`/laporan-komisi-bulanan/${bulanTahun}`, {
             headers: {
                 "Content-Type": "application/json",
                 "Accept": "application/pdf",
@@ -247,7 +265,27 @@ export const GetLaporanBarangHabis = async () => {
         const fileURL = window.URL.createObjectURL(new Blob([response.data], { type: 'application/pdf' }));
         return fileURL;
     } catch (error) {
-        console.error("Error fetching laporan barang penitipan habis", error);
+        console.error("Error fetching laporan Komisi", error);
+        return null;
+    }
+};
+
+export const GetLaporanStokGudang = async () => {
+    try {
+        const token = sessionStorage.getItem("token");
+         const response = await useAxios.get(`/laporan-stok-gudang`, {
+            headers: {
+                "Content-Type": "application/json",
+                "Accept": "application/pdf",
+                "Authorization": `Bearer ${token}`,
+            },
+            responseType: 'blob',
+        });
+
+        const fileURL = window.URL.createObjectURL(new Blob([response.data], { type: 'application/pdf' }));
+        return fileURL;
+    } catch (error) {
+        console.error("Error fetching laporan Stok Gudang", error);
         return null;
     }
 };

@@ -32,7 +32,7 @@ class TransaksiPembelianController
                 'id_alamat' => $request->id_alamat,
                 'tanggal_pembelian' => now(),
                 'batas_pembayaran' => now()->addMinutes(1),
-                'pengiriman' => $request->pengiriman,
+                'pengiriman' => $request->pengiriman === "diantar kurir" ? "diantar kurir" : "diambil sendiri",
                 'penggunaan_poin' => $request->penggunaan_poin,
                 'tambahan_poin' => $request->tambahan_poin,
                 'total_pembayaran' => $request->total_pembayaran,

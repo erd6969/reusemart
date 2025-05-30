@@ -154,6 +154,9 @@ Route::middleware('auth:owner')->group(function () {
     Route::get('/laporan-request-donasi', [PdfController::class, 'generateLaporanRequestDonasi']);
     Route::get('/laporan-barang-habis', [PdfController::class, 'generateLaporanBarangHabis']);
     Route::get('/laporan-transaksi-penitip/{id_penitip}/{bulanTahun}', [PdfController::class, 'generateLaporanPenitip']);
+    Route::get('/laporan-penjualan-keseluruhan/{tahun}', [PdfController::class, 'generateLaporanPenjualanKeseluruhan']);
+    Route::get('/laporan-komisi-bulanan/{bulanTahun}', [PdfController::class, 'generateLaporanKomisi']);
+    Route::get('/laporan-stok-gudang', [PdfController::class, 'generateLaporanStokGudang']);
 
 });
 Route::middleware('auth:gudang')->group(function () {

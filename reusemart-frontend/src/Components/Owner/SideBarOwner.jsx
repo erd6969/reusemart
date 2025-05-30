@@ -38,10 +38,10 @@ const SideBarOwner = () => {
                             <li className="sidebarSubItemOwner" onClick={() => navigate("/owner/laporan-penjualan")}>
                                 Laporan Penjualan Bulanan
                             </li>
-                            <li className="sidebarSubItemOwner" onClick={() => navigate("/owner/laporan-komisi")}>
+                            <li className="sidebarSubItemOwner" onClick={() => navigate("/owner/laporan-komisi-bulanan")}>
                                 Laporan Komisi Bulanan
                             </li>
-                            <li className="sidebarSubItemOwner" onClick={() => navigate("/owner/laporan-stok")}>
+                            <li className="sidebarSubItemOwner" onClick={() => navigate("/owner/laporan-stok-gudang")}>
                                 Laporan Stok Gudang
                             </li>
                             <li className="sidebarSubItemOwner" onClick={() => navigate("/owner/laporan-penjualan-kategori")}>

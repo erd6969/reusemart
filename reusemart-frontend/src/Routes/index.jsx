@@ -79,6 +79,9 @@ import PegawaiGudangLayout from "../Layouts/PegawaiGudangLayouts";
 import DetailTransaksiPenitipanPage from "../Pages/PegawaiGudang/DetailTransaksiPenitipanPage";
 import VerifikasiSelesaiPage from "../Pages/PegawaiGudang/VerifikasiSelesaiPage";
 import TransaksiPengirimanPage from "../Pages/PegawaiGudang/TransaksiPengirimanPage";
+import LaporanPenjualanKeseluruhan from "../Pages/Owner/Laporan/LaporanPenjualanKeseluruhan";
+import LaporanKomisiBulanan from "../Pages/Owner/Laporan/LaporanKomisiBulanan";
+import LaporanStokGudang from "../Pages/Owner/Laporan/LaporanStokGudang";
 import LaporanBarangHabis from "../Pages/Owner/Laporan/LaporanBarangHabis";
 const router = createBrowserRouter([
     {
@@ -217,6 +220,18 @@ const router = createBrowserRouter([
             {
                 path: "req-donasi-show-barang/:nama_organisasi/:id_request_donasi",
                 element: <ReqDonasiShowBarang />,
+            },
+            {
+                path: "laporan-penjualan",
+                element: <LaporanPenjualanKeseluruhan />,
+            },
+            {
+                path: "laporan-komisi-bulanan",
+                element: <LaporanKomisiBulanan/>,
+            },
+            {
+                path: "laporan-stok-gudang",
+                element: <LaporanStokGudang/>,
             },
             {
                 path: "laporan-transaksi-penitip",

@@ -5,7 +5,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:reusemart_mobile/HunterPage/hunter_home.dart';
 import 'package:reusemart_mobile/KurirPage/kurir_main_page.dart';
 import 'package:reusemart_mobile/PenitipPage/penitip_home.dart';
-import 'package:reusemart_mobile/PembeliPage/pembeli_home.dart';
+import 'package:reusemart_mobile/PembeliPage/pembeli_main.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -154,7 +154,7 @@ class _LoginPageState extends State<LoginPage> {
                               Navigator.pushReplacement(
                                 context,
                                 MaterialPageRoute(
-                                    builder: (context) => PembeliHomePage()),
+                                    builder: (context) => PembeliMainPage()),
                               );
                             } else if (role == 'penitip') {
                               Navigator.pushReplacement(

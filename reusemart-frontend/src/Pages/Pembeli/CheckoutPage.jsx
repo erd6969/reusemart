@@ -67,7 +67,7 @@ const AlamatSection = ({ alamatUtama, setShowModal, shippingOption, setShippingO
                             )
                         ) : (
                             <>
-                                <p>Jl. Cyka Blyat No. 01, Jomblangan, Banguntapan, Kabupaten Bantul, 55888</p>
+                                <p>Jl. Atma Jaya Yogyakarta No. 199, Babarsari, Sleman, Daerah Istimewa Yogyakarta</p>
                                 <p className="pickup-warning">
                                     *Catatan: Kamu harus mengambil barang sesuai jadwal yang ditentukan atau transaksi akan dibatalkan.
                                 </p>
@@ -197,8 +197,10 @@ const PaymentDetail = ({ cartItems, alamatUtama, shippingOption }) => {
         }
     };
 
-
-    const ongkir = totalHarga < 1500000 ? 100000 : 0;
+    let ongkir = 0;
+    if (shippingOption === 'diantar kurir') {
+        ongkir = totalHarga < 1500000 ? 100000 : 0;
+    }
     const potonganPoin = selectedPoints > 0 ? selectedPoints * 100 : 0;
     const totalBayar = totalHarga + ongkir - potonganPoin;
     const poinDapat = totalHarga >= 500000 ? Math.floor((totalBayar / 10000) + ((totalBayar / 10000) * 0.2)) : Math.floor(totalBayar / 10000);

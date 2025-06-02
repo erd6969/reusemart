@@ -52,8 +52,8 @@ const ModalPengirimanKurir = ({ show, handleClose, dataEdit, onSuccess }) => {
         if (!formData.jam_pengiriman) return toast.error("Pilih jam pengiriman!");
 
         const [jam, menit] = formData.jam_pengiriman.split(":").map(Number);
-        if (jam > 16 || (jam === 16 && menit > 0)) {
-            return toast.error("Jam pengiriman tidak boleh lebih dari pukul 16:00");
+        if (jam < 8 || jam > 16 || (jam === 16 && menit > 0)) {
+            return toast.error("Jam pengiriman harus antara pukul 08:00 sampai 16:00");
         }
         console.log("Form Data:", dataEdit.id_transaksi_pembelian);
         try {

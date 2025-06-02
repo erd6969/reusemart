@@ -22,10 +22,10 @@ const ExtendProductPage = () => {
     const [selectedProductId, setSelectedProductId] = useState(null);
 
 
-    const fetchExtendProducts = async () => {
+    const fetchExtendProducts = async (page = 1) => {
         setIsLoading(true);
         try {
-            const response = await ShowExtendProducts();
+            const response = await ShowExtendProducts(page);
             setExtendProducts(response.data);
             setTotalPages(response.last_page);
             setCurrentPage(response.current_page);
@@ -40,8 +40,8 @@ const ExtendProductPage = () => {
         }
     }
     useEffect(() => {
-        fetchExtendProducts();
-    }, []);
+        fetchExtendProducts(currentPage);
+    }, [currentPage]);
 
     const handleOpenModal = (id_barang) => {
         setSelectedProductId(id_barang);

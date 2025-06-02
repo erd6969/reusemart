@@ -523,7 +523,6 @@ class BarangController
                 ], 404);
             }
 
-
             if ($kurir && $kurir->fcm_token) {
                 $notifRequest = new Request([
                     'token' => $kurir->fcm_token,
@@ -568,6 +567,7 @@ class BarangController
                 }
             }
 
+            $this->getKomisiPembelian($detailTransaksi->id_transaksi_pembelian);
             $detailTransaksi->update([
                 'id_pegawai' => $kurir->id_pegawai,
                 'tanggal_pengiriman' => $sendDate,
@@ -638,8 +638,6 @@ class BarangController
                     (new NotificationController())->sendNotification($notifRequest);
                 }
             }
-
-
             $this->getKomisiPembelian($detailTransaksi->id_transaksi_pembelian);
 
             $detailTransaksi->update([
@@ -667,6 +665,7 @@ class BarangController
             $barang = $komisi->barang;
             $harga = $barang->harga_barang;
             $detail = $komisi->barang->detailtransaksipenitipan->first();
+            $transaksi_penitipan = $detail->transaksiPenitipan;
             $pembeli = $komisi->transaksiPembelian->pembeli;
             $poinDapat = $komisi->transaksiPembelian->tambahan_poin;
 
@@ -696,9 +695,11 @@ class BarangController
                 }
             }
 
-            if ($detail->tanggal_penitipan >= now()->subDays(7)) {
+            if ($transaksi_penitipan->tanggal_penitipan >= now()->subDays(7)) {
                 $bonus_penitip = $komisi_reusemart * 0.1;
                 $komisi_reusemart = $komisi_reusemart - $bonus_penitip;
+                Log::info('Bonus Penitip: ' . $bonus_penitip);
+                Log::info('Komisi Reusemart setelah bonus: ' . $komisi_reusemart);
             }
 
             $komisi->update([
@@ -709,7 +710,7 @@ class BarangController
                 'bonus_penitip' => $bonus_penitip,
             ]);
 
-            if ($detail->transaksiPenitipan->penitip) {
+            if ($detail->transaksiPenitipan && $detail->transaksiPenitipan->penitip) {
                 $penitip = $detail->transaksiPenitipan->penitip;
                 $penitip->saldo += $komisi_penitip;
                 $penitip->komisi_penitip += $bonus_penitip;
@@ -732,8 +733,6 @@ class BarangController
             'message' => 'Komisi berhasil dihitung',
         ], 200);
     }
-
-    // Mengubah status transaksi pembelian menjadi 'siap diambil' dan menyimpan tanggal pengiriman
     public function VerifyAmbilBarangPembeli($id)
     {
         $validatedData = request()->validate([
@@ -921,9 +920,10 @@ class BarangController
                     'transaksi_pembelian.pengiriman',
                     'transaksi_pembelian.tanggal_pengiriman',
                     'transaksi_pembelian.status_pengiriman',
+                    'transaksi_pembelian.tanggal_pembelian',
                 )
                 ->distinct()
-                ->orderBy('transaksi_pembelian.tanggal_pengiriman', 'asc')
+                ->orderBy('transaksi_pembelian.id_transaksi_pembelian', 'desc')
                 ->paginate(5);
 
             return response()->json($products, 200);

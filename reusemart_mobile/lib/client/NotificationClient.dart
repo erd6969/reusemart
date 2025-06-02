@@ -1,9 +1,11 @@
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
+import 'package:reusemart_mobile/client/baseUrl.dart';
+
 Future<void> sendNotification(String token, String title, String body) async {
   final response = await http.post(
-    Uri.parse('http://10.0.2.2:8000/api/send-notification'),
+    Uri.parse('$baseUrl/api/send-notification'),
     headers: {'Content-Type': 'application/json'},
     body: json.encode({
       'token': token,

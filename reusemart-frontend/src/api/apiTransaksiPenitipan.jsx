@@ -163,7 +163,8 @@ export const PreviewPdf = async (id_transaksi_penitipan) => {
     window.open(fileURL, '_blank'); // open PDF preview in new tab
 
   } catch (error) {
-    console.error('Gagal menampilkan PDF:', error);
+    console.error('Gagal menampilkan PDF:', error.response.data.message || error.message);
+    throw error?.response?.data || error;
   }
 };
 

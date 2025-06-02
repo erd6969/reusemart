@@ -51,7 +51,9 @@ class TransaksiPenitipanController
      */
     public function show()
     {
-        $TransaksiPenitipan = TransaksiPenitipan::with(['penitip:id_penitip,nama_penitip,email_penitip'])->paginate(10);
+        $TransaksiPenitipan = TransaksiPenitipan::with(['penitip:id_penitip,nama_penitip,email_penitip'])
+        ->orderBy('id_transaksi_penitipan', 'desc')
+        ->paginate(10);
         // $TransaksiPenitipan = TransaksiPenitipan::with(['penitip', 'detailTransaksiPenitipan.barang'])->get();
         return response()->json(
             $TransaksiPenitipan

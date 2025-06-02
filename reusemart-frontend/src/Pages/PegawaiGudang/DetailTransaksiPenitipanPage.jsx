@@ -105,7 +105,18 @@ const DetailTransaksiPenitipanPage = () => {
     };
 
     const handleNota = () => {
-        PreviewPdf(id_transaksi_penitipan);
+        try{
+            PreviewPdf(id_transaksi_penitipan);
+        }catch (error) {
+            if (error.response && error.response.data.errors) {
+                const errors = error.response.data.errors;
+                Object.values(errors).forEach((messages) => {
+                    messages.forEach((msg) => toast.error(msg));
+                });
+            } else {
+                toast.error(error.message || "Gagal melakukan create pegawai");
+            }
+        }
     };
 
     return (

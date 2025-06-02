@@ -4,7 +4,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:reusemart_mobile/HunterPage/hunter_home.dart';
 import 'package:reusemart_mobile/KurirPage/kurir_main_page.dart';
-import 'package:reusemart_mobile/PenitipPage/penitip_home.dart';
+import 'package:reusemart_mobile/PenitipPage/penitip_profile.dart';
+import 'package:reusemart_mobile/PenitipPage/penitip_main.dart';
 import 'package:reusemart_mobile/PembeliPage/pembeli_main.dart';
 
 class LoginPage extends StatefulWidget {
@@ -149,7 +150,7 @@ class _LoginPageState extends State<LoginPage> {
                             await prefs.setString('token', token ?? '');
                             await prefs.setString('role', role ?? '');
 
-                            // Redirect langsung ke widget halaman
+                           
                             if (role == 'pembeli') {
                               Navigator.pushReplacement(
                                 context,
@@ -160,7 +161,7 @@ class _LoginPageState extends State<LoginPage> {
                               Navigator.pushReplacement(
                                 context,
                                 MaterialPageRoute(
-                                    builder: (context) => PenitipHomePage()),
+                                    builder: (context) => PenitipMainPage()),
                               );
                             } else if (role == 'kurir') {
                               Navigator.pushReplacement(

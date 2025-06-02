@@ -1,19 +1,18 @@
 import 'package:flutter/material.dart';
-import 'package:reusemart_mobile/PembeliPage/pembeli_merchandise.dart';
-import 'package:reusemart_mobile/PembeliPage/pembeli_profile.dart';
+import 'package:reusemart_mobile/PenitipPage/penitip_profile.dart';
+import 'package:reusemart_mobile/PenitipPage/penitip_history.dart';
 import 'package:reusemart_mobile/BarangPage/list_barang.dart';
 import 'package:reusemart_mobile/client/AuthClient.dart';
 import 'package:reusemart_mobile/client/BarangClient.dart';
-import 'package:reusemart_mobile/client/PembeliClient.dart';
 
-class PembeliMainPage extends StatefulWidget {
-  const PembeliMainPage({super.key});
+class PenitipMainPage extends StatefulWidget {
+  const PenitipMainPage({super.key});
 
   @override
-  State<PembeliMainPage> createState() => _PembeliMainPageState();
+  State<PenitipMainPage> createState() => _PenitipMainPageState();
 }
 
-class _PembeliMainPageState extends State<PembeliMainPage> {
+class _PenitipMainPageState extends State<PenitipMainPage> {
   int _currentIndex = 0;
 
   Future<List<dynamic>> fetchBarang() async {
@@ -27,9 +26,9 @@ class _PembeliMainPageState extends State<PembeliMainPage> {
       case 0:
         return ListBarangPage(fetchData: fetchBarang);
       case 1:
-        return PembeliMerchandisePage();
+        return PenitipHistoryPage();
       case 2:
-        return ProfilePembeliPage();
+        return ProfilePenitipPage();
       default:
         return ListBarangPage(fetchData: fetchBarang);
     }
@@ -42,7 +41,7 @@ class _PembeliMainPageState extends State<PembeliMainPage> {
         automaticallyImplyLeading: false,
         backgroundColor: const Color(0xFF347928),
         title: const Text(
-          'Pembeli Page ReuseMart',
+          'Penitip Page ReuseMart',
           style: TextStyle(
             fontSize: 24,
             fontWeight: FontWeight.w600,
@@ -67,7 +66,7 @@ class _PembeliMainPageState extends State<PembeliMainPage> {
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.shopping_bag),
-            label: 'Merchandise',
+            label: 'History',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.person),

@@ -1,16 +1,17 @@
 import 'package:flutter/material.dart';
-import 'package:reusemart_mobile/client/AuthClient.dart';
-import 'package:reusemart_mobile/client/PembeliClient.dart';
-import 'package:reusemart_mobile/PembeliPage/detail_barang.dart';
+import 'package:reusemart_mobile/BarangPage/detail_barang.dart';
+import 'package:reusemart_mobile/client/BarangClient.dart';
 
-class PembeliBarangPage extends StatefulWidget {
-  const PembeliBarangPage({super.key});
+class ListBarangPage extends StatefulWidget {
+  final Future<List<dynamic>> Function() fetchData;
+
+  const ListBarangPage({super.key, required this.fetchData});
 
   @override
-  State<PembeliBarangPage> createState() => _PembeliBarangPageState();
+  State<ListBarangPage> createState() => _ListBarangPageState();
 }
 
-class _PembeliBarangPageState extends State<PembeliBarangPage> {
+class _ListBarangPageState extends State<ListBarangPage> {
   List<dynamic> _barangList = [];
   String _searchText = '';
   bool _isLoading = true;
@@ -23,13 +24,7 @@ class _PembeliBarangPageState extends State<PembeliBarangPage> {
 
   Future<void> fetchBarang() async {
     try {
-      final token = await AuthClient.getToken();
-      if (token == null) {
-        print('Token tidak tersedia');
-        return;
-      }
-
-      final data = await PembeliClient.getBarang(token);
+      final data = await widget.fetchData();
       setState(() {
         _barangList = data;
         _isLoading = false;
@@ -56,7 +51,6 @@ class _PembeliBarangPageState extends State<PembeliBarangPage> {
           ? const Center(child: CircularProgressIndicator())
           : Column(
               children: [
-                // Search Bar
                 Padding(
                   padding: const EdgeInsets.all(16),
                   child: TextField(
@@ -72,10 +66,30 @@ class _PembeliBarangPageState extends State<PembeliBarangPage> {
                     },
                   ),
                 ),
-
-                // Hapus Carousel, langsung ke Grid View
-
-                // Grid View
+                Container(
+                  margin:
+                      const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                  padding: const EdgeInsets.all(12),
+                  decoration: BoxDecoration(
+                    color: Colors.orange[100],
+                    borderRadius: BorderRadius.circular(10),
+                    border: Border.all(color: Colors.orange, width: 1),
+                  ),
+                  child: Row(
+                    children: const [
+                      Icon(Icons.star, color: Colors.orange),
+                      SizedBox(width: 8),
+                      Text(
+                        'Top Seller: Asiang gaming',
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 16,
+                          color: Colors.orange,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
                 Expanded(
                   child: filteredList.isEmpty
                       ? const Center(child: Text('Tidak ada data barang.'))
@@ -91,7 +105,7 @@ class _PembeliBarangPageState extends State<PembeliBarangPage> {
                           itemCount: filteredList.length,
                           itemBuilder: (context, index) {
                             final barang = filteredList[index];
-                            final fotoUrl = PembeliClient.getFotoBarang(
+                            final fotoUrl = BarangClient.getFotoBarang(
                                 barang['foto_barang'] ?? '');
 
                             return GestureDetector(

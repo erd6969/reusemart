@@ -118,7 +118,7 @@ const ExtendProductPage = () => {
     return (
         <div className="histori-penitipan-wrapper">
             <div className="sold-products-container">
-                <h2><b>Produk Masa Penitipan Habis</b></h2>
+                <h2><b>Perpanjangan Barang</b></h2>
                 <div className="sold-products-content-container">
                     <div className="search-bar">
                         <img src={SearchIcon} alt="Search Icon" className="search-icon-inside" />
@@ -155,7 +155,6 @@ const ExtendProductPage = () => {
                                         <td className='product-info'>
                                             <img src={getThumbnailBarang(product.foto_barang) || defaultImage} alt={product.nama_barang} style={{ maxWidth: '8vw' }} />
                                             <b>{product.nama_barang}</b>
-
                                         </td>
                                         <td style={{ width: '15%' }}>Rp {product.harga_barang?.toLocaleString('id-ID') || '-'} </td>
                                         <td>{product.tanggal_berakhir}</td>
@@ -165,25 +164,44 @@ const ExtendProductPage = () => {
                                                 <div className='action-buttons'>
                                                     {product.status_perpanjangan === 0 ? (
                                                         <>
-                                                            <button className="btn btn-success" onClick={() => handleExtend(product.id_detail_transaksi_penitipan)}>
+                                                            <button
+                                                                className="btn btn-success"
+                                                                onClick={e => {
+                                                                    e.stopPropagation();
+                                                                    handleExtend(product.id_detail_transaksi_penitipan);
+                                                                }}
+                                                            >
                                                                 Extend
                                                             </button>
 
-                                                            <button style={{ color: 'white' }} className="btn btn-danger" onClick={() => handleAmbil(product.id_barang)}>
+                                                            <button
+                                                                style={{ color: 'white' }}
+                                                                className="btn btn-danger"
+                                                                onClick={e => {
+                                                                    e.stopPropagation();
+                                                                    handleAmbil(product.id_barang);
+                                                                }}
+                                                            >
                                                                 Ambil
                                                             </button>
                                                         </>
                                                     ) : (
-                                                        <button style={{ color: 'white', width: '100%' }} className="btn btn-danger" onClick={() => handleAmbil(product.id_barang)}>
+                                                        <button
+                                                            style={{ color: 'white', width: '100%' }}
+                                                            className="btn btn-danger"
+                                                            onClick={e => {
+                                                                e.stopPropagation();
+                                                                handleAmbil(product.id_barang);
+                                                            }}
+                                                        >
                                                             Ambil
-                                                        </button>)}
+                                                        </button>
+                                                    )}
                                                 </div>
                                             ) : (
                                                 <Badge style={{ padding: '12px', fontSize: '15px' }} bg='warning'>Masa Pengambilan</Badge>
                                             )}
                                         </td>
-
-
                                     </tr>
                                 ))
                             ) : (

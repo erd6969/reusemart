@@ -3,12 +3,12 @@ import 'package:http/http.dart' as http;
 
 
 
+import 'package:reusemart_mobile/client/baseUrl.dart';
+
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 
 class AuthClient {
-  // static const String baseUrl = '10.0.2.2:8000';
-  static const String baseUrl = '192.168.0.112:8000';
   static final String apiPath = '/api';
 
   static Future<bool> login(String email, String password) async {

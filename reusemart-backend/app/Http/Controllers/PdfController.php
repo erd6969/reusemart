@@ -24,6 +24,10 @@ class PdfController
     {
         $transaksi = TransaksiPenitipan::with(['penitip', 'detailTransaksiPenitipan.barang.pegawai'])->findOrFail($id_transaksi_penitipan);
 
+        if(!$transaksi->detailTransaksiPenitipan->count()) {
+            return response()->json(['message' => 'Tidak ada detail transaksi penitipan untuk transaksi ini', 'errors' => 'Tidak ada data barang'], 404);
+        }
+
         log::info('Transaksi Penitipan: ' . json_encode($transaksi));
 
         $pdf = Pdf::loadView('pdf.nota_transaksi_penitipan', ['transaksi' => $transaksi]);

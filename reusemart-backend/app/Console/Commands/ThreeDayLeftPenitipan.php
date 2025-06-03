@@ -18,9 +18,11 @@ class ThreeDayLeftPenitipan extends Command
     public function handle()
     {
         $now = Carbon::now();
-        $targetDate = Carbon::today()->addDays(3);
+        $targetDate = Carbon::now()->addDays(3);
         Log::info("================================================");
         Log::info("3DayLeftPenitipan dijalankan pada: {$now}");
+        Log::info("3DayLeftPenitipan dijalankan pada: {$targetDate}");
+        Log::info("================================================");
 
         $transaksis = DetailTransaksiPenitipan::with('transaksiPenitipan', 'barang')
             ->whereDate('tanggal_berakhir', $targetDate)

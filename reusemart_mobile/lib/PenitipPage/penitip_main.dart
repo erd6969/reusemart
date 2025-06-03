@@ -30,7 +30,7 @@ class _PenitipMainPageState extends State<PenitipMainPage> {
       case 2:
         return ProfilePenitipPage();
       default:
-        return ListBarangPage(fetchData: fetchBarang);
+        return ProfilePenitipPage();
     }
   }
 

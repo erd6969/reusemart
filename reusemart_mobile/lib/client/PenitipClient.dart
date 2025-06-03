@@ -3,9 +3,10 @@ import 'package:http/http.dart' as http;
 
 import 'package:reusemart_mobile/entity/Penitip.dart';
 
+import 'package:reusemart_mobile/client/baseUrl.dart';
+
 class PenitipClient {
   // static const String baseUrl = '10.0.2.2:8000';
-  static const String baseUrl = '192.168.0.112:8000';
   static final String apiPath = '/api';
 
   

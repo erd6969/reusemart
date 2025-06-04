@@ -4,6 +4,7 @@ import 'package:reusemart_mobile/PenitipPage/penitip_history.dart';
 import 'package:reusemart_mobile/BarangPage/list_barang.dart';
 import 'package:reusemart_mobile/client/AuthClient.dart';
 import 'package:reusemart_mobile/client/BarangClient.dart';
+import 'package:reusemart_mobile/client/PenitipClient.dart';
 
 class PenitipMainPage extends StatefulWidget {
   const PenitipMainPage({super.key});
@@ -21,12 +22,20 @@ class _PenitipMainPageState extends State<PenitipMainPage> {
     return await BarangClient.getBarang(token);
   }
 
+  Future<List<Map<String, dynamic>>> fetchHistory() async {
+    final token = await AuthClient.getToken();
+    if (token == null) throw Exception("Token tidak ditemukan");
+    final history = await PenitipClient.getPenitipHistory(token);
+    return history;
+  }
+
+
   Widget _getPage(int index) {
     switch (index) {
       case 0:
         return ListBarangPage(fetchData: fetchBarang);
       case 1:
-        return PenitipHistoryPage();
+        return PenitipHistoryPage(fetchData: fetchHistory);
       case 2:
         return ProfilePenitipPage();
       default:

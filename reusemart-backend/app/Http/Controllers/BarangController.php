@@ -241,7 +241,9 @@ class BarangController
     {
         try {
             $barang = Barang::join('detail_transaksi_penitipan', 'barang.id_barang', '=', 'detail_transaksi_penitipan.id_barang')
+                ->join('transaksi_penitipan', 'transaksi_penitipan.id_transaksi_penitipan', '=', 'detail_transaksi_penitipan.id_transaksi_penitipan')
                 ->where('detail_transaksi_penitipan.status_penitipan', '=', 'ready jual')
+                // ->where('transaksi_penitipan.tanggal_penitipan', '>=', Carbon::today()->subdays(25))
                 ->get();
 
             return response()->json($barang, 200);

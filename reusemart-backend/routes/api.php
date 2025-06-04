@@ -67,6 +67,7 @@ Route::middleware('auth:penitip')->group(function () {
     Route::get('/penitip/search-terjual/{search_barang}', [PenitipController::class, 'searchBarangTerjual']);
     Route::get('/penitip/show-detail-pendapatan/{id_barang}', [PenitipController::class, 'showDetailPendapatan']);
     Route::get('/detail-donasi/{id_barang}', [BarangController::class, 'showDetailBarangDonasi']);
+    Route::get('/penitip/show-history-penitipan', [PenitipController::class, 'showHistoryPenitipan']);
 });
  #endregion
 

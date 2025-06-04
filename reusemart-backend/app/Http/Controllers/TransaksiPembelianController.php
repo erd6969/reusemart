@@ -305,9 +305,26 @@ class TransaksiPembelianController
     public function rejectTransaksiPembelian(Request $request)
     {
         try {
+            // Update status transaksi menjadi ditolak
             $transaksi = TransaksiPembelian::where('id_transaksi_pembelian', $request->id_transaksi_pembelian)
+                ->first();
+
+            if (!$transaksi) {
+                return response()->json(['message' => 'Transaksi tidak ditemukan'], 404);
+            }
+
+            $transaksi->update([
+                'verifikasi_bukti' => 'transaksi ditolak',
+            ]);
+
+            // Ambil semua id_barang dari komisi pada transaksi ini
+            $idBarangs = Komisi::where('id_transaksi_pembelian', $transaksi->id_transaksi_pembelian)
+                ->pluck('id_barang');
+
+            // Update status_penitipan semua barang terkait
+            DetailTransaksiPenitipan::whereIn('id_barang', $idBarangs)
                 ->update([
-                    'verifikasi_bukti' => 'transaksi ditolak',
+                    'status_penitipan' => 'ready jual',
                 ]);
 
             return response()->json([

@@ -1,10 +1,10 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import 'package:reusemart_mobile/client/baseUrl.dart';
 
 import 'package:reusemart_mobile/client/baseUrl.dart';
 
 class BarangClient {
-  // static const String baseUrl = '10.0.2.2:8000';
   static final String apiPath = '/api';
   static Future<List<dynamic>> getBarang(String token) async {
     try {

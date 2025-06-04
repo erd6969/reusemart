@@ -7,8 +7,6 @@ import 'package:reusemart_mobile/client/baseUrl.dart';
 class PembeliClient {
   static final String apiPath = '/api';
 
-  
-
   static Future<Pembeli?> getProfilePembeli(String token) async {
     try {
       final url = Uri.http(baseUrl, '$apiPath/pembeli/show-profile');

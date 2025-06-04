@@ -23,10 +23,10 @@ const OnSaleProductPage = () => {
 
 
 
-    const fetchOnSaleProducts = async () => {
+    const fetchOnSaleProducts = async (page = 1) => {
         setIsLoading(true);
         try {
-            const response = await ShowOnSaleProducts();
+            const response = await ShowOnSaleProducts(page);
             setOnSaleProducts(response.data);
             setTotalPages(response.last_page);
             setCurrentPage(response.current_page);
@@ -41,7 +41,7 @@ const OnSaleProductPage = () => {
     }
 
     useEffect(() => {
-        fetchOnSaleProducts();
+        fetchOnSaleProducts(currentPage);
     }, [currentPage]);
 
     const handlePagination = (page) => {

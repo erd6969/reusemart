@@ -70,8 +70,14 @@
         @php
             $alamat = $transaksi->alamat;
         @endphp
-        <p>{{ $alamat->nama_alamat }}, {{ $alamat->alamat }}, {{ $alamat->keterangan }}</p>
-        <p>{{ $alamat->kecamatan }}, {{ $alamat->kabupaten }}, {{ $alamat->kelurahan }}, {{ $alamat->kode_pos }}</p>
+
+        @if ($alamat)
+            <p>{{ $alamat->nama_alamat }}, {{ $alamat->alamat }}, {{ $alamat->keterangan }}</p>
+            <p>{{ $alamat->kecamatan }}, {{ $alamat->kabupaten }}, {{ $alamat->kelurahan }}, {{ $alamat->kode_pos }}</p>
+        @else
+            <p>Gudang ReuseMart Yogyakarta</p>
+            <p>Jl. Atma Jaya Yogyakarta No. 199, Babarsari, Sleman, Daerah Istimewa Yogyakarta</p>
+        @endif
     </div>
 
     <div class="section">
@@ -103,7 +109,7 @@
                                     {{ \Carbon\Carbon::parse($detail->barang->tanggal_garansi)->greaterThan(\Carbon\Carbon::now())
                     ? 'Garansi: ' . \Carbon\Carbon::parse($detail->barang->tanggal_garansi)->format('d/m/Y')
                     : 'Sudah Kadaluarsa / Lewat Garansi' 
-                                                                                                                                                                                                            }}
+                                                                                                                                                                                                                        }}
                                 </td>
 
                             </tr>

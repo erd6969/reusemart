@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import 'package:reusemart_mobile/client/AuthClient.dart';
 
 import 'package:reusemart_mobile/entity/Penitip.dart';
 import 'package:reusemart_mobile/client/baseUrl.dart';
@@ -72,6 +73,31 @@ class PenitipClient {
     } catch (e) {
       print('Error fetching penitip history: $e');
       return [];
+    }
+  }
+
+  static Future<Map<String, dynamic>> getTopSeller() async {
+    try {
+      final token = await AuthClient.getToken();
+      if (token == null) throw Exception("Token tidak ditemukan");
+      final url = Uri.http(baseUrl, '$apiPath/penitip/get-top-seller');
+      final response = await http.get(
+        url,
+        headers: {
+          'Authorization': 'Bearer $token',
+          'Accept': 'application/json',
+        },
+      );
+
+      if (response.statusCode == 200) {
+        final data = jsonDecode(response.body);
+        return Map<String, dynamic>.from(data);
+      } else {
+        return {};
+      }
+    } catch (e) {
+      print('Error fetching top seller: $e');
+      return {};
     }
   }
 }

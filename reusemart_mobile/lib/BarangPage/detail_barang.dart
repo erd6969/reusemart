@@ -32,7 +32,7 @@ class DetailBarangPage extends StatelessWidget {
           children: [
             if (fotoList.isNotEmpty)
               SizedBox(
-                height: 200,
+                height: 400,
                 child: CarouselSlider.builder(
                   itemCount: fotoList.length,
                   slideBuilder: (index) {

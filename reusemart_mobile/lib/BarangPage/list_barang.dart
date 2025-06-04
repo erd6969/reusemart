@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:reusemart_mobile/BarangPage/detail_barang.dart';
 import 'package:reusemart_mobile/client/BarangClient.dart';
+import 'package:reusemart_mobile/client/PenitipClient.dart';
 
 class ListBarangPage extends StatefulWidget {
   final Future<List<dynamic>> Function() fetchData;
@@ -15,10 +16,12 @@ class _ListBarangPageState extends State<ListBarangPage> {
   List<dynamic> _barangList = [];
   String _searchText = '';
   bool _isLoading = true;
+  Map<String, dynamic>? _topSeller;
 
   @override
   void initState() {
     super.initState();
+    getTopSeller();
     fetchBarang();
   }
 
@@ -31,6 +34,24 @@ class _ListBarangPageState extends State<ListBarangPage> {
       });
     } catch (e) {
       print('Gagal mengambil data barang: $e');
+      setState(() {
+        _isLoading = false;
+      });
+    }
+  }
+
+  Future<void> getTopSeller() async{
+    try{
+      setState(() {
+        _isLoading = true;
+      });
+      final data = await PenitipClient.getTopSeller();
+      setState((){
+        _topSeller = data;
+        _isLoading = false;
+      });
+    }catch (e) {
+      print('Gagal mengambil data top seller: $e');
       setState(() {
         _isLoading = false;
       });
@@ -76,11 +97,11 @@ class _ListBarangPageState extends State<ListBarangPage> {
                     border: Border.all(color: Colors.orange, width: 1),
                   ),
                   child: Row(
-                    children: const [
+                    children: [
                       Icon(Icons.star, color: Colors.orange),
                       SizedBox(width: 8),
                       Text(
-                        'Top Seller: Asiang gaming',
+                        'Top Seller Bulan Lalu: ${_topSeller?['nama_penitip'] ?? 'Tidak ada'}!',
                         style: TextStyle(
                           fontWeight: FontWeight.bold,
                           fontSize: 16,

@@ -648,4 +648,18 @@ class PenitipController
         }
     }
 
+    public function getTopSeller(){
+        try{
+            $penitip = Penitip::where('badge', '=', 1)
+            ->first();
+
+            return response()->json($penitip, 200);
+        }catch (\Exception $e) {
+            return response()->json([
+                'message' => 'Error occurred',
+                'error' => $e->getMessage(),
+            ], 500);
+        }
+    }
+
 }

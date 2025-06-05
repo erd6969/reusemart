@@ -194,4 +194,30 @@ class PembeliController
             ], 404);
         }
     }
+
+    public function showAllHistoryPembelian(){
+        try{
+            $pembeli = auth('pembeli')->user();
+
+            $barang = DB::table('transaksi_pembelian')
+                ->join('komisi', 'transaksi_pembelian.id_transaksi_pembelian', '=', 'komisi.id_transaksi_pembelian')
+                ->join('barang', 'komisi.id_barang', '=', 'barang.id_barang')
+                ->where('transaksi_pembelian.id_pembeli', $pembeli->id_pembeli)
+                ->select(
+                    'barang.*',
+                    'transaksi_pembelian.tanggal_pembelian',
+                    'transaksi_pembelian.pengiriman',
+                    'transaksi_pembelian.total_pembayaran',
+                )
+                ->orderBy('transaksi_pembelian.tanggal_pembelian', 'desc')
+                ->paginate(10);
+
+            return response()->json($barang, 200);
+        }catch(Exception $e){
+            return response()->json([
+                'message' => 'Pembeli not found',
+                'error' => $e->getMessage(),
+            ], 404);
+        }
+    }
 }

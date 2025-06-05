@@ -127,6 +127,8 @@ Route::middleware('auth:pembeli')->group(function () {
     Route::get('/pembeli/show-unpaid-purchase', [PembeliController::class, 'showUnpaidPurchase']);
     Route::get('/pembeli/show-verification-purchase', [PembeliController::class, 'showVerificationPurchase']);
     Route::post('/pembeli/tambah-rating', [BarangController::class, 'tambahRating']);
+    Route::get('/pembeli/show-all-history-pembelian', [PembeliController::class, 'showAllHistoryPembelian']);
+    Route::get('/pembeli/show-detail-history/{id_barang}', [BarangController::class, 'showHistoryBarangIdPembeli']);
 });
 #endregion
 

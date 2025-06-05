@@ -8,6 +8,7 @@ class Hunter {
   String nomor_telepon_hunter;
   double total_komisi;
   String foto_hunter;
+  DateTime tanggal_lahir_hunter;
 
   Hunter({
     required this.id_hunter,
@@ -17,6 +18,7 @@ class Hunter {
     required this.nomor_telepon_hunter,
     required this.total_komisi,
     required this.foto_hunter,
+    required this.tanggal_lahir_hunter,
   });
 
   factory Hunter.fromRawJson(String str) => Hunter.fromJson(json.decode(str));
@@ -28,6 +30,7 @@ class Hunter {
         nomor_telepon_hunter: json["nomor_telepon_hunter"],
         total_komisi: json["total_komisi"].toDouble(),
         foto_hunter: json["foto_hunter"],
+        tanggal_lahir_hunter: DateTime.parse(json["tanggal_lahir_hunter"]),
       );
 
   String toRawJson() => json.encode(toJson());
@@ -39,5 +42,7 @@ class Hunter {
         "nomor_telepon_hunter": nomor_telepon_hunter,
         "total_komisi": total_komisi,
         "foto_hunter": foto_hunter,
+         "tanggal_lahir_pembeli":
+            "${tanggal_lahir_hunter.year.toString().padLeft(4, '0')}-${tanggal_lahir_hunter.month.toString().padLeft(2, '0')}-${tanggal_lahir_hunter.day.toString().padLeft(2, '0')}",
       };
 }

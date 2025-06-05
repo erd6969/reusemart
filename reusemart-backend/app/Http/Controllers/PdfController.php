@@ -24,7 +24,7 @@ class PdfController
     {
         $transaksi = TransaksiPenitipan::with(['penitip', 'detailTransaksiPenitipan.barang.pegawai'])->findOrFail($id_transaksi_penitipan);
 
-        if(!$transaksi->detailTransaksiPenitipan->count()) {
+        if (!$transaksi->detailTransaksiPenitipan->count()) {
             return response()->json(['message' => 'Tidak ada detail transaksi penitipan untuk transaksi ini', 'errors' => 'Tidak ada data barang'], 404);
         }
 
@@ -137,9 +137,8 @@ class PdfController
             ->join('transaksi_penitipan as tpen', 'p.id_penitip', '=', 'tpen.id_penitip')
             ->join('detail_transaksi_penitipan as dtp', 'tpen.id_transaksi_penitipan', '=', 'dtp.id_transaksi_penitipan')
             ->join('barang as b', 'dtp.id_barang', '=', 'b.id_barang')
-            ->whereMonth('dtp.tanggal_berakhir', $today->month)
-            ->whereYear('dtp.tanggal_berakhir', $today->year)
             ->whereDate('dtp.tanggal_berakhir', '<=', $today->toDateString())
+            ->whereNotIn('dtp.status_penitipan', ['terjual', 'didonasikan', 'open donasi'])
             ->select(
                 'b.id_barang',
                 'b.nama_barang',
@@ -148,7 +147,6 @@ class PdfController
                 'tpen.tanggal_penitipan',
                 'dtp.tanggal_berakhir',
                 'dtp.tanggal_batas_pengambilan',
-
             )
             ->get();
 

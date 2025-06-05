@@ -101,4 +101,17 @@ class HunterController
             ], 500);
         }
     }
+
+    public function showProfile()
+    {
+        try {
+            $hunter = auth('hunter')->user();
+            return response()->json($hunter, 200);
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'hunter not found',
+                'error' => $e->getMessage(),
+            ], 404);
+        }
+    }
 }

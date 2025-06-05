@@ -241,3 +241,8 @@ Route::middleware('auth:kurir')->group(function () {
 });
 #endregion
 
+Route::middleware('auth:hunter')->group(function () {
+   Route::get('/hunter/show-profile', [HunterController::class, 'showProfile']);
+});
+
+

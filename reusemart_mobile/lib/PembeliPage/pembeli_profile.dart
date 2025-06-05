@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:reusemart_mobile/PembeliPage/pembeli_history.dart';
 import 'package:reusemart_mobile/client/PembeliClient.dart';
 import 'package:reusemart_mobile/entity/Pembeli.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -96,22 +97,39 @@ class _ProfilePembeliPageState extends State<ProfilePembeliPage> {
                   ),
                 ),
                 const SizedBox(height: 24),
-                const Align(
-                  alignment: Alignment.centerLeft,
-                  child: Text(
-                    'Tanggal Lahir',
-                    style: TextStyle(fontWeight: FontWeight.bold),
-                  ),
-                ),
                 Align(
                   alignment: Alignment.centerLeft,
                   child: Text(
-                    _pembeli!.tanggal_lahir_pembeli.toString(),
-                    style: const TextStyle(color: Colors.black54),
+                    'Email Pembeli : ' + _pembeli!.email_pembeli,
+                    style: const TextStyle(fontWeight: FontWeight.bold),
                   ),
                 ),
-                const SizedBox(height: 24),
+                const SizedBox(height: 10),
+                Align(
+                  alignment: Alignment.centerLeft,
+                  child: Text(
+                    'Tanggal Lahir : ' + _pembeli!.tanggal_lahir_pembeli.toLocal().toString().split(' ')[0],
+                    style: TextStyle(fontWeight: FontWeight.bold),
+                  ),
+                ),
+                const SizedBox(height: 10),
+                Align(
+                  alignment: Alignment.centerLeft,
+                  child: Text(
+                    'Nomor Telepon : ' + _pembeli!.nomor_telepon_pembeli,
+                    style: const TextStyle(fontWeight: FontWeight.bold),
+                  ),
+                ),
+                const SizedBox(height: 10),
+                Align(
+                  alignment: Alignment.centerLeft,
+                  child: Text(
+                    'Poin Loyalitas : ' + _pembeli!.poin_loyalitas.toString(),
+                    style: const TextStyle(fontWeight: FontWeight.bold),
+                  ),
+                ),
 
+                const SizedBox(height: 30),
                 // Tombol Logout
                 ElevatedButton.icon(
                   onPressed: () async {
@@ -121,6 +139,9 @@ class _ProfilePembeliPageState extends State<ProfilePembeliPage> {
                       MaterialPageRoute(builder: (context) => LoginPage()),
                     );
                   },
+                  // navigator.pushReplacement dengan push biasa beda, yang pushReplacement akan menghapus halaman sebelumnya dari stack
+                  // sehingga ketika pengguna menekan tombol kembali, mereka tidak akan kembali ke halaman sebelumnya.
+                  // kalau yang push biasa, pengguna akan kembali ke halaman sebelumnya ketika menekan tombol kembali
                   icon: const Icon(Icons.logout),
                   label: const Text('Logout'),
                   style: ElevatedButton.styleFrom(

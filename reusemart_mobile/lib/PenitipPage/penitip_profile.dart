@@ -149,7 +149,7 @@ class _ProfilePenitipPageState extends State<ProfilePenitipPage> {
                 Align(
                   alignment: Alignment.centerLeft,
                   child: Text(
-                    'Saldo : ${_penitip!.saldo}', 
+                    'Saldo : ${_penitip!.saldo.toString().replaceAllMapped(RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'), (Match m) => '${m[1]}.')}', 
                     style: const TextStyle(fontWeight: FontWeight.bold),
                   ),
                 ),

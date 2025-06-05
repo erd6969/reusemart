@@ -3,16 +3,16 @@ import 'package:flutter/material.dart';
 import 'package:flutter_carousel_slider/carousel_slider.dart';
 import 'package:reusemart_mobile/client/BarangClient.dart';
 
-class DetailHistoryBarang extends StatefulWidget {
+class DetailHistoryBarangPenitip extends StatefulWidget {
   final int id_barang;
 
-  const DetailHistoryBarang({super.key, required this.id_barang});
+  const DetailHistoryBarangPenitip({super.key, required this.id_barang});
 
   @override
-  _DetailHistoryBarangState createState() => _DetailHistoryBarangState();
+  _DetailHistoryBarangPenitipState createState() => _DetailHistoryBarangPenitipState();
 }
 
-class _DetailHistoryBarangState extends State<DetailHistoryBarang> {
+class _DetailHistoryBarangPenitipState extends State<DetailHistoryBarangPenitip> {
   Map<String, dynamic>? barang;
   bool isLoading = true;
 
@@ -23,7 +23,7 @@ class _DetailHistoryBarangState extends State<DetailHistoryBarang> {
   }
 
   Future<void> fetchBarang() async {
-    final fetched = await BarangClient.getBarangById(widget.id_barang);
+    final fetched = await BarangClient.getHistoryBarangPenitipById(widget.id_barang);
     setState(() {
       barang = fetched;
       isLoading = false;

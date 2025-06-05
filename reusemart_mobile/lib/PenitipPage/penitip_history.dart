@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:reusemart_mobile/BarangPage/detail_barang.dart';
-import 'package:reusemart_mobile/BarangPage/detail_history_barang.dart';
+import 'package:reusemart_mobile/BarangPage/detail_history_barang_penitip.dart';
 import 'package:reusemart_mobile/client/BarangClient.dart';
 
-import '../penitip_client.dart';
+import 'package:reusemart_mobile/client/PenitipClient.dart';
 
 class PenitipHistoryPage extends StatefulWidget {
   final Future<List<Map<String, dynamic>>> Function() fetchData;
@@ -115,7 +115,7 @@ class _PenitipHistoryPageState extends State<PenitipHistoryPage> {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (_) => DetailHistoryBarang(
+                            builder: (_) => DetailHistoryBarangPenitip(
                                 id_barang: item['barang']['id_barang']),
                           ),
                         );

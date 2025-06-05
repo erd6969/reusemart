@@ -970,4 +970,35 @@ class BarangController
             ], 500);
         }
     }
+    public function showHistoryBarangIdPembeli($id_barang){
+        try{
+            $history = DB::table('barang')
+                        ->join('detail_transaksi_penitipan', 'barang.id_barang', '=', 'detail_transaksi_penitipan.id_barang')
+                        ->join('transaksi_penitipan', 'detail_transaksi_penitipan.id_transaksi_penitipan', '=', 'transaksi_penitipan.id_transaksi_penitipan')
+                        ->leftJoin('komisi', 'komisi.id_barang', '=', 'barang.id_barang')
+                        ->leftJoin('transaksi_pembelian', 'transaksi_pembelian.id_transaksi_pembelian', '=', 'komisi.id_transaksi_pembelian')
+                        ->leftJoin('penitip', 'transaksi_penitipan.id_penitip', '=', 'penitip.id_penitip')
+                        ->where('barang.id_barang', $id_barang)
+                        ->select(
+                            'barang.*',
+                            'transaksi_pembelian.*',
+                            'penitip.nama_penitip',
+                        )->distinct()
+                        ->get();
+
+            if ($history->isEmpty()) {
+                return response()->json([
+                    'message' => 'History not found',
+                ], 404);
+            }
+
+            return response()->json($history, 200);
+
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'Failed to retrieve history',
+                'error' => $e->getMessage(),
+            ], 500);
+        }
+    }
 }

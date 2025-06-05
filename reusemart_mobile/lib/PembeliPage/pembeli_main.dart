@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:reusemart_mobile/PembeliPage/pembeli_history.dart';
 import 'package:reusemart_mobile/PembeliPage/pembeli_merchandise.dart';
 import 'package:reusemart_mobile/PembeliPage/pembeli_profile.dart';
 import 'package:reusemart_mobile/BarangPage/list_barang.dart';
@@ -29,6 +30,8 @@ class _PembeliMainPageState extends State<PembeliMainPage> {
       case 1:
         return PembeliMerchandisePage();
       case 2:
+        return PembeliHistoryPage();
+      case 3:
         return ProfilePembeliPage();
       default:
         return ListBarangPage(fetchData: fetchBarang);
@@ -68,6 +71,10 @@ class _PembeliMainPageState extends State<PembeliMainPage> {
           BottomNavigationBarItem(
             icon: Icon(Icons.shopping_bag),
             label: 'Merchandise',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.history),
+            label: 'History',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.person),

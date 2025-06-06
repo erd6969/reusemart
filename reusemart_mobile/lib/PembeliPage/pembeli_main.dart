@@ -23,12 +23,18 @@ class _PembeliMainPageState extends State<PembeliMainPage> {
     return await BarangClient.getBarang(token);
   }
 
+  Future<List<dynamic>> fetchMerchandise() async {
+    final token = await AuthClient.getToken();
+    if (token == null) throw Exception("Token tidak ditemukan");
+    return await BarangClient.getMerchandise(token);
+  }
+
   Widget _getPage(int index) {
     switch (index) {
       case 0:
         return ListBarangPage(fetchData: fetchBarang);
       case 1:
-        return PembeliMerchandisePage();
+        return PembeliMerchandisePage(fetchData: fetchMerchandise);
       case 2:
         return PembeliHistoryPage();
       case 3:

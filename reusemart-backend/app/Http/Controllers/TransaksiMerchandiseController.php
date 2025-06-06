@@ -3,28 +3,70 @@
 namespace App\Http\Controllers;
 
 use App\Models\TransaksiMerchandise;
+use App\Models\Merchandise;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 
 class TransaksiMerchandiseController
 {
-    
-    public function showAll(){
-        $transaksi_merchandise = TransaksiMerchandise::with(['pembeli' => function($query){
-            $query->select('id_pembeli', 'nama_pembeli');
-        },
-        
-        'merchandise' => function($query){
-            $query->select('id_merchandise', 'nama_merchandise', 'jumlah_merchandise');
-        }])->orderByRaw('ISNULL(tanggal_claim) DESC, tanggal_claim DESC')->paginate(10);
 
-        if($transaksi_merchandise->isEmpty()){
+    public function createTransaksiMerchandise($id_merchandise)
+    {
+        try {
+            $today = Carbon::now();
+            $pembeli = auth()->user();
+
+            $merchandiseTransaksi = TransaksiMerchandise::create([
+                'id_merchandise' => $id_merchandise,
+                'id_pembeli' => $pembeli->id_pembeli,
+                'tanggal_claim' => $today,
+                'status_claim' => 0,
+                'jumlah_claim' => 1,
+            ]);
+
+            $merchandise = Merchandise::find($id_merchandise);
+            if ($merchandise && $merchandise->jumlah_merchandise > 0) {
+                $merchandise->jumlah_merchandise = $merchandise->jumlah_merchandise - 1;
+                $merchandise->save();
+            } else {
+
+                return response()->json([
+                    'message' => 'Stok merchandise habis',
+                ], 400);
+            }
+
+            return response()->json($merchandiseTransaksi, 201);
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'Terjadi kesalahan saat memproses transaksi merchandise',
+                'error' => $e->getMessage(),
+            ], 500);
+        }
+    }
+
+
+    public function showAll()
+    {
+        $transaksi_merchandise = TransaksiMerchandise::with([
+            'pembeli' => function ($query) {
+                $query->select('id_pembeli', 'nama_pembeli');
+            },
+
+            'merchandise' => function ($query) {
+                $query->select('id_merchandise', 'nama_merchandise', 'jumlah_merchandise');
+            }
+        ])->orderByRaw('ISNULL(tanggal_claim) DESC, tanggal_claim DESC')->paginate(10);
+
+        if ($transaksi_merchandise->isEmpty()) {
             return response()->json([
                 'message' => 'Data tidak ditemukan'
             ], 404);
         }
         return response()->json(
             $transaksi_merchandise
-        , 200);
+            ,
+            200
+        );
     }
 
     public function setTransaksiMerchandise(Request $request)

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:reusemart_mobile/HunterPage/hunter_history.dart';
 import 'package:reusemart_mobile/HunterPage/hunter_profile.dart';
 import 'package:reusemart_mobile/PenitipPage/penitip_history.dart';
 import 'package:reusemart_mobile/BarangPage/list_barang.dart';
@@ -34,7 +35,7 @@ class _HunterMainPageState extends State<HunterMainPage> {
       case 0:
         return ListBarangPage(fetchData: fetchBarang);
       case 1:
-        return PenitipHistoryPage(fetchData: fetchHistory);
+        return HunterHistory();
       case 2:
         return ProfileHunterPage();
       default:

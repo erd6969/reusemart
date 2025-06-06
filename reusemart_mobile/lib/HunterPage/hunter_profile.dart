@@ -104,7 +104,38 @@ class _ProfileHunterPageState extends State<ProfileHunterPage> {
                 Align(
                   alignment: Alignment.centerLeft,
                   child: Text(
-                    'Rp. ' + _hunter!.total_komisi.toString(),
+                    'Rp. ${_hunter!.total_komisi?.toStringAsFixed(0).replaceAllMapped(RegExp(r'(\d)(?=(\d{3})+(?!\d))'), (Match m) => '${m[1]}.') ?? '0'}',
+                    style: const TextStyle(color: Colors.black54),
+                  ),
+                ),
+                const SizedBox(height: 12),
+                const Align(
+                  alignment: Alignment.centerLeft,
+                  child: Text(
+                    'Email Hunter',
+                    style: TextStyle(fontWeight: FontWeight.bold),
+                  ),
+                ),
+                Align(
+                  alignment: Alignment.centerLeft,
+                  child: Text(
+                    _hunter!.email_hunter ?? 'Email tidak tersedia',
+                    style: const TextStyle(color: Colors.black54),
+                  ),
+                ),
+                const SizedBox(height: 12),
+                const Align(
+                  alignment: Alignment.centerLeft,
+                  child: Text(
+                    'Nomor Telepon',
+                    style: TextStyle(fontWeight: FontWeight.bold),
+                  ),
+                ),
+                Align(
+                  alignment: Alignment.centerLeft,
+                  child: Text(
+                    _hunter!.nomor_telepon_hunter ??
+                        'Nomor telepon tidak tersedia',
                     style: const TextStyle(color: Colors.black54),
                   ),
                 ),

@@ -26,6 +26,10 @@ use App\Http\Controllers\KomisiController;
 use App\Http\Controllers\TransaksiPembelianController;
 use App\Http\Controllers\PdfController;
 
+Route::get('/get-kabupaten', [AlamatController::class, 'GetKabupaten']);
+Route::get('/get-kecamatan/{id_kabupaten}', [AlamatController::class, 'GetKecamatan']);
+Route::get('/get-kelurahan/{id_kecamatan}', [AlamatController::class, 'GetKelurahan']);
+
 Route::post('/send-konfirmasi-email', [EmailController::class, 'sendKonfirmasiEmail']);
 Route::post('/reset-password', [LoginController::class, 'resetPassword']);
 

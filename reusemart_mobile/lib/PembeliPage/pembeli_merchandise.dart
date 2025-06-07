@@ -134,7 +134,7 @@ class _PembeliMerchandisePageState extends State<PembeliMerchandisePage> {
                                         maxLines: 1,
                                         overflow: TextOverflow.ellipsis,
                                       ),
-                                      const SizedBox(height: 35),
+                                      const SizedBox(height: 15),
                                       Row(
                                         mainAxisAlignment:
                                             MainAxisAlignment.spaceBetween,

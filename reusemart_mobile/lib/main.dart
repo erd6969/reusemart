@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:reusemart_mobile/HomePage/UmumMain.dart';
 import 'AuthPage/login.dart';
 import 'HomePage/Home.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -134,7 +135,7 @@ class _MainAppState extends State<MainApp> {
       ],
       home: const Scaffold(
         body: Center(
-          child: HomePage(),
+          child: UmumMainPage(),
         ),
       ),
     );

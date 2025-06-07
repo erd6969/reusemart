@@ -265,7 +265,7 @@ class PenitipController
                 ->whereIn('detail_transaksi_penitipan.status_penitipan', ['terjual', 'proses pembayaran'])
                 ->select(
                     'barang.*',
-                    'transaksi_pembelian.tanggal_pembelian'
+                    'transaksi_pembelian.tanggal_pembelian',
                 )
                 ->paginate(5);
 
@@ -615,6 +615,46 @@ class PenitipController
 
             return response()->json($penitip, 200);
         } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'Error occurred',
+                'error' => $e->getMessage(),
+            ], 500);
+        }
+    }
+
+    public function showHistoryPenitipan(){
+        try {
+            $penitip = auth('penitip')->user();
+
+            $history = TransaksiPenitipan::where('id_penitip', $penitip->id_penitip)
+            ->with([
+                'detailTransaksiPenitipan.barang.komisi' => function ($query) {
+                    $query->select('id_komisi', 'id_barang', 'id_transaksi_pembelian', 'total_harga_bersih');
+                },
+                'detailTransaksiPenitipan.barang.komisi.transaksiPembelian.pembeli' => function ($query) {
+                    $query->select('id_pembeli', 'nama_pembeli');
+                }
+            ])
+            ->orderBy('created_at', 'desc')
+            ->get();
+
+
+            return response()->json($history, 200);
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'Error occurred',
+                'error' => $e->getMessage(),
+            ], 500);
+        }
+    }
+
+    public function getTopSeller(){
+        try{
+            $penitip = Penitip::where('badge', '=', 1)
+            ->first();
+
+            return response()->json($penitip, 200);
+        }catch (\Exception $e) {
             return response()->json([
                 'message' => 'Error occurred',
                 'error' => $e->getMessage(),

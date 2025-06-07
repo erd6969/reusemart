@@ -13,7 +13,7 @@ class Penitip {
   int poin_loyalitas;
   bool badge;
   double komisi_penitip;
-  double rerata_penitip;
+  double rerata_rating;
   String foto_penitip;
 
   Penitip({
@@ -29,7 +29,7 @@ class Penitip {
     required this.poin_loyalitas,
     required this.badge,
     required this.komisi_penitip,
-    required this.rerata_penitip,
+    required this.rerata_rating,
     required this.foto_penitip,
   });
 
@@ -47,7 +47,7 @@ class Penitip {
         poin_loyalitas: json["poin_loyalitas"],
         badge: json["badge"] == 1,
         komisi_penitip: (json["komisi_penitip"] ?? 0).toDouble(),
-        rerata_penitip: (json["rerata_rating"] ?? 0).toDouble(),
+        rerata_rating: (json["rerata_rating"] ?? 0).toDouble(),
         foto_penitip: json["foto_penitip"],
       );
 
@@ -60,13 +60,12 @@ class Penitip {
         "NIK": NIK,
         "foto_ktp": foto_ktp,
         "nomor_telepon_penitip": nomor_telepon_penitip,
-        "tanggal_lahir":
-            "${tanggal_lahir.year.toString().padLeft(4, '0')}-${tanggal_lahir.month.toString().padLeft(2, '0')}-${tanggal_lahir.day.toString().padLeft(2, '0')}",
+        "tanggal_lahir": tanggal_lahir.toIso8601String(),
         "saldo": saldo,
         "poin_loyalitas": poin_loyalitas,
         "badge": badge,
         "komisi_penitip": komisi_penitip,
-        "rerata_penitip": rerata_penitip,
+        "rerata_penitip": rerata_rating,
         "foto_penitip": foto_penitip,
       };
 }

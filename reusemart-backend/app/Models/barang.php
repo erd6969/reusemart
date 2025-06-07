@@ -54,5 +54,10 @@ class Barang extends Model
     {
         return $this->hasMany(Keranjang::class, 'id_barang', 'id_barang');
     }
+
+    public function komisi()
+    {
+        return $this->hasMany(Komisi::class, 'id_barang', 'id_barang');
+    }
     
 }

@@ -5,7 +5,7 @@ import { VerifKirimPembeli } from "../../../api/apiBarang";
 import { GetListKurir } from "../../../api/apiPegawai";
 
 const ModalPengirimanKurir = ({ show, handleClose, dataEdit, onSuccess }) => {
-    const [formData, setFormData] = useState({ id_pegawai: "", tanggal_pengiriman: "",  jam_pengiriman: "" });
+    const [formData, setFormData] = useState({ id_pegawai: "", tanggal_pengiriman: "", jam_pengiriman: "" });
     const [isLoading, setIsLoading] = useState(false);
     const [listKurir, setListKurir] = useState([]);
 
@@ -16,6 +16,7 @@ const ModalPengirimanKurir = ({ show, handleClose, dataEdit, onSuccess }) => {
                 id_pegawai: dataEdit.id_pegawai || "",
                 tanggal_pengiriman: tanggal,
                 jam_pengiriman: jam ? jam.slice(0, 5) : "",
+                tanggal_pembelian: dataEdit.tanggal_pembelian || "",
             });
         }
     }, [dataEdit]);
@@ -52,9 +53,19 @@ const ModalPengirimanKurir = ({ show, handleClose, dataEdit, onSuccess }) => {
         if (!formData.jam_pengiriman) return toast.error("Pilih jam pengiriman!");
 
         const [jam, menit] = formData.jam_pengiriman.split(":").map(Number);
-        if (jam < 8 || jam > 16 || (jam === 16 && menit > 0)) {
-            return toast.error("Jam pengiriman harus antara pukul 08:00 sampai 16:00");
+        if (jam < 8 || jam > 20 || (jam === 20 && menit > 0)) {
+            return toast.error("Jam pengiriman harus antara pukul 08:00 sampai 20:00");
         }
+
+        // Ambil jam dari tanggal_pembelian dan cek jika lebih dari jam 16:00 (4 sore)
+        if (formData.tanggal_pembelian) {
+            const pembelianDate = new Date(formData.tanggal_pembelian);
+            const jamPembelian = pembelianDate.getHours();
+            if (jamPembelian >= 16 && formData.tanggal_pengiriman == pembelianDate.toISOString().split("T")[0]) {
+                return toast.error("Transaksi setelah jam 16:00 tidak bisa diproses hari ini.");
+            }
+        }
+
         console.log("Form Data:", dataEdit.id_transaksi_pembelian);
         try {
             if (dataEdit && dataEdit.id_transaksi_pembelian) {
@@ -109,7 +120,7 @@ const ModalPengirimanKurir = ({ show, handleClose, dataEdit, onSuccess }) => {
                         </Form.Group>
                         <Form.Group className="mb-3" controlId="tanggal_pengiriman">
 
-                        <Form.Label>Tanggal Pengiriman</Form.Label>
+                            <Form.Label>Tanggal Pengiriman</Form.Label>
                             <Form.Control
                                 type="date"
                                 name="tanggal_pengiriman"
@@ -118,7 +129,7 @@ const ModalPengirimanKurir = ({ show, handleClose, dataEdit, onSuccess }) => {
                             />
                         </Form.Group>
                         <Form.Group className="mb-3" controlId="jam_pengiriman">
-                        <Form.Label>Jam Pengiriman</Form.Label>
+                            <Form.Label>Jam Pengiriman</Form.Label>
                             <Form.Control
                                 type="time"
                                 name="jam_pengiriman"

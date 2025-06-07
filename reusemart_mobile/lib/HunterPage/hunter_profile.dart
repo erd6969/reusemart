@@ -1,19 +1,17 @@
 import 'package:flutter/material.dart';
-import 'package:reusemart_mobile/PembeliPage/pembeli_history.dart';
-import 'package:reusemart_mobile/client/PembeliClient.dart';
-import 'package:reusemart_mobile/entity/Pembeli.dart';
+import 'package:reusemart_mobile/client/HunterClient.dart';
+import 'package:reusemart_mobile/entity/Hunter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:reusemart_mobile/client/AuthClient.dart';
 import 'package:reusemart_mobile/AuthPage/login.dart';
 
-class ProfilePembeliPage extends StatefulWidget {
+class ProfileHunterPage extends StatefulWidget {
   @override
-  _ProfilePembeliPageState createState() => _ProfilePembeliPageState();
+  State<ProfileHunterPage> createState() => _ProfileHunterPageState();
 }
 
-class _ProfilePembeliPageState extends State<ProfilePembeliPage> {
-  Pembeli? _pembeli;
-  int poin = 0;
+class _ProfileHunterPageState extends State<ProfileHunterPage> {
+  Hunter? _hunter;
   bool _isLoading = true;
 
   @override
@@ -27,9 +25,9 @@ class _ProfilePembeliPageState extends State<ProfilePembeliPage> {
     String? token = prefs.getString('token');
 
     if (token != null) {
-      Pembeli? pembeli = await PembeliClient.getProfilePembeli(token);
+      Hunter? hunter = await HunterClient.getProfileHunter(token);
       setState(() {
-        _pembeli = pembeli;
+        _hunter = hunter;
         _isLoading = false;
       });
     } else {
@@ -54,16 +52,15 @@ class _ProfilePembeliPageState extends State<ProfilePembeliPage> {
       return const Center(child: CircularProgressIndicator());
     }
 
-    if (_pembeli == null) {
-      return const Center(child: Text('Gagal memuat data Pembeli'));
+    if (_hunter == null) {
+      return const Center(child: Text('Gagal memuat data hunter'));
     }
-
     return SingleChildScrollView(
       child: Column(
         children: [
           const SizedBox(height: 20),
           const Text(
-            'Profil Pembeli',
+            'Profil Hunter',
             style: TextStyle(fontSize: 32, fontWeight: FontWeight.bold),
           ),
           const SizedBox(height: 20),
@@ -79,7 +76,7 @@ class _ProfilePembeliPageState extends State<ProfilePembeliPage> {
                 ClipRRect(
                   borderRadius: BorderRadius.circular(12),
                   child: Image.network(
-                    PembeliClient.getFotoPembeli(_pembeli!.foto_pembeli ?? ''),
+                    HunterClient.getFotoHunter(_hunter!.foto_hunter ?? ''),
                     width: 250,
                     height: 250,
                     fit: BoxFit.cover,
@@ -89,7 +86,7 @@ class _ProfilePembeliPageState extends State<ProfilePembeliPage> {
                 Align(
                   alignment: Alignment.center,
                   child: Text(
-                    _pembeli!.nama_pembeli ?? 'Nama tidak tersedia',
+                    _hunter!.nama_hunter ?? 'Nama tidak tersedia',
                     style: const TextStyle(
                       fontSize: 24,
                       fontWeight: FontWeight.w800,
@@ -97,39 +94,68 @@ class _ProfilePembeliPageState extends State<ProfilePembeliPage> {
                   ),
                 ),
                 const SizedBox(height: 24),
-                Align(
+                const Align(
                   alignment: Alignment.centerLeft,
                   child: Text(
-                    'Email Pembeli : ' + _pembeli!.email_pembeli,
-                    style: const TextStyle(fontWeight: FontWeight.bold),
-                  ),
-                ),
-                const SizedBox(height: 10),
-                Align(
-                  alignment: Alignment.centerLeft,
-                  child: Text(
-                    'Tanggal Lahir : ' + _pembeli!.tanggal_lahir_pembeli.toLocal().toString().split(' ')[0],
+                    'Komisi',
                     style: TextStyle(fontWeight: FontWeight.bold),
                   ),
                 ),
-                const SizedBox(height: 10),
                 Align(
                   alignment: Alignment.centerLeft,
                   child: Text(
-                    'Nomor Telepon : ' + _pembeli!.nomor_telepon_pembeli,
-                    style: const TextStyle(fontWeight: FontWeight.bold),
+                    'Rp. ${_hunter!.total_komisi?.toStringAsFixed(0).replaceAllMapped(RegExp(r'(\d)(?=(\d{3})+(?!\d))'), (Match m) => '${m[1]}.') ?? '0'}',
+                    style: const TextStyle(color: Colors.black54),
                   ),
                 ),
-                const SizedBox(height: 10),
+                const SizedBox(height: 12),
+                const Align(
+                  alignment: Alignment.centerLeft,
+                  child: Text(
+                    'Email Hunter',
+                    style: TextStyle(fontWeight: FontWeight.bold),
+                  ),
+                ),
                 Align(
                   alignment: Alignment.centerLeft,
                   child: Text(
-                    'Poin Loyalitas : ' + _pembeli!.poin_loyalitas.toString(),
-                    style: const TextStyle(fontWeight: FontWeight.bold),
+                    _hunter!.email_hunter ?? 'Email tidak tersedia',
+                    style: const TextStyle(color: Colors.black54),
                   ),
                 ),
+                const SizedBox(height: 12),
+                const Align(
+                  alignment: Alignment.centerLeft,
+                  child: Text(
+                    'Nomor Telepon',
+                    style: TextStyle(fontWeight: FontWeight.bold),
+                  ),
+                ),
+                Align(
+                  alignment: Alignment.centerLeft,
+                  child: Text(
+                    _hunter!.nomor_telepon_hunter ??
+                        'Nomor telepon tidak tersedia',
+                    style: const TextStyle(color: Colors.black54),
+                  ),
+                ),
+                const SizedBox(height: 12),
+                const Align(
+                  alignment: Alignment.centerLeft,
+                  child: Text(
+                    'Tanggal Lahir',
+                    style: TextStyle(fontWeight: FontWeight.bold),
+                  ),
+                ),
+                Align(
+                  alignment: Alignment.centerLeft,
+                  child: Text(
+                    _hunter!.tanggal_lahir_hunter.toString(),
+                    style: const TextStyle(color: Colors.black54),
+                  ),
+                ),
+                const SizedBox(height: 24),
 
-                const SizedBox(height: 30),
                 // Tombol Logout
                 ElevatedButton.icon(
                   onPressed: () async {
@@ -139,9 +165,6 @@ class _ProfilePembeliPageState extends State<ProfilePembeliPage> {
                       MaterialPageRoute(builder: (context) => LoginPage()),
                     );
                   },
-                  // navigator.pushReplacement dengan push biasa beda, yang pushReplacement akan menghapus halaman sebelumnya dari stack
-                  // sehingga ketika pengguna menekan tombol kembali, mereka tidak akan kembali ke halaman sebelumnya.
-                  // kalau yang push biasa, pengguna akan kembali ke halaman sebelumnya ketika menekan tombol kembali
                   icon: const Icon(Icons.logout),
                   label: const Text('Logout'),
                   style: ElevatedButton.styleFrom(

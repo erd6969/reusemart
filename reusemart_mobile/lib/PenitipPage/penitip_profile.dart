@@ -4,6 +4,13 @@ import 'package:reusemart_mobile/entity/Penitip.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:reusemart_mobile/client/AuthClient.dart';
 import 'package:reusemart_mobile/AuthPage/login.dart';
+import 'package:intl/intl.dart';
+
+import 'package:flutter/material.dart';
+
+Icon fullStar = const Icon(Icons.star, color: Colors.amber, size: 18);
+Icon halfStar = const Icon(Icons.star_half, color: Colors.amber, size: 18);
+Icon emptyStar = const Icon(Icons.star_border, color: Colors.amber, size: 18);
 
 class ProfilePenitipPage extends StatefulWidget {
   @override
@@ -87,14 +94,90 @@ class _ProfilePenitipPageState extends State<ProfilePenitipPage> {
                 Align(
                   alignment: Alignment.center,
                   child: Text(
-                    _penitip!.nama_penitip ?? 'Nama tidak tersedia',
+                    _penitip!.nama_penitip,
                     style: const TextStyle(
                       fontSize: 24,
                       fontWeight: FontWeight.w800,
                     ),
                   ),
                 ),
-                const SizedBox(height: 24),
+                const SizedBox(height: 16),
+                _penitip!.badge
+                    ? 
+                      ClipRRect(
+                        borderRadius: BorderRadius.circular(2),
+                        child: Image.asset(
+                          'images/badgeTop.png',
+                          height: 120,
+                          fit: BoxFit.cover,
+                        ),
+                      )
+                    : const Text(
+                        "Tidak ada Badge!",
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.w600,
+                          color: Colors.deepOrange,
+                        ),
+                      ),
+                const SizedBox(height: 16),
+                Container(
+                  child: Row(
+                    children: [
+                      const Text(
+                        "Rating : ",
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.w600,
+                          color: Colors.black,
+                        ),
+                      ),
+                      Text(
+                        "${_penitip?.rerata_rating.toStringAsFixed(1)}",
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.w600,
+                          color: Colors.amber,
+                        ),
+                      ),
+                      const SizedBox(width: 4),
+                      Row(children: buildStarIcons(_penitip?.rerata_rating ?? 0))
+                    ],
+                  ),
+                ),
+                const SizedBox(height: 16),
+                Align(
+                  alignment: Alignment.centerLeft,
+                  child: Text(
+                    'Saldo : ${_penitip!.saldo.toString().replaceAllMapped(RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'), (Match m) => '${m[1]}.')}', 
+                    style: const TextStyle(fontWeight: FontWeight.bold),
+                  ),
+                ),
+                const SizedBox(height: 16),
+                Align(
+                  alignment: Alignment.centerLeft,
+                  child: Text(
+                    'Poin Loyalitas : ${_penitip!.poin_loyalitas}',
+                    style: const TextStyle(fontWeight: FontWeight.bold),
+                  ),
+                ),
+                const SizedBox(height: 16),
+                Align(
+                  alignment: Alignment.centerLeft,
+                  child: Text(
+                    'Email : ${_penitip!.email_penitip}',
+                    style: const TextStyle(fontWeight: FontWeight.bold),
+                  ),
+                ),
+                const SizedBox(height: 16),
+                Align(
+                  alignment: Alignment.centerLeft,
+                  child: Text(
+                    'Nomor Telepon : ${_penitip!.nomor_telepon_penitip}',
+                    style: const TextStyle(fontWeight: FontWeight.bold),
+                  ),
+                ),
+                const SizedBox(height: 16),
                 const Align(
                   alignment: Alignment.centerLeft,
                   child: Text(
@@ -105,7 +188,7 @@ class _ProfilePenitipPageState extends State<ProfilePenitipPage> {
                 Align(
                   alignment: Alignment.centerLeft,
                   child: Text(
-                    _penitip!.tanggal_lahir.toString(),
+                    DateFormat('dd MMMM yyyy').format(_penitip!.tanggal_lahir),
                     style: const TextStyle(color: Colors.black54),
                   ),
                 ),
@@ -137,4 +220,23 @@ class _ProfilePenitipPageState extends State<ProfilePenitipPage> {
       ),
     );
   }
+}
+
+List<Widget> buildStarIcons(double rating) {
+  int fullStars = rating.floor();
+  bool hasHalf = (rating - fullStars) >= 0.5;
+  int totalStars = 5;
+  List<Widget> stars = [];
+
+  for (int i = 0; i < fullStars; i++) {
+    stars.add(fullStar);
+  }
+
+  if (hasHalf) stars.add(halfStar);
+
+  while (stars.length < totalStars) {
+    stars.add(emptyStar);
+  }
+
+  return stars;
 }

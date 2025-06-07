@@ -1,20 +1,20 @@
 import 'package:flutter/material.dart';
-import 'package:reusemart_mobile/PembeliPage/pembeli_history.dart';
-import 'package:reusemart_mobile/PembeliPage/pembeli_merchandise.dart';
-import 'package:reusemart_mobile/PembeliPage/pembeli_profile.dart';
+import 'package:reusemart_mobile/HunterPage/hunter_history.dart';
+import 'package:reusemart_mobile/HunterPage/hunter_profile.dart';
+import 'package:reusemart_mobile/PenitipPage/penitip_history.dart';
 import 'package:reusemart_mobile/BarangPage/list_barang.dart';
 import 'package:reusemart_mobile/client/AuthClient.dart';
 import 'package:reusemart_mobile/client/BarangClient.dart';
-import 'package:reusemart_mobile/client/PembeliClient.dart';
+import 'package:reusemart_mobile/client/PenitipClient.dart';
 
-class PembeliMainPage extends StatefulWidget {
-  const PembeliMainPage({super.key});
+class HunterMainPage extends StatefulWidget {
+  const HunterMainPage({super.key});
 
   @override
-  State<PembeliMainPage> createState() => _PembeliMainPageState();
+  State<HunterMainPage> createState() => _HunterMainPageState();
 }
 
-class _PembeliMainPageState extends State<PembeliMainPage> {
+class _HunterMainPageState extends State<HunterMainPage> {
   int _currentIndex = 0;
 
   Future<List<dynamic>> fetchBarang() async {
@@ -23,10 +23,11 @@ class _PembeliMainPageState extends State<PembeliMainPage> {
     return await BarangClient.getBarang(token);
   }
 
-  Future<List<dynamic>> fetchMerchandise() async {
+  Future<List<Map<String, dynamic>>> fetchHistory() async {
     final token = await AuthClient.getToken();
     if (token == null) throw Exception("Token tidak ditemukan");
-    return await BarangClient.getMerchandise(token);
+    final history = await PenitipClient.getPenitipHistory(token);
+    return history;
   }
 
   Widget _getPage(int index) {
@@ -34,13 +35,11 @@ class _PembeliMainPageState extends State<PembeliMainPage> {
       case 0:
         return ListBarangPage(fetchData: fetchBarang);
       case 1:
-        return PembeliMerchandisePage(fetchData: fetchMerchandise);
+        return HunterHistory();
       case 2:
-        return PembeliHistoryPage();
-      case 3:
-        return ProfilePembeliPage();
+        return ProfileHunterPage();
       default:
-        return ListBarangPage(fetchData: fetchBarang);
+        return ProfileHunterPage();
     }
   }
 
@@ -51,7 +50,7 @@ class _PembeliMainPageState extends State<PembeliMainPage> {
         automaticallyImplyLeading: false,
         backgroundColor: const Color(0xFF347928),
         title: const Text(
-          'Pembeli Page ReuseMart',
+          'Hunter Page ReuseMart',
           style: TextStyle(
             fontSize: 24,
             fontWeight: FontWeight.w600,
@@ -59,7 +58,6 @@ class _PembeliMainPageState extends State<PembeliMainPage> {
           ),
         ),
       ),
-      backgroundColor: Colors.white,
       body: SafeArea(child: _getPage(_currentIndex)),
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: _currentIndex,
@@ -76,10 +74,6 @@ class _PembeliMainPageState extends State<PembeliMainPage> {
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.shopping_bag),
-            label: 'Merchandise',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.history),
             label: 'History',
           ),
           BottomNavigationBarItem(

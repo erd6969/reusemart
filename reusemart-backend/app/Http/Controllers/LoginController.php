@@ -40,6 +40,16 @@ class LoginController
             ]);
         }
 
+        $hunter = Hunter::where('email_hunter', $credentials['email'])->first();
+        if ($hunter && Hash::check($credentials['password'], $hunter->password_hunter)) {
+            $token = $hunter->createToken('auth_token', ["hunter"])->plainTextToken;
+            return response()->json([
+                'message' => 'Login successful',
+                'token' => $token,
+                'role' => 'hunter'
+            ]);
+        }
+
         $pegawai = pegawai::where('email_pegawai', $credentials['email'])->first();
         if ($pegawai && Hash::check($credentials['password'], $pegawai->password_pegawai)) {
             $cekJabatan = $pegawai->jabatan->id_jabatan;
@@ -156,7 +166,7 @@ class LoginController
                 $penitip->save();
             } else {
                 $organisasi = Organisasi::where('email_organisasi', $resetRecord->email)->first();
-                if($organisasi) {
+                if ($organisasi) {
                     $organisasi->password_organisasi = Hash::make($request->password);
                     $organisasi->save();
                 } else {

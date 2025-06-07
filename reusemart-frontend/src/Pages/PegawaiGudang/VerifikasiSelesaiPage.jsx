@@ -15,7 +15,7 @@ const VerifikasiSelesaiPage = () => {
     const [currentPage, setCurrentPage] = useState(1);
     const [searchQuery, setSearchQuery] = useState("");
     const [totalPages, setTotalPages] = useState(1);
-     const [showModal, setShowModal] = useState(false);
+    const [showModal, setShowModal] = useState(false);
     const [selectedProductId, setSelectedProductId] = useState(null);
 
 
@@ -38,7 +38,7 @@ const VerifikasiSelesaiPage = () => {
         fetchAmbilBarang(currentPage);
     }, [currentPage]);
 
-     const handleOpenModal = (id_barang) => {
+    const handleOpenModal = (id_barang) => {
         setSelectedProductId(id_barang);
         setShowModal(true);
     };
@@ -95,12 +95,12 @@ const VerifikasiSelesaiPage = () => {
         }, 500);
 
         return () => clearTimeout(delayDebounce);
-    }, [searchQuery,  currentPage]);
+    }, [searchQuery, currentPage]);
 
     return (
         <div className="histori-penitipan-wrapper">
             <div className="sold-products-container">
-                <h2><b>Verifikasi Selesai</b></h2>
+                <h2><b>Verifikasi Pengambilan barang penitip</b></h2>
                 <div className="sold-products-content-container">
                     <div className="search-bar">
                         <img src={SearchIcon} alt="Search Icon" className="search-icon-inside" />
@@ -131,7 +131,7 @@ const VerifikasiSelesaiPage = () => {
                                 {ambilBarang.map((product, index) => {
                                     return (
                                         <tr key={index} style={{ fontSize: '15px', cursor: "pointer" }}
-                                        onClick={() => handleOpenModal(product.id_barang)}>
+                                            onClick={() => handleOpenModal(product.id_barang)}>
                                             <td className={"product-info"} style={{ width: '200%' }}>
                                                 <img src={getThumbnailBarang(product.foto_barang) || defaultImage} alt={product.nama_barang} style={{ maxWidth: '5vw' }} />
                                                 <b>{product.nama_barang}</b>
@@ -140,10 +140,10 @@ const VerifikasiSelesaiPage = () => {
                                                 <b>{product.nama_penitip}</b>
                                             </td>
                                             <td>
-                                                <Badge style={{padding:'12px'}} bg="secondary">{product.status_penitipan}</Badge>
+                                                <Badge style={{ padding: '12px' }} bg="secondary">{product.status_penitipan}</Badge>
                                             </td>
                                             <td>
-                                                <Button variant="success" onClick={(e) => {e.stopPropagation(),handleVerifikasi(product.id_detail_transaksi_penitipan)}}>Verifikasi</Button>
+                                                <Button variant="success" onClick={(e) => { e.stopPropagation(), handleVerifikasi(product.id_detail_transaksi_penitipan) }}>Verifikasi</Button>
                                             </td>
                                         </tr>
                                     );
@@ -152,7 +152,7 @@ const VerifikasiSelesaiPage = () => {
                         </table>
                     )}
                 </div>
-                
+
                 <div className="pagination d-flex justify-content-center align-items-center mt-4">
                     <Button
                         variant="secondary"

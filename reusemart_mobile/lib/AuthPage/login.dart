@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:reusemart_mobile/client/AuthClient.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import 'package:reusemart_mobile/HunterPage/hunter_home.dart';
+import 'package:reusemart_mobile/HunterPage/hunter_main.dart';
 import 'package:reusemart_mobile/KurirPage/kurir_main_page.dart';
 import 'package:reusemart_mobile/PenitipPage/penitip_profile.dart';
 import 'package:reusemart_mobile/PenitipPage/penitip_main.dart';
@@ -173,7 +173,7 @@ class _LoginPageState extends State<LoginPage> {
                               Navigator.pushReplacement(
                                 context,
                                 MaterialPageRoute(
-                                    builder: (context) => HunterHomePage()),
+                                    builder: (context) => HunterMainPage()),
                               );
                             } else {
                               ScaffoldMessenger.of(context).showSnackBar(

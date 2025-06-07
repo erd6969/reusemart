@@ -11,10 +11,13 @@ class DetailBarangPage extends StatelessWidget {
   Widget build(BuildContext context) {
     final foto1 = BarangClient.getFotoBarang(barang['foto_barang'] ?? '');
     final foto2 = BarangClient.getFotoBarang(barang['foto_barang2'] ?? '');
+    final foto3 = BarangClient.getFotoBarang(barang['foto_barang3'] ?? '');
+
 
     final List<String> fotoList = [
       if (foto1.isNotEmpty) foto1,
       if (foto2.isNotEmpty) foto2,
+      if (foto3.isNotEmpty) foto3,
     ];
 
     return Scaffold(
@@ -29,7 +32,7 @@ class DetailBarangPage extends StatelessWidget {
           children: [
             if (fotoList.isNotEmpty)
               SizedBox(
-                height: 200,
+                height: 400,
                 child: CarouselSlider.builder(
                   itemCount: fotoList.length,
                   slideBuilder: (index) {

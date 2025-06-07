@@ -149,7 +149,7 @@ class _ProfilePenitipPageState extends State<ProfilePenitipPage> {
                 Align(
                   alignment: Alignment.centerLeft,
                   child: Text(
-                    'Saldo : ${_penitip!.saldo.toString().replaceAllMapped(RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'), (Match m) => '${m[1]}.')}', 
+                    'Saldo : Rp ${_penitip!.saldo.toString().replaceAllMapped(RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'), (Match m) => '${m[1]}.')}', 
                     style: const TextStyle(fontWeight: FontWeight.bold),
                   ),
                 ),
@@ -158,6 +158,14 @@ class _ProfilePenitipPageState extends State<ProfilePenitipPage> {
                   alignment: Alignment.centerLeft,
                   child: Text(
                     'Poin Loyalitas : ${_penitip!.poin_loyalitas}',
+                    style: const TextStyle(fontWeight: FontWeight.bold),
+                  ),
+                ),
+                const SizedBox(height: 16),
+                Align(
+                  alignment: Alignment.centerLeft,
+                  child: Text(
+                    'Komisi Penitip : Rp ${_penitip!.komisi_penitip.toString().replaceAllMapped(RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'), (Match m) => '${m[1]}.')}',
                     style: const TextStyle(fontWeight: FontWeight.bold),
                   ),
                 ),

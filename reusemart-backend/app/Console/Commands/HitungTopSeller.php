@@ -23,6 +23,7 @@ class HitungTopSeller extends Command
         $now = Carbon::now();
         $today = $now->month;
         $highest = 0;
+        $highestHarga = 0;
         $topSeller = null;
 
 
@@ -55,17 +56,24 @@ class HitungTopSeller extends Command
             $penitips->badge = 0;
             $penitips->save();
 
-            if($highest < $totalHarga){
-                $highest = $totalHarga;
+            if($highest < $transaksiCount){
+                $highest = $transaksiCount;
+                $highestHarga = $totalHarga;
+                $topSeller = $penitips;
+            }else if($highest == $transaksiCount && $highestHarga < $totalHarga){
+                $highest = $transaksiCount;
+                $highestHarga = $totalHarga;
                 $topSeller = $penitips;
             }
+
             Log::info("Total harga untuk penitip {$penitips->nama_penitip}: {$totalHarga}");
             Log::info("=================================================");
         }
 
         $topSeller->badge = 1;
-        $bonus = $highest * 0.1;
+        $bonus = $highestHarga * 0.1;
         $topSeller->saldo = $topSeller->saldo + $bonus;
+        $topSeller->komisi_penitip = $topSeller->komisi_penitip + $bonus;
         $topSeller->save();
         Log::info("Top seller bulan ini adalah: {$topSeller->nama_penitip} dengan total harga terjual: {$highest}");
         Log::info("=================================================");

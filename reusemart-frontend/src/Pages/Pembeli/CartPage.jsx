@@ -29,6 +29,7 @@ const CartPage = () => {
     };
 
     useEffect(() => {
+        cartCheck();
         fetchCartData();
     }, []);
 
@@ -77,6 +78,25 @@ const CartPage = () => {
         return points;
     };
 
+    const cartCheck = async () => {
+        try {
+            const response = await CheckCart();
+            if (response.status === "success") {
+                if (response.message.toLowerCase().includes("terjual")) {
+                    toast.warning("Barang sudah terjual, silahkan pilih barang lain");
+                }
+            } else {
+                toast.error("Gagal melakukan checkout");
+            }
+        } catch (error) {
+            alert("Terjadi kesalahan saat memeriksa keranjang.");
+            console.error(error);
+        } finally {
+            refreshCartCount();
+        }
+    };
+
+
     const handleCheckout = async () => {
         try {
 
@@ -99,6 +119,8 @@ const CartPage = () => {
         } catch (error) {
             alert("Terjadi kesalahan saat memeriksa keranjang.");
             console.error(error);
+        } finally {
+            refreshCartCount();
         }
     };
     

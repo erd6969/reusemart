@@ -145,7 +145,8 @@ class HomePage extends StatelessWidget {
                                 SizedBox(height: 8),
                                 Text(
                                   'Jadi ini adalah bapak penemu reusemart, beliau adalah seorang mahasiswa yang sangat peduli dengan lingkungan. Beliau ingin orang-orang bisa membeli barang bekas dengan mudah dan aman.',
-                                  style: TextStyle(fontSize: 16), textAlign: TextAlign.justify,
+                                  style: TextStyle(fontSize: 16),
+                                  textAlign: TextAlign.justify,
                                 ),
                               ],
                             ),
@@ -158,36 +159,36 @@ class HomePage extends StatelessWidget {
                   const SizedBox(height: 32),
 
                   // === Login Button ===
-                  ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.yellow,
-                      padding:
-                          const EdgeInsets.symmetric(horizontal: 40, vertical: 16),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(30),
-                      ),
-                    ),
-                    onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (context) => const LoginPage()),
-                      );
-                    },
-                    child: const Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Text(
-                          'Login Now',
-                          style: TextStyle(
-                            color: Colors.black,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                        SizedBox(width: 8),
-                        Icon(Icons.arrow_forward, color: Colors.black),
-                      ],
-                    ),
-                  ),
+                  // ElevatedButton(
+                  //   style: ElevatedButton.styleFrom(
+                  //     backgroundColor: Colors.yellow,
+                  //     padding:
+                  //         const EdgeInsets.symmetric(horizontal: 40, vertical: 16),
+                  //     shape: RoundedRectangleBorder(
+                  //       borderRadius: BorderRadius.circular(30),
+                  //     ),
+                  //   ),
+                  //   onPressed: () {
+                  //     Navigator.push(
+                  //       context,
+                  //       MaterialPageRoute(builder: (context) => const LoginPage()),
+                  //     );
+                  //   },
+                  //   child: const Row(
+                  //     mainAxisSize: MainAxisSize.min,
+                  //     children: [
+                  //       Text(
+                  //         'Login Now',
+                  //         style: TextStyle(
+                  //           color: Colors.black,
+                  //           fontWeight: FontWeight.bold,
+                  //         ),
+                  //       ),
+                  //       SizedBox(width: 8),
+                  //       Icon(Icons.arrow_forward, color: Colors.black),
+                  //     ],
+                  //   ),
+                  // ),
                 ],
               ),
             ),
@@ -198,7 +199,8 @@ class HomePage extends StatelessWidget {
   }
 
   // === Helper Widget: Info Box ===
-  Widget boxVisiMisi({required IconData icon, required String title, required String text}) {
+  Widget boxVisiMisi(
+      {required IconData icon, required String title, required String text}) {
     return Container(
       width: 150,
       padding: const EdgeInsets.all(16.0),
@@ -218,7 +220,8 @@ class HomePage extends StatelessWidget {
           Icon(icon, size: 32, color: Colors.black),
           const SizedBox(height: 8),
           Text(title,
-              style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+              style:
+                  const TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
           const SizedBox(height: 8),
           Text(text, textAlign: TextAlign.center),
         ],

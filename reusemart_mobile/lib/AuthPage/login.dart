@@ -150,7 +150,6 @@ class _LoginPageState extends State<LoginPage> {
                             await prefs.setString('token', token ?? '');
                             await prefs.setString('role', role ?? '');
 
-                           
                             if (role == 'pembeli') {
                               Navigator.pushReplacement(
                                 context,

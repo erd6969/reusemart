@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:reusemart_mobile/BarangPage/list_barang.dart';
 import 'package:reusemart_mobile/HomePage/Home.dart';
 import 'package:reusemart_mobile/client/BarangClient.dart';
+import 'package:reusemart_mobile/HomePage/ProfileGuest.dart';
+import 'package:reusemart_mobile/AuthPage/login.dart';
 
 class UmumMainPage extends StatefulWidget {
   const UmumMainPage({super.key});
@@ -22,6 +24,8 @@ class _UmumMainPageState extends State<UmumMainPage> {
         return HomePage();
       case 1:
         return ListBarangPage(fetchData: fetchBarang);
+      case 2:
+        return ProfileGuestPage();
       default:
         return ListBarangPage(fetchData: fetchBarang);
     }
@@ -60,6 +64,10 @@ class _UmumMainPageState extends State<UmumMainPage> {
           BottomNavigationBarItem(
             icon: Icon(Icons.shopping_bag),
             label: 'Barang',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.person),
+            label: 'Profile',
           ),
         ],
       ),

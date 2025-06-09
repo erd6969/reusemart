@@ -153,7 +153,7 @@ const PaymentDetail = ({ cartItems, alamatUtama, shippingOption }) => {
                 pengiriman: shippingOption,
                 penggunaan_poin: selectedPoints,
                 tambahan_poin: poinDapat,
-                total_pembayaran: totalBayar,
+                total_pembayaran: totalHargaFinal,
             };
             const transaksiResponse = await CreateTransaksiPembelian(transaksiData);
             const idTransaksi = transaksiResponse.transaksi.id_transaksi_pembelian;
@@ -202,7 +202,8 @@ const PaymentDetail = ({ cartItems, alamatUtama, shippingOption }) => {
         ongkir = totalHarga < 1500000 ? 100000 : 0;
     }
     const potonganPoin = selectedPoints > 0 ? selectedPoints * 100 : 0;
-    const totalBayar = totalHarga + ongkir - potonganPoin;
+    const totalBayar = totalHarga - potonganPoin;
+    const totalHargaFinal = totalBayar + ongkir;
     const poinDapat = totalHarga >= 500000 ? Math.floor((totalBayar / 10000) + ((totalBayar / 10000) * 0.2)) : Math.floor(totalBayar / 10000);
 
     return (
@@ -222,7 +223,7 @@ const PaymentDetail = ({ cartItems, alamatUtama, shippingOption }) => {
             <div className="total-bill-section">
                 <div style={{ display: 'flex', justifyContent: 'space-between' }}>
                     <span><b>Total Bayar : </b></span>
-                    <span className="total-bill-amount"><span className="point-earned">(+{poinDapat} Poin)</span> Rp{totalBayar.toLocaleString('id-ID')}</span>
+                    <span className="total-bill-amount"><span className="point-earned">(+{poinDapat} Poin)</span> Rp{totalHargaFinal.toLocaleString('id-ID')}</span>
                 </div>
 
                 <button className="pay-button" onClick={handleBayarSekarang}>

@@ -15,6 +15,26 @@
     border-radius: 5px;
 }
 
+.input-data .custom-dropdown > .dropdown-toggle {
+  width: 100% !important;
+  padding: 8px 12px !important;
+  border: 1px solid #B7B7B7 !important;
+  border-radius: 5px !important;
+  background-color: #fff !important;
+  color: #333 !important;
+  text-align: left !important;
+  font-size: 1rem !important;
+  box-shadow: none !important;
+  display: flex !important;
+  justify-content: space-between !important;
+  align-items: center !important;
+}
+
+/* Optional: center the arrow vertically */
+.input-data .custom-dropdown > .dropdown-toggle::after {
+  margin-left: auto !important;
+}
+
 @media (max-width: 768px) {
     .input-data {
         margin-bottom: 15px;

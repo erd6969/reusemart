@@ -26,10 +26,17 @@ class TransaksiMerchandiseController
 
             $merchandise = Merchandise::find($id_merchandise);
             if ($merchandise && $merchandise->jumlah_merchandise > 0) {
-                $merchandise->jumlah_merchandise = $merchandise->jumlah_merchandise - 1;
-                $merchandise->save();
+                if ($pembeli->poin_loyalitas < $merchandise->poin_tukar) {
+                    return response()->json([
+                        'message' => 'Poin loyalitas tidak mencukupi untuk menukar merchandise ini',
+                    ], 400);
+                } else {
+                    $pembeli->poin_loyalitas -= $merchandise->poin_tukar;
+                    $pembeli->save();
+                    $merchandise->jumlah_merchandise = $merchandise->jumlah_merchandise - 1;
+                    $merchandise->save();
+                }
             } else {
-
                 return response()->json([
                     'message' => 'Stok merchandise habis',
                 ], 400);

@@ -129,3 +129,48 @@ export const GetAlamatById = async (id) => {
     throw error?.response?.data || error;
   }
 }
+
+export const GetKabupaten = async () => {
+  try {
+    const response = await useAxios.get("/get-kabupaten", {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${getToken()}`,
+      },
+    });
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching kabupaten:", error);
+    throw error?.response?.data || error;
+  }
+}
+
+export const GetKecamatan = async (kabupatenId) => {
+  try {
+    const response = await useAxios.get(`/get-kecamatan/${kabupatenId}`, {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${getToken()}`,
+      },
+    });
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching kecamatan:", error);
+    throw error?.response?.data || error;
+  }
+}
+
+export const GetKelurahan = async (kecamatanId) => {
+  try {
+    const response = await useAxios.get(`/get-kelurahan/${kecamatanId}`, {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${getToken()}`,
+      },
+    });
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching kelurahan:", error);
+    throw error?.response?.data || error;
+  }
+}

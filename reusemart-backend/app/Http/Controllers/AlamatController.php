@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Alamat;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Http;
 
 class AlamatController
 {
@@ -330,6 +331,63 @@ class AlamatController
 
             return response()->json($alamat, 200);
         } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'Failed to retrieve address',
+                'error' => $e->getMessage(),
+            ], 500);
+        }
+    }
+
+    public function GetKabupaten(){
+        try{
+            
+            $response = Http::get('https://agusfebrianto.github.io/api-wilayah-indonesia/api/regencies/34.json');
+            if ($response->failed()) {
+                return response()->json([
+                    'message' => 'Failed to retrieve address data',
+                    'error' => $response->body(),
+                ], 500);
+            }
+
+            return response()->json($response->json(), 200);
+
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'Failed to retrieve address',
+                'error' => $e->getMessage(),
+            ], 500);
+        }
+    }
+
+    public function GetKecamatan($id_kabupaten){
+        try{
+            $response = Http::get('https://agusfebrianto.github.io/api-wilayah-indonesia/api/districts/' . $id_kabupaten . '.json');
+            if ($response->failed()) {
+                return response()->json([
+                    'message' => 'Failed to retrieve address data',
+                    'error' => $response->body(),
+                ], 500);
+            }
+            return response()->json($response->json(), 200);
+        }catch (\Exception $e) {
+            return response()->json([
+                'message' => 'Failed to retrieve address',
+                'error' => $e->getMessage(),
+            ], 500);
+        }
+    }
+
+    public function GetKelurahan($id_kecamatan){
+        try{
+            $response = Http::get('https://agusfebrianto.github.io/api-wilayah-indonesia/api/villages/' . $id_kecamatan . '.json');
+            if ($response->failed()) {
+                return response()->json([
+                    'message' => 'Failed to retrieve address data',
+                    'error' => $response->body(),
+                ], 500);
+            }
+            return response()->json($response->json(), 200);
+        }catch (\Exception $e) {
             return response()->json([
                 'message' => 'Failed to retrieve address',
                 'error' => $e->getMessage(),

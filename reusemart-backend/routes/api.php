@@ -135,6 +135,7 @@ Route::middleware('auth:pembeli')->group(function () {
     Route::post('/pembeli/tambah-rating', [BarangController::class, 'tambahRating']);
     Route::get('/pembeli/show-all-history-pembelian', [PembeliController::class, 'showAllHistoryPembelian']);
     Route::get('/pembeli/show-detail-history/{id_barang}', [BarangController::class, 'showHistoryBarangIdPembeli']);
+    Route::post('/pembeli/history-pembelian-by-tanggal', [PembeliController::class, 'showHistoryPembelianByTanggal']);
 });
 #endregion
 

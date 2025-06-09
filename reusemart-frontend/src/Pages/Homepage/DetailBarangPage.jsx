@@ -1,5 +1,6 @@
 import { Container, Row, Col, Form, Button, FloatingLabel, Spinner } from "react-bootstrap";
 import profileImage from "../../assets/images/blank-pembeli-profile-picture.png";
+import badgeTopSeller from "../../assets/images/badgeTop.png";
 import "./DetailBarangPage.css";
 import { FaStar } from "react-icons/fa";
 import { useNavigate, useParams } from "react-router-dom";
@@ -133,6 +134,10 @@ const Toko = ({ penitip }) => {
                 <div className="toko-image-container">
                     <img src={getThumbnailPenitip(penitip.foto_penitip)} alt="Toko" />
                 </div>
+                <h3>
+                    {penitip.badge ? 
+                    <img src={badgeTopSeller} alt="Badge" className="badge-image" style={{height: 100}} /> : null}
+                </h3>
                 <div className="toko-detail">
                     <h3><b>{penitip.nama_penitip}</b></h3>
                     {/* <button

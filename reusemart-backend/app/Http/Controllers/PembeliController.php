@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\ValidationException;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class PembeliController
 {
@@ -224,6 +225,62 @@ class PembeliController
         } catch (Exception $e) {
             return response()->json([
                 'message' => 'Pembeli not found',
+                'error' => $e->getMessage(),
+            ], 404);
+        }
+    }
+
+    public function showHistoryPembelianByTanggal(Request $request){
+        try{
+            $validate = $request->validate([
+                'tanggal_mulai' => 'required',
+                'tanggal_selesai' => 'required',
+            ]);
+
+            $pembeli = auth('pembeli')->user();
+
+            $barang = DB::table('transaksi_pembelian')
+                ->join('komisi', 'transaksi_pembelian.id_transaksi_pembelian', '=', 'komisi.id_transaksi_pembelian')
+                ->join('barang', 'komisi.id_barang', '=', 'barang.id_barang')
+                ->where('transaksi_pembelian.id_pembeli', $pembeli->id_pembeli)
+                ->whereBetween('transaksi_pembelian.tanggal_pembelian', [$validate['tanggal_mulai'], $validate['tanggal_selesai']])
+                ->select(
+                    'barang.*',
+                    'transaksi_pembelian.tanggal_pembelian',
+                    'transaksi_pembelian.pengiriman',
+                    'transaksi_pembelian.total_pembayaran',
+                )
+                ->orderBy('transaksi_pembelian.tanggal_pembelian', 'desc')
+                ->paginate(10);
+
+            Log::info('Data pembelian berdasarkan tanggal', [
+                'tanggal_mulai' => $validate['tanggal_mulai'],
+                'tanggal_selesai' => $validate['tanggal_selesai'],
+                'pembeli_id' => $pembeli->id_pembeli,
+            ]);
+            
+
+            if($barang->isEmpty()){
+                return response()->json([
+                    'items' => [],
+                    'message' => 'Tidak ada data pembelian pada rentang tanggal tersebut.',
+                    'current_page' => 1,
+                    'last_page' => 1,
+                ], 200);
+            }
+
+            Log::info('Barang : ' . $barang->count() . ' items found');
+
+            return response()->json($barang, 200);
+            
+        }catch(ValidationException $e) {
+            return response()->json([
+                'message' => 'Validasi gagal',
+                'errors' => $e->errors()
+            ], 422);
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'Ada kesalahan saat mengambil data pembelian berdasarkan tanggal',
                 'error' => $e->getMessage(),
             ], 404);
         }

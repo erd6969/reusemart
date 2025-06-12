@@ -19,7 +19,6 @@ class TransaksiMerchandiseController
             $merchandiseTransaksi = TransaksiMerchandise::create([
                 'id_merchandise' => $id_merchandise,
                 'id_pembeli' => $pembeli->id_pembeli,
-                'tanggal_claim' => $today,
                 'status_claim' => 0,
                 'jumlah_claim' => 1,
             ]);

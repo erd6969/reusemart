@@ -83,24 +83,52 @@ class PdfController
 
     public function generateLaporanPenjualanKategori($tahun)
     {
-        $semuaKategori = Kategori::all();
+        // $semuaKategori = Kategori::all();
 
-        $penjualan = DetailTransaksiPenitipan::with('barang.kategori')
-            ->whereIn('status_penitipan', ['terjual', 'didonasikan', 'open donasi'])
-            ->whereYear('tanggal_berakhir', $tahun)
+        // $penjualan = DetailTransaksiPenitipan::with('barang.kategori')
+        //     ->whereIn('status_penitipan', ['terjual', 'didonasikan', 'open donasi'])
+        //     ->whereYear('tanggal_berakhir', $tahun)
+        //     ->get();
+
+        // $kategoriStats = $semuaKategori->map(function ($kategori) use ($penjualan) {
+        //     $items = $penjualan->filter(function ($item) use ($kategori) {
+        //         return optional($item->barang->kategori)->id_kategori == $kategori->id_kategori;
+        //     });
+
+        //     return [
+        //         'nama_kategori' => $kategori->nama_kategori,
+        //         'terjual' => $items->where('status_penitipan', 'terjual')->count() ?: '-',
+        //         'gagal_terjual' => $items->whereIn('status_penitipan', ['Didonasikan', 'open donasi'])->count() ?: '-',
+        //     ];
+        // });
+
+        // $pdf = Pdf::loadView('pdf.laporan_penjualan_kategori', [
+        //     'kategoriStats' => $kategoriStats,
+        //     'tahun' => $tahun
+        // ]);
+
+        // return response($pdf->output(), 200)
+        //     ->header('Content-Type', 'application/pdf')
+        //     ->header('Content-Disposition', 'inline; filename="laporan_penjualan_kategori_' . $tahun . '.pdf"');
+        $kategoriStats = DB::table(DB::raw('(SELECT id_kategori, nama_kategori FROM kategori WHERE id_kategori % 10 = 0) as k_utama'))
+            ->leftJoin('kategori as k', DB::raw('k.id_kategori - (k.id_kategori % 10)'), '=', 'k_utama.id_kategori')
+            ->leftJoin('barang as b', 'b.id_kategori', '=', 'k.id_kategori')
+            ->leftJoin('detail_transaksi_penitipan as dtp', 'b.id_barang', '=', 'dtp.id_barang')
+            ->leftJoin('transaksi_penitipan as ttp', 'dtp.id_transaksi_penitipan', '=', 'ttp.id_transaksi_penitipan')
+            ->leftJoin('komisi as kmi', 'b.id_barang', '=', 'kmi.id_barang')
+            ->where(function ($query) use ($tahun) {
+                $query->whereYear('dtp.tanggal_berakhir', $tahun)
+                    ->orWhereNull('dtp.tanggal_berakhir');
+            })
+            ->select(
+                DB::raw('k_utama.nama_kategori as nama_kategori'),
+                DB::raw('COUNT(CASE WHEN kmi.id_komisi IS NOT NULL THEN 1 END) as terjual'),
+                DB::raw('COUNT(CASE WHEN kmi.id_komisi IS NULL AND dtp.id_barang IS NOT NULL THEN 1 END) as gagal_terjual')
+            )
+            ->groupBy('k_utama.nama_kategori')
+            ->orderBy('k_utama.nama_kategori')
             ->get();
 
-        $kategoriStats = $semuaKategori->map(function ($kategori) use ($penjualan) {
-            $items = $penjualan->filter(function ($item) use ($kategori) {
-                return optional($item->barang->kategori)->id_kategori == $kategori->id_kategori;
-            });
-
-            return [
-                'nama_kategori' => $kategori->nama_kategori,
-                'terjual' => $items->where('status_penitipan', 'terjual')->count() ?: '-',
-                'gagal_terjual' => $items->whereIn('status_penitipan', ['Didonasikan', 'open donasi'])->count() ?: '-',
-            ];
-        });
 
         $pdf = Pdf::loadView('pdf.laporan_penjualan_kategori', [
             'kategoriStats' => $kategoriStats,
@@ -110,7 +138,7 @@ class PdfController
         return response($pdf->output(), 200)
             ->header('Content-Type', 'application/pdf')
             ->header('Content-Disposition', 'inline; filename="laporan_penjualan_kategori_' . $tahun . '.pdf"');
-    }
+        }
 
 
 

@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\ValidationException;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Carbon\Carbon;
 
 class PembeliController
 {
@@ -232,18 +233,22 @@ class PembeliController
 
     public function showHistoryPembelianByTanggal(Request $request){
         try{
+
             $validate = $request->validate([
-                'tanggal_mulai' => 'required',
-                'tanggal_selesai' => 'required',
+                'tanggal_mulai' => 'required|date',
+                'tanggal_selesai' => 'required|date',
             ]);
 
             $pembeli = auth('pembeli')->user();
+
+            $tanggalMulai = Carbon::parse($validate['tanggal_mulai'])->startOfDay();     // 2025-06-02 00:00:00
+            $tanggalSelesai = Carbon::parse($validate['tanggal_selesai'])->endOfDay();   // 2025-06-04 23:59:59
 
             $barang = DB::table('transaksi_pembelian')
                 ->join('komisi', 'transaksi_pembelian.id_transaksi_pembelian', '=', 'komisi.id_transaksi_pembelian')
                 ->join('barang', 'komisi.id_barang', '=', 'barang.id_barang')
                 ->where('transaksi_pembelian.id_pembeli', $pembeli->id_pembeli)
-                ->whereBetween('transaksi_pembelian.tanggal_pembelian', [$validate['tanggal_mulai'], $validate['tanggal_selesai']])
+                ->whereBetween('transaksi_pembelian.tanggal_pembelian', [$tanggalMulai, $tanggalSelesai])
                 ->select(
                     'barang.*',
                     'transaksi_pembelian.tanggal_pembelian',
@@ -252,6 +257,7 @@ class PembeliController
                 )
                 ->orderBy('transaksi_pembelian.tanggal_pembelian', 'desc')
                 ->paginate(10);
+
 
             Log::info('Data pembelian berdasarkan tanggal', [
                 'tanggal_mulai' => $validate['tanggal_mulai'],

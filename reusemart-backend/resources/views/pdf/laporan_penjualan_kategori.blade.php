@@ -65,13 +65,14 @@
             </tr>
         </thead>
         <tbody>
-            @foreach($kategoriStats as $kategori)
-                <tr>
-                    <td>{{ $kategori['nama_kategori'] }}</td>
-                    <td>{{ $kategori['terjual'] }}</td>
-                    <td>{{ $kategori['gagal_terjual'] }}</td>
-                </tr>
+            @foreach ($kategoriStats as $kategori)
+            <tr>
+                <td>{{ $kategori->nama_kategori }}</td>
+                <td>{{ $kategori->terjual > 0 ? $kategori->terjual : '-' }}</td>
+                <td>{{ $kategori->gagal_terjual > 0 ? $kategori->gagal_terjual : '-' }}</td>
+            </tr>
             @endforeach
+
         </tbody>
     </table>
 

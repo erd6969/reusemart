@@ -464,6 +464,83 @@ class TransaksiPembelianController
         }
     }
 
+    public function getKomisiPembelian($id_transaksi_pembelian)
+    {
+        $cariKomisi = Komisi::with('barang.detailtransaksipenitipan.transaksiPenitipan.penitip', 'barang.hunter', 'transaksiPembelian.pembeli')->where('id_transaksi_pembelian', $id_transaksi_pembelian)
+            ->get();
+
+        foreach ($cariKomisi as $komisi) {
+            $barang = $komisi->barang;
+            $harga = $barang->harga_barang;
+            $detail = $komisi->barang->detailtransaksipenitipan->first();
+            $transaksi_penitipan = $detail->transaksiPenitipan;
+            $pembeli = $komisi->transaksiPembelian->pembeli;
+            $poinDapat = $komisi->transaksiPembelian->tambahan_poin;
+
+
+            $komisi_hunter = 0;
+            $komisi_reusemart = 0;
+            $komisi_penitip = 0;
+            $bonus_penitip = 0;
+
+            if ($barang->id_hunter) {
+                if ($detail->status_perpanjangan == 0) {
+                    $komisi_penitip = $harga * 0.8;
+                    $komisi_hunter = $harga * 0.05;
+                    $komisi_reusemart = $harga * 0.15;
+                } else {
+                    $komisi_penitip = $harga * 0.7;
+                    $komisi_hunter = $harga * 0.05;
+                    $komisi_reusemart = $harga * 0.25;
+                }
+            } else {
+                if ($detail->status_perpanjangan == 0) {
+                    $komisi_penitip = $harga * 0.8;
+                    $komisi_reusemart = $harga * 0.2;
+                } else {
+                    $komisi_penitip = $harga * 0.7;
+                    $komisi_reusemart = $harga * 0.3;
+                }
+            }
+
+            if ($transaksi_penitipan->tanggal_penitipan >= now()->subDays(7)) {
+                $bonus_penitip = $komisi_reusemart * 0.1;
+                $komisi_reusemart = $komisi_reusemart - $bonus_penitip;
+                Log::info('Bonus Penitip: ' . $bonus_penitip);
+                Log::info('Komisi Reusemart setelah bonus: ' . $komisi_reusemart);
+            }
+
+            $komisi->update([
+                'total_harga_kotor' => $harga,
+                'total_harga_bersih' => $komisi_penitip,
+                'komisi_hunter' => $komisi_hunter,
+                'komisi_reusemart' => $komisi_reusemart,
+                'bonus_penitip' => $bonus_penitip,
+            ]);
+
+            if ($detail->transaksiPenitipan && $detail->transaksiPenitipan->penitip) {
+                $penitip = $detail->transaksiPenitipan->penitip;
+                $penitip->saldo += $komisi_penitip;
+                $penitip->komisi_penitip += $bonus_penitip;
+                $penitip->save();
+            }
+
+            if ($barang->id_hunter) {
+                $hunter = $barang->hunter;
+                $hunter->total_komisi += $komisi_hunter;
+                $hunter->save();
+            }
+
+            if ($pembeli) {
+                $pembeli->poin_loyalitas += $poinDapat;
+                $pembeli->save();
+            }
+        }
+
+        return response()->json([
+            'message' => 'Komisi berhasil dihitung',
+        ], 200);
+    }
 
     public function changeStatusPengiriman(Request $request)
     {
@@ -479,6 +556,7 @@ class TransaksiPembelianController
             $transaksi->update([
                 'status_pengiriman' => 'sudah sampai'
             ]);
+            $this->getKomisiPembelian($request->id_transaksi_pembelian);
 
             // Ambil penitip pertama yang ditemukan
             $penitip = Penitip::join('transaksi_penitipan', 'transaksi_penitipan.id_penitip', '=', 'penitip.id_penitip')

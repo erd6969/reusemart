@@ -67,41 +67,49 @@
             </tr>
         </thead>
         <tbody>
-            @foreach($laporan as $lap)
-                @if ($lap->total_pembayaran === 'Merge')
-                    <tr>
-                        <td colspan="2" style="text-align: center;"><strong>Total</strong></td>
-                        <td><strong>{{ number_format($lap->total_pembayaran, 0, ',', '.') }}</strong></td>
-                    </tr>
-                @else
-                    @php
-                        $total_harga_jual += $lap->total_pembayaran;
-                        $total_komisi_hunter += $lap->komisi_hunter;
-                        $total_komisi_reusemart += $lap->komisi_reusemart;
-                        $total_bonus_penitip += $lap->bonus_penitip;
-                    @endphp
-                    <tr>
-                        <td>B{{ $lap->id_barang }}</td>
-                        <td>{{ $lap->nama_barang }}</td>
-                        <td>
-                            {{ number_format($lap->total_pembayaran, 0, ',', '.') }}
-                        </td>
-                        <td>{{ $lap->tanggal_penitipan }}</td>
-                        <td>{{ $lap->tanggal_pembelian }}</td>
-                        <td>{{ number_format($lap->komisi_hunter, 0, ',', '.') }}</td>
-                        <td>{{ number_format($lap->komisi_reusemart, 0, ',', '.') }}</td>
-                        <td>{{ number_format($lap->bonus_penitip, 0, ',', '.') }}</td>
-                    </tr>
-                @endif
-            @endforeach
-            <tr>
-                <td colspan="2" style="text-align: center;"><strong>Total</strong></td>
-                <td><strong>{{ number_format($total_harga_jual, 0, ',', '.') }}</strong></td>
-                <td colspan="2"></td>
-                <td><strong>{{ number_format($total_komisi_hunter, 0, ',', '.') }}</strong></td>
-                <td><strong>{{ number_format($total_komisi_reusemart, 0, ',', '.') }}</strong></td>
-                <td><strong>{{ number_format($total_bonus_penitip, 0, ',', '.') }}</strong></td>
-            </tr>
+            @if ($laporan->isEmpty())
+                <tr>
+                    <td colspan="8" style="text-align: center;">Tidak ada data laporan komisi untuk bulan ini.</td>
+                </tr>
+            @else
+
+                @foreach($laporan as $lap)
+                    @if ($lap->total_pembayaran === 'Merge')
+                        <tr>
+                            <td colspan="2" style="text-align: center;"><strong>Total</strong></td>
+                            <td><strong>{{ number_format($lap->total_pembayaran, 0, ',', '.') }}</strong></td>
+                        </tr>
+                    @else
+                        @php
+                            $total_harga_jual += $lap->total_pembayaran;
+                            $total_komisi_hunter += $lap->komisi_hunter;
+                            $total_komisi_reusemart += $lap->komisi_reusemart;
+                            $total_bonus_penitip += $lap->bonus_penitip;
+                        @endphp
+                        <tr>
+                            <td>B{{ $lap->id_barang }}</td>
+                            <td>{{ $lap->nama_barang }}</td>
+                            <td>
+                                {{ number_format($lap->total_pembayaran, 0, ',', '.') }}
+                            </td>
+                            <td>{{ $lap->tanggal_penitipan }}</td>
+                            <td>{{ $lap->tanggal_pembelian }}</td>
+                            <td>{{ number_format($lap->komisi_hunter, 0, ',', '.') }}</td>
+                            <td>{{ number_format($lap->komisi_reusemart, 0, ',', '.') }}</td>
+                            <td>{{ number_format($lap->bonus_penitip, 0, ',', '.') }}</td>
+                        </tr>
+                    @endif
+                @endforeach
+
+                <tr>
+                    <td colspan="2" style="text-align: center;"><strong>Total</strong></td>
+                    <td><strong>{{ number_format($total_harga_jual, 0, ',', '.') }}</strong></td>
+                    <td colspan="2"></td>
+                    <td><strong>{{ number_format($total_komisi_hunter, 0, ',', '.') }}</strong></td>
+                    <td><strong>{{ number_format($total_komisi_reusemart, 0, ',', '.') }}</strong></td>
+                    <td><strong>{{ number_format($total_bonus_penitip, 0, ',', '.') }}</strong></td>
+                </tr>
+            @endif
         </tbody>
     </table>
 </body>

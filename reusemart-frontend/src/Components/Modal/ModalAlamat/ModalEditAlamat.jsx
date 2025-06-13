@@ -26,14 +26,11 @@ const ModalEditAlamat = ({ show, handleClose, dataEdit, onSuccess }) => {
   const [selectedKabupaten, setSelectedKabupaten] = useState('');
   const [selectedKecamatan, setSelectedKecamatan] = useState('');
   const [selectedKelurahan, setSelectedKelurahan] = useState('');
-  const [selectedIdKabupaten, setSelectedIdKabupaten] = useState('');
-  const [selectedIdKecamatan, setSelectedIdKecamatan] = useState('');
-
-  useEffect(() => {
-    getKabupaten();
-    getKecamatan(selectedIdKabupaten);
-    getKelurahan(selectedIdKecamatan);
-  }, [selectedIdKabupaten, selectedIdKecamatan]);
+  const [selectedOldAlamat, setSelectedOldAlamat] = useState([
+    '',
+    '',
+    ''
+  ]);
 
   const getKabupaten = async () => {
     try {
@@ -46,11 +43,19 @@ const ModalEditAlamat = ({ show, handleClose, dataEdit, onSuccess }) => {
     }
   }
 
-  const getKecamatan = async (kabupatenId) => {
+  const handleKabupatenSelect = async (kabupaten) => {
+    setSelectedKabupaten(kabupaten.name);
+    setFormData(prev => ({
+      ...prev,
+      kabupaten: kabupaten.name
+    }));
+
     try {
-      const response = await GetKecamatan(kabupatenId);
+      const response = await GetKecamatan(kabupaten.id);
       console.log('Kecamatan:', response);
       setKecamatanList(response);
+      setSelectedKecamatan('');
+      setSelectedKelurahan('');
       setFormData(prev => ({
         ...prev,
         kecamatan: '',
@@ -60,13 +65,19 @@ const ModalEditAlamat = ({ show, handleClose, dataEdit, onSuccess }) => {
       console.error('Error fetching kecamatan:', error);
       toast.error("Gagal memuat daftar kecamatan");
     }
-  };
+  }
 
-  const getKelurahan = async (kecamatanId) => {
+  const handleKecamatanSelect = async (kecamatan) => {
+    setSelectedKecamatan(kecamatan.name);
+    setFormData(prev => ({
+      ...prev,
+      kecamatan: kecamatan.name
+    }));
     try {
-      const response = await GetKelurahan(kecamatanId);
+      const response = await GetKelurahan(kecamatan.id);
       console.log('Kelurahan:', response);
       setKelurahanList(response);
+      setSelectedKelurahan('');
       setFormData(prev => ({
         ...prev,
         kelurahan: ''
@@ -75,7 +86,20 @@ const ModalEditAlamat = ({ show, handleClose, dataEdit, onSuccess }) => {
       console.error('Error fetching kelurahan:', error);
       toast.error("Gagal memuat daftar kelurahan");
     }
-  };
+  }
+
+  const handleKelurahanSelect = (kelurahan) => {
+    setSelectedKelurahan(kelurahan.name);
+    setFormData(prev => ({
+      ...prev,
+      kelurahan: kelurahan.name
+    }));
+    console.log('Kelurahan yang dipilih:', kelurahan.name);
+  }
+
+  useEffect(() => {
+    getKabupaten();
+  }, []);
 
   useEffect(() => {
     if (dataEdit) {
@@ -89,28 +113,16 @@ const ModalEditAlamat = ({ show, handleClose, dataEdit, onSuccess }) => {
         kode_pos: dataEdit.kode_pos || '',
         alamat_utama: dataEdit.alamat_utama || false,
       });
-
-      kabupatenList.forEach(kabupaten => {
-        if (kabupaten.name === dataEdit.kabupaten) {
-          setSelectedKabupaten(kabupaten.name);
-          setSelectedIdKabupaten(kabupaten.id);
-        }
-      });
-
-      kecamatanList.forEach(kecamatan => {
-        if (kecamatan.name === dataEdit.kecamatan) {
-          setSelectedKecamatan(kecamatan.name);
-          setSelectedIdKecamatan(kecamatan.id);
-        }
-      });
-
-      kelurahanList.forEach(kelurahan => {
-        if (kelurahan.name === dataEdit.kelurahan) {
-          setSelectedKelurahan(kelurahan.name);
-        }
-      });
+      setSelectedOldAlamat([
+        dataEdit.kabupaten || '',
+        dataEdit.kecamatan || '',
+        dataEdit.kelurahan || ''
+      ]);
+      setSelectedKabupaten('');
+      setSelectedKecamatan('');
+      setSelectedKelurahan('');
     }
-  }, [dataEdit, kabupatenList, kecamatanList]);
+  }, [dataEdit]);
 
 
 
@@ -176,8 +188,38 @@ const ModalEditAlamat = ({ show, handleClose, dataEdit, onSuccess }) => {
             onChange={handleChange}
           />
 
+          <InputColumn
+            nameLabel="kabupaten"
+            contentLabel="Kabupaten Sebelumnya"
+            typeInput="text"
+            idInput="kabupaten"
+            placeholderInput="Masukkan kabupaten..."
+            value={selectedOldAlamat[0]}
+            disabled="true"
+          />
+
+          <InputColumn
+            nameLabel="kecamatan"
+            contentLabel="Kecamatan Sebelumnya"
+            typeInput="text"
+            idInput="kecamatan"
+            placeholderInput="Masukkan kecamatan..."
+            value={selectedOldAlamat[1]}
+            disabled="true"
+          />
+          
+          <InputColumn
+            nameLabel="kelurahan"
+            contentLabel="Kelurahan Sebelumnya"
+            typeInput="text"
+            idInput="kelurahan"
+            placeholderInput="Masukkan kelurahan..."
+            value={selectedOldAlamat[2]}
+            disabled="true"
+          />
+
           <div className="input-data">
-            <label htmlFor="dropdown-basic-button">Kabupaten</label>
+            <label htmlFor="dropdown-basic-button">Kabupaten Baru</label>
             <DropdownButton
               id="dropdown-basic-button"
               title={selectedKabupaten || "Pilih Kabupaten"}
@@ -195,44 +237,47 @@ const ModalEditAlamat = ({ show, handleClose, dataEdit, onSuccess }) => {
             </DropdownButton>
           </div>
 
-          <div className="input-data">
-            <label htmlFor="dropdown-basic-button">Kecamatan</label>
-            <DropdownButton
-              id="dropdown-basic-button"
-              title={selectedKecamatan || "Pilih kecamatan"}
-              className="custom-dropdown"
-              variant="light"
-            >
-              {kecamatanList.map((kecamatan) => (
-                <Dropdown.Item
-                  key={kecamatan.id}
-                  onClick={() => handleKecamatanSelect(kecamatan)}
-                >
-                  {kecamatan.name}
-                </Dropdown.Item>
-              ))}
-            </DropdownButton>
-          </div>
+          {selectedKabupaten && (
+            <div className="input-data">
+              <label htmlFor="dropdown-basic-button">Kecamatan Baru</label>
+              <DropdownButton
+                id="dropdown-basic-button"
+                title={selectedKecamatan || "Pilih kecamatan"}
+                className="custom-dropdown"
+                variant="light"
+              >
+                {kecamatanList.map((kecamatan) => (
+                  <Dropdown.Item
+                    key={kecamatan.id}
+                    onClick={() => handleKecamatanSelect(kecamatan)}
+                  >
+                    {kecamatan.name}
+                  </Dropdown.Item>
+                ))}
+              </DropdownButton>
+            </div>
+          )}
 
-
-          <div className="input-data">
-            <label htmlFor="dropdown-basic-button">Kelurahan</label>
-            <DropdownButton
-              id="dropdown-basic-button"
-              title={selectedKelurahan || "Pilih Kelurahan"}
-              className="custom-dropdown"
-              variant="light"
-            >
-              {kelurahanList.map((kelurahan) => (
-                <Dropdown.Item
-                  key={kelurahan.id}
-                  onClick={() => handleKelurahanSelect(kelurahan)}
-                >
-                  {kelurahan.name}
-                </Dropdown.Item>
-              ))}
-            </DropdownButton>
-          </div>
+          {selectedKecamatan && (
+            <div className="input-data">
+              <label htmlFor="dropdown-basic-button">Kelurahan Baru</label>
+              <DropdownButton
+                id="dropdown-basic-button"
+                title={selectedKelurahan || "Pilih Kelurahan"}
+                className="custom-dropdown"
+                variant="light"
+              >
+                {kelurahanList.map((kelurahan) => (
+                  <Dropdown.Item
+                    key={kelurahan.id}
+                    onClick={() => handleKelurahanSelect(kelurahan)}
+                  >
+                    {kelurahan.name}
+                  </Dropdown.Item>
+                ))}
+              </DropdownButton>
+            </div>
+          )}
 
           <InputColumn
             nameLabel="kode_pos"

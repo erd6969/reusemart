@@ -76,6 +76,7 @@ const AlamatPembeliPage = () => {
         setAddress(data);
         setIsLoading(false);
         setIsFirstLoad(false);
+        console.log("Alamat:", data);
       })
       .catch((error) => {
         console.error("Error fetching address:", error);

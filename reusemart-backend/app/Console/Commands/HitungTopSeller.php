@@ -71,11 +71,13 @@ class HitungTopSeller extends Command
         }
 
         $topSeller->badge = 1;
-        $bonus = $highestHarga * 0.1;
+        $bonus = $highestHarga * 0.01;
         $topSeller->saldo = $topSeller->saldo + $bonus;
         $topSeller->komisi_penitip = $topSeller->komisi_penitip + $bonus;
+        $topSeller->poin_loyalitas = $topSeller->poin_loyalitas + $bonus;
         $topSeller->save();
         Log::info("Top seller bulan ini adalah: {$topSeller->nama_penitip} dengan total harga terjual: {$highest}");
+        Log::info("Bonus untuk penitip adalah: {$bonus}");
         Log::info("=================================================");
 
     }

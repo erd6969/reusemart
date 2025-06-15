@@ -625,6 +625,9 @@ class PenitipController
     public function showHistoryPenitipan(){
         try {
             $penitip = auth('penitip')->user();
+            $targetDate = Carbon::now()->subDays(30);
+            $today = Carbon::now();
+
 
             $history = TransaksiPenitipan::where('id_penitip', $penitip->id_penitip)
             ->with([
@@ -635,7 +638,8 @@ class PenitipController
                     $query->select('id_pembeli', 'nama_pembeli');
                 }
             ])
-            ->orderBy('created_at', 'desc')
+            ->whereBetween('tanggal_penitipan', [$targetDate, $today])
+            ->orderBy('tanggal_penitipan', 'desc')
             ->get();
 
 

@@ -66,13 +66,19 @@
             $total_bonus = 0;
             $total_pendapatan = 0;
         @endphp
+        @if($laporan->isEmpty())
+            <tr>
+                <td colspan="7" class="no-border">Tidak ada data.</td>
+            </tr>
+        @else
 
+        
         @foreach ($laporan as $item)
-            @php
+        @php
                 $total_bersih += $item->total_harga_bersih;
                 $total_bonus += $item->bonus_penitip;
                 $total_pendapatan += $item->pendapatan;
-            @endphp
+                @endphp
             <tr>
                 <td>K{{ $item->id_barang }}</td>
                 <td class="text-left">{{ $item->nama_barang }}</td>
@@ -82,16 +88,17 @@
                 <td>{{ number_format($item->bonus_penitip, 0, ',', '.') }}</td>
                 <td>{{ number_format($item->pendapatan, 0, ',', '.') }}</td>
             </tr>
-        @endforeach
-
-        <tr class="total-row">
-            <td colspan="4">TOTAL</td>
-            <td>{{ number_format($total_bersih, 0, ',', '.') }}</td>
-            <td>{{ number_format($total_bonus, 0, ',', '.') }}</td>
-            <td>{{ number_format($total_pendapatan, 0, ',', '.') }}</td>
-        </tr>
-    </tbody>
-</table>
-
+            @endforeach
+            
+            <tr class="total-row">
+                <td colspan="4">TOTAL</td>
+                <td>{{ number_format($total_bersih, 0, ',', '.') }}</td>
+                <td>{{ number_format($total_bonus, 0, ',', '.') }}</td>
+                <td>{{ number_format($total_pendapatan, 0, ',', '.') }}</td>
+            </tr>
+        @endif
+        </tbody>
+    </table>
+    
 </body>
 </html>

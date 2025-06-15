@@ -59,6 +59,7 @@
             </tr>
         </thead>
         <tbody>
+            
             @foreach($donasi as $d)
             <tr>
                 <td>K{{ $d->id_barang }}</td>

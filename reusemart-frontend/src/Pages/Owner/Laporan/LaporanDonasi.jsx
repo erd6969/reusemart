@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { GetLaporanDonasi } from "../../../api/apiPegawai";
+import { toast } from "react-toastify";
 
 import '../../CustomerService/CSDiscussionPage.css'
 
@@ -16,8 +17,21 @@ const LaporanDonasi = () => {
                 const bulan = String(date.getMonth() + 1).padStart(2, '0');
                 const tahun = date.getFullYear();
                 const bulanTahun = `${bulan}-${tahun}`;
-                const url = await GetLaporanDonasi(bulanTahun);
-                setPdfUrl(url);
+
+                try {
+                    const url = await GetLaporanDonasi(bulanTahun);
+
+                    if (!url) {
+                        toast.info("Laporan donasi untuk bulan yang dipilih tidak tersedia.");
+                        setPdfUrl(null);
+                    } else {
+                        setPdfUrl(url);
+                    }
+                } catch (error) {
+                    toast.error("Terjadi kesalahan saat mengambil laporan donasi.");
+                    setPdfUrl(null);
+                    console.error("Fetch PDF Error:", error);
+                }
             }
         };
 
@@ -39,15 +53,15 @@ const LaporanDonasi = () => {
                 />
             </div>
 
-            {pdfUrl && (
-            <>
-                {console.log("PDF URL:", pdfUrl)}
+            {pdfUrl ? (
                 <div style={{ marginTop: '20px' }}>
-                <embed src={pdfUrl} type="application/pdf" width="100%" height="600px" />
+                    <embed src={pdfUrl} type="application/pdf" width="100%" height="600px" />
                 </div>
-            </>
+            ) : (
+                <div style={{ marginTop: '20px', textAlign: 'center' }}>
+                    <p>Silakan pilih bulan dan tahun untuk melihat laporan donasi barang.</p>
+                </div>
             )}
-
         </Container>
     );
 };

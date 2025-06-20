@@ -86,11 +86,11 @@ export const ShowRequestDonasiByIdBarang = async (id_barang) => {
     }
 }
 
-export const ShowWaitingRequestDonasi = async () => {
+export const ShowWaitingRequestDonasi = async (page = 1) => {
     try {
         const token = getToken();
 
-        const response = await useAxios.get(`/request_donasi/show-waiting-request`, {
+        const response = await useAxios.get(`/request_donasi/show-waiting-request?page=${page}`, {
             headers: {
                 "Content-Type": "application/json",
                 "Accept": "application/json",

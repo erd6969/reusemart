@@ -39,13 +39,19 @@ class PenitipController
                 'NIK.unique' => 'NIK sudah terdaftar',
             ]);
 
+            $fileKTP = $request->file('foto_ktp');
+            $filePathKTP = uniqid() . '.' . $fileKTP->getClientOriginalExtension();
+            $fileKTP->storeAs('img/Penitip/ktp', $filePathKTP, 'public');
 
-            $fotoKTPPath = $request->file('foto_ktp')->store('img/Penitip/ktp', 'public');
             if ($request->hasFile('foto_penitip')) {
-                $foto_penitip_path = $request->file('foto_penitip')->store('img/Penitip', 'public');
+                $file = $request->file('foto_penitip');
+                $filename = uniqid() . '.' . $file->getClientOriginalExtension();
+                $file->storeAs('img/Penitip', $filename, 'public');
+                $foto_penitip = $filename;
             } else {
-                $foto_penitip_path = 'img/blank-profile-picture.jpg';
+                $foto_penitip = 'blank-pegawai-profile-pict.png';
             }
+
             Log::info($request);
             $penitip = penitip::create([
                 'email_penitip' => $request->email_penitip,
@@ -54,13 +60,13 @@ class PenitipController
                 'nomor_telepon_penitip' => $request->nomor_telepon_penitip,
                 'tanggal_lahir' => $request->tanggal_lahir,
                 'NIK' => $request->NIK,
-                'foto_ktp' => $fotoKTPPath,
+                'foto_ktp' => $filePathKTP,
                 'saldo' => 0,
                 'poin_loyalitas' => 0,
                 'badge' => 0,
                 'komisi_penitip' => 0,
                 'rerata_rating' => 0,
-                'foto_penitip' => $foto_penitip_path,
+                'foto_penitip' => $foto_penitip,
             ]);
 
             return response()->json([

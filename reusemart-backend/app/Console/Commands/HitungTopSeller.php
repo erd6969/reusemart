@@ -70,6 +70,11 @@ class HitungTopSeller extends Command
             Log::info("=================================================");
         }
 
+        if($topSeller === null) {
+            Log::info("Tidak ada penitip yang memenuhi kriteria untuk menjadi top seller.");
+            return;
+        }
+
         $topSeller->badge = 1;
         $bonus = $highestHarga * 0.01;
         $topSeller->saldo = $topSeller->saldo + $bonus;

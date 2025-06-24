@@ -122,8 +122,8 @@ class PdfController
             })
             ->select(
                 DB::raw('k_utama.nama_kategori as nama_kategori'),
-                DB::raw('COUNT(CASE WHEN kmi.id_komisi IS NOT NULL THEN 1 END) as terjual'),
-                DB::raw('COUNT(CASE WHEN kmi.id_komisi IS NULL AND dtp.id_barang IS NOT NULL THEN 1 END) as gagal_terjual')
+                DB::raw("COUNT(CASE WHEN dtp.status_penitipan = 'terjual' THEN 1 END) as terjual"),
+                DB::raw("COUNT(CASE WHEN dtp.status_penitipan IN ('Didonasikan', 'open donasi') THEN 1 END) as gagal_terjual")
             )
             ->groupBy('k_utama.nama_kategori')
             ->orderBy('k_utama.nama_kategori')

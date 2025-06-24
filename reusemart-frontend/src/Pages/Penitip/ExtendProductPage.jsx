@@ -78,6 +78,12 @@ const ExtendProductPage = () => {
 
     const handleExtend = async (id_detail_transaksi_penitipan) => {
         setIsLoading(true);
+        const confirmed = confirm("Apakay yakin? " + id_detail_transaksi_penitipan)
+        if(!confirmed){
+            setIsLoading(false);
+            return;
+        }
+
         try {
             const response = await extendBarang(id_detail_transaksi_penitipan);
             console.log("Extend response:", response);

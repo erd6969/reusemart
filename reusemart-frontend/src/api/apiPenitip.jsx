@@ -425,3 +425,20 @@ export const GetDetailDonasiBarang = async (id_barang) => {
         throw error?.response?.data || error;
     }
 }
+
+export const PenarikanSaldoPenitip = async (data) => {
+    const token = sessionStorage.getItem("token");
+    try {
+        const response = await useAxios.post(`/penitip/penarikan-saldo`, data, {
+            headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${token}`
+            },
+        });
+        console.log("Penarikan Saldo response:", response.data);
+        return response.data;
+    } catch (error) {
+        console.error("Error fetching Detail Barang:", error);
+        throw error?.response?.data || error;
+    }
+}

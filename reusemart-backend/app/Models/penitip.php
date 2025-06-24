@@ -21,6 +21,7 @@ class Penitip extends Model
         'nomor_telepon_penitip',
         'tanggal_lahir',
         'saldo',
+        'nominal_tarik',
         'poin_loyalitas',
         'badge',
         'foto_penitip',

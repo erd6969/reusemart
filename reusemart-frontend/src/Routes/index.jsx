@@ -58,6 +58,7 @@ import SoldProductPage from "../Pages/Penitip/SoldProductPage";
 import OnSaleProductPage from "../Pages/Penitip/OnSaleProductPage";
 import ExtendProductPage from "../Pages/Penitip/ExtendProductPage";
 import DonatedProductPage from "../Pages/Penitip/DonatedProductPage";
+import PenarikanSaldo from "../Pages/Penitip/PenarikanSaldoPage";
 
 //CS
 import CSLayout from "../Layouts/CSLayouts";
@@ -421,6 +422,10 @@ const router = createBrowserRouter([
                     { path: "donated", element: <DonatedProductPage /> },
                 ],
             },
+            {
+                path: "penarikan-saldo",
+                element: <PenarikanSaldo />,
+            }
         ],
     },
     {

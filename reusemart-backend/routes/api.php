@@ -74,6 +74,7 @@ Route::middleware('auth:penitip')->group(function () {
     Route::get('/detail-donasi/{id_barang}', [BarangController::class, 'showDetailBarangDonasi']);
     Route::get('/penitip/show-history-penitipan', [PenitipController::class, 'showHistoryPenitipan']);
     Route::get('/penitip/show-detail-history/{id_barang}', [BarangController::class, 'showHistoryBarangIdPenitip']);
+    Route::post('/penitip/penarikan-saldo', [PenitipController::class, 'penarikanSaldo']);
 });
 #endregion
 

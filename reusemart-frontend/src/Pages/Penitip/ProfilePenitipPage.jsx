@@ -5,9 +5,12 @@ import FotoPenitip from "../../Components/Penitip/FotoPenitip";
 import InputColumn from "../../Components/InputColumn";
 import { ShowProfilePenitip } from "../../api/apiPenitip";
 import { FaMedal } from "react-icons/fa";
+import { useNavigate } from "react-router-dom";
+
 
 const ProfilePenitip = () => {
   const [penitip, setPenitip] = useState(null);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchData = async () => {
@@ -21,6 +24,11 @@ const ProfilePenitip = () => {
 
     fetchData();
   }, []);
+
+  const handleTarikSaldo = () => {
+    navigate(`/penitip/penarikan-saldo/`);
+    alert("Fitur tarik saldo belum tersedia.");
+  };
 
   return (
     <>
@@ -43,6 +51,7 @@ const ProfilePenitip = () => {
                   <div className="detail-item">
                     <b>Saldo</b>
                     <p>Rp{penitip.saldo?.toLocaleString('id-ID')},00</p>
+                    <button onClick={handleTarikSaldo}>Tarik Saldo</button>
                   </div>
                   <div className="detail-item">
                     <b>Poin Loyalitas</b>

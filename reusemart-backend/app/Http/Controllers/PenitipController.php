@@ -672,4 +672,35 @@ class PenitipController
         }
     }
 
+    public function penarikanSaldo(Request $request){
+        try{
+            $validate = $request->validate([
+                'nominal_tarik' => 'required',
+            ]);
+
+            $penitip = auth('penitip')->user();
+            $nominal = $validate['nominal_tarik'] + $validate['nominal_tarik'] * 0.05;
+            if($penitip->saldo < $nominal){
+                return response()->json([
+                    'message' => 'Saldo tidak cukup ' . $penitip->saldo . " untuk penarikan sebesar " . $nominal,
+                ], 400);
+            }
+
+            $penitip->saldo -= $nominal;
+            $penitip->nominal_tarik = $nominal;
+            $penitip->save();
+
+            return response()->json([
+                'message' => 'Penarikan saldo berhasil',
+                'saldo_tersisa' => $penitip->saldo,
+            ], 200);
+
+        }catch( \Exception $e) {
+            return response()->json([
+                'message' => 'Error occurred dalam penarikan saldo',
+                'error' => $e->getMessage(),
+            ], 500);
+        }
+    }
+
 }

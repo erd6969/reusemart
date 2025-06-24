@@ -1,0 +1,183 @@
+.penitip-container {
+    background-color: white;
+    border-radius: 5px;
+    margin: 50px;
+}
+
+.profile-penitip-header{
+    justify-content: space-between;
+    padding-top: 30px;
+    padding-left: 20px;
+    padding-right: 20px;
+}
+
+.profile-penitip-header hr{
+    width: 100%;
+    margin-top: -5px;
+}
+
+.profile-content {
+    display: flex;
+    gap: 30px;
+    align-items: start;
+}
+
+.profile-details-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    padding: 15px;
+    border-radius: 10px;
+    width: 300px;
+}
+  
+.left-details {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    width: 70%;
+}
+
+.right-detail {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    width: 30%;
+    border-left: 1px solid #e0e0e0;
+    padding-left: 15px;
+}
+
+.detail-item {
+    text-align: left;
+}
+
+.detail-item b {
+    display: block;
+    margin-bottom: 5px;
+    font-size: 14px;
+    color: #666;
+}
+
+.detail-item p {
+    margin: 0;
+    font-size: 18px;
+    font-weight: bold;
+    color: #000;
+}
+
+.badge-placeholder {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+}
+
+.profile-left {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.input-container {
+    flex: 1;
+    max-width: 400px;
+    border: 1px solid #B7B7B7;
+    border-radius: 5px;
+    padding: 20px;
+    margin-top:25px;
+    margin-bottom: 50px;
+}
+
+.input-button{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 20px;
+    border-radius: 5px;
+    background-color: #347928;
+    color: white;
+    height: 35px;
+    width: 150px;
+    font-size: 18px;
+}
+
+@media (max-width: 768px) {
+    .penitip-container {
+        background-color: white;
+        border-radius: 5px;
+        margin: 100px;
+    }
+
+    .profile-content {
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .profile-left {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        width: 100%;
+        margin-bottom: 20px;
+    }
+
+    .input-container {
+        width: 100%;
+        max-width: 100%;
+        margin-top: 20px;
+    }
+
+    .input-button {
+        width: 100%;
+        max-width: 300px;
+        margin: 0 auto;
+    }
+
+    .poin-container{
+        text-align: center;
+    }
+}
+
+
+@media (max-width: 480px) {
+    .penitip-container {
+        background-color: white;
+        border-radius: 5px;
+        margin: 20px;
+        padding: 15px;
+    }
+
+    .profile-content {
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+    }
+
+    .profile-left {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        width: 100%;
+        margin-bottom: 15px;
+    }
+
+    .input-container {
+        width: 100%;
+        max-width: 100%;
+        margin-top: 20px;
+    }
+
+    .input-button {
+        width: 100%;
+        max-width: 250px;
+        margin: 0 auto;
+    }
+
+    .poin-container {
+        text-align: center;
+    }
+}

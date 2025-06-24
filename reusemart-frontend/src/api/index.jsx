@@ -1,6 +1,6 @@
 import axios from "axios";
 
-export const BASE_URL = "http://127.0.0.1:8000";
+export const BASE_URL = "https://laravelagus.barioth.web.id";
 
 export const getThumbnail = (thumbnail) => {
     return `${BASE_URL}/storage/img/${thumbnail}`;

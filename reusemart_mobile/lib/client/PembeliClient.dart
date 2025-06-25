@@ -11,7 +11,7 @@ class PembeliClient {
 
   static Future<Pembeli?> getProfilePembeli(String token) async {
     try {
-      final url = Uri.http(baseUrl, '$apiPath/pembeli/show-profile');
+      final url = Uri.https(baseUrl, '$apiPath/pembeli/show-profile');
       final response = await http.get(
         url,
         headers: {
@@ -42,7 +42,7 @@ class PembeliClient {
     if (token == null) throw Exception("Token tidak ditemukan");
     try {
       final url =
-          Uri.http(baseUrl, '$apiPath/pembeli/show-all-history-pembelian', {
+          Uri.https(baseUrl, '$apiPath/pembeli/show-all-history-pembelian', {
         'page': page.toString(),
       });
       final response = await http.get(
@@ -71,7 +71,7 @@ class PembeliClient {
   static Future<void> createTransaksiMerchandise(
       String token, int idMerchandise) async {
     try {
-      final url = Uri.http(
+      final url = Uri.https(
           baseUrl, '$apiPath/pembeli/create-merchandise/$idMerchandise');
 
       print('Request URL: $url');
@@ -105,7 +105,7 @@ class PembeliClient {
     if (token == null) throw Exception("Token tidak ditemukan");
     try {
       final url =
-          Uri.http(baseUrl, '$apiPath/pembeli/history-pembelian-by-tanggal', {
+          Uri.https(baseUrl, '$apiPath/pembeli/history-pembelian-by-tanggal', {
         'tanggal_mulai': dateFormat.format(tanggalMulai!),
         'tanggal_selesai': dateFormat.format(tanggalSelesai!),
         'page': page.toString(),
@@ -127,8 +127,7 @@ class PembeliClient {
             'currentPage': data['current_page'],
             'lastPage': data['last_page'],
           };
-        }
-        else if (data['items'] == null ||
+        } else if (data['items'] == null ||
             (data['items'] is List && data['items'].isEmpty)) {
           print('Data tidak ditemukan atau format tidak sesuai: $data');
           return {
@@ -137,7 +136,6 @@ class PembeliClient {
             'lastPage': 1,
           };
         }
-
       } else {
         throw Exception('Failed to load history pembelian by tanggal');
       }

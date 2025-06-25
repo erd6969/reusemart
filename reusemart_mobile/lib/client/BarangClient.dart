@@ -9,7 +9,7 @@ class BarangClient {
   static final String apiPath = '/api';
   static Future<List<dynamic>> getBarang(String token) async {
     try {
-      final url = Uri.http(baseUrl, '$apiPath/shop-page');
+      final url = Uri.https(baseUrl, '$apiPath/shop-page');
       final response = await http.get(
         url,
         headers: {
@@ -37,7 +37,7 @@ class BarangClient {
 
   static Future<List<dynamic>> getBarangUmum() async {
     try {
-      final url = Uri.http(baseUrl, '$apiPath/shop-page');
+      final url = Uri.https(baseUrl, '$apiPath/shop-page');
       final response = await http.get(
         url,
         headers: {
@@ -73,7 +73,8 @@ class BarangClient {
       final token = await AuthClient.getToken();
       if (token == null) throw Exception("Token tidak ditemukan");
 
-      final url = Uri.http(baseUrl, '$apiPath/penitip/show-detail-history/$id');
+      final url =
+          Uri.https(baseUrl, '$apiPath/penitip/show-detail-history/$id');
       final response = await http.get(
         url,
         headers: {
@@ -103,7 +104,8 @@ class BarangClient {
       final token = await AuthClient.getToken();
       if (token == null) throw Exception("Token tidak ditemukan");
 
-      final url = Uri.http(baseUrl, '$apiPath/pembeli/show-detail-history/$id');
+      final url =
+          Uri.https(baseUrl, '$apiPath/pembeli/show-detail-history/$id');
       final response = await http.get(
         url,
         headers: {
@@ -133,7 +135,7 @@ class BarangClient {
       final token = await AuthClient.getToken();
       if (token == null) throw Exception("Token tidak ditemukan");
 
-      final url = Uri.http(baseUrl, '$apiPath/hunter/show-detail-history/$id');
+      final url = Uri.https(baseUrl, '$apiPath/hunter/show-detail-history/$id');
       final response = await http.get(
         url,
         headers: {
@@ -159,7 +161,7 @@ class BarangClient {
 
   static Future<List<dynamic>> getMerchandise(String token) async {
     try {
-      final url = Uri.http(baseUrl, '$apiPath/pembeli/show-merchandise');
+      final url = Uri.https(baseUrl, '$apiPath/pembeli/show-merchandise');
       final response = await http.get(
         url,
         headers: {

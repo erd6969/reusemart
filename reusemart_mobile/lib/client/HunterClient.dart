@@ -10,7 +10,7 @@ class HunterClient {
 
   static Future<Hunter?> getProfileHunter(String token) async {
     try {
-      final url = Uri.http(baseUrl, '$apiPath/hunter/show-profile');
+      final url = Uri.https(baseUrl, '$apiPath/hunter/show-profile');
       final response = await http.get(
         url,
         headers: {
@@ -35,11 +35,12 @@ class HunterClient {
     return "http://$baseUrl/storage/img/Hunter/$thumbnail";
   }
 
-  static Future<Map<String, dynamic>> getAllHistoryHunter({int page = 1}) async {
+  static Future<Map<String, dynamic>> getAllHistoryHunter(
+      {int page = 1}) async {
     final token = await AuthClient.getToken();
     if (token == null) throw Exception("Token tidak ditemukan");
     try {
-      final url = Uri.http(baseUrl, '$apiPath/hunter/history', {
+      final url = Uri.https(baseUrl, '$apiPath/hunter/history', {
         'page': page.toString(),
       });
 

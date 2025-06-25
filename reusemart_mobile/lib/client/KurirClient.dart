@@ -9,7 +9,7 @@ class KurirClient {
 
   static Future<Kurir?> getProfileKurir(String token) async {
     try {
-      final url = Uri.http(baseUrl, '$apiPath/pegawai/show-profile');
+      final url = Uri.https(baseUrl, '$apiPath/pegawai/show-profile');
       final response = await http.get(
         url,
         headers: {
@@ -32,7 +32,7 @@ class KurirClient {
 
   static Future<int> countPengiriman(String token) async {
     try {
-      final url = Uri.http(baseUrl, '$apiPath/kurir/count-pengiriman');
+      final url = Uri.https(baseUrl, '$apiPath/kurir/count-pengiriman');
       final response = await http.get(
         url,
         headers: {
@@ -67,7 +67,7 @@ class KurirClient {
 
   static Future<List<String>> getPengiriman(String token) async {
     try {
-      final url = Uri.http(baseUrl, '$apiPath/kurir/pengiriman');
+      final url = Uri.https(baseUrl, '$apiPath/kurir/pengiriman');
       final response = await http.get(
         url,
         headers: {
@@ -93,7 +93,7 @@ class KurirClient {
       String token, String tanggal) async {
     try {
       final url =
-          Uri.http(baseUrl, '$apiPath/kurir/histori-pengiriman/$tanggal');
+          Uri.https(baseUrl, '$apiPath/kurir/histori-pengiriman/$tanggal');
 
       final response = await http.get(
         url,
@@ -121,7 +121,7 @@ class KurirClient {
 
   static Future<List<dynamic>> getListPengiriman(String token) async {
     try {
-      final url = Uri.http(baseUrl, '$apiPath/kurir/list-pengiriman');
+      final url = Uri.https(baseUrl, '$apiPath/kurir/list-pengiriman');
 
       final response = await http.get(
         url,
@@ -149,7 +149,7 @@ class KurirClient {
   static Future<void> updateStatusPengiriman(
       String token, int idTransaksi) async {
     try {
-      final url = Uri.http(baseUrl, '$apiPath/kurir/update-status-pengiriman');
+      final url = Uri.https(baseUrl, '$apiPath/kurir/update-status-pengiriman');
 
       final response = await http.post(
         url,

@@ -12,7 +12,7 @@ class PenitipClient {
 
   static Future<Penitip?> getProfilePenitip(String token) async {
     try {
-      final url = Uri.http(baseUrl, '$apiPath/penitip/profile');
+      final url = Uri.https(baseUrl, '$apiPath/penitip/profile');
       final response = await http.get(
         url,
         headers: {
@@ -37,8 +37,8 @@ class PenitipClient {
     return "http://$baseUrl/storage/img/Penitip/$thumbnail";
   }
 
-  static Future<List<Map<String, dynamic>>> getPenitipHistory(String token) async {
-
+  static Future<List<Map<String, dynamic>>> getPenitipHistory(
+      String token) async {
     /*
     contoh nya (buat agus belaajr be)
       Map<String, dynamic> contohMap = {
@@ -55,7 +55,7 @@ class PenitipClient {
 
     */
     try {
-      final url = Uri.http(baseUrl, '$apiPath/penitip/show-history-penitipan');
+      final url = Uri.https(baseUrl, '$apiPath/penitip/show-history-penitipan');
       final response = await http.get(
         url,
         headers: {
@@ -80,7 +80,7 @@ class PenitipClient {
     try {
       final token = await AuthClient.getToken();
       if (token == null) throw Exception("Token tidak ditemukan");
-      final url = Uri.http(baseUrl, '$apiPath/penitip/get-top-seller');
+      final url = Uri.https(baseUrl, '$apiPath/penitip/get-top-seller');
       final response = await http.get(
         url,
         headers: {

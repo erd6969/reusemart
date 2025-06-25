@@ -4,8 +4,10 @@ import 'dart:convert';
 import 'package:reusemart_mobile/client/baseUrl.dart';
 
 Future<void> sendNotification(String token, String title, String body) async {
+  final url = Uri.https(baseUrl, '/api/send-notification');
+
   final response = await http.post(
-    Uri.parse('$baseUrl/api/send-notification'),
+    url,
     headers: {'Content-Type': 'application/json'},
     body: json.encode({
       'token': token,

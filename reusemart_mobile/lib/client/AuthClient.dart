@@ -1,8 +1,6 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 
-
-
 import 'package:reusemart_mobile/client/baseUrl.dart';
 
 import 'package:shared_preferences/shared_preferences.dart';
@@ -14,7 +12,7 @@ class AuthClient {
   static Future<bool> login(String email, String password) async {
     final fcmToken = await FirebaseMessaging.instance.getToken();
 
-    final url = Uri.http(baseUrl, '$apiPath/mobile/login');
+    final url = Uri.https(baseUrl, '$apiPath/mobile/login');
 
     final body = {
       'email': email,
@@ -46,7 +44,7 @@ class AuthClient {
   }
 
   static Future<void> logout() async {
-    final url = Uri.http(baseUrl, '$apiPath/logout-mobile');
+    final url = Uri.https(baseUrl, '$apiPath/logout-mobile');
     final prefs = await SharedPreferences.getInstance();
     final token = prefs.getString('token');
 

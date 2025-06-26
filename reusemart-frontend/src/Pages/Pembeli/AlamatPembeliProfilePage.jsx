@@ -36,7 +36,7 @@ const AlamatDetail = ({ data, onEdit, toggleMain, onDelete }) => {
     <Container className="alamat-list-container">
       <div className="nama-alamat-container">
         <b className="nama-alamat">{nama_alamat}</b>
-        {alamat_utama === 1 && <span className="main-address">Alamat Utama</span>}
+        {Number(alamat_utama) === 1 && <span className="main-address">Alamat Utama</span>}
       </div>
       <p>{alamat} ({keterangan}), {kelurahan}, Kecamatan {kecamatan}, Kabupaten {kabupaten}, {kode_pos}</p>
       <div className="alamat-button-container">
@@ -48,7 +48,7 @@ const AlamatDetail = ({ data, onEdit, toggleMain, onDelete }) => {
         </div>
         <div className="right-button">
           <button
-            className={alamat_utama === 1 ? "set-as-main-button-active" : "set-as-main-button-inactive"}
+            className={Number(alamat_utama) === 1 ? "set-as-main-button-active" : "set-as-main-button-inactive"}
             onClick={toggleMain}
           >
             Jadikan Alamat Utama

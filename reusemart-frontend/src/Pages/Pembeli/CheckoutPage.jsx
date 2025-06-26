@@ -127,8 +127,9 @@ const PaymentDetail = ({ cartItems, alamatUtama, shippingOption }) => {
     }, []);
 
     const totalHarga = cartItems.reduce((total, toko) => {
-        return total + toko.barang.reduce((subTotal, item) => subTotal + (item.harga_barang || 0), 0);
+        return total + toko.barang.reduce((subTotal, item) => subTotal + Number(item.harga_barang || 0), 0);
     }, 0);
+
 
     const handleBayarSekarang = async () => {
         if (cartItems.length === 0) return;
@@ -210,9 +211,9 @@ const PaymentDetail = ({ cartItems, alamatUtama, shippingOption }) => {
         <>
             <div className="payment-box">
                 <h3><b>Rincian Pembayaran</b></h3>
-                <p><span>Total Harga</span><span>Rp{totalHarga.toLocaleString('id-ID')}</span></p>
-                <p><span>Biaya Pengiriman</span><span>Rp{ongkir.toLocaleString('id-ID')}</span></p>
-                <p><span>Diskon Poin</span><span className="discount">- Rp{potonganPoin.toLocaleString('id-ID')}</span></p>
+                <p><span>Total Harga</span><span>Rp{Number(totalHarga).toLocaleString('id-ID')}</span></p>
+                <p><span>Biaya Pengiriman</span><span>Rp{Number(ongkir).toLocaleString('id-ID')}</span></p>
+                <p><span>Diskon Poin</span><span className="discount">- Rp{Number(potonganPoin).toLocaleString('id-ID')}</span></p>
                 <p style={{fontSize: '12px', marginTop: '-10px', color: '#888'}}>({selectedPoints} Poin Digunakan)</p>
                 <p style={{ fontSize: '12px', textAlign: 'right', marginTop: '10px', color: '#888', float: 'right', marginBottom: '-10px' }}>
                     {profile.poin_loyalitas - selectedPoints} Poin Tersisa

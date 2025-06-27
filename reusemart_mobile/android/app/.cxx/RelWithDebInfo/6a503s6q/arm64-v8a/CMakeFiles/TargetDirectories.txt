@@ -1,0 +1,2 @@
+D:/Tampungan Clone/reusemart/reusemart/reusemart_mobile/android/app/.cxx/RelWithDebInfo/6a503s6q/arm64-v8a/CMakeFiles/edit_cache.dir
+D:/Tampungan Clone/reusemart/reusemart/reusemart_mobile/android/app/.cxx/RelWithDebInfo/6a503s6q/arm64-v8a/CMakeFiles/rebuild_cache.dir

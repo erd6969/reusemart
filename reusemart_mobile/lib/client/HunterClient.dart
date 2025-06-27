@@ -23,11 +23,15 @@ class HunterClient {
         final data = jsonDecode(response.body);
         return Hunter.fromJson(data);
       } else {
-        return null;
+        final errorData = jsonDecode(response.body);
+        return throw Exception(
+            'Failed to load profile Hunter: ${errorData['error']}');
       }
     } catch (e) {
       print('Error fetching profile Hunter: $e');
-      return null;
+      return e is Exception
+          ? throw e
+          : throw Exception('Error fetching profile Hunter: $e');
     }
   }
 

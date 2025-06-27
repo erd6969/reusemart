@@ -26,16 +26,25 @@ class _ProfilePembeliPageState extends State<ProfilePembeliPage> {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String? token = prefs.getString('token');
 
-    if (token != null) {
-      Pembeli? pembeli = await PembeliClient.getProfilePembeli(token);
+    try{
+      if (token != null) {
+        Pembeli? pembeli = await PembeliClient.getProfilePembeli(token);
+        setState(() {
+          _pembeli = pembeli;
+          _isLoading = false;
+        });
+      } else {
+        setState(() {
+          _isLoading = false;
+        });
+      }
+    }catch (e) {
       setState(() {
-        _pembeli = pembeli;
         _isLoading = false;
       });
-    } else {
-      setState(() {
-        _isLoading = false;
-      });
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Gagal memuat profil: ${e.toString()}')),
+      );
     }
   }
 

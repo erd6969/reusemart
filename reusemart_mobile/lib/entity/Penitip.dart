@@ -43,11 +43,11 @@ class Penitip {
         foto_ktp: json["foto_ktp"],
         nomor_telepon_penitip: json["nomor_telepon_penitip"],
         tanggal_lahir: DateTime.parse(json["tanggal_lahir"]),
-        saldo: (json["saldo"] ?? 0).toDouble(),
-        poin_loyalitas: json["poin_loyalitas"],
-        badge: json["badge"] == 1,
-        komisi_penitip: (json["komisi_penitip"] ?? 0).toDouble(),
-        rerata_rating: (json["rerata_rating"] ?? 0).toDouble(),
+        saldo: double.parse(json["saldo"].toString()),
+        poin_loyalitas: int.parse(json["poin_loyalitas"].toString()),
+        badge: json["badge"].toString() == '1',
+        komisi_penitip: double.parse(json["komisi_penitip"].toString()),
+        rerata_rating: double.parse(json["rerata_rating"].toString()),
         foto_penitip: json["foto_penitip"],
       );
 

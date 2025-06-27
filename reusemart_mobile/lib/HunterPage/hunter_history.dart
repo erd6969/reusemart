@@ -104,7 +104,7 @@ class _HunterHistoryState extends State<HunterHistory> {
                         context,
                         MaterialPageRoute(
                           builder: (_) => DetailHistoryHunter(
-                            id_barang: item['id_barang'],
+                            id_barang: int.parse(item['id_barang'].toString()),
                           ),
                         ),
                       );

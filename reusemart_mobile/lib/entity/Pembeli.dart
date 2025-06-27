@@ -29,7 +29,7 @@ class Pembeli {
         nama_pembeli: json["nama_pembeli"],
         nomor_telepon_pembeli: json["nomor_telepon_pembeli"],
         tanggal_lahir_pembeli: DateTime.parse(json["tanggal_lahir_pembeli"]),
-        poin_loyalitas: json["poin_loyalitas"],
+        poin_loyalitas: int.parse(json["poin_loyalitas"].toString()),
         foto_pembeli: json["foto_pembeli"],
       );
 

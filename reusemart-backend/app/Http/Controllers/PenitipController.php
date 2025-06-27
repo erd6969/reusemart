@@ -556,10 +556,10 @@ class PenitipController
         }
     }
 
-    public function extendBarangPenitip(Request $request)
+    public function extendBarangPenitip($id_dtp)
     {
-        $detailTransaksi = DetailTransaksiPenitipan::where('id_detail_transaksi_penitipan', $request->id_detail_transaksi_penitipan)->first();
-
+        Log::info($id_dtp);
+        $detailTransaksi = DetailTransaksiPenitipan::where('id_detail_transaksi_penitipan', $id_dtp)->first();
         if (!$detailTransaksi) {
             return response()->json([
                 'message' => 'Detail Transaksi not found',
@@ -589,9 +589,9 @@ class PenitipController
     }
 
 
-    public function pengambilanBarang(Request $request)
+    public function pengambilanBarang($id_barang)
     {
-        $detailTransaksi = DetailTransaksiPenitipan::where('id_barang', $request->id_barang)->first();
+        $detailTransaksi = DetailTransaksiPenitipan::where('id_barang', $id_barang)->first();
 
         if (!$detailTransaksi) {
             return response()->json([

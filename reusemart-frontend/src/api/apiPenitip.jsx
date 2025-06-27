@@ -186,8 +186,10 @@ export const ShowOnSaleProducts = async (page = 1) => {
 export const extendBarang = async (id_detail_transaksi_penitipan) => {
     try {
         const token = sessionStorage.getItem("token");
-        
-        const response = await useAxios.post(`/penitip/extend-barang/`, {id_detail_transaksi_penitipan}, {
+        console.log("ID Detail Transaksi Penitipan:", id_detail_transaksi_penitipan);
+        console.log("Token:", token);
+
+        const response = await useAxios.get(`/penitip/extend-barang/${id_detail_transaksi_penitipan}`, {
             headers: {
                 "Content-Type": "application/json",
                 "Accept": "application/json",
@@ -216,7 +218,7 @@ export const ambilBarang = async (id_barang) => {
     try {
         const token = sessionStorage.getItem("token");
         
-        const response = await useAxios.post(`/penitip/ambil-barang/`, {id_barang}, {
+        const response = await useAxios.get(`/penitip/ambil-barang/${id_barang}`, {
             headers: {
                 "Content-Type": "application/json",
                 "Accept": "application/json",

@@ -135,7 +135,7 @@ const Toko = ({ penitip }) => {
                     <img src={getThumbnailPenitip(penitip.foto_penitip)} alt="Toko" />
                 </div>
                 <h3>
-                    {penitip.badge ? 
+                    {penitip.badge == "1" ? 
                     <img src={badgeTopSeller} alt="Badge" className="badge-image" style={{height: 100}} /> : null}
                 </h3>
                 <div className="toko-detail">

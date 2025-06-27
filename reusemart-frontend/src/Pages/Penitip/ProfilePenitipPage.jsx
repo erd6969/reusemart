@@ -59,7 +59,7 @@ const ProfilePenitip = () => {
                   </div>
                   <div className="detail-item">
                     <b>Badge</b>
-                    <div className="badge-placeholder">{penitip.badge === 1 && <FaMedal color="#facc15" />}</div>
+                    <div className="badge-placeholder">{penitip.badge == "1" && <FaMedal color="#facc15" />}</div>
                   </div>
                 </div>
                 <div className="right-detail">

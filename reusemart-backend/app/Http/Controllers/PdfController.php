@@ -166,7 +166,7 @@ class PdfController
             ->join('detail_transaksi_penitipan as dtp', 'tpen.id_transaksi_penitipan', '=', 'dtp.id_transaksi_penitipan')
             ->join('barang as b', 'dtp.id_barang', '=', 'b.id_barang')
             ->whereDate('dtp.tanggal_berakhir', '<=', $today->toDateString())
-            ->whereNotIn('dtp.status_penitipan', ['terjual', 'didonasikan', 'open donasi'])
+            // ->whereNotIn('dtp.status_penitipan', ['terjual', 'didonasikan', 'open donasi'])
             ->select(
                 'b.id_barang',
                 'b.nama_barang',

@@ -168,7 +168,7 @@ const ExtendProductPage = () => {
                                         <td>
                                             {product.status_penitipan === "ready jual" ? (
                                                 <div className='action-buttons'>
-                                                    {product.status_perpanjangan === 0 ? (
+                                                    {product.status_perpanjangan === "0" ? (
                                                         <>
                                                             <button
                                                                 className="btn btn-success"

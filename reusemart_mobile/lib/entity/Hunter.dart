@@ -28,7 +28,7 @@ class Hunter {
         password_hunter: json["password_hunter"],
         nama_hunter: json["nama_hunter"],
         nomor_telepon_hunter: json["nomor_telepon_hunter"],
-        total_komisi: json["total_komisi"].toDouble(),
+        total_komisi: double.parse(json["total_komisi"].toString()),
         foto_hunter: json["foto_hunter"],
         tanggal_lahir_hunter: DateTime.parse(json["tanggal_lahir_hunter"]),
       );

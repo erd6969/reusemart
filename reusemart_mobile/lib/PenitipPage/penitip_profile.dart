@@ -31,16 +31,25 @@ class _ProfilePenitipPageState extends State<ProfilePenitipPage> {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String? token = prefs.getString('token');
 
-    if (token != null) {
-      Penitip? penitip = await PenitipClient.getProfilePenitip(token);
+    try {
+      if (token != null) {
+        Penitip? penitip = await PenitipClient.getProfilePenitip(token);
+        setState(() {
+          _penitip = penitip;
+          _isLoading = false;
+        });
+      } else {
+        setState(() {
+          _isLoading = false;
+        });
+      }
+    } catch (e) {
       setState(() {
-        _penitip = penitip;
         _isLoading = false;
       });
-    } else {
-      setState(() {
-        _isLoading = false;
-      });
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Gagal memuat profil: ${e.toString()}')),
+      );
     }
   }
 
@@ -103,8 +112,7 @@ class _ProfilePenitipPageState extends State<ProfilePenitipPage> {
                 ),
                 const SizedBox(height: 16),
                 _penitip!.badge
-                    ? 
-                      ClipRRect(
+                    ? ClipRRect(
                         borderRadius: BorderRadius.circular(2),
                         child: Image.asset(
                           'images/badgeTop.png',
@@ -141,7 +149,9 @@ class _ProfilePenitipPageState extends State<ProfilePenitipPage> {
                         ),
                       ),
                       const SizedBox(width: 4),
-                      Row(children: buildStarIcons(_penitip?.rerata_rating ?? 0))
+                      Row(
+                          children:
+                              buildStarIcons(_penitip?.rerata_rating ?? 0))
                     ],
                   ),
                 ),
@@ -149,7 +159,7 @@ class _ProfilePenitipPageState extends State<ProfilePenitipPage> {
                 Align(
                   alignment: Alignment.centerLeft,
                   child: Text(
-                    'Saldo : Rp ${_penitip!.saldo.toString().replaceAllMapped(RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'), (Match m) => '${m[1]}.')}', 
+                    'Saldo : Rp ${_penitip!.saldo.toString().replaceAllMapped(RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'), (Match m) => '${m[1]}.')}',
                     style: const TextStyle(fontWeight: FontWeight.bold),
                   ),
                 ),

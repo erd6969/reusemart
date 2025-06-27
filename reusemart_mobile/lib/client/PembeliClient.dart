@@ -24,11 +24,15 @@ class PembeliClient {
         final data = jsonDecode(response.body);
         return Pembeli.fromJson(data);
       } else {
-        return null;
+        final errorData = jsonDecode(response.body);
+        return throw Exception(
+            'Failed to load profile pembeli: ${errorData['message']}');
       }
     } catch (e) {
       print('Error fetching profile pembeli: $e');
-      return null;
+      return e is Exception
+          ? throw e
+          : throw Exception('Error fetching profile pembeli: $e');
     }
   }
 

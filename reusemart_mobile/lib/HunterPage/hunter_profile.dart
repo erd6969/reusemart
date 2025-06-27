@@ -24,16 +24,25 @@ class _ProfileHunterPageState extends State<ProfileHunterPage> {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String? token = prefs.getString('token');
 
-    if (token != null) {
-      Hunter? hunter = await HunterClient.getProfileHunter(token);
+    try{
+      if (token != null) {
+        Hunter? hunter = await HunterClient.getProfileHunter(token);
+        setState(() {
+          _hunter = hunter;
+          _isLoading = false;
+        });
+      } else {
+        setState(() {
+          _isLoading = false;
+        });
+      }
+    } catch (e) {
       setState(() {
-        _hunter = hunter;
         _isLoading = false;
       });
-    } else {
-      setState(() {
-        _isLoading = false;
-      });
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Gagal memuat profil: ${e.toString()}')),
+      );
     }
   }
 

@@ -25,11 +25,15 @@ class PenitipClient {
         final data = jsonDecode(response.body);
         return Penitip.fromJson(data);
       } else {
-        return null;
+        final errorData = jsonDecode(response.body);
+        return throw Exception(
+            'Failed to load profile penitip: ${errorData['error']}');
       }
     } catch (e) {
-      print('Error fetching profile Penitip: $e');
-      return null;
+      print('Error fetching profile penitip: $e');
+      return e is Exception
+          ? throw e
+          : throw Exception('Error fetching profile penitip: $e');
     }
   }
 

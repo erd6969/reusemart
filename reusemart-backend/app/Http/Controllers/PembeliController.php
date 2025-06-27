@@ -60,12 +60,18 @@ class PembeliController
 
     public function show()
     {
-        $userProf = Auth()->user();
-        return response()->json(
-            $userProf
-            ,
-            200
-        );
+        try{
+            $userProf = Auth()->user();
+                return response()->json(
+                    $userProf
+                , 200
+           );
+        }catch (\Exception $e) {
+            return response()->json([
+                'message' => 'Pembeli not found',
+                'error' => $e->getMessage(),
+            ], 404);
+        }
     }
 
     public function showHistoryPurchase()

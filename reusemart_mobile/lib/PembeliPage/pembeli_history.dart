@@ -256,7 +256,7 @@ class _PembeliHistoryPageState extends State<PembeliHistoryPage> {
                                 context,
                                 MaterialPageRoute(
                                   builder: (_) => DetailHistoryBarangPembeli(
-                                    id_barang: item['id_barang'],
+                                    id_barang: int.parse(item['id_barang'].toString()),
                                   ),
                                 ),
                               );
